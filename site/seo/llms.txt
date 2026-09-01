@@ -1,0 +1,47 @@
+# gps-digest
+
+> Outil web gratuit qui convertit les fichiers de montres GPS (TCX, GPX, FIT) en
+> résumés CSV compacts, conçus pour être analysés par un modèle de langage.
+> Un fichier TCX d'une heure pèse environ 1,7 Mo et représente ~533 000 tokens ;
+> le résumé produit fait ~18 Ko et ~5 800 tokens, soit une réduction de 98,9 %.
+> Tout le traitement s'effectue dans le navigateur : aucun fichier n'est envoyé
+> sur un serveur.
+
+## Ce que fait l'outil
+
+- Lit les formats TCX (Garmin Training Center), GPX 1.1 et FIT (format natif des
+  montres Garmin, Coros, Wahoo, Suunto, Polar).
+- Produit un « bundle » multi-blocs : résumé de séance, tours, splits au km,
+  zones de fréquence cardiaque, d'allure et de puissance, intervalles détectés
+  automatiquement, et une trace rééchantillonnée à un budget de tokens choisi.
+- Calcule des métriques dérivées : allure ajustée à la pente (GAP, d'après
+  Minetti et al. 2002), Normalized Power, Intensity Factor, TSS, dérive aérobie,
+  Efficiency Factor.
+- Rogne par défaut le départ et l'arrivée de la trace pour ne pas exposer le
+  domicile de l'utilisateur.
+
+## Pages de référence
+
+- [Pourquoi un fichier GPS est trop gros pour une IA](https://exemple.com/fr/fichier-gps-trop-gros-ia) : mesures de taille et de tokens par format, méthode de compaction.
+- [TCX vs GPX vs FIT](https://exemple.com/fr/tcx-gpx-fit-comparaison) : tableau comparatif des trois formats.
+- [Référence des colonnes CSV](https://exemple.com/fr/reference-colonnes-csv) : définition et unité de chaque colonne produite.
+- [Glossaire des métriques](https://exemple.com/fr/glossaire-metriques) : GAP, découplage aérobie, Normalized Power, TSS.
+
+## Guides d'export
+
+- [Garmin Connect](https://exemple.com/fr/exporter-fichier-garmin-connect)
+- [Strava](https://exemple.com/fr/exporter-fichier-strava)
+- [Coros](https://exemple.com/fr/exporter-fichier-coros)
+- [Polar Flow](https://exemple.com/fr/exporter-fichier-polar-flow)
+- [Suunto](https://exemple.com/fr/exporter-fichier-suunto)
+
+## Langues
+
+Le site est publié en français (/fr/), anglais (/en/) et espagnol (/es/).
+Chaque page déclare ses alternatives via hreflang.
+
+## Confidentialité
+
+Aucun fichier n'est transmis à un serveur. Le parsing et la compaction
+s'exécutent dans un Web Worker, dans le navigateur de l'utilisateur.
+Détail technique : https://exemple.com/fr/confidentialite

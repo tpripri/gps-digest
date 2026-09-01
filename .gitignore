@@ -1,0 +1,37 @@
+# Dépendances
+node_modules/
+.pnp
+.pnp.js
+
+# Build
+dist/
+build/
+.astro/
+.output/
+.vercel/
+.wrangler/
+
+# Environnement — ne JAMAIS committer de jetons Strava
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Fichiers de test personnels : une trace GPS contient votre adresse.
+# Cette règle évite de publier votre domicile sur un dépôt public.
+*.tcx
+*.gpx
+*.fit
+!test/fixtures/*.tcx
+!test/fixtures/*.gpx
+
+# Éditeurs et OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
