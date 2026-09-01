@@ -1,0 +1,31 @@
+{
+  // Cloudflare Workers avec static assets.
+  // Cloudflare recommande Workers plutôt que Pages pour tout nouveau projet
+  // depuis 2025 : Pages reste supporté mais n'évolue plus.
+  //
+  //   wrangler login && wrangler deploy
+  //
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gps-digest",
+
+  // À mettre à jour à la date du jour lors d'un nouveau projet : cette date
+  // fige le comportement du runtime et évite qu'une évolution de Cloudflare
+  // casse le site sans prévenir.
+  "compatibility_date": "2026-08-21",
+
+  // Le Worker sert la redirection de « / » selon la langue du navigateur.
+  // Sans lui, il faudrait choisir une langue par défaut pour tout le monde.
+  "main": "worker/index.ts",
+
+  "assets": {
+    // Sortie du build statique (Astro : « dist »).
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Le Worker ne s'exécute que si aucun fichier statique ne correspond.
+    // Les pages sont donc servies directement depuis l'edge, sans coût.
+    "not_found_handling": "404-page",
+    "run_worker_first": false
+  },
+
+  "observability": { "enabled": true }
+}

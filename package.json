@@ -1,0 +1,28 @@
+{
+  "name": "gps-digest",
+  "version": "0.1.0",
+  "description": "Compacte les fichiers de montres GPS (TCX, GPX, FIT) en résumés CSV ingérables par un LLM.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts",
+    "typecheck": "npx tsc --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "optionalDependencies": {
+    "@garmin/fitsdk": "^21.158.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "wrangler": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tpripri/gps-digest.git"
+  }
+}

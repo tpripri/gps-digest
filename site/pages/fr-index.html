@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SEO / GEO — remplacer exemple.com partout avant mise en ligne.
+
+     Le titre est formulé comme la requête réelle, pas comme un slogan.
+     La description contient le CHIFFRE : les moteurs génératifs citent
+     des faits vérifiables, pas des promesses marketing.
+     ═══════════════════════════════════════════════════════════════ -->
+<title>Convertir un fichier TCX, GPX ou FIT en CSV pour ChatGPT ou Gemini — gps-digest</title>
+<meta name="description" content="Outil gratuit qui compacte vos fichiers de montre GPS pour qu'ils tiennent dans une IA. Un TCX d'une heure passe de 533 000 à 5 800 tokens, soit 98,9 % de réduction. Détecte aussi la ceinture cardio, la dérive de FC et le respect des blocs. Tout se calcule dans votre navigateur.">
+<link rel="canonical" href="https://exemple.com/fr/">
+
+<!-- hreflang réciproque : un groupe non réciproque est ignoré en entier.
+     À générer depuis la table SLUGS de seo/schema.ts, jamais à la main. -->
+<link rel="alternate" hreflang="fr" href="https://exemple.com/fr/">
+<link rel="alternate" hreflang="en" href="https://exemple.com/en/">
+<link rel="alternate" hreflang="es" href="https://exemple.com/es/">
+<link rel="alternate" hreflang="x-default" href="https://exemple.com/en/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:url" content="https://exemple.com/fr/">
+<meta property="og:site_name" content="gps-digest">
+<meta property="og:title" content="Convertir un fichier TCX, GPX ou FIT en CSV pour une IA">
+<meta property="og:description" content="Un TCX d'une heure pèse 533 000 tokens. Le résumé produit en fait 5 800, et il est plus utile à analyser que le fichier brut.">
+<meta property="og:image" content="https://exemple.com/og-fr.png">
+<meta property="og:image:alt" content="Capture de l'outil : fichiers déposés, analyses et export CSV.">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="author" content="gps-digest">
+
+<!-- ── JSON-LD ─────────────────────────────────────────────────────
+     Quatre blocs. SoftwareApplication décrit l'outil, FAQPage vise les
+     réponses génératives, HowTo la procédure, DefinedTermSet déclare
+     que ce site est la SOURCE de définition des métriques employées —
+     c'est le type que les moteurs reprennent le plus volontiers.
+     ─────────────────────────────────────────────────────────────── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://exemple.com/#organization",
+      "name": "gps-digest",
+      "url": "https://exemple.com",
+      "logo": "https://exemple.com/logo.svg"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://exemple.com/#website",
+      "url": "https://exemple.com",
+      "name": "gps-digest",
+      "inLanguage": "fr",
+      "publisher": { "@id": "https://exemple.com/#organization" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "gps-digest",
+      "url": "https://exemple.com/fr/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "Navigateur moderne avec support des Web Workers",
+      "inLanguage": "fr",
+      "description": "Convertit les fichiers de montres GPS (TCX, GPX, FIT) en résumés CSV compacts analysables par un modèle de langage, et produit des analyses d'entraînement de base.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "featureList": [
+        "Conversion TCX, GPX et FIT vers CSV",
+        "Réduction de 98,9 % du nombre de tokens",
+        "Traitement intégral dans le navigateur, aucun envoi de fichier",
+        "Détection de la source de fréquence cardiaque (ceinture ou capteur poignet)",
+        "Calcul de la dérive cardiaque avec contrôle de validité",
+        "Analyse du respect des blocs d'entraînement",
+        "Projections de chrono sur 5 km, 10 km, semi-marathon et marathon",
+        "Import de jusqu'à 20 fichiers simultanément",
+        "Import depuis Strava"
+      ],
+      "publisher": { "@id": "https://exemple.com/#organization" }
+    },
+    {
+      "@type": "HowTo",
+      "name": "Convertir un fichier de montre GPS en CSV pour une IA",
+      "description": "Compacter un fichier TCX, GPX ou FIT pour qu'il tienne dans la fenêtre de contexte d'un modèle de langage.",
+      "inLanguage": "fr",
+      "totalTime": "PT2M",
+      "tool": [{ "@type": "HowToTool", "name": "gps-digest" }],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Déposer les fichiers",
+          "text": "Glissez jusqu'à 20 fichiers TCX, GPX ou FIT dans la zone de dépôt, ou connectez votre compte Strava.",
+          "url": "https://exemple.com/fr/#depot"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Renseigner ses repères",
+          "text": "Indiquez votre fréquence cardiaque maximale mesurée et un chrono de course récent. Sans ces valeurs, les zones sont estimées sur la FC maximale observée dans les fichiers.",
+          "url": "https://exemple.com/fr/#reperes"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Vérifier les avertissements",
+          "text": "L'outil signale les changements de capteur cardiaque et les séances dont la fréquence cardiaque n'est pas fiable. Ces avertissements conditionnent la validité des comparaisons.",
+          "url": "https://exemple.com/fr/#analyses"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Copier le résumé dans l'IA",
+          "text": "Copiez le résumé compacté et collez-le dans ChatGPT, Gemini ou Claude avec votre question.",
+          "url": "https://exemple.com/fr/#export"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "inLanguage": "fr",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Pourquoi mon fichier TCX est-il trop gros pour Gemini ou ChatGPT ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de balises XML, soit à peu près 533 000 tokens. Même quand ce volume tient dans la fenêtre de contexte, le modèle raisonne mal : on lui demande une analyse d'entraînement à partir de 3 600 lignes de coordonnées brutes. Le compacter en résumé structuré donne de meilleures réponses qu'un fichier complet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Mes fichiers GPS sont-ils envoyés sur un serveur ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non. Le parsing et la compaction s'exécutent dans un Web Worker, à l'intérieur de votre navigateur. Aucun fichier ne transite par un serveur. Une trace GPS contient l'adresse du domicile au mètre près dans ses premiers et derniers points : l'outil rogne par défaut 250 mètres au départ et à l'arrivée."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment savoir si une séance a été enregistrée avec une ceinture cardio ou avec le capteur du poignet ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le fichier ne le dit presque jamais, sauf en FIT. L'outil le déduit de la signature du signal : verrouillage de la fréquence cardiaque sur la cadence, longueur des plateaux de valeurs identiques, granularité battement à battement et latence de réponse aux changements d'allure. Le verrouillage sur la cadence est l'artefact le plus caractéristique : le capteur optique confond le rythme des foulées avec les pulsations et affiche par exemple 172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut pas produire cette erreur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Peut-on comparer la fréquence cardiaque entre une séance au poignet et une séance à la ceinture ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non. Les deux technologies produisent des écarts importants pendant l'effort, et le capteur optique se dégrade nettement quand l'intensité augmente ou varie rapidement. Un changement de capteur au milieu d'une période fausse silencieusement les zones, les dérives et les tendances. L'outil détecte ce changement, le date, et analyse les deux périodes séparément."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce que la dérive cardiaque et à partir de quel seuil faut-il s'inquiéter ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La dérive cardiaque, ou découplage aérobie, compare le rapport vitesse sur fréquence cardiaque entre la première et la seconde moitié d'un effort. Au-delà de 5 %, l'allure était trop élevée pour la durée ou l'endurance de base est le facteur limitant. La chaleur, la déshydratation et la fatigue résiduelle produisent le même effet : le chiffre seul ne suffit pas à conclure sur la forme. Ce calcul n'a de sens que sur un effort continu et régulier ; sur du fractionné, il ne veut rien dire et l'outil refuse de le produire."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quelle est la fiabilité d'une projection de temps sur marathon ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Faible. Une étude portant sur 2 303 coureurs amateurs a montré que la formule de Riegel est bien calibrée jusqu'au semi-marathon mais sous-estime nettement le temps sur marathon, donnant des prévisions au moins dix minutes trop rapides pour la moitié des coureurs. Un modèle fondé sur un ou deux résultats de course réels divise l'erreur par environ deux. C'est pourquoi l'outil pondère davantage un chrono en compétition qu'un effort d'entraînement, et affiche une fourchette plutôt qu'une valeur unique."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "La température affichée par ma montre est-elle celle de l'air ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non. Le capteur d'une montre est porté au poignet et chauffé par le corps. Il surestime généralement de 3 à 8 °C, et le biais augmente à l'arrêt. L'outil affiche la valeur mais l'accompagne systématiquement de cet avertissement, y compris dans le résumé transmis à l'IA, pour éviter que le modèle en tire des conclusions fausses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quels formats de fichiers de montre sont acceptés ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TCX, GPX et FIT. Le FIT est le format natif de la plupart des montres Garmin, Coros, Wahoo, Suunto et Polar récentes ; il est déjà plus compact que le TCX et plus riche en données de capteurs. Partir du FIT donne un meilleur résultat que partir d'un TCX exporté depuis le même enregistrement."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://exemple.com/fr/glossaire-metriques#glossaire",
+      "name": "Glossaire des métriques d'entraînement",
+      "url": "https://exemple.com/fr/glossaire-metriques",
+      "inLanguage": "fr",
+      "hasDefinedTerm": [
+        {
+          "@type": "DefinedTerm",
+          "name": "Allure ajustée à la pente (GAP)",
+          "description": "Allure corrigée du coût métabolique de la pente, calculée à partir du polynôme de degré 5 établi par Minetti et ses coauteurs en 2002, valide entre −45 % et +45 % de pente. Permet de comparer une sortie vallonnée à une sortie plate.",
+          "inDefinedTermSet": { "@id": "https://exemple.com/fr/glossaire-metriques#glossaire" }
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Dérive cardiaque",
+          "description": "Écart en pourcentage du rapport vitesse sur fréquence cardiaque entre la première et la seconde moitié d'un effort continu. Au-delà de 5 %, l'endurance aérobie de base est généralement le facteur limitant.",
+          "inDefinedTermSet": { "@id": "https://exemple.com/fr/glossaire-metriques#glossaire" }
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Verrouillage sur la cadence",
+          "description": "Erreur d'un capteur de fréquence cardiaque optique qui confond le rythme des foulées avec les pulsations et affiche une valeur égale à la cadence ou à sa moitié. Artefact impossible avec une ceinture, qui mesure un signal électrique.",
+          "inDefinedTermSet": { "@id": "https://exemple.com/fr/glossaire-metriques#glossaire" }
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Vitesse critique",
+          "description": "Asymptote de la relation hyperbolique entre vitesse et temps jusqu'à épuisement, dans le modèle à deux paramètres décrit par Jones et ses coauteurs en 2010. Représente la plus haute intensité soutenable en régime stable.",
+          "inDefinedTermSet": { "@id": "https://exemple.com/fr/glossaire-metriques#glossaire" }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://exemple.com/fr/" }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+/* ------------------------------------------------------------------
+   Sobriété fonctionnelle. Lisible par un coureur de 60 ans, sur un
+   téléphone, au soleil. Contraste AA, cible tactile 44 px, police
+   système (zéro chargement, zéro décalage de mise en page).
+   ------------------------------------------------------------------ */
+:root{
+  --ink:#14181d; --ink-soft:#4a5560; --line:#d4dae0; --bg:#fff;
+  --panel:#f5f7f9; --accent:#0b5d3f; --accent-ink:#fff;
+  --warn-bg:#fdf6e3; --warn-line:#b8860b; --warn-ink:#6b4e00;
+  --ok:#0b5d3f; --mid:#8a5a00; --bad:#98261c; --radius:6px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ink:#eef2f5; --ink-soft:#a8b4bf; --line:#39424c; --bg:#12161a;
+    --panel:#1b2127; --accent:#4ade9f; --accent-ink:#0d1114;
+    --warn-bg:#2a2314; --warn-line:#c9a227; --warn-ink:#f0d98a;
+    --ok:#4ade9f; --mid:#e0b44c; --bad:#f08076;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:1rem/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:62rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 .4rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;margin:2.4rem 0 .7rem}
+h3{font-size:1rem;margin:1.4rem 0 .4rem}
+.lede{color:var(--ink-soft);margin:0 0 1.6rem;max-width:44rem}
+a{color:var(--accent)}
+.promise{display:flex;gap:.6rem;align-items:flex-start;border-left:3px solid var(--accent);
+  background:var(--panel);padding:.7rem .9rem;border-radius:0 var(--radius) var(--radius) 0;
+  margin-bottom:1.6rem;font-size:.92rem}
+.drop{border:2px dashed var(--line);border-radius:var(--radius);padding:2rem 1rem;
+  text-align:center;background:var(--panel)}
+.drop p{margin:.4rem 0;color:var(--ink-soft)}
+.btn{display:inline-block;min-height:44px;padding:.6rem 1.1rem;background:var(--accent);
+  color:var(--accent-ink);border:0;border-radius:var(--radius);font-size:1rem;
+  font-weight:600;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+:where(a,button,input,select,summary):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.settings{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));margin:1.5rem 0}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.25rem}
+.field .hint{display:block;font-weight:400;color:var(--ink-soft);font-size:.82rem}
+input,select{width:100%;min-height:44px;padding:.45rem .6rem;font-size:1rem;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);color:var(--ink)}
+input[type=range]{padding:0}
+.check{display:flex;gap:.5rem;align-items:flex-start;margin:.5rem 0}
+.check input{width:20px;height:20px;min-height:0;margin-top:.15rem;flex:0 0 auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--ink-soft);font-size:.82rem;text-transform:uppercase;letter-spacing:.03em}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.badge{display:inline-block;padding:.1rem .45rem;border-radius:3px;font-size:.78rem;
+  font-weight:600;border:1px solid currentColor}
+.badge.ok{color:var(--ok)} .badge.mid{color:var(--mid)} .badge.bad{color:var(--bad)}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);
+  border-radius:var(--radius);padding:.7rem .9rem;margin:.8rem 0;font-size:.9rem}
+.note strong{display:block;margin-bottom:.2rem}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:1rem;margin:.8rem 0}
+.metric{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;border-bottom:1px solid var(--line)}
+.metric:last-of-type{border:0}
+.metric b{font-variant-numeric:tabular-nums}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.8rem;overflow-x:auto;font-size:.8rem;line-height:1.45;max-height:22rem}
+.actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:.8rem 0}
+.budget{display:flex;justify-content:space-between;font-size:.88rem;color:var(--ink-soft)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:.3rem 0 .8rem}
+.bar>span{display:block;height:100%;background:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+details{border:1px solid var(--line);border-radius:var(--radius);padding:.6rem .8rem;margin:.6rem 0}
+summary{cursor:pointer;font-weight:600;min-height:32px}
+nav.langs{font-size:.85rem;margin-bottom:1rem}
+nav.langs a{margin-right:.7rem}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--ink-soft)}
+footer a{margin-right:1rem;display:inline-block;line-height:2}
+.refs{font-size:.85rem;color:var(--ink-soft)}
+.refs li{margin-bottom:.5rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Sélecteur de langue en HTML statique : un moteur qui n'exécute pas
+     le JS doit pouvoir atteindre les autres versions. -->
+<nav class="langs" aria-label="Langue">
+  <span aria-current="true"><strong>Français</strong></span>
+  <a href="/en/" hreflang="en">English</a>
+  <a href="/es/" hreflang="es">Español</a>
+</nav>
+
+<header>
+  <h1>Convertir un fichier TCX, GPX ou FIT en CSV pour une IA</h1>
+  <p class="lede">
+    Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude.
+    Cet outil les compacte et en tire déjà les analyses de base.
+  </p>
+</header>
+
+<p class="promise">
+  <span aria-hidden="true">🔒</span>
+  <span><strong>Vos fichiers ne quittent pas votre navigateur.</strong>
+  Tout le calcul se fait sur votre appareil. Une trace GPS contient votre adresse :
+  l'outil rogne le départ et l'arrivée par défaut.</span>
+</p>
+
+<main>
+
+<!-- Le chiffre, en HTML statique, dès le haut de page. C'est ce qu'un
+     moteur génératif extrait et cite. -->
+<section aria-labelledby="chiffres">
+  <h2 id="chiffres">Ce que fait l'outil, en chiffres</h2>
+  <div class="scroll">
+  <table>
+    <caption class="sr">Réduction obtenue sur une sortie d'une heure enregistrée à 1 Hz</caption>
+    <thead><tr>
+      <th scope="col">Sortie d'une heure à 1 Hz</th>
+      <th scope="col" class="num">Taille</th>
+      <th scope="col" class="num">Tokens estimés</th>
+    </tr></thead>
+    <tbody>
+      <tr><th scope="row">Fichier TCX d'origine</th><td class="num">1,70 Mo</td><td class="num">~533 000</td></tr>
+      <tr><th scope="row">Résumé produit</th><td class="num">18,2 Ko</td><td class="num">~5 800</td></tr>
+      <tr><th scope="row">Réduction</th><td class="num">98,9 %</td><td class="num">×92</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:.88rem;color:var(--ink-soft)">
+    Mesuré sur une séance de 8 × 400 m par le banc d'essai fourni avec le code source.
+    Dernière mesure : 21 août 2026. <a href="/fr/methode">Méthode et reproduction</a>.
+  </p>
+</section>
+
+<section aria-labelledby="depot">
+  <h2 id="depot">1. Vos fichiers</h2>
+  <div class="drop">
+    <p><strong>Déposez jusqu'à 20 fichiers</strong></p>
+    <p>TCX, GPX ou FIT — Garmin, Coros, Polar, Suunto, Wahoo, Strava</p>
+    <p style="margin-top:1rem">
+      <button class="btn" type="button">Choisir des fichiers</button>
+      <button class="btn secondary" type="button">Importer depuis Strava</button>
+    </p>
+    <p style="font-size:.85rem"><a href="/fr/exporter-fichier-garmin-connect">Comment exporter mes fichiers ?</a></p>
+  </div>
+
+  <div class="scroll">
+  <table>
+    <caption class="sr">Fichiers chargés et analyses associées</caption>
+    <thead><tr>
+      <th scope="col">Date</th><th scope="col">Séance</th>
+      <th scope="col" class="num">Distance</th><th scope="col">Capteur FC</th>
+      <th scope="col" class="num">Dérive</th><th scope="col">Blocs</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>17 août</td><td>Sortie longue</td><td class="num">18,4 km</td><td>Ceinture</td><td class="num">4,1 %</td><td>—</td></tr>
+      <tr><td>14 août</td><td>Fractionné</td><td class="num">12,1 km</td><td>Ceinture</td><td class="num">n/a</td><td><span class="badge ok">conforme</span></td></tr>
+      <tr><td>10 août</td><td>Endurance</td><td class="num">10,2 km</td><td>Ceinture</td><td class="num">3,2 %</td><td>—</td></tr>
+      <tr><td>28 juil.</td><td>Tempo</td><td class="num">11,0 km</td><td>Poignet</td><td class="num">n/a</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note" role="status">
+    <strong>Changement de capteur détecté le 10 août</strong>
+    Avant cette date, la FC vient du poignet ; après, d'une ceinture. Les deux ne se
+    comparent pas : zones, dérives et tendances cardiaques sont analysées séparément
+    sur chaque période. <a href="/fr/methode#capteur">Pourquoi ?</a>
+  </div>
+
+  <div class="note" role="status">
+    <strong>Séance du 28 juillet : FC peu fiable</strong>
+    Sur 24 % de la séance, la FC suit la cadence — le capteur poignet a confondu les
+    foulées avec les pulsations. La dérive n'est pas calculée sur cette séance.
+  </div>
+</section>
+
+<section aria-labelledby="reperes">
+  <h2 id="reperes">2. Vos repères</h2>
+  <p class="lede" style="margin-bottom:1rem">
+    Facultatif, mais sans ces valeurs les zones sont estimées sur la FC maximale
+    observée dans les fichiers, ce qui est approximatif.
+  </p>
+  <div class="settings">
+    <div class="field">
+      <label for="fcmax">FC maximale <span class="hint">Mesurée en test, pas 220 moins l'âge</span></label>
+      <input type="number" id="fcmax" value="168" min="120" max="230">
+    </div>
+    <div class="field">
+      <label for="seuil">Allure seuil <span class="hint">Tenue environ 1 h à fond</span></label>
+      <input type="text" id="seuil" value="4:35" inputmode="numeric" placeholder="min:s / km">
+    </div>
+    <div class="field">
+      <label for="chrono">Dernier chrono en course <span class="hint">Améliore nettement les projections</span></label>
+      <select id="chrono">
+        <option>Marathon — 3h29 — avril 2025</option>
+        <option>Ajouter un chrono…</option>
+      </select>
+    </div>
+  </div>
+
+  <details>
+    <summary>Confidentialité et budget</summary>
+    <div class="check">
+      <input type="checkbox" id="privacy" checked>
+      <label for="privacy">Rogner 250 m au départ et à l'arrivée
+        <span class="hint">Empêche la trace de révéler votre domicile</span></label>
+    </div>
+    <div class="check">
+      <input type="checkbox" id="nocoord">
+      <label for="nocoord">Retirer complètement les coordonnées
+        <span class="hint">Conserve profil, allures et FC</span></label>
+    </div>
+    <div class="field" style="margin-top:.8rem">
+      <label for="budget">Détail de la trace conservée</label>
+      <input type="range" id="budget" min="0" max="3" value="2" aria-describedby="budget-desc">
+      <span class="hint" id="budget-desc">Standard — environ 6 000 tokens par séance</span>
+    </div>
+  </details>
+</section>
+
+<section aria-labelledby="analyses">
+  <h2 id="analyses">3. Ce que disent vos fichiers</h2>
+
+  <h3>Dérive cardiaque</h3>
+  <div class="card">
+    <div class="metric"><span>Sortie longue du 17 août</span><b>4,1 %</b></div>
+    <div class="metric"><span>1<sup>re</sup> moitié</span><b>5:12 /km à 141 bpm</b></div>
+    <div class="metric"><span>2<sup>e</sup> moitié</span><b>5:14 /km à 147 bpm</b></div>
+    <div class="metric"><span>Température relevée</span><b>29 °C</b></div>
+    <p style="margin:.7rem 0 0;font-size:.9rem;color:var(--ink-soft)">
+      Dérive dans la norme (≤ 5 %). À 29 °C relevés par la montre — capteur porté au
+      poignet, qui surestime de 3 à 8 °C — une part de cette dérive vient de la chaleur,
+      pas de la forme.
+    </p>
+  </div>
+
+  <h3>Respect des blocs — fractionné du 14 août</h3>
+  <div class="scroll">
+  <table>
+    <caption class="sr">Détail des répétitions</caption>
+    <thead><tr>
+      <th scope="col" class="num">Rép.</th><th scope="col" class="num">Distance</th>
+      <th scope="col" class="num">Allure</th><th scope="col" class="num">Écart</th>
+      <th scope="col" class="num">FC moy.</th><th scope="col" class="num">Récup</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="num">400 m</td><td class="num">3:28</td><td class="num">−1 %</td><td class="num">151</td><td class="num">90 s</td></tr>
+      <tr><td class="num">2</td><td class="num">400 m</td><td class="num">3:29</td><td class="num">−0 %</td><td class="num">156</td><td class="num">90 s</td></tr>
+      <tr><td class="num">3</td><td class="num">400 m</td><td class="num">3:31</td><td class="num">+0 %</td><td class="num">159</td><td class="num">92 s</td></tr>
+      <tr><td class="num">4</td><td class="num">400 m</td><td class="num">3:33</td><td class="num">+1 %</td><td class="num">162</td><td class="num">96 s</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:.9rem;color:var(--ink-soft)">
+    <span class="badge ok">conforme</span>
+    Allure très régulière (variation 1,2 %). Mais la FC monte de 11 bpm sur la série à
+    allure tenue : le coût cardiaque augmente avant que les jambes ne lâchent. Les
+    récupérations s'allongent en fin de série.
+  </p>
+
+  <h3>Projections</h3>
+  <div class="scroll">
+  <table>
+    <caption class="sr">Estimations de chrono par distance</caption>
+    <thead><tr>
+      <th scope="col">Distance</th><th scope="col" class="num">Estimation</th>
+      <th scope="col" class="num">Fourchette</th><th scope="col">Fiabilité</th>
+    </tr></thead>
+    <tbody>
+      <tr><th scope="row">5 km</th><td class="num">21:40</td><td class="num">20:58 – 22:22</td><td><span class="badge ok">moyenne</span></td></tr>
+      <tr><th scope="row">10 km</th><td class="num">45:12</td><td class="num">43:45 – 46:39</td><td><span class="badge ok">moyenne</span></td></tr>
+      <tr><th scope="row">Semi-marathon</th><td class="num">1h40:20</td><td class="num">1h36:12 – 1h44:28</td><td><span class="badge mid">moyenne</span></td></tr>
+      <tr><th scope="row">Marathon</th><td class="num">3h31</td><td class="num">3h18 – 3h44</td><td><span class="badge bad">faible</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:.9rem;color:var(--ink-soft)">
+    Calibré sur votre marathon en 3h29, vieux de 16 mois — son poids est donc réduit.
+    Une projection marathon reste la moins fiable de toutes : sur 2 303 coureurs amateurs,
+    la formule de Riegel s'est révélée au moins dix minutes trop optimiste pour la moitié
+    d'entre eux. <a href="/fr/methode#projections">Détail de la méthode</a>.
+  </p>
+</section>
+
+<section aria-labelledby="export">
+  <h2 id="export">4. Envoyer à une IA</h2>
+  <div class="budget">
+    <span>4 séances compactées</span>
+    <span><b>23 400</b> tokens sur 1 000 000</span>
+  </div>
+  <div class="bar"><span style="width:2.3%"></span></div>
+  <p style="font-size:.88rem;color:var(--ink-soft);margin-top:-.4rem">
+    Fichiers d'origine : 6,8 Mo, environ 2,1 millions de tokens. Réduction de 98,9 %.
+  </p>
+
+  <div class="actions">
+    <button class="btn" type="button">Copier pour l'IA</button>
+    <button class="btn secondary" type="button">Télécharger le CSV</button>
+    <button class="btn secondary" type="button">CSV pour Excel</button>
+  </div>
+
+  <details>
+    <summary>Voir ce qui sera envoyé</summary>
+<pre><code># gps-digest v1 — synthèse multi-séances
+# 4 séances du 2026-07-28 au 2026-08-17
+# ⚠ Changement de capteur de FC détecté autour du 2026-08-10
+#   (capteur poignet → ceinture). Les comparaisons cardiaques de part
+#   et d'autre de cette date ne sont pas valides.
+
+## sessions
+date,sport,dist_km,dur_moving,pace_mmss,hr_avg,hr_source,drift_pct,temp_c
+2026-07-28,running,11.00,55:12,5:01,148,capteur poignet,n/a,27
+2026-08-10,running,10.20,53:24,5:14,138,ceinture,3.2,26
+2026-08-14,running,12.10,58:40,4:51,145,ceinture,n/a,28
+2026-08-17,running,18.40,1h36:08,5:13,144,ceinture,4.1,29
+
+## race_projections
+race,estimate,range_low,range_high,confidence
+5 km,21:40,20:58,22:22,moyenne
+semi-marathon,1h40:20,1h36:12,1h44:28,moyenne</code></pre>
+  </details>
+
+  <details>
+    <summary>Prompts prêts à coller</summary>
+    <ul style="margin:.5rem 0;padding-left:1.2rem">
+      <li>Analyse ma dérive cardiaque sur ces séances en tenant compte de la température.</li>
+      <li>Mes blocs sont-ils respectés ? Que faut-il corriger sur la prochaine séance ?</li>
+      <li>Compare les deux périodes de capteur séparément et dis-moi ce qui a changé.</li>
+      <li>Propose ma semaine d'entraînement à partir de cette charge.</li>
+    </ul>
+  </details>
+</section>
+
+<!-- FAQ en HTML visible, pas seulement en JSON-LD : Google exige que le
+     contenu balisé soit présent sur la page pour les utilisateurs. -->
+<section aria-labelledby="faq">
+  <h2 id="faq">Questions fréquentes</h2>
+
+  <h3>Pourquoi mon fichier TCX est-il trop gros pour Gemini ou ChatGPT ?</h3>
+  <p>Un TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de
+  balises XML, soit à peu près 533 000 tokens. Même quand ce volume tient dans la
+  fenêtre de contexte, le modèle raisonne mal : on lui demande une analyse
+  d'entraînement à partir de 3 600 lignes de coordonnées brutes.</p>
+
+  <h3>Mes fichiers GPS sont-ils envoyés sur un serveur ?</h3>
+  <p>Non. Le parsing et la compaction s'exécutent dans un Web Worker, à l'intérieur de
+  votre navigateur. Vous pouvez le vérifier vous-même dans l'onglet Réseau de votre
+  navigateur. Une trace GPS contient l'adresse du domicile au mètre près dans ses
+  premiers et derniers points : l'outil rogne par défaut 250 mètres au départ et à
+  l'arrivée.</p>
+
+  <h3>Comment savoir si une séance vient d'une ceinture ou du capteur du poignet ?</h3>
+  <p>Le fichier ne le dit presque jamais, sauf en FIT. L'outil le déduit de la signature
+  du signal. Le marqueur le plus caractéristique est le verrouillage sur la cadence :
+  le capteur optique confond le rythme des foulées avec les pulsations et affiche par
+  exemple 172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut
+  pas produire cette erreur. S'y ajoutent la longueur des plateaux de valeurs identiques,
+  la granularité battement à battement et la latence de réponse aux changements d'allure.</p>
+
+  <h3>Peut-on comparer une FC au poignet et une FC à la ceinture ?</h3>
+  <p>Non. Les deux technologies divergent nettement pendant l'effort, et le capteur
+  optique se dégrade quand l'intensité augmente ou varie rapidement. Un changement de
+  capteur au milieu d'une période fausse silencieusement les zones, les dérives et les
+  tendances. L'outil détecte ce changement, le date, et analyse les deux périodes
+  séparément.</p>
+
+  <h3>Qu'est-ce que la dérive cardiaque et à partir de quel seuil s'inquiéter ?</h3>
+  <p>Elle compare le rapport vitesse sur fréquence cardiaque entre la première et la
+  seconde moitié d'un effort. Au-delà de 5 %, l'allure était trop élevée pour la durée
+  ou l'endurance de base est le facteur limitant. Chaleur, déshydratation et fatigue
+  résiduelle produisent le même effet : le chiffre seul ne suffit pas à conclure. Ce
+  calcul n'a de sens que sur un effort continu ; sur du fractionné, l'outil refuse de
+  le produire plutôt que de sortir un nombre trompeur.</p>
+
+  <h3>Quelle est la fiabilité d'une projection marathon ?</h3>
+  <p>Faible, et il faut le dire. Une étude portant sur 2 303 coureurs amateurs a montré
+  que la formule de Riegel est bien calibrée jusqu'au semi-marathon mais donne des
+  prévisions marathon au moins dix minutes trop rapides pour la moitié des coureurs.
+  Un modèle fondé sur un ou deux résultats de course réels divise l'erreur par environ
+  deux. L'outil pondère donc davantage un chrono en compétition qu'un effort
+  d'entraînement, décote les chronos anciens, et affiche une fourchette.</p>
+
+  <h3>La température affichée par ma montre est-elle celle de l'air ?</h3>
+  <p>Non. Le capteur est porté au poignet et chauffé par le corps : il surestime
+  généralement de 3 à 8 °C, et le biais augmente à l'arrêt. L'outil affiche la valeur
+  mais l'accompagne toujours de cet avertissement, y compris dans le résumé transmis à
+  l'IA, pour éviter que le modèle en tire une conclusion fausse.</p>
+
+  <h3>Quels formats sont acceptés ?</h3>
+  <p>TCX, GPX et FIT. Le FIT est le format natif de la plupart des montres Garmin, Coros,
+  Wahoo, Suunto et Polar récentes. Il est déjà plus compact que le TCX et plus riche en
+  données de capteurs : partir du FIT donne un meilleur résultat que partir d'un TCX
+  exporté depuis le même enregistrement.</p>
+</section>
+
+<!-- Les références font partie du contenu, pas d'une annexe. C'est ce qui
+     distingue une page citable d'une page de plus. -->
+<section aria-labelledby="refs">
+  <h2 id="refs">Sur quoi reposent ces calculs</h2>
+  <p class="lede">
+    Chaque métrique produite par l'outil s'appuie sur un travail publié. Les voici,
+    avec ce que chacun apporte et ce qu'il ne dit pas.
+  </p>
+
+  <ol class="refs">
+    <li>
+      <strong>Allure ajustée à la pente (GAP).</strong>
+      Minetti AE, Moia C, Roi GS, Susta D, Ferretti G. <em>Energy cost of walking and
+      running at extreme uphill and downhill slopes.</em> J Appl Physiol. 2002;93(3):1039–46.
+      <a href="https://doi.org/10.1152/japplphysiol.01177.2001" rel="nofollow">doi:10.1152/japplphysiol.01177.2001</a> ·
+      <a href="https://pubmed.ncbi.nlm.nih.gov/12183501/" rel="nofollow">PubMed</a><br>
+      Polynôme de degré 5 du coût métabolique en fonction de la pente, mesuré sur
+      10 coureurs entre −45 % et +45 %. <em>Limite :</em> établi sur tapis roulant, il
+      ne tient compte ni du terrain technique ni de la casse musculaire en descente
+      prolongée.
+    </li>
+
+    <li>
+      <strong>Détection du capteur de fréquence cardiaque.</strong>
+      Gillinov S, Etiwy M, Wang R, et al. <em>Variable accuracy of wearable heart rate
+      monitors during aerobic exercise.</em> Med Sci Sports Exerc. 2017;49(8):1697–703. ·
+      Pasadyn SR, Soudan M, Gillinov M, et al. <em>Accuracy of commercially available
+      heart rate monitors in athletes.</em> Cardiovasc Diagn Ther. 2019;9(4):379–85.
+      <a href="https://doi.org/10.21037/cdt.2019.06.05" rel="nofollow">doi:10.21037/cdt.2019.06.05</a> ·
+      <a href="https://pubmed.ncbi.nlm.nih.gov/31555543/" rel="nofollow">PubMed</a><br>
+      Établissent l'écart entre capteur optique et ceinture ECG à l'effort et sa
+      dégradation avec l'intensité. Sartor F, et al. (<em>BMC Sports Sci Med Rehabil.</em>
+      2018;10:10, <a href="https://doi.org/10.1186/s13102-018-0098-0" rel="nofollow">doi:10.1186/s13102-018-0098-0</a>)
+      documente le comportement seconde par seconde sur 199 sujets.
+      <em>Limite :</em> ces travaux mesurent l'erreur, ils ne proposent pas de méthode
+      pour identifier le capteur à partir du seul fichier. Notre détection est une
+      heuristique dérivée de ces mécanismes d'erreur, pas un protocole validé —
+      d'où la confiance plafonnée à 0,90.
+    </li>
+
+    <li>
+      <strong>Projection de chrono — formule de puissance.</strong>
+      Riegel PS. <em>Athletic records and human endurance.</em> American Scientist.
+      1981;69(3):285–90. <a href="https://www.jstor.org/stable/27850427" rel="nofollow">JSTOR</a><br>
+      T₂ = T₁ × (D₂/D₁)^1,06, ajusté sur des records du monde.
+      <em>Limite majeure :</em> calibré sur des athlètes d'élite, sur route plate.
+    </li>
+
+    <li>
+      <strong>Correction de la projection marathon.</strong>
+      Vickers AJ, Vertosick EA. <em>An empirical study of race times in recreational
+      endurance runners.</em> BMC Sports Sci Med Rehabil. 2016;8:26.
+      <a href="https://doi.org/10.1186/s13102-016-0052-y" rel="nofollow">doi:10.1186/s13102-016-0052-y</a><br>
+      Sur 2 303 coureurs amateurs : Riegel est bien calibré jusqu'au semi-marathon mais
+      sous-estime nettement le marathon, avec des prévisions au moins dix minutes trop
+      rapides pour la moitié des coureurs. Un modèle fondé sur un ou deux résultats
+      réels réduit l'erreur quadratique de 381 à 228 puis 208. C'est la raison directe
+      pour laquelle l'outil pondère les chronos de course au-dessus des efforts
+      d'entraînement.
+    </li>
+
+    <li>
+      <strong>Vitesse critique.</strong>
+      Jones AM, Vanhatalo A, Burnley M, Morton RH, Poole DC. <em>Critical power:
+      implications for determination of V̇O₂max and exercise tolerance.</em>
+      Med Sci Sports Exerc. 2010;42(10):1876–90.
+      <a href="https://doi.org/10.1249/MSS.0b013e3181d9cf7f" rel="nofollow">doi:10.1249/MSS.0b013e3181d9cf7f</a> ·
+      <a href="https://pubmed.ncbi.nlm.nih.gov/20195180/" rel="nofollow">PubMed</a><br>
+      Modèle à deux paramètres : la vitesse critique est l'asymptote de la relation
+      hyperbolique vitesse–durée, D′ la réserve au-dessus.
+      <em>Limite :</em> le modèle suppose la vitesse critique tenable indéfiniment. C'est
+      faux au-delà d'environ 90 minutes — d'où la décote appliquée aux projections
+      semi et marathon.
+    </li>
+
+    <li>
+      <strong>Réduction de la trace.</strong>
+      Douglas DH, Peucker TK. <em>Algorithms for the reduction of the number of points
+      required to represent a digitized line or its caricature.</em> Cartographica.
+      1973;10(2):112–22.
+      <a href="https://doi.org/10.3138/FM57-6770-U75U-7727" rel="nofollow">doi:10.3138/FM57-6770-U75U-7727</a><br>
+      Appliqué ici séparément à chaque canal (altitude, vitesse, FC, puissance, cadence),
+      puis union des points retenus — pour qu'une rupture sur n'importe quel canal
+      survive à la compaction.
+    </li>
+
+    <li>
+      <strong>Puissance normalisée, facteur d'intensité, TSS.</strong>
+      Allen H, Coggan A. <em>Training and Racing with a Power Meter.</em> VeloPress.<br>
+      <em>Nature du travail :</em> méthodologie d'entraînement largement adoptée, pas un
+      article évalué par les pairs. Nous l'indiquons parce que la distinction compte.
+      La dérive cardiaque (Pa:Hr, Pw:Hr) relève de la même catégorie : protocole de
+      terrain popularisé par Joe Friel, cohérent avec la physiologie du découplage mais
+      sans validation contrôlée publiée.
+    </li>
+  </ol>
+
+  <p class="note">
+    <strong>Ce que ces références ne garantissent pas</strong>
+    Elles fondent les formules, pas les conclusions. Un chiffre calculé correctement
+    à partir d'un capteur défaillant reste faux, et une projection reste une projection.
+    En cas de douleur ou avant de modifier un plan d'entraînement, l'avis d'un
+    professionnel prime sur cet outil comme sur l'IA à qui vous transmettrez ses résultats.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <nav aria-label="Pied de page">
+    <a href="/fr/methode">Méthode et sources</a>
+    <a href="/fr/tcx-gpx-fit-comparaison">TCX vs GPX vs FIT</a>
+    <a href="/fr/glossaire-metriques">Glossaire</a>
+    <a href="/fr/confidentialite">Confidentialité</a>
+    <a href="/fr/a-propos">À propos</a>
+  </nav>
+  <p>Dernière mise à jour des mesures : <time datetime="2026-08-21">21 août 2026</time>.
+  Code source ouvert, licence MIT.</p>
+</footer>
+
+</div>
+</body>
+</html>
