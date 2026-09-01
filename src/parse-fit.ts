@@ -125,12 +125,43 @@ export function fromFitMessages(m: FitMessages): Activity {
   };
 }
 
+/**
+ * Surface du SDK effectivement utilisée ici.
+ *
+ * On la déclare nous-mêmes plutôt que de dépendre des typages publiés : sous
+ * la résolution NodeNext, le paquet expose son contenu via `module.exports`,
+ * et TypeScript ne voit alors ni `Decoder` ni `Stream` comme exports nommés.
+ * Décrire le contrat minimal dont on a besoin est plus robuste qu'attendre
+ * que les typages amont soient corrigés.
+ */
+interface FitStream {
+  readonly __brand?: "fit-stream";
+}
+
+interface FitSdk {
+  Stream: { fromByteArray(bytes: number[]): FitStream };
+  Decoder: new (stream: FitStream) => {
+    isFIT(): boolean;
+    checkIntegrity(): boolean;
+    read(options?: Record<string, unknown>): { messages: unknown; errors?: unknown[] };
+  };
+}
+
 /** Décode un .fit brut. Nécessite `npm i @garmin/fitsdk`. */
 export async function parseFit(buf: ArrayBuffer | Uint8Array): Promise<Activity> {
-  const { Decoder, Stream } = await import("@garmin/fitsdk");
+  const mod = (await import("@garmin/fitsdk")) as unknown as FitSdk & { default?: FitSdk };
+  // Paquet CommonJS importé depuis un module ESM : selon que Node parvient ou
+  // non à détecter les exports nommés, le contenu se trouve à la racine ou
+  // sous `default`. Tester les deux évite un « Decoder is not a constructor »
+  // qui ne se manifesterait qu'à l'exécution, sur la machine de l'utilisateur.
+  const sdk: FitSdk = typeof mod.Decoder === "function" ? mod : (mod.default as FitSdk);
+  if (!sdk || typeof sdk.Decoder !== "function") {
+    throw new Error("SDK FIT introuvable ou incompatible. Installer @garmin/fitsdk.");
+  }
+
   const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
-  const stream = Stream.fromByteArray(Array.from(bytes));
-  const decoder = new Decoder(stream);
+  const stream = sdk.Stream.fromByteArray(Array.from(bytes));
+  const decoder = new sdk.Decoder(stream);
   if (!decoder.isFIT() || !decoder.checkIntegrity()) {
     throw new Error("Fichier FIT invalide ou corrompu.");
   }

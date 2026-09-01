@@ -30,7 +30,12 @@ const TYPE_MAP: Record<string, Sport> = {
 
 export function parseGpx(xml: string): Activity {
   const samples: Sample[] = [];
-  let sport: Sport = "other";
+  // Le `as Sport` n'est pas cosmétique : sans lui, l'analyse de flux de
+  // TypeScript fige le type sur le littéral « other », parce que la seule
+  // réaffectation a lieu dans le callback SAX — et une fonction imbriquée
+  // n'est pas prise en compte. La comparaison plus bas serait alors rejetée
+  // comme impossible, alors qu'elle est parfaitement atteignable à l'exécution.
+  let sport: Sport = "other" as Sport;
   let device: string | undefined;
   let t0: number | undefined;
 
