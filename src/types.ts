@@ -20,6 +20,12 @@ export interface Sample {
   cad?: number;
   pw?: number;
   temp?: number;
+  /**
+   * Vrai quand ce point ouvre un nouveau segment : la montre a été mise en
+   * pause entre le point précédent et celui-ci. Le déplacement dans
+   * l'intervalle n'est pas de l'activité.
+   */
+  discontinuity?: boolean;
 }
 
 /** Un tour, tel que présent nativement dans le fichier (TCX et FIT en ont). */
@@ -106,6 +112,8 @@ export interface IntervalSet {
   avgWorkPwW?: number;
   avgRestDurS: number;
   description: string;
+  /** Indices des blocs de travail qui composent cette série. */
+  workBlockIndices?: number[];
 }
 
 export interface SessionSummary {
@@ -118,6 +126,8 @@ export interface SessionSummary {
   distM: number;
   eleGainM?: number;
   eleLossM?: number;
+  /** Vrai si le dénivelé vient de l'altimètre de la montre, pas d'un calcul GPS. */
+  elevationFromDevice?: boolean;
   paceAvgSPerKm?: number;
   gapAvgSPerKm?: number;
   speedAvgMS?: number;
@@ -126,6 +136,8 @@ export interface SessionSummary {
   hrMax?: number;
   cadAvg?: number;
   pwAvg?: number;
+  /** Vrai hors cyclisme : puissance estimée par la montre, non comparable. */
+  pwIsEstimated?: boolean;
   /** Normalized Power (moyenne glissante 30 s, puissance 4). */
   pwNormalizedW?: number;
   intensityFactor?: number;
@@ -136,6 +148,12 @@ export interface SessionSummary {
   tempAvgC?: number;
   sampleCountRaw: number;
   samplingHz?: number;
+  /** Niveau de traitement retenu : full, swim ou load. */
+  tier?: "full" | "swim" | "load";
+  /** Vrai si le sport déclaré dans le fichier a été corrigé. */
+  reclassified?: boolean;
+  declaredSport?: Sport;
+  classificationReasons?: string[];
 }
 
 export interface AthleteProfile {
@@ -162,6 +180,13 @@ export interface DigestOptions {
   locale?: string;
   /** Vérité terrain du capteur de FC, quand le fichier la fournit (FIT). */
   hrSensorHint?: { hrSensor?: "chest_strap" | "optical" | "unknown" };
+  /** Données propres au FIT : longueurs de bassin, longueur du bassin. */
+  fitExtras?: {
+    poolLengthM?: number;
+    lengths?: import("./swim.ts").RawLength[];
+    totalAscentM?: number;
+    totalDescentM?: number;
+  };
   /** Échauffement à écarter du calcul de dérive, en secondes. */
   driftWarmupS?: number;
   /** Température de l'air issue d'une source météo, si disponible. */

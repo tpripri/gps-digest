@@ -16,6 +16,9 @@ import { analyzeDrift } from "../src/drift.ts";
 import { bestEfforts, fitCriticalSpeed, projectRaces, formatDuration } from "../src/efforts.ts";
 import { analyzeBatch, buildBatchBundle, type FileAnalysis } from "../src/batch.ts";
 import { fromStravaStreams } from "../src/strava.ts";
+import { decodeFit } from "../src/fit-decode.ts";
+import { parseGpx } from "../src/parse-gpx.ts";
+import { haversine } from "../src/geo.ts";
 import { speedSeries } from "../src/analyze.ts";
 import { estimateTokens, paceLabel } from "../src/serialize.ts";
 
@@ -177,10 +180,19 @@ const intervalsXml = makeTcx({
   startIso: "2026-08-14T06:30:00Z",
 });
 const intervals = analyze(intervalsXml, "2026-08-14-fractionne.tcx");
-check("dérive REFUSÉE sur du fractionné", !intervals.drift.applicable,
-  intervals.drift.reason?.slice(0, 55));
-check("irrégularité mesurée", (intervals.drift.speedCvPct ?? 0) > 18,
-  `CV ${intervals.drift.speedCvPct?.toFixed(0)} %`);
+// Nouveau contrat : sur du fractionné, on ne refuse plus en bloc — on cherche
+// la plus longue portion régulière et on signale qu'elle est peu représentative.
+if (intervals.drift.applicable) {
+  check("fenêtre homogène trouvée sur le fractionné", !!intervals.drift.window,
+    `${Math.round((intervals.drift.window?.durationS ?? 0) / 60)} min`);
+  check("fenêtre signalée comme peu représentative", intervals.drift.quality === "indicatif",
+    `${intervals.drift.quality}, couverture ${intervals.drift.windowCoveragePct?.toFixed(0)} %`);
+  check("note de représentativité rédigée", !!intervals.drift.qualityNote);
+} else {
+  check("refus argumenté", !!intervals.drift.reason, intervals.drift.reason?.slice(0, 55));
+  check("fenêtre absente cohérente", intervals.drift.window == null);
+  check("pas de chiffre trompeur", intervals.drift.decouplingPct === null);
+}
 check("température exposée avec réserve",
   intervals.drift.temperature?.caveat != null,
   `${Math.round(intervals.drift.temperature?.avgC ?? 0)} °C, capteur montre`);
@@ -273,7 +285,89 @@ check("blocs transversaux présents",
     .every((b) => batchBundle.includes(b)));
 check("avertissement en tête du bundle", batchBundle.indexOf("⚠") < batchBundle.indexOf("## sessions"));
 
-// ------------------------------------------------------------ 6. Strava
+// ------------------------------------------- 6. GPX : pauses et segments
+
+section("GPX — coupures de segment");
+
+// Garmin Connect ouvre un <trkseg> après chaque pause. Sans traitement, la
+// distance à vol d'oiseau entre l'arrêt et la reprise s'ajoute au total : un
+// déjeuner en ville ou un trajet en voiture gonfle la sortie de plusieurs km.
+{
+  const mkPt = (lat: number, iso: string) =>
+    `<trkpt lat="${lat.toFixed(7)}" lon="2.34"><ele>40</ele><time>${iso}</time></trkpt>`;
+  const mkSeg = (lat0: number, t0: string, n: number) =>
+    Array.from({ length: n }, (_, i) =>
+      mkPt(lat0 + i * 0.00009, new Date(Date.parse(t0) + i * 1000).toISOString()),
+    ).join("");
+  const paused =
+    `<?xml version="1.0"?><gpx version="1.1" creator="Garmin Connect"><trk><trkseg>` +
+    mkSeg(48.85, "2026-09-01T08:00:00Z", 600) +
+    `</trkseg><trkseg>` +
+    mkSeg(48.88, "2026-09-01T09:00:00Z", 600) +
+    `</trkseg></trk></gpx>`;
+
+  const parsed = parseGpx(paused);
+  const segLen = haversine(48.85, 2.34, 48.85 + 599 * 0.00009, 2.34);
+  const gap = haversine(48.85 + 599 * 0.00009, 2.34, 48.88, 2.34);
+  const total = parsed.samples[parsed.samples.length - 1].dist ?? 0;
+
+  check("rupture de segment détectée",
+    parsed.samples.filter((s) => s.discontinuity).length === 1);
+  check("saut entre segments exclu de la distance",
+    Math.abs(total - 2 * segLen) < 50,
+    `${(total / 1000).toFixed(2)} km au lieu de ${((2 * segLen + gap) / 1000).toFixed(2)}`);
+  check("les deux segments sont bien comptés", total > 2 * segLen * 0.98,
+    `${(total / 1000).toFixed(2)} km`);
+}
+
+// ---------------------------------------------- 7. FIT : horodatage compressé
+
+section("FIT — horodatage compressé");
+
+// Mode qu'aucun fichier Garmin réel n'emploie, donc jamais exercé par les
+// autres tests. Un décodeur qui lit le bit d'en-tête sans appliquer le décalage
+// produit des messages sans date, que la couche supérieure écarte en silence :
+// le fichier se vide de ses points sans la moindre erreur.
+{
+  const buf: number[] = [];
+  const u8 = (v: number) => buf.push(v & 0xff);
+  const u16 = (v: number) => { u8(v); u8(v >> 8); };
+  const u32 = (v: number) => { u16(v); u16(v >> 16); };
+
+  u8(0x40); u8(0); u8(0); u16(20); u8(3);
+  u8(253); u8(4); u8(0x86);
+  u8(3); u8(1); u8(0x02);
+  u8(5); u8(4); u8(0x86);
+
+  const T0 = 1100000000;
+  u8(0x00); u32(T0); u8(120); u32(0);
+
+  u8(0x40); u8(0); u8(0); u16(20); u8(2);
+  u8(3); u8(1); u8(0x02);
+  u8(5); u8(4); u8(0x86);
+  // Le décalage sur 5 bits repasse par zéro toutes les 32 s : c'est ce
+  // franchissement que le décodage doit rattraper.
+  for (let i = 1; i <= 40; i++) { u8(0x80 | (i & 0x1f)); u8(120); u32(i * 300); }
+
+  const data = Uint8Array.from(buf);
+  const out = new Uint8Array(12 + data.length + 2);
+  const dv = new DataView(out.buffer);
+  out[0] = 12; out[1] = 16; dv.setUint16(2, 2140, true);
+  dv.setUint32(4, data.length, true);
+  out.set([0x2e, 0x46, 0x49, 0x54], 8);
+  out.set(data, 12);
+
+  const decoded = decodeFit(out);
+  const recs = decoded.byGlobal.get(20) ?? [];
+  check("41 points décodés", recs.length === 41, `${recs.length}`);
+  check("tous horodatés", recs.every((r) => r[253] != null));
+  const ts = recs.map((r) => r[253] as number);
+  check("horodatages strictement croissants", ts.every((v, i) => i === 0 || v > ts[i - 1]));
+  check("rollover 32 s rattrapé", ts[ts.length - 1] - ts[0] === 40,
+    `plage ${ts[ts.length - 1] - ts[0]} s`);
+}
+
+// ------------------------------------------------------------ 8. Strava
 
 section("Adaptateur Strava");
 

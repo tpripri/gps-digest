@@ -10,12 +10,12 @@
   "scripts": {
     "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts",
     "typecheck": "npx tsc --noEmit",
-    "build": "tsc -p tsconfig.json",
-    "deploy": "wrangler deploy",
-    "preview": "wrangler dev"
-  },
-  "optionalDependencies": {
-    "@garmin/fitsdk": "^21.158.0"
+    "build": "node scripts/build.mjs",
+    "deploy": "npm run typecheck && npm test && npm run build && wrangler deploy",
+    "preview": "wrangler dev",
+    "dev": "node scripts/dev-server.mjs",
+    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
+    "interop": "node --experimental-strip-types scripts/interop.mjs"
   },
   "devDependencies": {
     "typescript": "^5.7.0",

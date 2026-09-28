@@ -1,4 +1,4 @@
-# robots.txt — remplacer exemple.com par le domaine retenu
+# robots.txt — le domaine est injecté au build (SITE_URL)
 
 # --- Moteurs classiques ---
 User-agent: Googlebot
@@ -45,4 +45,4 @@ Allow: /
 Disallow: /*?debug=
 Disallow: /api/
 
-Sitemap: https://exemple.com/sitemap-index.xml
+Sitemap: https://exemple.com/sitemap.xml

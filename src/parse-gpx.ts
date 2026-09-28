@@ -42,14 +42,23 @@ export function parseGpx(xml: string): Activity {
   let pt: (Sample & { time?: number }) | null = null;
   let inMetadata = false;
   let buf = "";
+  // Garmin Connect ouvre un nouveau <trkseg> après chaque pause. Enchaîner les
+  // points par-dessus ces coupures ajoute la distance à vol d'oiseau entre
+  // l'endroit où l'on s'est arrêté et celui où l'on a repris — un déjeuner en
+  // ville, un trajet en voiture, et le total est faux de plusieurs kilomètres.
+  let segmentStart = false;
 
   sax(xml, {
     open(name, attrs) {
       buf = "";
       if (name === "metadata") inMetadata = true;
+      if (name === "trkseg") segmentStart = true;
       if (name === "gpx" && attrs.creator) device = attrs.creator;
       if (name === "trkpt" || name === "rtept") {
         pt = { t: 0, lat: num(attrs.lat), lon: num(attrs.lon) };
+        // Le premier point d'un segment n'est pas la suite du précédent.
+        if (segmentStart && samples.length) pt.discontinuity = true;
+        segmentStart = false;
       }
     },
 

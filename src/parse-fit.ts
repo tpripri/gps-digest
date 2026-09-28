@@ -1,171 +1,269 @@
 /**
- * Adaptateur FIT (Garmin, Coros, Wahoo, Suunto, Polar récents).
+ * Lecture des fichiers FIT.
  *
- * À ne surtout pas négliger : c'est le format **natif** de la quasi-totalité
- * des montres. Il est déjà 5 à 10× plus compact que le TCX, plus riche (events,
- * champs développeur type Stryd/Running Dynamics) et beaucoup d'utilisateurs
- * n'ont pas de TCX sous la main.
+ * Format natif de la quasi-totalité des montres. Plus compact que le TCX, plus
+ * riche, et surtout **le seul à porter deux choses que rien d'autre ne donne** :
  *
- * Dépendance : `@garmin/fitsdk` (SDK officiel, MIT-like, tourne dans le
- * navigateur). Import dynamique pour ne pas l'embarquer si l'utilisateur ne
- * dépose que du TCX/GPX.
+ *   1. Les longueurs de bassin, une par une. L'export TCX de Garmin Connect les
+ *      écrase en un tour unique.
+ *   2. Le matériel réellement appairé. Un `device_info` annonçant un capteur
+ *      cardiaque ANT+ est une **vérité terrain** : plus besoin de deviner si
+ *      l'athlète portait une ceinture, le fichier le dit.
+ *
+ * Construit sur un décodeur maison (fit-decode.ts) plutôt que sur le SDK
+ * Garmin, qui est un module CommonJS et ne se charge pas dans un navigateur
+ * sans bundler — ce qui rendait le FIT inutilisable dans l'outil.
  */
 
+import {
+  decodeFit, GLOBAL, fitTimeToUnix, semicircles, scaled,
+  FIT_SPORT, FIT_SUB_SPORT, SWIM_STROKE, FIT_MANUFACTURER, type FitMessage,
+} from "./fit-decode.ts";
 import { fillDistance, sanitizeSamples } from "./geo.ts";
 import type { Activity, Lap, Sample, Sport } from "./types.ts";
 
-const SEMICIRCLE = 180 / 2 ** 31;
+/** Une longueur de bassin, telle que la montre l'a comptée. */
+export interface FitLength {
+  index: number;
+  startT: number;
+  durS: number;
+  active: boolean;
+  strokes?: number;
+  stroke?: string;
+  speedMS?: number;
+  cadence?: number;
+}
+
+export interface FitExtras {
+  /** Dénivelé mesuré par l'altimètre barométrique de la montre. */
+  totalAscentM?: number;
+  totalDescentM?: number;
+  manufacturer?: string;
+  manufacturerId?: number;
+  /** Compte des messages décodés, pour diagnostiquer un fichier inconnu. */
+  messageCounts?: Record<number, number>;
+  subSport?: string;
+  poolLengthM?: number;
+  lengths: FitLength[];
+  hrSensor?: "chest_strap" | "optical" | "unknown";
+  hrSensorEvidence?: string;
+  totalDistanceM?: number;
+}
 
 /**
- * Piège classique : selon les options du décodeur, les coordonnées sortent en
- * semicercles (entiers jusqu'à ±2^31) ou déjà en degrés. On détecte au lieu de
- * supposer — c'est la cause n°1 de traces "au milieu de l'Atlantique".
+ * Identifie le capteur cardiaque à partir du matériel appairé.
+ *
+ * Piège : le champ `device_type` est une **union**, dont la signification
+ * dépend de `source_type`. En ANT+, un moniteur cardiaque porte le type 120 ;
+ * en Bluetooth LE, il porte le type 1. Ne chercher que 120 revient à ne
+ * détecter que les ceintures connectées en ANT+ — c'est exactement ce qui
+ * faisait manquer une ceinture appairée en Bluetooth sur une sortie où elle
+ * était bel et bien présente.
+ *
+ * L'absence de ces messages ne prouve rien en revanche : beaucoup de montres
+ * n'écrivent pas de `device_info` pour leur capteur optique intégré. On répond
+ * donc « indéterminé » plutôt que « poignet », et l'heuristique de signal
+ * reprend la main.
  */
-function toDegrees(v: number | undefined): number | undefined {
-  if (v == null || !Number.isFinite(v)) return undefined;
-  return Math.abs(v) > 180 ? v * SEMICIRCLE : v;
-}
-
-const SPORT_MAP: Record<string, Sport> = {
-  running: "running",
-  cycling: "cycling",
-  swimming: "swimming",
-  hiking: "hiking",
-  walking: "hiking",
+const SOURCE_LABEL: Record<number, string> = {
+  0: "ANT", 1: "ANT+", 2: "Bluetooth", 3: "Bluetooth LE",
 };
 
-interface FitRecord {
-  timestamp?: Date | number;
-  positionLat?: number;
-  positionLong?: number;
-  altitude?: number;
-  enhancedAltitude?: number;
-  distance?: number;
-  heartRate?: number;
-  cadence?: number;
-  fractionalCadence?: number;
-  power?: number;
-  temperature?: number;
+function detectHrSensor(devices: FitMessage[]): {
+  verdict?: "chest_strap" | "optical" | "unknown";
+  evidence?: string;
+} {
+  for (const d of devices) {
+    const deviceType = d[1] as number | undefined;
+    const sourceType = d[25] as number | undefined;
+    if (sourceType == null || deviceType == null) continue;
+
+    // source_type : 0 ant, 1 antplus, 2 bluetooth, 3 BLE, 4 wifi, 5 local.
+    // Le type 5 désigne un capteur interne à la montre : jamais une ceinture.
+    const antHr = (sourceType === 0 || sourceType === 1) && deviceType === 120;
+    const bleHr = (sourceType === 2 || sourceType === 3) && deviceType === 1;
+    if (!antHr && !bleHr) continue;
+
+    const product = d[4] as number | undefined;
+    return {
+      verdict: "chest_strap",
+      evidence:
+        `Capteur cardiaque externe appairé en ${SOURCE_LABEL[sourceType] ?? `source ${sourceType}`}` +
+        (product != null ? ` (produit ${product})` : "") +
+        " : information lue dans le fichier, pas estimée.",
+    };
+  }
+  return {};
 }
 
-export interface FitMessages {
-  recordMesgs?: FitRecord[];
-  lapMesgs?: Record<string, unknown>[];
-  sessionMesgs?: Record<string, unknown>[];
-  fileIdMesgs?: Record<string, unknown>[];
-}
+export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array): {
+  activity: Activity;
+  extras: FitExtras;
+} {
+  const fit = decodeFit(buffer);
+  const records = fit.byGlobal.get(GLOBAL.RECORD) ?? [];
+  const session = (fit.byGlobal.get(GLOBAL.SESSION) ?? [])[0];
+  const lapMsgs = fit.byGlobal.get(GLOBAL.LAP) ?? [];
+  const lengthMsgs = fit.byGlobal.get(GLOBAL.LENGTH) ?? [];
+  const devices = fit.byGlobal.get(GLOBAL.DEVICE_INFO) ?? [];
+  const fileId = (fit.byGlobal.get(GLOBAL.FILE_ID) ?? [])[0];
 
-function ts(v: Date | number | undefined): number | undefined {
-  if (v == null) return undefined;
-  const ms = v instanceof Date ? v.getTime() : v * 1000;
-  return Number.isFinite(ms) ? ms / 1000 : undefined;
-}
-
-/** Convertit la sortie du décodeur FIT vers le modèle interne. */
-export function fromFitMessages(m: FitMessages): Activity {
-  const records = m.recordMesgs ?? [];
-  const samples: Sample[] = [];
   let t0: number | undefined;
+  const samples: Sample[] = [];
 
   for (const r of records) {
-    const abs = ts(r.timestamp);
+    const abs = fitTimeToUnix(r[253] as number | undefined);
     if (abs == null) continue;
     if (t0 == null) t0 = abs;
 
-    // La cadence FIT est en tours/min ; en course, un tour = 2 pas.
-    let cad = r.cadence;
-    if (cad != null && r.fractionalCadence != null) cad += r.fractionalCadence;
+    let cad = r[4] as number | undefined;
+    const frac = r[53] as number | undefined;
+    if (cad != null && frac != null) cad += frac / 128;
 
     samples.push({
       t: Math.round((abs - t0) * 10) / 10,
-      lat: toDegrees(r.positionLat),
-      lon: toDegrees(r.positionLong),
-      ele: r.enhancedAltitude ?? r.altitude,
-      dist: r.distance,
-      hr: r.heartRate,
+      lat: semicircles(r[0] as number | undefined),
+      lon: semicircles(r[1] as number | undefined),
+      ele: scaled(r[78] as number | undefined, 5, 500) ?? scaled(r[2] as number | undefined, 5, 500),
+      dist: scaled(r[5] as number | undefined, 100),
+      hr: r[3] as number | undefined,
       cad,
-      pw: r.power,
-      temp: r.temperature,
+      pw: r[7] as number | undefined,
+      temp: r[13] as number | undefined,
     });
   }
 
-  const laps: Lap[] = (m.lapMesgs ?? []).map((l, i) => {
-    const start = ts(l.startTime as Date | number | undefined);
+  // Chaîne de repli pour le sport. Tous les encodeurs n'écrivent pas de
+  // message `session` : s'appuyer uniquement dessus ferait basculer une course
+  // entière en « autre », donc hors analyse. On interroge ensuite le message
+  // `sport`, puis le premier tour, avant d'abandonner.
+  const sportMsg = (fit.byGlobal.get(GLOBAL.SPORT) ?? [])[0];
+  const rawSport =
+    (session?.[5] as number | undefined) ??
+    (sportMsg?.[0] as number | undefined) ??
+    (lapMsgs[0]?.[25] as number | undefined);
+  const subSport =
+    (session?.[6] as number | undefined) ?? (sportMsg?.[1] as number | undefined);
+  const sport = (FIT_SPORT[rawSport ?? 0] ?? "other") as Sport;
+
+  const lengths: FitLength[] = lengthMsgs.map((l, i) => {
+    const start = fitTimeToUnix(l[2] as number | undefined);
     return {
-      index: i,
+      index: (l[254] as number | undefined) ?? i,
       startT: start != null && t0 != null ? Math.max(0, start - t0) : 0,
-      durS: (l.totalTimerTime as number) ?? (l.totalElapsedTime as number) ?? 0,
-      distM: (l.totalDistance as number) ?? 0,
-      hrAvg: l.avgHeartRate as number | undefined,
-      hrMax: l.maxHeartRate as number | undefined,
-      calories: l.totalCalories as number | undefined,
-      intensity: l.intensity as string | undefined,
-      trigger: l.lapTrigger as string | undefined,
+      durS: scaled(l[4] as number | undefined, 1000) ?? 0,
+      active: l[12] === 1,
+      // Beaucoup de montres n'ont pas de compteur de coups de bras : un zéro
+      // signifie « non mesuré », pas « aucun mouvement ». Le distinguer évite
+      // d'afficher un SWOLF construit sur du vide.
+      strokes: (l[5] as number | undefined) || undefined,
+      stroke: l[7] != null ? SWIM_STROKE[l[7] as number] : undefined,
+      speedMS: scaled(l[6] as number | undefined, 1000),
+      cadence: (l[9] as number | undefined) || undefined,
     };
   });
 
-  const session = (m.sessionMesgs ?? [])[0] ?? {};
-  const rawSport = String(session.sport ?? "").toLowerCase();
-  const device = (m.fileIdMesgs ?? [])[0]?.manufacturer as string | undefined;
+  const laps: Lap[] = lapMsgs.map((l, i) => {
+    const start = fitTimeToUnix(l[2] as number | undefined);
+    return {
+      index: i,
+      startT: start != null && t0 != null ? Math.max(0, start - t0) : 0,
+      durS: scaled(l[8] as number | undefined, 1000) ?? scaled(l[7] as number | undefined, 1000) ?? 0,
+      distM: scaled(l[9] as number | undefined, 100) ?? 0,
+      hrAvg: l[15] as number | undefined,
+      hrMax: l[16] as number | undefined,
+      calories: l[11] as number | undefined,
+      intensity: l[23] != null ? String(l[23]) : undefined,
+      trigger: l[24] != null ? String(l[24]) : undefined,
+    };
+  });
 
   sanitizeSamples(samples);
-  const sport = SPORT_MAP[rawSport] ?? "other";
+
+  // Natation en bassin : les points ne portent aucune distance, la montre
+  // comptant des longueurs. On la reconstruit depuis les longueurs — plus
+  // précises que les tours, puisqu'on connaît la durée exacte de chacune.
+  const poolLengthM = scaled(session?.[44] as number | undefined, 100);
+  const needsDistance = samples.length > 0 && samples.every((s) => s.dist == null);
+
+  if (needsDistance && poolLengthM && lengths.some((l) => l.active)) {
+    let cumulative = 0;
+    for (const len of lengths) {
+      const from = len.startT;
+      const to = len.startT + len.durS;
+      const gained = len.active ? poolLengthM : 0;
+      for (const s of samples) {
+        if (s.t < from || s.t > to) continue;
+        const frac = len.durS > 0 ? (s.t - from) / len.durS : 1;
+        s.dist = cumulative + frac * gained;
+      }
+      cumulative += gained;
+    }
+    let last = 0;
+    for (const s of samples) {
+      if (s.dist == null || s.dist < last) s.dist = last;
+      else last = s.dist;
+    }
+  } else if (needsDistance) {
+    const lapTotal = laps.reduce((sum, l) => sum + l.distM, 0);
+    if (lapTotal > 50) {
+      let cumulative = 0;
+      for (const lap of laps) {
+        for (const s of samples) {
+          if (s.t < lap.startT || s.t > lap.startT + lap.durS) continue;
+          const frac = lap.durS > 0 ? (s.t - lap.startT) / lap.durS : 1;
+          s.dist = cumulative + frac * lap.distM;
+        }
+        cumulative += lap.distM;
+      }
+      let last = 0;
+      for (const s of samples) {
+        if (s.dist == null || s.dist < last) s.dist = last;
+        else last = s.dist;
+      }
+    } else {
+      fillDistance(samples);
+    }
+  }
   if (sport === "running") {
     for (const s of samples) if (s.cad != null && s.cad < 130) s.cad *= 2;
   }
-  if (samples.length && samples[0].dist == null) fillDistance(samples);
+
+  const hr = detectHrSensor(devices);
+  const manufacturerId = fileId?.[1] as number | undefined;
+  const manufacturer =
+    manufacturerId != null
+      ? (FIT_MANUFACTURER[manufacturerId] ?? `fabricant ${manufacturerId}`)
+      : undefined;
 
   return {
-    sport,
-    startTime: t0 != null ? new Date(t0 * 1000).toISOString() : undefined,
-    device,
-    source: "fit",
-    samples,
-    laps,
+    activity: {
+      sport,
+      startTime: t0 != null ? new Date(t0 * 1000).toISOString() : undefined,
+      device: manufacturer ?? "FIT",
+      source: "fit",
+      samples,
+      laps,
+    },
+    extras: {
+      totalAscentM: session?.[22] as number | undefined,
+      totalDescentM: session?.[23] as number | undefined,
+      manufacturer,
+      manufacturerId,
+      messageCounts: Object.fromEntries(
+        [...fit.byGlobal.entries()].map(([g, m]) => [g, m.length]),
+      ),
+      subSport: subSport != null ? FIT_SUB_SPORT[subSport] : undefined,
+      poolLengthM,
+      lengths,
+      hrSensor: hr.verdict,
+      hrSensorEvidence: hr.evidence,
+      totalDistanceM: scaled(session?.[9] as number | undefined, 100),
+    },
   };
 }
 
-/**
- * Surface du SDK effectivement utilisée ici.
- *
- * On la déclare nous-mêmes plutôt que de dépendre des typages publiés : sous
- * la résolution NodeNext, le paquet expose son contenu via `module.exports`,
- * et TypeScript ne voit alors ni `Decoder` ni `Stream` comme exports nommés.
- * Décrire le contrat minimal dont on a besoin est plus robuste qu'attendre
- * que les typages amont soient corrigés.
- */
-interface FitStream {
-  readonly __brand?: "fit-stream";
-}
-
-interface FitSdk {
-  Stream: { fromByteArray(bytes: number[]): FitStream };
-  Decoder: new (stream: FitStream) => {
-    isFIT(): boolean;
-    checkIntegrity(): boolean;
-    read(options?: Record<string, unknown>): { messages: unknown; errors?: unknown[] };
-  };
-}
-
-/** Décode un .fit brut. Nécessite `npm i @garmin/fitsdk`. */
+/** Décode un .fit. Plus aucune dépendance externe ni import dynamique. */
 export async function parseFit(buf: ArrayBuffer | Uint8Array): Promise<Activity> {
-  const mod = (await import("@garmin/fitsdk")) as unknown as FitSdk & { default?: FitSdk };
-  // Paquet CommonJS importé depuis un module ESM : selon que Node parvient ou
-  // non à détecter les exports nommés, le contenu se trouve à la racine ou
-  // sous `default`. Tester les deux évite un « Decoder is not a constructor »
-  // qui ne se manifesterait qu'à l'exécution, sur la machine de l'utilisateur.
-  const sdk: FitSdk = typeof mod.Decoder === "function" ? mod : (mod.default as FitSdk);
-  if (!sdk || typeof sdk.Decoder !== "function") {
-    throw new Error("SDK FIT introuvable ou incompatible. Installer @garmin/fitsdk.");
-  }
-
-  const bytes = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
-  const stream = sdk.Stream.fromByteArray(Array.from(bytes));
-  const decoder = new sdk.Decoder(stream);
-  if (!decoder.isFIT() || !decoder.checkIntegrity()) {
-    throw new Error("Fichier FIT invalide ou corrompu.");
-  }
-  const { messages, errors } = decoder.read({ mesgListener: undefined });
-  if (errors?.length) console.warn("FIT: messages ignorés", errors.length);
-  return fromFitMessages(messages as FitMessages);
+  return parseFitBuffer(buf).activity;
 }

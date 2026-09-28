@@ -21,7 +21,7 @@
  */
 
 import { mean } from "./geo.ts";
-import type { IntervalBlock, IntervalSet } from "./types.ts";
+import type { IntervalBlock, IntervalSet, Sample } from "./types.ts";
 
 export interface BlockTarget {
   reps?: number;
@@ -41,6 +41,12 @@ export interface RepReport {
   hrAvg?: number;
   hrMax?: number;
   restAfterS?: number;
+  /** FC à la fin de la répétition, avant récupération. */
+  hrEndBpm?: number;
+  /** Chute de FC dans les 60 s suivant la répétition. Marqueur parasympathique. */
+  hrr60Bpm?: number;
+  /** Idem à 120 s. */
+  hrr120Bpm?: number;
   /** Écart à la cible, en % (positif = plus lent que demandé). */
   deltaVsTargetPct?: number;
   /** Écart à la moyenne de la série, en %. */
@@ -59,6 +65,10 @@ export interface AdherenceReport {
   restDriftS?: number;
   /** Montée de FC entre première et dernière répétition, à allure comparable. */
   hrRiseBpm?: number;
+  /** Moyenne des chutes de FC à 60 s sur la série. */
+  hrr60AvgBpm?: number;
+  /** Érosion de la récupération : bpm perdus par répétition. Positif = dégradation. */
+  hrr60DeclinePerRep?: number;
   repsCompleted: number;
   repsPlanned?: number;
   verdicts: string[];
@@ -90,10 +100,66 @@ function cv(values: (number | undefined)[]): number | undefined {
   return (Math.sqrt(variance) / m) * 100;
 }
 
+/**
+ * FC à un instant donné, par recherche dichotomique sur la trace.
+ * Renvoie undefined si l'instant tombe dans un trou d'enregistrement.
+ */
+function hrAt(samples: Sample[], t: number): number | undefined {
+  if (!samples.length) return undefined;
+  let lo = 0;
+  let hi = samples.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (samples[mid].t < t) lo = mid + 1;
+    else hi = mid;
+  }
+  // Tolérance de 5 s : au-delà, on extrapolerait sur un trou.
+  return Math.abs(samples[lo].t - t) <= 5 ? samples[lo].hr : undefined;
+}
+
+/**
+ * Récupération cardiaque après chaque répétition.
+ *
+ * La vitesse à laquelle la FC redescend après un effort est un des meilleurs
+ * marqueurs du tonus parasympathique disponibles sans matériel de laboratoire.
+ * Plus révélateur encore : son **érosion au fil de la série**. Une récupération
+ * qui passe de 40 à 25 bpm entre la première et la dernière répétition indique
+ * une fatigue accumulée que l'allure, elle, ne montre pas encore.
+ */
+function recoveryFor(
+  samples: Sample[],
+  block: IntervalBlock,
+): { hrEnd?: number; hrr60?: number; hrr120?: number } {
+  const endT = block.startT + block.durS;
+  // La FC culmine quelques secondes APRÈS l'arrêt de l'effort : la prendre
+  // pile à la fin sous-estimerait systématiquement la récupération.
+  const peak = [0, 3, 6, 9, 12]
+    .map((d) => hrAt(samples, endT + d))
+    .filter((v): v is number => v != null);
+  if (!peak.length) return {};
+  const hrEnd = Math.max(...peak);
+
+  const at60 = hrAt(samples, endT + 60);
+  const at120 = hrAt(samples, endT + 120);
+
+  // Borne de plausibilité. Une chute de plus de 60 bpm en une minute n'existe
+  // pas chez l'humain à l'effort : c'est un décrochage de capteur. La rapporter
+  // comme une récupération exceptionnelle serait pire que ne rien dire.
+  const plausible = (v: number | undefined, max: number) =>
+    v != null && v >= -10 && v <= max ? v : undefined;
+
+  return {
+    hrEnd,
+    hrr60: plausible(at60 != null ? hrEnd - at60 : undefined, 60),
+    hrr120: plausible(at120 != null ? hrEnd - at120 : undefined, 80),
+  };
+}
+
 export function analyzeAdherence(
   blocks: IntervalBlock[],
   set: IntervalSet,
   target?: BlockTarget,
+  samples: Sample[] = [],
 ): AdherenceReport {
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
@@ -112,6 +178,7 @@ export function analyzeAdherence(
 
   const reps: RepReport[] = work.map((w, i) => {
     const nextRest = rest.find((r) => r.startT >= w.startT + w.durS - 2);
+    const rec = samples.length ? recoveryFor(samples, w) : {};
     const deltaTarget =
       target?.targetPaceSPerKm && w.paceSPerKm
         ? ((w.paceSPerKm - target.targetPaceSPerKm) / target.targetPaceSPerKm) * 100
@@ -128,6 +195,9 @@ export function analyzeAdherence(
       hrAvg: w.hrAvg,
       hrMax: w.hrMax,
       restAfterS: nextRest?.durS,
+      hrEndBpm: rec.hrEnd,
+      hrr60Bpm: rec.hrr60,
+      hrr120Bpm: rec.hrr120,
       deltaVsTargetPct: deltaTarget,
       deltaVsSetPct: deltaSet,
     };
@@ -138,6 +208,11 @@ export function analyzeAdherence(
   const fadePctPerRep = slope != null && setPace ? (slope / setPace) * 100 : undefined;
   const restCv = cv(reps.map((r) => r.restAfterS).slice(0, -1));
   const restSlope = linearSlope(reps.map((r) => r.restAfterS).slice(0, -1));
+
+  const hrr60Values = reps.map((r) => r.hrr60Bpm);
+  const hrr60Avg = mean(hrr60Values);
+  const hrr60Slope = linearSlope(hrr60Values);
+  const hrr60Decline = hrr60Slope != null ? -hrr60Slope : undefined;
 
   const firstHr = reps[0]?.hrAvg;
   const lastHr = reps[reps.length - 1]?.hrAvg;
@@ -188,6 +263,22 @@ export function analyzeAdherence(
     }
   }
 
+  // Signal le plus fin de la série : la récupération se dégrade avant l'allure.
+  if (hrr60Avg != null) {
+    if (hrr60Avg >= 35) {
+      verdicts.push(`Récupération cardiaque très bonne : ${hrr60Avg.toFixed(0)} bpm de chute en 60 s après chaque répétition.`);
+    } else if (hrr60Avg >= 22) {
+      verdicts.push(`Récupération cardiaque correcte : ${hrr60Avg.toFixed(0)} bpm en 60 s.`);
+    } else if (hrr60Avg > 0) {
+      verdicts.push(`Récupération lente : seulement ${hrr60Avg.toFixed(0)} bpm de chute en 60 s. Fatigue résiduelle, chaleur ou récupérations trop courtes pour le format.`);
+      penalty += 1;
+    }
+    if (hrr60Decline != null && hrr60Decline >= 3 && reps.length >= 4) {
+      verdicts.push(`La récupération s'érode de ${hrr60Decline.toFixed(0)} bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir.`);
+      penalty += 1;
+    }
+  }
+
   if (target?.reps && work.length < target.reps) {
     verdicts.push(`${work.length} répétitions réalisées sur les ${target.reps} prévues.`);
     penalty += 2;
@@ -219,6 +310,8 @@ export function analyzeAdherence(
     restCvPct: restCv,
     restDriftS: restSlope,
     hrRiseBpm: hrRise,
+    hrr60AvgBpm: hrr60Avg,
+    hrr60DeclinePerRep: hrr60Decline,
     repsCompleted: work.length,
     repsPlanned: target?.reps,
     verdicts,

@@ -19,6 +19,9 @@ export function haversine(lat1: number, lon1: number, lat2: number, lon2: number
  * (cas systématique du GPX). Un seuil de 0,3 m évite d'accumuler le bruit GPS
  * à l'arrêt, qui gonfle sinon la distance de plusieurs centaines de mètres.
  */
+/** Au-delà, ce n'est plus un déplacement mais un saut : reprise après pause. */
+const MAX_PLAUSIBLE_SPEED_MS = 30; // 108 km/h
+
 export function fillDistance(samples: Sample[]): void {
   let cum = 0;
   for (let i = 0; i < samples.length; i++) {
@@ -27,7 +30,15 @@ export function fillDistance(samples: Sample[]): void {
       const p = samples[i - 1];
       if (p.lat != null && p.lon != null && s.lat != null && s.lon != null) {
         const d = haversine(p.lat, p.lon, s.lat, s.lon);
-        if (d > 0.3) cum += d;
+        const dt = s.t - p.t;
+
+        // Deux raisons de ne pas compter l'écart :
+        //   - le fichier annonce une rupture (nouveau segment après pause) ;
+        //   - la vitesse impliquée est impossible, donc c'est un saut.
+        // Dans les deux cas l'athlète s'est déplacé autrement qu'en
+        // s'entraînant, et l'ajouter gonflerait la distance.
+        const jump = dt > 0 && d / dt > MAX_PLAUSIBLE_SPEED_MS;
+        if (d > 0.3 && !s.discontinuity && !jump) cum += d;
       }
     }
     s.dist = cum;

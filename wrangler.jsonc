@@ -11,7 +11,7 @@
   // À mettre à jour à la date du jour lors d'un nouveau projet : cette date
   // fige le comportement du runtime et évite qu'une évolution de Cloudflare
   // casse le site sans prévenir.
-  "compatibility_date": "2026-08-21",
+  "compatibility_date": "2026-09-25",
 
   // Le Worker sert la redirection de « / » selon la langue du navigateur.
   // Sans lui, il faudrait choisir une langue par défaut pour tout le monde.

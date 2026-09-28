@@ -101,13 +101,27 @@ Source Strava : `strava.ts` convertit les flux du MCP vers le même modèle inte
 
 Les mélanger est le bug n°1 des convertisseurs : un utilisateur francophone ouvre le CSV « LLM » dans Excel et voit une seule colonne — ou pire, envoie à un modèle un fichier où `3,45` compte pour deux champs.
 
+## Banc d'essai avec interface
+
+```bash
+npm run dev     # puis http://localhost:5173
+```
+
+Déposez vos fichiers, l'analyse s'affiche. Aucun build, aucun bundler : le serveur
+de développement retire les annotations de types à la volée (`module.stripTypeScriptTypes`,
+Node 22+) et sert les modules `.ts` directement au navigateur. Éditez un fichier de
+`src/`, rechargez la page, c'est à jour.
+
+Le retrait de types n'est pas une vérification de types : `npx tsc --noEmit` reste
+nécessaire avant de pousser.
+
 ## Tests
 
 ```bash
 npm test    # test/run.ts (compaction) + test/analysis.ts (analyses)
 ```
 
-46 tests sur deux suites, sans dépendance.
+68 assertions sur deux suites, sans dépendance.
 
 `test/run.ts` génère un TCX synthétique cohérent — trajectoire intégrée le long d'un cap variable, réponse cardiaque du premier ordre, bruit altimétrique — et vérifie parsing, plausibilité des métriques, détection des 8 × 400 m et de la récupération de 90 s, tenue du budget de tokens, intégrité du CSV.
 

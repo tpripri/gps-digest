@@ -220,6 +220,7 @@ export function detectIntervals(
   speed: number[],
   laps: Lap[],
   minBlockS = 20,
+  sport: Sport = "running",
 ): { blocks: IntervalBlock[]; sets: IntervalSet[] } {
   const nativeRest = laps.filter((l) => /rest/i.test(l.intensity ?? "")).length;
   if (nativeRest >= 2 && laps.length >= 4) {
@@ -233,7 +234,7 @@ export function detectIntervals(
       hrAvg: l.hrAvg,
       hrMax: l.hrMax,
     }));
-    return { blocks, sets: groupSets(blocks) };
+    return { blocks, sets: groupSets(blocks, sport) };
   }
 
   const hasPower = samples.some((s) => s.pw != null);
@@ -297,11 +298,75 @@ export function detectIntervals(
 
   const workCount = blocks.filter((b) => b.kind === "work").length;
   if (workCount < 2) return { blocks: [], sets: [] };
-  return { blocks, sets: groupSets(blocks) };
+  const totalMoving = samples[samples.length - 1].t - samples[0].t;
+  return { blocks, sets: filterMeaningfulSets(groupSets(blocks, sport), blocks, totalMoving) };
+}
+
+/**
+ * Écarte les séries parasites.
+ *
+ * Sur une sortie longue contenant deux blocs tempo, la segmentation produit
+ * aussi des groupes issus de l'échauffement, des lignes droites ou du bruit —
+ * du genre « 2 × 87 s ». Ils sont formellement corrects et parfaitement
+ * trompeurs : ils donnent à croire que la séance comportait une structure
+ * qu'elle n'avait pas.
+ *
+ * Critère retenu : une série ne compte que si son temps de travail cumulé
+ * représente au moins 8 % de la séance. Une vraie série y parvient largement ;
+ * un artefact, jamais.
+ */
+function filterMeaningfulSets(
+  sets: IntervalSet[],
+  blocks: IntervalBlock[],
+  totalDurationS: number,
+): IntervalSet[] {
+  if (totalDurationS <= 0) return sets;
+  const byIndex = new Map(blocks.map((b) => [b.index, b]));
+
+  const scored = sets
+    .map((s) => {
+      const work = (s.workBlockIndices ?? [])
+        .map((i) => byIndex.get(i))
+        .filter((b): b is IntervalBlock => b != null);
+      const workS = work.reduce((sum, b) => sum + b.durS, 0);
+      return { set: s, sharePct: (workS / totalDurationS) * 100 };
+    })
+    .filter((x) => x.sharePct >= 8)
+    .sort((a, b) => b.sharePct - a.sharePct);
+
+  // Au-delà de trois séries, on décrit du bruit plutôt qu'une séance.
+  return scored.slice(0, 3).map((x) => x.set);
+}
+
+/**
+ * Libellé d'une série, adapté au sport.
+ *
+ * À vélo, décrire une série en mètres n'a aucun sens : sur home trainer la
+ * distance est virtuelle, et en extérieur elle dépend du vent et de la pente.
+ * C'est la puissance et la durée qui définissent l'effort — d'où « 7 × 60 s à
+ * 257 W » plutôt que « 7 × 1200 m ».
+ */
+function describeSet(
+  reps: number,
+  kind: "distance" | "time",
+  target: number,
+  avgDur: number,
+  avgRest: number,
+  avgPw: number | undefined,
+  sport: Sport,
+): string {
+  const rest = avgRest > 3 ? `, récup ${Math.round(avgRest)} s` : "";
+  if (sport === "cycling") {
+    const power = avgPw != null ? ` à ${Math.round(avgPw)} W` : "";
+    return `${reps} × ${Math.round(avgDur)} s${power}${rest}`;
+  }
+  return kind === "distance"
+    ? `${reps} × ${target} m${rest}`
+    : `${reps} × ${Math.round(avgDur)} s${rest}`;
 }
 
 /** Regroupe les répétitions homogènes : "8 × 400 m, récup 90 s". */
-function groupSets(blocks: IntervalBlock[]): IntervalSet[] {
+function groupSets(blocks: IntervalBlock[], sport: Sport = "running"): IntervalSet[] {
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
   if (work.length < 2) return [];
@@ -338,6 +403,7 @@ function groupSets(blocks: IntervalBlock[]): IntervalSet[] {
     const target = near ?? Math.round(avgDur);
 
     sets.push({
+      workBlockIndices: group.map((g) => g.index),
       reps: group.length,
       kind,
       targetM: kind === "distance" ? near : undefined,
@@ -346,10 +412,7 @@ function groupSets(blocks: IntervalBlock[]): IntervalSet[] {
       avgWorkPaceSPerKm: avgPace,
       avgWorkPwW: avgPw,
       avgRestDurS: Math.round(avgRest),
-      description:
-        kind === "distance"
-          ? `${group.length} × ${target} m, récup ${Math.round(avgRest)} s`
-          : `${group.length} × ${Math.round(avgDur)} s, récup ${Math.round(avgRest)} s`,
+      description: describeSet(group.length, kind, target, avgDur, avgRest, avgPw, sport),
     });
     group = [];
   };
@@ -374,6 +437,8 @@ export function summarize(
   device: string | undefined,
   source: SessionSummary["sourceFormat"],
   athlete?: AthleteProfile,
+  /** Dénivelé annoncé par l'appareil, quand le fichier le porte. */
+  deviceElevation?: { gainM?: number; lossM?: number },
 ): SessionSummary {
   const speed = speedSeries(samples);
   const grade = gradeSeries(samples);
@@ -381,14 +446,25 @@ export function summarize(
   const durElapsed = samples.length ? samples[samples.length - 1].t - samples[0].t : 0;
   const durMoving = movingTime(samples, sport, speed);
   const distM = samples.length ? (samples[samples.length - 1].dist ?? 0) : 0;
-  const { gain, loss } = elevationGainLoss(samples);
+  const computed = elevationGainLoss(samples);
+  // Le dénivelé calculé depuis l'altitude GPS sous-estime largement celui d'un
+  // altimètre barométrique : mesuré sur une sortie réelle, 64 m contre 140,
+  // et l'écart ne se rattrape pas en abaissant le seuil — même à 1 m on
+  // plafonne à 89. Quand la montre donne son propre chiffre, il fait foi.
+  const gain = deviceElevation?.gainM ?? computed.gain;
+  const loss = deviceElevation?.lossM ?? computed.loss;
+  const elevationFromDevice = deviceElevation?.gainM != null;
 
   const hrAvg = mean(samples.map((s) => s.hr));
-  const np = normalizedPower(samples);
   const speedAvg = durMoving > 0 ? distM / durMoving : undefined;
-  const hasPower = samples.some((s) => s.pw != null);
-
-  const ftp = athlete?.ftpW;
+  // La puissance en course à pied est une estimation propre à chaque
+  // constructeur, sans référentiel commun avec la puissance mécanique d'un
+  // capteur vélo. Lui appliquer le modèle de Coggan (NP, IF, TSS), conçu et
+  // validé pour le cyclisme, produirait des chiffres d'apparence sérieuse et
+  // sans fondement. On réserve donc ces métriques au vélo.
+  const powerIsMechanical = sport === "cycling";
+  const np = powerIsMechanical ? normalizedPower(samples) : undefined;
+  const ftp = powerIsMechanical ? athlete?.ftpW : undefined;
   const intensityFactor = np && ftp ? np / ftp : undefined;
   const tss =
     np && ftp && intensityFactor
@@ -405,6 +481,7 @@ export function summarize(
     distM: Math.round(distM),
     eleGainM: Math.round(gain),
     eleLossM: Math.round(loss),
+    elevationFromDevice,
     paceAvgSPerKm: distM > 0 ? (durMoving / distM) * 1000 : undefined,
     gapAvgSPerKm: mean(gap.filter((v) => v > 0)),
     speedAvgMS: speedAvg,
@@ -416,10 +493,11 @@ export function summarize(
     ),
     cadAvg: mean(samples.map((s) => s.cad)),
     pwAvg: mean(samples.map((s) => s.pw)),
+    pwIsEstimated: !powerIsMechanical && samples.some((s) => s.pw != null),
     pwNormalizedW: np,
     intensityFactor,
     tss,
-    decouplingPct: decoupling(samples, speed, hasPower),
+    decouplingPct: decoupling(samples, speed, powerIsMechanical),
     efficiencyFactor: efficiencyFactor(hrAvg, np, speedAvg, sport),
     tempAvgC: mean(samples.map((s) => s.temp)),
     sampleCountRaw: samples.length,

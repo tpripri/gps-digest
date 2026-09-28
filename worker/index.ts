@@ -14,8 +14,10 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
-const LOCALES = ["fr", "en", "es"] as const;
-const DEFAULT_LOCALE = "en";
+// Seules les langues réellement publiées. En ajouter une ici sans la page
+// correspondante enverrait les visiteurs sur une 404.
+const LOCALES = ["fr"] as const;
+const DEFAULT_LOCALE = "fr";
 
 /**
  * Choisit la langue depuis l'en-tête Accept-Language, en respectant les
