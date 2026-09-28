@@ -20,6 +20,7 @@
  */
 
 import { smoothByTime, mean } from "./geo.ts";
+import { t, translator } from "./i18n.ts";
 import type { Sample, Sport } from "./types.ts";
 
 export interface DriftWindow {
@@ -90,6 +91,7 @@ export function temperatureContext(
     humidityPct?: number;
     windKmh?: number;
   },
+  locale?: string,
 ): TemperatureContext | undefined {
   const temps = samples.map((s) => s.temp).filter((v): v is number => v != null);
   if (!temps.length && !external) return undefined;
@@ -100,7 +102,7 @@ export function temperatureContext(
     fromWristSensor: wristMounted,
     caveat:
       wristMounted && temps.length
-        ? "Capteur de la montre, chauffé par le poignet : surestime généralement de 3 à 8 °C. Ce n'est PAS la température de l'air."
+        ? t(locale, "drift.wristCaveat")
         : undefined,
     externalAvgC: external?.avgC,
     externalSource: external?.source,
@@ -259,6 +261,7 @@ export interface DriftOptions {
   };
   minDurationS?: number;
   maxCvPct?: number;
+  locale?: string;
 }
 
 export function analyzeDrift(
@@ -267,10 +270,12 @@ export function analyzeDrift(
   sport: Sport,
   opts: DriftOptions = {},
 ): DriftAnalysis {
+  const tr = translator(opts.locale);
   const temperature = temperatureContext(
     samples,
     opts.wristMountedTemperature ?? true,
     opts.externalTemperature,
+    opts.locale,
   );
 
   const hasPower = samples.some((s) => s.pw != null);
@@ -285,7 +290,7 @@ export function analyzeDrift(
   const basis: DriftAnalysis["basis"] = usePower ? "power" : "speed";
   const basisNote =
     hasPower && sport !== "cycling"
-      ? "Puissance présente mais ignorée : hors cyclisme, elle est estimée par la montre et ne constitue pas une base fiable. Découplage calculé sur la vitesse."
+      ? tr("drift.basisPowerIgnored")
       : undefined;
 
   const win = findHomogeneousWindow(samples, speed, {
@@ -303,8 +308,8 @@ export function analyzeDrift(
       decouplingPct: null,
       applicable: false,
       reason: usePower
-        ? "Aucune portion d'au moins 10 minutes à puissance régulière dans cette séance. Le rapport puissance/FC ne se compare qu'à effort constant ; analyser plutôt les répétitions une à une."
-        : "Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.",
+        ? tr("drift.noWindowPower")
+        : tr("drift.noWindowSpeed"),
       basis,
       basisNote,
       temperature,
@@ -322,7 +327,7 @@ export function analyzeDrift(
     return {
       decouplingPct: null,
       applicable: false,
-      reason: "Fenêtre régulière trouvée mais trop peu de données cardiaques exploitables dedans.",
+      reason: tr("drift.sparseHr"),
       basis,
       basisNote,
       temperature,
@@ -345,7 +350,7 @@ export function analyzeDrift(
     return {
       decouplingPct: null,
       applicable: false,
-      reason: "Données insuffisantes pour comparer les deux moitiés de la fenêtre.",
+      reason: tr("drift.halvesInsufficient"),
       basis,
       basisNote,
       temperature,
@@ -366,7 +371,11 @@ export function analyzeDrift(
       return {
         decouplingPct: null,
         applicable: false,
-        reason: `Effort en baisse de ${workDropPct.toFixed(0)} % entre les deux moitiés de la fenêtre (${usePower ? "puissance" : "vitesse"} ${Math.round(workFirst)} → ${Math.round(workSecond)}) : le rendement chute parce que l'intensité chute, pas parce que le cœur dérive. Aucune dérive calculable.`,
+        reason: tr(usePower ? "drift.workDrop.power" : "drift.workDrop.speed", {
+          drop: workDropPct.toFixed(0),
+          from: Math.round(workFirst),
+          to: Math.round(workSecond),
+        }),
         basis,
         basisNote,
         temperature,
@@ -395,34 +404,33 @@ export function analyzeDrift(
   let quality: "solide" | "indicatif" = short || lowIntensity ? "indicatif" : "solide";
   let qualityNote: string | undefined;
   if (lowIntensity && short) {
-    qualityNote =
-      "Fenêtre courte et située dans la partie la moins intense de la séance — vraisemblablement un échauffement ou un retour au calme. Le chiffre est exact mais ne décrit pas l'effort principal ; regarder plutôt l'analyse des répétitions.";
+    qualityNote = tr("drift.qualityNote.shortEasy");
   } else if (lowIntensity) {
-    qualityNote =
-      "Seule portion régulière trouvée : la partie la moins intense de la séance. La dérive y est structurellement faible et n'indique pas grand-chose sur l'effort principal.";
+    qualityNote = tr("drift.qualityNote.easy");
   } else if (short) {
-    qualityNote = `Fenêtre de ${Math.round(windowDur / 60)} min couvrant ${Math.round(coveragePct)} % de la séance : mesure valide mais peu représentative de l'ensemble.`;
+    qualityNote = tr("drift.qualityNote.short", {
+      min: Math.round(windowDur / 60),
+      pct: Math.round(coveragePct),
+    });
   }
   const airC = temperature?.externalAvgC ?? undefined;
   const hot = airC != null && airC >= 24;
 
   let interpretation: string;
   if (pct < 0) {
-    interpretation =
-      "Découplage négatif : le rendement s'améliore en seconde moitié. Typique d'un échauffement encore incomplet au début de la fenêtre, ou d'une accélération progressive volontaire.";
+    interpretation = tr("drift.interp.negative");
   } else if (pct < 3) {
-    interpretation = "Très faible dérive : l'effort était nettement sous le seuil aérobie.";
+    interpretation = tr("drift.interp.low");
   } else if (pct <= 5) {
-    interpretation =
-      "Dérive dans la norme (≤ 5 %). L'endurance aérobie soutient cette allure sur cette durée.";
+    interpretation = tr("drift.interp.normal");
   } else if (pct <= 10) {
     interpretation = hot
-      ? `Dérive marquée (> 5 %), mais par ${Math.round(airC!)} °C d'air : à cette température, 5 à 6 % de découplage sont le coût thermique normal et non un signe de méforme.`
-      : "Dérive marquée (> 5 %). L'allure était trop élevée pour la durée, ou l'endurance de base est le facteur limitant. Déshydratation et fatigue résiduelle produisent le même effet.";
+      ? tr("drift.interp.markedHot", { temp: Math.round(airC!) })
+      : tr("drift.interp.marked");
   } else {
     interpretation = hot
-      ? `Dérive importante (> 10 %) par ${Math.round(airC!)} °C : la chaleur explique une partie du chiffre, mais pas tout. Vérifier l'hydratation et la fraîcheur.`
-      : "Dérive importante (> 10 %). Allure non soutenable sur cette durée dans ces conditions.";
+      ? tr("drift.interp.highHot", { temp: Math.round(airC!) })
+      : tr("drift.interp.high");
   }
 
   return {
@@ -450,6 +458,11 @@ export function analyzeDrift(
     interpretation,
     temperature,
   };
+}
+
+/** Libellé affichable de la représentativité, dans la langue demandée. */
+export function driftQualityLabel(q: "solide" | "indicatif", locale?: string): string {
+  return t(locale, q === "solide" ? "drift.quality.solide" : "drift.quality.indicatif");
 }
 
 /**

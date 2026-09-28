@@ -21,6 +21,7 @@
  * Quand les deux divergent, l'écart est l'information : il mesure l'incertitude.
  */
 
+import { t, translator, type MessageKey } from "./i18n.ts";
 import type { Sample } from "./types.ts";
 
 export interface BestEffort {
@@ -51,6 +52,20 @@ export const RACE_LABELS: Record<number, string> = {
   21097.5: "semi-marathon",
   42195: "marathon",
 };
+
+/**
+ * Libellé d'une distance de course dans la langue demandée. `RACE_LABELS`
+ * reste exporté pour compatibilité : c'est le jeu français.
+ */
+export function raceLabel(distanceM: number, locale?: string): string | undefined {
+  if (RACE_LABELS[distanceM] == null) return undefined;
+  return t(locale, `race.${distanceM}` as MessageKey);
+}
+
+/** Libellé affichable d'un niveau de confiance de projection. */
+export function confidenceLabel(c: RaceProjection["confidence"], locale?: string): string {
+  return t(locale, `proj.confidence.${c}` as const);
+}
 
 /**
  * Fenêtre glissante sur la distance : cherche, pour chaque distance cible, la
@@ -240,6 +255,7 @@ export interface ProjectionInput {
   targets?: readonly number[];
   /** Date de référence pour pondérer l'ancienneté des chronos. */
   today?: Date;
+  locale?: string;
 }
 
 function monthsSince(date: string | undefined, today = new Date()): number | undefined {
@@ -283,6 +299,8 @@ function enduranceFactor(distanceM: number): number {
 
 export function projectRaces(input: ProjectionInput): RaceProjection[] {
   const targets = input.targets ?? [5000, 10000, 21097.5, 42195];
+  const tr = translator(input.locale);
+  const label = (d: number) => raceLabel(d, input.locale);
   const out: RaceProjection[] = [];
 
   // Meilleure référence disponible, par ordre de qualité décroissant :
@@ -314,8 +332,11 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       estimates.push({
         value: riegel(ref.distanceM, ref.timeS, target, k),
         method:
-          `Riegel depuis ${RACE_LABELS[ref.distanceM] ?? `${Math.round(ref.distanceM / 1000)} km`} en course (k=${k.toFixed(3)})` +
-          (ageMonths != null ? `, chrono vieux de ${Math.round(ageMonths)} mois` : ""),
+          tr("proj.method.race", {
+            ref: label(ref.distanceM) ?? `${Math.round(ref.distanceM / 1000)} km`,
+            k: k.toFixed(3),
+          }) +
+          (ageMonths != null ? tr("proj.method.raceAge", { months: Math.round(ageMonths) }) : ""),
         weight,
       });
     }
@@ -323,7 +344,9 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
     if (longEffort) {
       estimates.push({
         value: riegel(longEffort.distanceM, longEffort.timeS, target, k),
-        method: `Riegel depuis un effort de ${RACE_LABELS[longEffort.distanceM] ?? `${Math.round(longEffort.distanceM)} m`} à l'entraînement`,
+        method: tr("proj.method.training", {
+          ref: label(longEffort.distanceM) ?? `${Math.round(longEffort.distanceM)} m`,
+        }),
         weight: 1.5,
       });
     }
@@ -332,7 +355,10 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       const raw = target / input.cs.csMS;
       estimates.push({
         value: raw / enduranceFactor(target),
-        method: `Vitesse critique (CS ${paceText(1000 / input.cs.csMS)}/km, R²=${input.cs.r2.toFixed(3)})`,
+        method: tr("proj.method.cs", {
+          pace: paceText(1000 / input.cs.csMS),
+          r2: input.cs.r2.toFixed(3),
+        }),
         weight: target <= 10000 ? 2 : 1,
       });
     }
@@ -360,7 +386,7 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
 
     out.push({
       distanceM: target,
-      label: RACE_LABELS[target] ?? `${(target / 1000).toFixed(1)} km`,
+      label: label(target) ?? `${(target / 1000).toFixed(1)} km`,
       timeS: blended,
       lowS: blended - margin,
       highS: blended + margin,
@@ -369,9 +395,9 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       confidence,
       caveat:
         target >= 42195
-          ? "Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
+          ? tr("proj.caveat.marathon")
           : target >= 21097.5
-            ? "Suppose une préparation spécifique et une allure tenue régulièrement."
+            ? tr("proj.caveat.half")
             : undefined,
     });
   }

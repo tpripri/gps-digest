@@ -34,6 +34,7 @@
  */
 
 import { smoothByTime, mean } from "./geo.ts";
+import { translator, t } from "./i18n.ts";
 import type { Sample, Sport } from "./types.ts";
 
 export type HrSource = "chest_strap" | "optical" | "unknown";
@@ -135,6 +136,7 @@ function longestPlateauS(samples: Sample[]): number {
 function cadenceLock(
   samples: Sample[],
   speed: number[],
+  reason: string,
 ): { pct: number; ranges: { fromS: number; toS: number; reason: string }[] } {
   let locked = 0;
   let eligible = 0;
@@ -166,7 +168,7 @@ function cadenceLock(
 
   const flush = () => {
     if (from != null && last - from >= 20 && count >= 8) {
-      ranges.push({ fromS: from, toS: last, reason: "FC verrouillée sur la cadence" });
+      ranges.push({ fromS: from, toS: last, reason });
     }
     from = null;
     count = 0;
@@ -258,7 +260,9 @@ export function analyzeHrSource(
   speed: number[],
   sport: Sport,
   deviceHint?: { hrSensor?: HrSource },
+  locale?: string,
 ): HrSourceAnalysis {
+  const tr = translator(locale);
   // En natation, la détection n'a aucun sens : sous l'eau, un capteur optique
   // ne lit pas et une ceinture ne transmet pas — elle enregistre puis déverse
   // ses données à la sortie. Les « variations » observées décrivent le mode de
@@ -271,11 +275,11 @@ export function analyzeHrSource(
       fromDeviceMetadata: false,
       signals: [
         {
-          name: "Détection non applicable",
+          name: tr("sensor.swim.name"),
           value: 0,
           unit: "",
           points: "neutral",
-          note: "En natation, la FC est bufferisée puis déversée à la sortie de l'eau : la forme du signal ne dit rien du capteur. Déposer le fichier FIT permet en revanche de lire directement le matériel appairé.",
+          note: tr("sensor.swim.note"),
         },
       ],
       cadenceLockPct: 0,
@@ -296,7 +300,7 @@ export function analyzeHrSource(
   }
 
   const signals: HrSignal[] = [];
-  const lock = cadenceLock(samples, speed);
+  const lock = cadenceLock(samples, speed, tr("sensor.lockRange"));
   const { meanAbsStep, zeroStepPct, plateauTimePct } = stepStatistics(samples);
   const plateau = longestPlateauS(samples);
   const lag = responseLagS(samples, speed);
@@ -310,14 +314,14 @@ export function analyzeHrSource(
 
   if (lockRelevant) {
     signals.push({
-      name: "Verrouillage sur la cadence",
+      name: tr("sensor.lock.name"),
       value: Math.round(lock.pct * 10) / 10,
-      unit: " %",
+      unit: tr("unit.percent"),
       points: lock.pct > 8 ? "optical" : lock.pct < 2 ? "chest_strap" : "neutral",
       note:
         lock.pct > 8
-          ? "La FC suit la cadence sur une part notable de la séance : artefact typique d'un capteur poignet."
-          : "Aucune confusion FC/cadence détectée.",
+          ? tr("sensor.lock.found")
+          : tr("sensor.lock.none"),
     });
     if (lock.pct > 15) score -= 3;
     else if (lock.pct > 8) score -= 2;
@@ -325,49 +329,49 @@ export function analyzeHrSource(
   }
 
   signals.push({
-    name: "Plateau le plus long",
+    name: tr("sensor.plateau.name"),
     value: Math.round(plateau),
     unit: " s",
     points: plateau > 30 ? "optical" : plateau < 20 ? "chest_strap" : "neutral",
     note:
       plateau > 30
-        ? "Longue séquence de FC strictement constante : signature du lissage optique."
-        : "Pas de palier anormalement long.",
+        ? tr("sensor.plateau.long")
+        : tr("sensor.plateau.normal"),
   });
   if (plateau > 45) score -= 2;
   else if (plateau > 30) score -= 1;
   else if (plateau < 20) score += 1;
 
   signals.push({
-    name: "Temps en palier",
+    name: tr("sensor.plateauTime.name"),
     value: Math.round(plateauTimePct),
-    unit: " %",
+    unit: tr("unit.percent"),
     points: plateauTimePct > 35 ? "optical" : plateauTimePct < 25 ? "chest_strap" : "neutral",
-    note: `Part du temps où la FC ne bouge pas pendant plus de 5 s.`,
+    note: tr("sensor.plateauTime.note"),
   });
   if (plateauTimePct > 35) score -= 1;
   else if (plateauTimePct < 25) score += 1;
 
   signals.push({
-    name: "Variation moyenne",
+    name: tr("sensor.step.name"),
     value: Math.round(meanAbsStep * 1000) / 1000,
     unit: " bpm/s",
     points: meanAbsStep > 0.45 ? "chest_strap" : meanAbsStep < 0.35 ? "optical" : "neutral",
-    note: `${Math.round(zeroStepPct)} % des intervalles sans aucune variation.`,
+    note: tr("sensor.step.note", { pct: Math.round(zeroStepPct) }),
   });
   if (meanAbsStep > 0.45) score += 1;
   else if (meanAbsStep < 0.35) score -= 1;
 
   if (lag != null) {
     signals.push({
-      name: "Latence de réponse",
+      name: tr("sensor.lag.name"),
       value: lag,
       unit: " s",
       points: lag > 15 ? "optical" : lag < 8 ? "chest_strap" : "neutral",
       note:
         lag > 20
-          ? "La FC réagit avec un retard important aux changements d'allure."
-          : "Réponse rapide aux changements d'allure.",
+          ? tr("sensor.lag.slow")
+          : tr("sensor.lag.fast"),
     });
     if (lag > 22) score -= 2;
     else if (lag > 15) score -= 1;
@@ -376,11 +380,11 @@ export function analyzeHrSource(
 
   if (spike) {
     signals.push({
-      name: "Pic de démarrage",
+      name: tr("sensor.spike.name"),
       value: 1,
       unit: "",
       points: "chest_strap",
-      note: "FC aberrante au départ puis décrochage : électrodes sèches, typique d'une ceinture.",
+      note: tr("sensor.spike.note"),
     });
     score += 2;
   }
@@ -399,11 +403,11 @@ export function analyzeHrSource(
     // les signaux : un verdict incertain y est la règle, pas l'exception.
     if (verdict === "unknown" && sport === "cycling") {
       signals.push({
-        name: "Calibration",
+        name: tr("sensor.calibration.name"),
         value: 0,
         unit: "",
         points: "neutral",
-        note: "Seuils établis sur la course à pied : à vélo, les signaux sont moins tranchés et le verdict reste souvent indéterminé. Le fichier FIT lève le doute en donnant le matériel appairé.",
+        note: tr("sensor.calibration.note"),
       });
     }
     // Saturation à 0,9 : sans métadonnée constructeur, une heuristique ne
@@ -421,6 +425,6 @@ export function analyzeHrSource(
   };
 }
 
-export function hrSourceLabel(v: HrSource): string {
-  return v === "chest_strap" ? "ceinture" : v === "optical" ? "capteur poignet" : "indéterminée";
+export function hrSourceLabel(v: HrSource, locale?: string): string {
+  return t(locale, v === "chest_strap" ? "sensor.label.chest_strap" : v === "optical" ? "sensor.label.optical" : "sensor.label.unknown");
 }

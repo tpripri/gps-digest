@@ -21,6 +21,7 @@
  */
 
 import { mean } from "./geo.ts";
+import { t, translator } from "./i18n.ts";
 import type { IntervalBlock, IntervalSet, Sample, Sport } from "./types.ts";
 
 export interface BlockTarget {
@@ -163,7 +164,9 @@ export function analyzeAdherence(
   target?: BlockTarget,
   samples: Sample[] = [],
   sport: Sport = "running",
+  locale?: string,
 ): AdherenceReport {
+  const tr = translator(locale);
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
 
@@ -172,7 +175,7 @@ export function analyzeAdherence(
       setDescription: set.description,
       reps: [],
       repsCompleted: work.length,
-      verdicts: ["Moins de deux répétitions identifiées : rien à comparer."],
+      verdicts: [tr("adh.tooFew")],
       grade: "non évaluable",
     };
   }
@@ -237,11 +240,11 @@ export function analyzeAdherence(
   let penalty = 0;
 
   if (paceCv != null) {
-    const what = basis === "power" ? "Puissance" : "Allure";
-    if (paceCv < 1.5) verdicts.push(`${what} très régulière entre les répétitions (variation ${paceCv.toFixed(1)} %).`);
-    else if (paceCv < 3) verdicts.push(`Régularité correcte (variation ${paceCv.toFixed(1)} %).`);
+    const cv = paceCv.toFixed(1);
+    if (paceCv < 1.5) verdicts.push(tr(basis === "power" ? "adh.veryRegular.power" : "adh.veryRegular.pace", { cv }));
+    else if (paceCv < 3) verdicts.push(tr("adh.regularOk", { cv }));
     else {
-      verdicts.push(`Répétitions irrégulières en ${basis === "power" ? "puissance" : "allure"} (variation ${paceCv.toFixed(1)} %) : gestion à travailler, ou séance mal calibrée.`);
+      verdicts.push(tr(basis === "power" ? "adh.irregular.power" : "adh.irregular.pace", { cv }));
       penalty += paceCv > 5 ? 2 : 1;
     }
   }
@@ -251,21 +254,21 @@ export function analyzeAdherence(
     // est l'inverse. On ramène donc la pente dans le sens « + = moins bien ».
     const totalFade = fadePctPerRep * (reps.length - 1) * (lowerIsBetter ? 1 : -1);
     if (totalFade > 3) {
-      verdicts.push(`Dégradation de ${totalFade.toFixed(1)} % en ${basis === "power" ? "puissance" : "allure"} entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel.`);
+      verdicts.push(tr(basis === "power" ? "adh.fade.power" : "adh.fade.pace", { pct: totalFade.toFixed(1) }));
       penalty += totalFade > 6 ? 2 : 1;
     } else if (totalFade < -2) {
-      verdicts.push(`Progression de ${Math.abs(totalFade).toFixed(1)} % au fil de la série : montée en puissance volontaire, signe d'une marge disponible.`);
+      verdicts.push(tr("adh.build", { pct: Math.abs(totalFade).toFixed(1) }));
     } else {
-      verdicts.push(`${basis === "power" ? "Puissance" : "Allure"} tenue du début à la fin de la série.`);
+      verdicts.push(tr(basis === "power" ? "adh.held.power" : "adh.held.pace"));
     }
   }
 
   if (restSlope != null && Math.abs(restSlope) > 3) {
     if (restSlope > 0) {
-      verdicts.push(`Récupérations qui s'allongent (+${restSlope.toFixed(0)} s par répétition) : la séance dérape en fin de série.`);
+      verdicts.push(tr("adh.restLonger", { s: restSlope.toFixed(0) }));
       penalty += 1;
     } else {
-      verdicts.push(`Récupérations qui raccourcissent (${restSlope.toFixed(0)} s par répétition).`);
+      verdicts.push(tr("adh.restShorter", { s: restSlope.toFixed(0) }));
     }
   }
 
@@ -274,31 +277,31 @@ export function analyzeAdherence(
   if (hrRise != null && Math.abs(hrRise) >= 3) {
     const stablePace = paceCv != null && paceCv < 3;
     if (hrRise > 0 && stablePace) {
-      verdicts.push(`Allure tenue mais FC en hausse de ${hrRise.toFixed(0)} bpm sur la série : coût cardiaque croissant à effort égal, signature de la fatigue accumulée.`);
+      verdicts.push(tr("adh.hrRiseStable", { bpm: hrRise.toFixed(0) }));
       if (hrRise > 8) penalty += 1;
     } else if (hrRise > 0) {
-      verdicts.push(`FC en hausse de ${hrRise.toFixed(0)} bpm sur la série.`);
+      verdicts.push(tr("adh.hrRise", { bpm: hrRise.toFixed(0) }));
     }
   }
 
   // Signal le plus fin de la série : la récupération se dégrade avant l'allure.
   if (hrr60Avg != null) {
     if (hrr60Avg >= 35) {
-      verdicts.push(`Récupération cardiaque très bonne : ${hrr60Avg.toFixed(0)} bpm de chute en 60 s après chaque répétition.`);
+      verdicts.push(tr("adh.hrrGood", { bpm: hrr60Avg.toFixed(0) }));
     } else if (hrr60Avg >= 22) {
-      verdicts.push(`Récupération cardiaque correcte : ${hrr60Avg.toFixed(0)} bpm en 60 s.`);
+      verdicts.push(tr("adh.hrrOk", { bpm: hrr60Avg.toFixed(0) }));
     } else if (hrr60Avg > 0) {
-      verdicts.push(`Récupération lente : seulement ${hrr60Avg.toFixed(0)} bpm de chute en 60 s. Fatigue résiduelle, chaleur ou récupérations trop courtes pour le format.`);
+      verdicts.push(tr("adh.hrrSlow", { bpm: hrr60Avg.toFixed(0) }));
       penalty += 1;
     }
     if (hrr60Decline != null && hrr60Decline >= 3 && reps.length >= 4) {
-      verdicts.push(`La récupération s'érode de ${hrr60Decline.toFixed(0)} bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir.`);
+      verdicts.push(tr("adh.hrrErode", { bpm: hrr60Decline.toFixed(0) }));
       penalty += 1;
     }
   }
 
   if (target?.reps && work.length < target.reps) {
-    verdicts.push(`${work.length} répétitions réalisées sur les ${target.reps} prévues.`);
+    verdicts.push(tr("adh.missingReps", { done: work.length, planned: target.reps }));
     penalty += 2;
   }
 
@@ -307,12 +310,12 @@ export function analyzeAdherence(
     const avgDelta = mean(reps.map((r) => r.deltaVsTargetPct));
     if (avgDelta != null) {
       const off = lowerIsBetter ? avgDelta : -avgDelta;
-      if (Math.abs(off) < 1.5) verdicts.push(`${basis === "power" ? "Puissance" : "Allure"} cible respectée.`);
+      if (Math.abs(off) < 1.5) verdicts.push(tr(basis === "power" ? "adh.targetMet.power" : "adh.targetMet.pace"));
       else if (off > 0) {
-        verdicts.push(`Série réalisée ${off.toFixed(1)} % en dessous de la cible.`);
+        verdicts.push(tr("adh.belowTarget", { pct: off.toFixed(1) }));
         penalty += off > 4 ? 2 : 1;
       } else {
-        verdicts.push(`Série réalisée ${Math.abs(off).toFixed(1)} % au-dessus de la cible : le bénéfice d'une séance à intervalles vient du respect de la consigne, pas du dépassement.`);
+        verdicts.push(tr("adh.aboveTarget", { pct: Math.abs(off).toFixed(1) }));
         penalty += Math.abs(off) > 4 ? 1 : 0;
       }
     }
@@ -338,6 +341,14 @@ export function analyzeAdherence(
     verdicts,
     grade,
   };
+}
+
+/**
+ * Libellé affichable d'une note. La note elle-même reste un identifiant stable
+ * (la page et les scripts la comparent) ; seul son affichage suit la langue.
+ */
+export function gradeLabel(grade: AdherenceReport["grade"], locale?: string): string {
+  return t(locale, `adh.grade.${grade}` as const);
 }
 
 /**

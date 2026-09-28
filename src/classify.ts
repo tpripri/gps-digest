@@ -20,6 +20,7 @@
  * l'analyse, pas du tableau.
  */
 
+import { translator } from "./i18n.ts";
 import type { Activity, Sample, Sport } from "./types.ts";
 
 export type ActivityTier = "full" | "swim" | "load";
@@ -61,7 +62,12 @@ function inferPoolLength(lapDistances: number[]): number | undefined {
   return undefined;
 }
 
-export function classifyActivity(activity: Activity, speed: number[]): Classification {
+export function classifyActivity(
+  activity: Activity,
+  speed: number[],
+  locale?: string,
+): Classification {
+  const tr = translator(locale);
   const declared = activity.sport;
   const s = activity.samples;
   const reasons: string[] = [];
@@ -111,9 +117,7 @@ export function classifyActivity(activity: Activity, speed: number[]): Classific
 
   if (declared === "swimming" || looksLikeSwim) {
     if (noPosition) {
-      reasons.push(
-        `Aucune position GPS, aucune cadence, vitesse de ${medSpeed.toFixed(2)} m/s : nage en bassin.`,
-      );
+      reasons.push(tr("cls.pool", { speed: medSpeed.toFixed(2) }));
       return {
         tier: "swim",
         sport: "swimming",
@@ -126,9 +130,7 @@ export function classifyActivity(activity: Activity, speed: number[]): Classific
       };
     }
     reasons.push(
-      `Position GPS intermittente (${Math.round(positionPct)} % de couverture, ${flips} décrochages) ` +
-        `à ${medSpeed.toFixed(2)} m/s sans cadence : nage en eau libre. La distance issue du GPS y est ` +
-        `surestimée, le signal se raccrochant à chaque sortie de bras.`,
+      tr("cls.openWater", { pct: Math.round(positionPct), flips, speed: medSpeed.toFixed(2) }),
     );
     return {
       tier: "swim",
@@ -148,9 +150,7 @@ export function classifyActivity(activity: Activity, speed: number[]): Classific
   // quel que soit son libellé.
   const distPerMin = elapsed > 0 ? distM / (elapsed / 60) : 0;
   if (elapsed > 600 && distPerMin < 40) {
-    reasons.push(
-      `${Math.round(distM)} m parcourus en ${Math.round(elapsed / 60)} min : déplacement trop faible pour une activité d'endurance.`,
-    );
+    reasons.push(tr("cls.static", { dist: Math.round(distM), min: Math.round(elapsed / 60) }));
     return {
       tier: "load",
       sport: declared,
@@ -174,7 +174,10 @@ export function classifyActivity(activity: Activity, speed: number[]): Classific
 
     if (movingRatio < 0.8 && mPerMin < 150) {
       reasons.push(
-        `Déclarée en course mais ${Math.round((1 - movingRatio) * 100)} % du temps à l'arrêt pour ${Math.round(mPerMin)} m par minute écoulée : effort discontinu, vraisemblablement du renforcement ou du cross-training. Comptée en charge, sans analyse de course.`,
+        tr("cls.crossTraining", {
+          stopPct: Math.round((1 - movingRatio) * 100),
+          mpm: Math.round(mPerMin),
+        }),
       );
       return {
         tier: "load",
@@ -199,11 +202,11 @@ export function classifyActivity(activity: Activity, speed: number[]): Classific
   }
 
   if (declared === "hiking") {
-    reasons.push("Randonnée : comptée en charge, sans analyse d'allure ni projection.");
+    reasons.push(tr("cls.hiking"));
     return { tier: "load", sport: "hiking", reclassified: false, declaredSport: declared, confidence: 0.9, reasons };
   }
 
-  reasons.push("Sport non reconnu comme activité d'endurance : compté en charge uniquement.");
+  reasons.push(tr("cls.unknownSport"));
   return { tier: "load", sport: declared, reclassified: false, declaredSport: declared, confidence: 0.6, reasons };
 }
 
@@ -255,7 +258,9 @@ export interface ErgAnalysis {
 export function detectErg(
   samples: Sample[],
   blocks: { kind: string; startT: number; durS: number }[],
+  locale?: string,
 ): ErgAnalysis {
+  const tr = translator(locale);
   const work = blocks.filter((b) => b.kind === "work" && b.durS >= 30);
   if (!samples.some((s) => s.pw != null) || work.length < 3) {
     return { detected: false, cadenceDropPerBlock: [] };
@@ -297,10 +302,10 @@ export function detectErg(
 
   return {
     detected: true,
-    evidence: `Puissance verrouillée sur ${pinned} bloc(s) sur ${work.length} : séance en mode ERG. La distance et la vitesse y sont virtuelles et ne mesurent rien.`,
+    evidence: tr("erg.evidence", { pinned, total: work.length }),
     cadenceDropPerBlock: drops,
     warning: drops.length
-      ? `Cadence en baisse sur ${drops.length} bloc(s) (jusqu'à ${Math.max(...drops.map((d) => d.dropRpm))} tr/min). En ERG, une cadence qui chute fait monter la résistance, ce qui la fait chuter davantage : cette spirale se termine par un arrêt. La parade est de relancer volontairement la cadence dès qu'elle part, ou de couper l'ERG sur les dernières répétitions.`
+      ? tr("erg.warning", { n: drops.length, max: Math.max(...drops.map((d) => d.dropRpm)) })
       : undefined,
   };
 }

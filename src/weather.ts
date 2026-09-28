@@ -29,6 +29,7 @@
  */
 
 import type { Sample } from "./types.ts";
+import { translator } from "./i18n.ts";
 
 export interface WeatherObservation {
   tempC: number;
@@ -190,18 +191,21 @@ export async function fetchWeather(
  * d'humidité, l'évaporation de la sueur est freinée et la contrainte dépasse
  * celle de 30 °C en air sec.
  */
-export function heatStressNote(obs: WeatherObservation): string | undefined {
+export function heatStressNote(obs: WeatherObservation, locale?: string): string | undefined {
+  const tr = translator(locale);
   const t = obs.apparentC ?? obs.tempC;
-  const humid = obs.humidityPct != null && obs.humidityPct >= 70;
+  const humid = obs.humidityPct != null && obs.humidityPct >= 70
+    ? tr("heat.humid", { pct: Math.round(obs.humidityPct!) })
+    : "";
 
   if (t >= 30) {
-    return `Contrainte thermique forte (ressenti ${Math.round(t)} °C${humid ? `, ${Math.round(obs.humidityPct!)} % d'humidité` : ""}). Une dérive cardiaque de 8 à 12 % est attendue à ce niveau, indépendamment de la forme.`;
+    return tr("heat.strong", { temp: Math.round(t), humid });
   }
   if (t >= 24) {
-    return `Chaleur notable (ressenti ${Math.round(t)} °C${humid ? `, ${Math.round(obs.humidityPct!)} % d'humidité` : ""}). Compter 5 à 8 % de dérive d'origine purement thermique.`;
+    return tr("heat.notable", { temp: Math.round(t), humid });
   }
   if (t <= 5) {
-    return `Froid (ressenti ${Math.round(t)} °C). La FC est souvent plus basse à allure égale, et l'échauffement demande plus de temps.`;
+    return tr("heat.cold", { temp: Math.round(t) });
   }
   return undefined;
 }

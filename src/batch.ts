@@ -14,9 +14,11 @@
  */
 
 import { mean } from "./geo.ts";
-import { bestEfforts, fitCriticalSpeed, projectRaces, formatDuration, RACE_LABELS } from "./efforts.ts";
+import { bestEfforts, fitCriticalSpeed, projectRaces, formatDuration, raceLabel, confidenceLabel } from "./efforts.ts";
 import { paceLabel, toCsv, estimateTokens, LLM_DIALECT } from "./serialize.ts";
 import { hrSourceLabel } from "./sensor.ts";
+import { gradeLabel } from "./adherence.ts";
+import { resolveLocale, translator, type Locale } from "./i18n.ts";
 import type { BestEffort, CriticalSpeedModel, RaceProjection } from "./efforts.ts";
 import type { HrSource, HrSourceAnalysis } from "./sensor.ts";
 import type { DriftAnalysis } from "./drift.ts";
@@ -77,15 +79,20 @@ export interface BatchAnalysis {
   sensorChanges: SensorChange[];
   progression: ProgressionAnalysis;
   warnings: string[];
+  /** Langue des textes produits. Le dossier et la synthèse la reprennent. */
+  locale: Locale;
 }
 
-function isoWeek(d: Date): string {
+function isoWeek(d: Date, locale?: string): string {
   const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const day = t.getUTCDay() || 7;
   t.setUTCDate(t.getUTCDate() + 4 - day);
   const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
   const week = Math.ceil(((t.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-  return `${t.getUTCFullYear()}-S${String(week).padStart(2, "0")}`;
+  return translator(locale)("batch.week", {
+    year: t.getUTCFullYear(),
+    week: String(week).padStart(2, "0"),
+  });
 }
 
 /**
@@ -115,9 +122,12 @@ export interface BatchOptions {
   maxHr?: number;
   raceResults?: { distanceM: number; timeS: number; date?: string; label?: string }[];
   riegelExponent?: number;
+  locale?: string;
 }
 
 export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): BatchAnalysis {
+  const locale = resolveLocale(opts.locale);
+  const tr = translator(locale);
   const sorted = [...files].sort((a, b) =>
     (a.digest.session.startTimeUtc ?? "").localeCompare(b.digest.session.startTimeUtc ?? ""),
   );
@@ -132,7 +142,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   for (const f of sorted) {
     const key = `${f.digest.session.startTimeUtc ?? "?"}|${f.digest.session.distM}`;
     const first = seen.get(key);
-    if (first) duplicates.push(`${f.filename} (identique à ${first})`);
+    if (first) duplicates.push(tr("batch.duplicateOf", { file: f.filename, first }));
     else {
       seen.set(key, f.filename);
       unique.push(f);
@@ -153,7 +163,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     totalMovingS += s.durMovingS;
 
     if (!s.startTimeUtc) continue;
-    const key = isoWeek(new Date(s.startTimeUtc));
+    const key = isoWeek(new Date(s.startTimeUtc), locale);
     const b = weekMap.get(key) ?? {
       isoWeek: key,
       sessions: 0,
@@ -209,6 +219,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     cs: criticalSpeed,
     raceResults: opts.raceResults,
     riegelExponent: opts.riegelExponent,
+    locale,
   });
 
   // --- Changements de capteur ---
@@ -240,35 +251,39 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
       tempC: f.weather?.tempC,
       sport: f.digest.session.tier === "full" ? f.digest.session.sport : "excluded",
     })),
+    locale,
   );
 
   const warnings: string[] = [];
 
   if (duplicates.length) {
-    warnings.push(
-      `${duplicates.length} doublon(s) écarté(s) — même horodatage de départ et même distance : ${duplicates.join(", ")}.`,
-    );
+    warnings.push(tr("batch.warnDuplicates", { n: duplicates.length, list: duplicates.join(", ") }));
   }
 
   const reclassified = sorted.filter((f) => f.digest.session.reclassified);
   if (reclassified.length) {
     warnings.push(
-      `${reclassified.length} séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (${reclassified
-        .map((f) => `${f.digest.session.startTimeUtc?.slice(0, 10)} ${f.digest.session.declaredSport}→${f.digest.session.sport}`)
-        .join(", ")}).`,
+      tr("batch.warnReclassified", {
+        n: reclassified.length,
+        list: reclassified
+          .map((f) => `${f.digest.session.startTimeUtc?.slice(0, 10)} ${f.digest.session.declaredSport}→${f.digest.session.sport}`)
+          .join(", "),
+      }),
     );
   }
   const loadOnly = sorted.filter((f) => f.digest.session.tier === "load");
   if (loadOnly.length) {
-    warnings.push(
-      `${loadOnly.length} séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.`,
-    );
+    warnings.push(tr("batch.warnLoadOnly", { n: loadOnly.length }));
   }
 
   if (sensorChanges.length) {
     const c = sensorChanges[sensorChanges.length - 1];
     warnings.push(
-      `Changement de capteur de FC détecté autour du ${c.date} (${hrSourceLabel(c.from)} → ${hrSourceLabel(c.to)}). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.`,
+      tr("batch.warnSensorChange", {
+        date: c.date,
+        from: hrSourceLabel(c.from, locale),
+        to: hrSourceLabel(c.to, locale),
+      }),
     );
   }
 
@@ -276,29 +291,23 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   if (opticalFiles.length) {
     const lockHeavy = opticalFiles.filter((f) => f.hrSource.cadenceLockPct > 10);
     if (lockHeavy.length) {
-      warnings.push(
-        `${lockHeavy.length} fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.`,
-      );
+      warnings.push(tr("batch.warnCadenceLock", { n: lockHeavy.length }));
     }
   }
 
   const inapplicableDrift = sorted.filter((f) => !f.drift.applicable).length;
   if (inapplicableDrift > 0 && inapplicableDrift < sorted.length) {
     warnings.push(
-      `Dérive cardiaque calculée sur ${sorted.length - inapplicableDrift} séance(s) sur ${sorted.length} : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.`,
+      tr("batch.warnDriftPartial", { ok: sorted.length - inapplicableDrift, total: sorted.length }),
     );
   }
 
   if (criticalSpeed && criticalSpeed.r2 < 0.97) {
-    warnings.push(
-      `Ajustement du modèle de vitesse critique moyen (R² = ${criticalSpeed.r2.toFixed(3)}) : les projections sont indicatives. Un test dédié — 3 min et 12 min à fond, frais — donnerait un modèle bien plus fiable.`,
-    );
+    warnings.push(tr("batch.warnCsFit", { r2: criticalSpeed.r2.toFixed(3) }));
   }
 
   if (!opts.raceResults?.length) {
-    warnings.push(
-      "Aucun résultat de course fourni. Les projections reposent uniquement sur des efforts d'entraînement, qui surestiment généralement la performance en compétition. Renseigner un chrono réel améliore nettement la calibration.",
-    );
+    warnings.push(tr("batch.warnNoRace"));
   }
 
   warnings.push(...progression.warnings);
@@ -307,9 +316,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   if (opts.maxHr) {
     const observed = Math.max(0, ...sorted.map((f) => f.digest.session.hrMax ?? 0));
     if (observed > opts.maxHr) {
-      warnings.push(
-        `FC max observée (${observed} bpm) supérieure à celle renseignée (${opts.maxHr} bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.`,
-      );
+      warnings.push(tr("batch.warnMaxHr", { observed, maxHr: opts.maxHr }));
     }
   }
 
@@ -327,6 +334,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     sensorChanges,
     progression,
     warnings,
+    locale,
   };
 }
 
@@ -338,19 +346,26 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
  * transversaux, et on laisse l'utilisateur exporter le détail d'une séance
  * précise s'il veut creuser.
  */
-export function buildBatchBundle(batch: BatchAnalysis, opts: { maxHr?: number } = {}): string {
+export function buildBatchBundle(
+  batch: BatchAnalysis,
+  opts: { maxHr?: number; locale?: string } = {},
+): string {
+  const locale = resolveLocale(opts.locale ?? batch.locale);
+  const tr = translator(locale);
   const out: string[] = [];
   const block = (name: string, csv: string) => {
     if (csv.trim()) out.push(`## ${name}\n${csv.trim()}\n`);
   };
 
-  out.push("# gps-digest v1 — synthèse multi-séances");
-  out.push(`# ${batch.files.length} séances du ${batch.dateFrom ?? "?"} au ${batch.dateTo ?? "?"}`);
-  out.push(`# volume total : ${(batch.totalDistanceM / 1000).toFixed(1)} km, ${formatDuration(batch.totalMovingS)} en mouvement`);
-  if (opts.maxHr) out.push(`# FC max de référence : ${opts.maxHr} bpm`);
+  out.push(`# ${tr("batch.bundle.title")}`);
+  out.push(`# ${tr("batch.bundle.range", { n: batch.files.length, from: batch.dateFrom ?? "?", to: batch.dateTo ?? "?" })}`);
+  out.push(`# ${tr("batch.bundle.volume", {
+    km: (batch.totalDistanceM / 1000).toFixed(1),
+    dur: formatDuration(batch.totalMovingS),
+  })}`);
+  if (opts.maxHr) out.push(`# ${tr("common.refMaxHr", { hr: opts.maxHr })}`);
   out.push("#");
-  out.push("# Les valeurs de FC ne sont comparables entre séances que si la colonne");
-  out.push("# hr_source est identique. Lire les avertissements avant toute conclusion.");
+  for (const line of tr("batch.bundle.note").split("\n")) out.push(`# ${line}`);
   for (const w of batch.warnings) out.push(`# ⚠ ${w}`);
   out.push("");
 
@@ -369,13 +384,13 @@ export function buildBatchBundle(batch: BatchAnalysis, opts: { maxHr?: number } 
           ele_gain_m: s.eleGainM,
           hr_avg: s.hrAvg == null ? undefined : Math.round(s.hrAvg),
           hr_max: s.hrMax,
-          hr_source: hrSourceLabel(f.hrSource.verdict),
+          hr_source: hrSourceLabel(f.hrSource.verdict, locale),
           hr_confidence: f.hrSource.confidence.toFixed(2),
           drift_pct: f.drift.decouplingPct == null ? "n/a" : f.drift.decouplingPct.toFixed(1),
           drift_valid: f.drift.applicable ? 1 : 0,
           temp_c: f.drift.temperature?.avgC == null ? undefined : Math.round(f.drift.temperature.avgC),
           intervals: f.digest.intervalSets.map((s2) => s2.description).join(" + ") || undefined,
-          adherence: f.adherence.map((a) => a.grade).join("/") || undefined,
+          adherence: f.adherence.map((a) => gradeLabel(a.grade, locale)).join("/") || undefined,
           file: f.filename,
         };
       }),
@@ -410,7 +425,7 @@ export function buildBatchBundle(batch: BatchAnalysis, opts: { maxHr?: number } 
     "best_efforts",
     toCsv(
       batch.consolidatedEfforts.map((e) => ({
-        distance: RACE_LABELS[e.distanceM] ?? `${e.distanceM} m`,
+        distance: raceLabel(e.distanceM, locale) ?? `${e.distanceM} m`,
         time: formatDuration(e.timeS),
         pace_mmss: paceLabel(e.paceSPerKm),
         date: e.sourceDate,
@@ -447,7 +462,7 @@ export function buildBatchBundle(batch: BatchAnalysis, opts: { maxHr?: number } 
         range_low: formatDuration(p.lowS),
         range_high: formatDuration(p.highS),
         pace_mmss: paceLabel(p.paceSPerKm),
-        confidence: p.confidence,
+        confidence: confidenceLabel(p.confidence, locale),
         method: p.method,
       })),
       LLM_DIALECT,
@@ -463,7 +478,7 @@ export function buildBatchBundle(batch: BatchAnalysis, opts: { maxHr?: number } 
       fade_total_pct:
         a.fadePctPerRep != null ? (a.fadePctPerRep * (a.repsCompleted - 1)).toFixed(1) : undefined,
       hr_rise_bpm: a.hrRiseBpm?.toFixed(0),
-      grade: a.grade,
+      grade: gradeLabel(a.grade, locale),
     })),
   );
   block("interval_adherence", toCsv(allAdherence, LLM_DIALECT));

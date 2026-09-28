@@ -24,6 +24,8 @@ import { analyzeSwim, type SwimAnalysis } from "./swim.ts";
 import { analyzeDrift, hrSpeedProfile, type DriftAnalysis, type HrSpeedPoint } from "./drift.ts";
 import { bestEfforts, type BestEffort } from "./efforts.ts";
 import { analyzeAdherence, inferTarget, type AdherenceReport, type BlockTarget } from "./adherence.ts";
+import { gradeLabel } from "./adherence.ts";
+import { translator } from "./i18n.ts";
 import type { Activity, Digest, DigestOptions, FieldPresence, Sample } from "./types.ts";
 
 export function detectFormat(filename: string, head: string): "tcx" | "gpx" | "fit" | null {
@@ -40,14 +42,15 @@ export function detectFormat(filename: string, head: string): "tcx" | "gpx" | "f
 export async function parseAny(
   filename: string,
   data: string | ArrayBuffer | Uint8Array,
+  locale?: string,
 ): Promise<Activity> {
   if (typeof data !== "string") {
-    return parseFit(data);
+    return parseFit(data, locale);
   }
   const fmt = detectFormat(filename, data.slice(0, 2048));
   if (fmt === "tcx") return parseTcx(data);
   if (fmt === "gpx") return parseGpx(data);
-  throw new Error(`Format non reconnu pour « ${filename} ». Formats acceptés : TCX, GPX, FIT.`);
+  throw new Error(translator(locale)("digest.errFormat", { filename }));
 }
 
 
@@ -97,10 +100,11 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     privacyRadiusM = 0,
     dropCoordinates = false,
     detectIntervals: wantIntervals = true,
+    locale,
   } = opts;
 
   let samples = activity.samples;
-  if (!samples.length) throw new Error("Aucun point exploitable dans le fichier.");
+  if (!samples.length) throw new Error(translator(locale)("digest.errNoPoints"));
 
   if (privacyRadiusM > 0) {
     samples = rebase(activity, trimPrivacyZone(samples, privacyRadiusM));
@@ -113,7 +117,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
   // La classification passe avant tout le reste : elle décide quelles analyses
   // ont un sens sur cette séance. Le champ Sport du fichier n'y suffit pas.
-  const classification = classifyActivity({ ...activity, samples }, speed);
+  const classification = classifyActivity({ ...activity, samples }, speed, locale);
   const sport = classification.sport;
   const swim =
     classification.tier === "swim"
@@ -122,6 +126,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
           classification.poolSwim ?? true,
           classification.poolLengthM ?? opts.fitExtras?.poolLengthM,
           opts.fitExtras?.lengths,
+          locale,
         )
       : undefined;
 
@@ -149,9 +154,9 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   const analysable = classification.tier === "full";
   const splits = analysable ? computeSplits(samples, unit, speed, gap) : [];
   const { blocks, sets } = analysable && wantIntervals
-    ? detectIntervals(samples, speed, activity.laps, 20, sport)
+    ? detectIntervals(samples, speed, activity.laps, 20, sport, locale)
     : { blocks: [], sets: [] };
-  const erg = sport === "cycling" ? detectErg(samples, blocks) : undefined;
+  const erg = sport === "cycling" ? detectErg(samples, blocks, locale) : undefined;
 
   const fields = presence(samples);
   if (dropCoordinates) fields.lat = false;
@@ -195,9 +200,9 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     session,
     laps: activity.laps,
     splits,
-    hrZones: hrZones(samples, athlete),
-    paceZones: paceZones(samples, speed, athlete),
-    powerZones: powerZones(samples, athlete),
+    hrZones: hrZones(samples, athlete, locale),
+    paceZones: paceZones(samples, speed, athlete, locale),
+    powerZones: powerZones(samples, athlete, locale),
     intervals: blocks,
     intervalSets: sets,
     stream,
@@ -213,7 +218,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   };
 
   // --- Analyses autonomes, lisibles sans passer par un LLM ---
-  const hrSource = analyzeHrSource(samples, speed, sport, opts.hrSensorHint);
+  const hrSource = analyzeHrSource(samples, speed, sport, opts.hrSensorHint, locale);
   const drift = analyzeDrift(samples, speed, sport, {
     warmupS: opts.driftWarmupS ?? 600,
     // Les segments où la FC est verrouillée sur la cadence sont faux. Les
@@ -221,6 +226,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     excludeRanges: hrSource.suspectRanges,
     wristMountedTemperature: true,
     externalTemperature: opts.externalTemperature,
+    locale,
   });
   // Correction : chaque série ne doit voir QUE ses propres blocs. En lui
   // passant la totalité, tous les rapports sortaient avec le même coefficient
@@ -240,7 +246,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
         )
       : blocks;
     return analyzeAdherence(
-      own, set, opts.blockTargets?.[i] ?? inferTarget(set, own, sport), samples, sport,
+      own, set, opts.blockTargets?.[i] ?? inferTarget(set, own, sport), samples, sport, locale,
     );
   });
 
@@ -292,31 +298,40 @@ export function finalize(
   opts: DigestOptions = {},
 ): DigestResult {
   const { digest, insights, samples } = built;
+  const locale = opts.locale;
+  const tr = translator(locale);
   const warnings: string[] = [];
   if (!opts.athlete?.maxHr && !opts.athlete?.lthr && digest.hrZones.length) {
-    warnings.push(
-      "Zones FC calculées sur la FC max observée dans le fichier, pas sur un profil athlète : à interpréter avec prudence.",
-    );
+    warnings.push(tr("digest.warnZonesObserved"));
   }
   if (!opts.athlete?.ftpW && digest.session.pwAvg != null) {
-    warnings.push("FTP inconnue : IF et TSS non calculés.");
+    warnings.push(tr("digest.warnNoFtp"));
   }
   if (!opts.privacyRadiusM && digest.fields.lat) {
-    warnings.push(
-      "Coordonnées de départ et d'arrivée non rognées : la trace peut révéler un domicile.",
-    );
+    warnings.push(tr("digest.warnCoords"));
   }
 
   if (insights.hrSource.verdict !== "unknown") {
     warnings.push(
-      `Source de FC estimée : ${hrSourceLabel(insights.hrSource.verdict)} (confiance ${insights.hrSource.confidence.toFixed(2)}). Ne comparer les valeurs cardiaques qu'entre séances de même source.`,
+      tr("digest.warnHrSource", {
+        label: hrSourceLabel(insights.hrSource.verdict, locale),
+        confidence: insights.hrSource.confidence.toFixed(2),
+      }),
     );
   }
   if (!insights.drift.applicable && insights.drift.reason) {
-    warnings.push(`Dérive cardiaque non calculée : ${insights.drift.reason}`);
+    warnings.push(tr("digest.warnDrift", { reason: insights.drift.reason }));
   }
 
-  const bundle = buildBundle(digest, { warnings, insights });
+  // Le bundle écrit la note telle quelle : on lui passe le libellé traduit.
+  const bundle = buildBundle(digest, {
+    warnings,
+    insights: {
+      ...insights,
+      adherence: insights.adherence.map((a) => ({ ...a, grade: gradeLabel(a.grade, locale) })),
+    },
+    locale,
+  });
   digest.reduction.rawBytes = rawBytes;
   digest.reduction.outputBytes = bundle.length;
   digest.reduction.estimatedTokens = estimateTokens(bundle);
@@ -330,7 +345,7 @@ export async function digestFile(
   data: string | ArrayBuffer | Uint8Array,
   opts: DigestOptions = {},
 ): Promise<DigestResult> {
-  const activity = await parseAny(filename, data);
+  const activity = await parseAny(filename, data, opts.locale);
   const rawBytes = typeof data === "string" ? data.length : data.byteLength;
   return finalize(buildFull(activity, opts), rawBytes, opts);
 }

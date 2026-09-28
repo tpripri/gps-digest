@@ -21,6 +21,7 @@
  */
 
 import { mean } from "./geo.ts";
+import { translator, type MessageKey, type MessageParams } from "./i18n.ts";
 import type { Activity, Lap, Sample } from "./types.ts";
 
 export interface SwimLength {
@@ -69,7 +70,10 @@ const paceLabel100 = (s: number): string =>
  * Regroupe les longueurs en séries : « 6 × 100 m, récup 30 s ».
  * Une pause de plus de 10 secondes sépare deux séries.
  */
-function groupSwimSets(lengths: SwimLength[]): SwimSet[] {
+function groupSwimSets(
+  lengths: SwimLength[],
+  tr: (key: MessageKey, params?: MessageParams) => string,
+): SwimSet[] {
   const swum = lengths.filter((l) => !l.isRest);
   if (swum.length < 2) return [];
 
@@ -105,8 +109,8 @@ function groupSwimSets(lengths: SwimLength[]): SwimSet[] {
         avgPaceSPer100m: pace,
         avgRestS: Math.round(rest),
         description:
-          `${g.reps.length} × ${Math.round(dist)} m à ${paceLabel100(pace)}/100m` +
-          (rest > 3 ? `, récup ${Math.round(rest)} s` : ""),
+          tr("swim.set", { reps: g.reps.length, dist: Math.round(dist), pace: paceLabel100(pace) }) +
+          (rest > 3 ? tr("swim.setRest", { s: Math.round(rest) }) : ""),
       };
     });
 }
@@ -126,7 +130,9 @@ export function analyzeSwim(
   poolSwim: boolean,
   poolLengthM?: number,
   fitLengths?: RawLength[],
+  locale?: string,
 ): SwimAnalysis {
+  const tr = translator(locale);
   const caveats: string[] = [];
   const samples = activity.samples;
   const elapsedS = samples.length ? samples[samples.length - 1].t - samples[0].t : 0;
@@ -138,16 +144,12 @@ export function analyzeSwim(
   const totalDistanceM = Math.max(lapTotal, trackTotal);
 
   if (lapTotal > trackTotal * 1.5) {
-    caveats.push(
-      "Distance reconstituée à partir des tours : le flux de points ne la porte pas, ce qui est normal en bassin.",
-    );
+    caveats.push(tr("swim.lapDistance"));
   }
 
   const hrValues = samples.map((s) => s.hr).filter((v): v is number => v != null);
   if (hrValues.length) {
-    caveats.push(
-      "Fréquence cardiaque en natation : un capteur optique ne lit pas sous l'eau et une ceinture ne transmet pas en immersion — elle enregistre puis déverse à la sortie. Les valeurs sont indicatives et leur horodatage approximatif. Aucune dérive cardiaque n'est calculée sur cette séance.",
-    );
+    caveats.push(tr("swim.hr"));
   }
 
   const hrAt = (t: number): number | undefined => {
@@ -206,9 +208,7 @@ export function analyzeSwim(
   const paces = swum.map((l) => l.paceSPer100m);
 
   if (!swum.length) {
-    caveats.push(
-      "Aucun tour exploitable : la séance n'a pas de découpage par longueurs. Seules la distance et la durée totales sont utilisables.",
-    );
+    caveats.push(tr("swim.noLaps"));
   }
 
   // Densité de nage : une séance où l'on nage sept minutes sur quatre-vingt-dix
@@ -216,26 +216,20 @@ export function analyzeSwim(
   const density = elapsedS > 0 ? swimTimeS / elapsedS : 0;
   if (elapsedS > 900 && density < 0.35) {
     caveats.push(
-      `Seulement ${Math.round(swimTimeS / 60)} min de nage effective sur ${Math.round(elapsedS / 60)} min écoulées : séance très fractionnée ou baignade plutôt qu'entraînement. À interpréter comme telle.`,
+      tr("swim.lowDensity", { swim: Math.round(swimTimeS / 60), elapsed: Math.round(elapsedS / 60) }),
     );
   }
 
   if (!poolSwim) {
-    caveats.push(
-      "Nage en eau libre : la distance provient du GPS, qui décroche à chaque bras immergé et se raccroche ensuite. Elle est généralement surestimée de 5 à 15 %, et l'allure instantanée n'est pas exploitable — seules les moyennes le sont.",
-    );
+    caveats.push(tr("swim.openWater"));
   }
 
   if (swum.length > 1 && swum.every((l) => l.strokes == null)) {
-    caveats.push(
-      "Aucun comptage de coups de bras dans le fichier : le SWOLF, qui mesure l'efficacité de la nage, ne peut pas être calculé. Toutes les montres ne le relèvent pas.",
-    );
+    caveats.push(tr("swim.noStrokes"));
   }
 
   if (poolSwim && !poolLengthM) {
-    caveats.push(
-      "Longueur de bassin non déduite des données : les distances proviennent telles quelles de la montre.",
-    );
+    caveats.push(tr("swim.noPoolLength"));
   }
 
   return {
@@ -248,7 +242,7 @@ export function analyzeSwim(
       swimTimeS > 0 && totalDistanceM > 0 ? (swimTimeS / totalDistanceM) * 100 : undefined,
     bestPaceSPer100m: paces.length ? Math.min(...paces) : undefined,
     lengths,
-    sets: groupSwimSets(lengths),
+    sets: groupSwimSets(lengths, tr),
     hrAvg: hrValues.length ? mean(hrValues) : undefined,
     swolfAvg: mean(lengths.map((l) => l.swolf)),
     caveats,
