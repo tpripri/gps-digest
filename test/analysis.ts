@@ -232,8 +232,23 @@ const progXml = makeTcx({
 });
 const prog = analyze(progXml, "2026-08-17-progressive.tcx");
 const cs = fitCriticalSpeed([...efforts, ...prog.efforts]);
-check("modèle de vitesse critique ajusté", cs != null,
-  cs ? `CS ${paceLabel(cs.csPaceSPerKm)}/km, R²=${cs.r2.toFixed(3)}` : "");
+// Les séances synthétiques sont tenues à allure constante : leurs meilleurs
+// efforts sur 800 m, 1 km et 3 km sont trois découpes du même effort, alignées
+// par construction. Le modèle doit refuser de s'y ajuster — un D' de quelques
+// mètres signalerait une colinéarité, pas un athlète sans réserve anaérobie.
+check("ajustement dégénéré refusé sur allure constante", cs === null,
+  cs ? `accepté à tort : D'=${Math.round(cs.dPrimeM)} m, R²=${cs.r2.toFixed(4)}` : "aucun modèle");
+
+// Efforts réalistes : la vitesse décroît avec la distance, donc D' est réel.
+const varied = [
+  { distanceM: 1000, timeS: 190, paceSPerKm: 190, speedMS: 1000 / 190, startS: 0 },
+  { distanceM: 1500, timeS: 300, paceSPerKm: 200, speedMS: 1500 / 300, startS: 0 },
+  { distanceM: 3000, timeS: 640, paceSPerKm: 213, speedMS: 3000 / 640, startS: 0 },
+  { distanceM: 5000, timeS: 1100, paceSPerKm: 220, speedMS: 5000 / 1100, startS: 0 },
+];
+const csReal = fitCriticalSpeed(varied);
+check("modèle ajusté sur des efforts réellement distincts", csReal != null,
+  csReal ? `CS ${paceLabel(csReal.csPaceSPerKm)}/km, D'=${Math.round(csReal.dPrimeM)} m, R²=${csReal.r2.toFixed(4)}` : "refusé");
 
 // Projection calibrée sur un marathon réel : 3h29 en 2025.
 const proj = projectRaces({

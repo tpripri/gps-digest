@@ -323,7 +323,7 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
       <thead><tr>
         <th>Fichier</th><th>Date</th><th class="num">Dist.</th>
         <th class="num">En mouvement</th><th class="num">Écoulé</th>
-        <th class="num">Allure</th><th class="num">FC moy</th><th>Capteur</th>
+        <th class="num">Allure / vitesse</th><th class="num">FC moy</th><th>Capteur</th>
         <th class="num">Dérive</th><th>Blocs</th>
       </tr></thead>
       <tbody id="rows"></tbody>
@@ -543,6 +543,7 @@ try {
 const {
   digestFile, digestActivity, analyzeBatch, buildDossier, formatDuration, paceLabel,
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
+  formatSpeed,
 } = lib;
 
 const $ = (id) => document.getElementById(id);
@@ -694,7 +695,7 @@ function renderAnalysis(batch) {
       <td class="num">${(s.distM / 1000).toFixed(2)} km</td>
       <td class="num">${formatDuration(s.durMovingS)}</td>
       <td class="num">${formatDuration(s.durElapsedS)}</td>
-      <td class="num">${esc(paceLabel(s.paceAvgSPerKm) ?? "—")}</td>
+      <td class="num">${esc(formatSpeed(s.sport, s.speedAvgMS) ?? "—")}</td>
       <td class="num">${s.hrAvg ? Math.round(s.hrAvg) : "—"}</td>
       <td><span class="badge ${f.hrSource.verdict === "chest_strap" ? "ok" :
         f.hrSource.verdict === "optical" ? "mid" : "bad"}">${

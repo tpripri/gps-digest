@@ -161,10 +161,29 @@ export function fitCriticalSpeed(efforts: BestEffort[]): CriticalSpeedModel | nu
     ssTot += (d[i] - md) ** 2;
   }
 
+  const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+  // Garde-fou contre un ajustement dégénéré.
+  //
+  // Les meilleurs efforts sur 800 m, 1 km, 1,6 km et 3 km extraits d'un même
+  // bloc continu ne sont pas quatre observations indépendantes : ce sont
+  // quatre découpes du même effort, alignées par construction. Le modèle
+  // affiche alors un R² de 1,000 — qui signale une colinéarité, pas une
+  // qualité d'ajustement.
+  //
+  // Le critère est D', et lui seul. Un R² élevé ne prouve rien dans un sens ni
+  // dans l'autre : le modèle à deux paramètres décrit une relation réellement
+  // linéaire, donc un bon ajustement dépasse couramment 0,999. C'est D' qui
+  // trahit la colinéarité — cette réserve anaérobie vaut typiquement 100 à
+  // 400 m chez un coureur, et une valeur de quelques dizaines de mètres n'est
+  // pas un athlète sans réserve, c'est une droite passant par des points qui
+  // n'auraient jamais dû servir à la tracer.
+  if (dPrime < 80) return null;
+
   return {
     csMS: cs,
     dPrimeM: dPrime,
-    r2: ssTot > 0 ? 1 - ssRes / ssTot : 0,
+    r2,
     usedEfforts: usable,
     csPaceSPerKm: 1000 / cs,
   };
@@ -187,6 +206,13 @@ export interface RaceProjection {
 }
 
 /** Riegel. k = 1,06 par défaut ; plus bas pour un athlète à gros volume. */
+/** s/km -> "4:17". Un « 4.29 min/km » décimal n'est lisible par personne. */
+function paceText(sPerKm: number): string {
+  const m = Math.floor(sPerKm / 60);
+  const s = Math.round(sPerKm % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
 export function riegel(refDistM: number, refTimeS: number, targetM: number, k = 1.06): number {
   return refTimeS * (targetM / refDistM) ** k;
 }
@@ -306,7 +332,7 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       const raw = target / input.cs.csMS;
       estimates.push({
         value: raw / enduranceFactor(target),
-        method: `Vitesse critique (CS ${(1000 / input.cs.csMS / 60).toFixed(2)} min/km, R²=${input.cs.r2.toFixed(3)})`,
+        method: `Vitesse critique (CS ${paceText(1000 / input.cs.csMS)}/km, R²=${input.cs.r2.toFixed(3)})`,
         weight: target <= 10000 ? 2 : 1,
       });
     }
