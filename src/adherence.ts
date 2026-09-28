@@ -21,7 +21,7 @@
  */
 
 import { mean } from "./geo.ts";
-import type { IntervalBlock, IntervalSet, Sample } from "./types.ts";
+import type { IntervalBlock, IntervalSet, Sample, Sport } from "./types.ts";
 
 export interface BlockTarget {
   reps?: number;
@@ -57,7 +57,9 @@ export interface AdherenceReport {
   setDescription: string;
   reps: RepReport[];
   target?: BlockTarget;
-  /** Coefficient de variation de l'allure entre répétitions, en %. */
+  /** Grandeur sur laquelle la régularité est jugée : allure ou puissance. */
+  basis?: "pace" | "power";
+  /** Coefficient de variation entre répétitions, en %. */
   paceCvPct?: number;
   /** Pente de dégradation, en % d'allure par répétition. */
   fadePctPerRep?: number;
@@ -160,6 +162,7 @@ export function analyzeAdherence(
   set: IntervalSet,
   target?: BlockTarget,
   samples: Sample[] = [],
+  sport: Sport = "running",
 ): AdherenceReport {
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
@@ -174,17 +177,28 @@ export function analyzeAdherence(
     };
   }
 
-  const setPace = mean(work.map((w) => w.paceSPerKm));
+  // À vélo, l'allure ne mesure rien : sur home trainer la distance est
+  // virtuelle et le relief simulé fait varier la vitesse de 30 % à watts
+  // rigoureusement constants. Juger la régularité là-dessus condamnait une
+  // séance ERG parfaitement exécutée comme « dégradée ». C'est la puissance
+  // qui définit l'effort, donc c'est elle qu'on mesure.
+  const hasPower = work.some((w) => w.pwAvg != null);
+  const basis: "pace" | "power" = sport === "cycling" && hasPower ? "power" : "pace";
+  const metric = (w: IntervalBlock) => (basis === "power" ? w.pwAvg : w.paceSPerKm);
+  /** Vrai quand une valeur plus BASSE est meilleure (allure) plutôt que plus haute. */
+  const lowerIsBetter = basis === "pace";
+
+  const setRef = mean(work.map(metric));
+  const setPace = setRef;
 
   const reps: RepReport[] = work.map((w, i) => {
     const nextRest = rest.find((r) => r.startT >= w.startT + w.durS - 2);
     const rec = samples.length ? recoveryFor(samples, w) : {};
+    const targetRef = basis === "power" ? target?.targetPwW : target?.targetPaceSPerKm;
+    const value = metric(w);
     const deltaTarget =
-      target?.targetPaceSPerKm && w.paceSPerKm
-        ? ((w.paceSPerKm - target.targetPaceSPerKm) / target.targetPaceSPerKm) * 100
-        : undefined;
-    const deltaSet =
-      setPace && w.paceSPerKm ? ((w.paceSPerKm - setPace) / setPace) * 100 : undefined;
+      targetRef && value ? ((value - targetRef) / targetRef) * 100 : undefined;
+    const deltaSet = setRef && value ? ((value - setRef) / setRef) * 100 : undefined;
 
     return {
       index: i + 1,
@@ -203,8 +217,9 @@ export function analyzeAdherence(
     };
   });
 
-  const paceCv = cv(reps.map((r) => r.paceSPerKm));
-  const slope = linearSlope(reps.map((r) => r.paceSPerKm));
+  const series = work.map(metric);
+  const paceCv = cv(series);
+  const slope = linearSlope(series);
   const fadePctPerRep = slope != null && setPace ? (slope / setPace) * 100 : undefined;
   const restCv = cv(reps.map((r) => r.restAfterS).slice(0, -1));
   const restSlope = linearSlope(reps.map((r) => r.restAfterS).slice(0, -1));
@@ -222,23 +237,26 @@ export function analyzeAdherence(
   let penalty = 0;
 
   if (paceCv != null) {
-    if (paceCv < 1.5) verdicts.push(`Allure très régulière entre les répétitions (variation ${paceCv.toFixed(1)} %).`);
+    const what = basis === "power" ? "Puissance" : "Allure";
+    if (paceCv < 1.5) verdicts.push(`${what} très régulière entre les répétitions (variation ${paceCv.toFixed(1)} %).`);
     else if (paceCv < 3) verdicts.push(`Régularité correcte (variation ${paceCv.toFixed(1)} %).`);
     else {
-      verdicts.push(`Répétitions irrégulières (variation ${paceCv.toFixed(1)} %) : gestion d'allure à travailler, ou séance mal calibrée.`);
+      verdicts.push(`Répétitions irrégulières en ${basis === "power" ? "puissance" : "allure"} (variation ${paceCv.toFixed(1)} %) : gestion à travailler, ou séance mal calibrée.`);
       penalty += paceCv > 5 ? 2 : 1;
     }
   }
 
   if (fadePctPerRep != null) {
-    const totalFade = fadePctPerRep * (reps.length - 1);
+    // Une allure qui augmente est une dégradation ; une puissance qui augmente
+    // est l'inverse. On ramène donc la pente dans le sens « + = moins bien ».
+    const totalFade = fadePctPerRep * (reps.length - 1) * (lowerIsBetter ? 1 : -1);
     if (totalFade > 3) {
-      verdicts.push(`Dégradation de ${totalFade.toFixed(1)} % entre la première et la dernière répétition : départ trop rapide, ou volume au-dessus du niveau actuel.`);
+      verdicts.push(`Dégradation de ${totalFade.toFixed(1)} % en ${basis === "power" ? "puissance" : "allure"} entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel.`);
       penalty += totalFade > 6 ? 2 : 1;
     } else if (totalFade < -2) {
-      verdicts.push(`Accélération progressive de ${Math.abs(totalFade).toFixed(1)} % : négative split sur la série, signe d'une marge disponible.`);
+      verdicts.push(`Progression de ${Math.abs(totalFade).toFixed(1)} % au fil de la série : montée en puissance volontaire, signe d'une marge disponible.`);
     } else {
-      verdicts.push("Allure tenue du début à la fin de la série.");
+      verdicts.push(`${basis === "power" ? "Puissance" : "Allure"} tenue du début à la fin de la série.`);
     }
   }
 
@@ -284,16 +302,18 @@ export function analyzeAdherence(
     penalty += 2;
   }
 
-  if (target?.targetPaceSPerKm) {
+  const hasTarget = basis === "power" ? target?.targetPwW != null : target?.targetPaceSPerKm != null;
+  if (hasTarget) {
     const avgDelta = mean(reps.map((r) => r.deltaVsTargetPct));
     if (avgDelta != null) {
-      if (Math.abs(avgDelta) < 1.5) verdicts.push("Allure cible respectée.");
-      else if (avgDelta > 0) {
-        verdicts.push(`Série courue ${avgDelta.toFixed(1)} % plus lentement que la cible.`);
-        penalty += avgDelta > 4 ? 2 : 1;
+      const off = lowerIsBetter ? avgDelta : -avgDelta;
+      if (Math.abs(off) < 1.5) verdicts.push(`${basis === "power" ? "Puissance" : "Allure"} cible respectée.`);
+      else if (off > 0) {
+        verdicts.push(`Série réalisée ${off.toFixed(1)} % en dessous de la cible.`);
+        penalty += off > 4 ? 2 : 1;
       } else {
-        verdicts.push(`Série courue ${Math.abs(avgDelta).toFixed(1)} % plus vite que la cible : le bénéfice d'une séance à intervalles vient du respect de l'allure, pas du dépassement.`);
-        penalty += Math.abs(avgDelta) > 4 ? 1 : 0;
+        verdicts.push(`Série réalisée ${Math.abs(off).toFixed(1)} % au-dessus de la cible : le bénéfice d'une séance à intervalles vient du respect de la consigne, pas du dépassement.`);
+        penalty += Math.abs(off) > 4 ? 1 : 0;
       }
     }
   }
@@ -305,6 +325,7 @@ export function analyzeAdherence(
     setDescription: set.description,
     reps,
     target,
+    basis,
     paceCvPct: paceCv,
     fadePctPerRep,
     restCvPct: restCv,
@@ -324,18 +345,28 @@ export function analyzeAdherence(
  * pas. On arrondit l'allure moyenne au multiple de 5 s/km le plus proche :
  * une séance prescrite l'est presque toujours sur un chiffre rond.
  */
-export function inferTarget(set: IntervalSet, blocks: IntervalBlock[]): BlockTarget {
+export function inferTarget(
+  set: IntervalSet,
+  blocks: IntervalBlock[],
+  sport: Sport = "running",
+): BlockTarget {
   const work = blocks.filter((b) => b.kind === "work");
-  const paces = work.map((w) => w.paceSPerKm).filter((v): v is number => v != null);
-  const median = paces.length
-    ? [...paces].sort((a, b) => a - b)[Math.floor(paces.length / 2)]
-    : undefined;
+  const med = (xs: number[]) =>
+    xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : undefined;
 
+  const powers = work.map((w) => w.pwAvg).filter((v): v is number => v != null);
+  if (sport === "cycling" && powers.length) {
+    const p = med(powers)!;
+    // Une consigne de puissance se donne sur un chiffre rond, à 5 W près.
+    return { reps: set.reps, workS: set.targetS, targetPwW: Math.round(p / 5) * 5, restS: set.avgRestDurS };
+  }
+
+  const paces = med(work.map((w) => w.paceSPerKm).filter((v): v is number => v != null));
   return {
     reps: set.reps,
     workM: set.targetM,
     workS: set.targetS,
-    targetPaceSPerKm: median != null ? Math.round(median / 5) * 5 : undefined,
+    targetPaceSPerKm: paces != null ? Math.round(paces / 5) * 5 : undefined,
     restS: set.avgRestDurS,
   };
 }
