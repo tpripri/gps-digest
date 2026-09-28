@@ -14,7 +14,11 @@
  * Rappel : retirer les types n'est PAS les vérifier. `npx tsc --noEmit` reste
  * la seule garantie, et le build s'arrête si on l'a sauté.
  *
- *   node scripts/build.mjs
+ * Les pages sont des gabarits (public/*.html) rendus une fois par langue par
+ * src/page-i18n.ts. Ce module est en TypeScript : le script se lance avec
+ * --experimental-strip-types (voir package.json), inutile à partir de Node 23.6.
+ *
+ *   npm run build
  */
 
 import { readFile, writeFile, mkdir, readdir, rm, copyFile } from "node:fs/promises";
@@ -22,6 +26,7 @@ import { existsSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderPage, pagePath, LOCALE_META } from "../src/page-i18n.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
@@ -47,15 +52,21 @@ if (!SITE_URL || SITE_URL.includes("exemple.com")) {
   process.exit(1);
 }
 
-/** Langues effectivement publiées. Ajouter ici quand une traduction existe. */
-const LOCALES = ["fr"];
+/**
+ * Langues effectivement publiées. Chacune doit avoir un catalogue complet
+ * (npm test le vérifie) ; retirer une langue ici la retire aussi des hreflang,
+ * du sélecteur et du sitemap, sans rien casser.
+ */
+const LOCALES = ["fr", "en", "es", "pt", "de", "zh", "ja"];
 
 async function transpileSources() {
   const srcDir = join(ROOT, "src");
   const outDir = join(DIST, "assets");
   await mkdir(outDir, { recursive: true });
 
-  const files = (await readdir(srcDir)).filter((f) => f.endsWith(".ts"));
+  // Les textes des pages (page-*.ts) ne servent qu'au rendu : inutile de les
+  // envoyer au navigateur.
+  const files = (await readdir(srcDir)).filter((f) => f.endsWith(".ts") && !f.startsWith("page-"));
   let total = 0;
 
   for (const file of files) {
@@ -78,31 +89,16 @@ async function transpileSources() {
 }
 
 /**
- * Prépare une page pour la production : chemin du module, domaine réel, et
- * retrait des `hreflang` vers des langues qui n'existent pas encore. Déclarer
- * une alternative absente est pire que ne rien déclarer — les moteurs ignorent
- * le groupe entier quand la réciprocité n'est pas vérifiable.
+ * Prépare une page pour la production : rendu dans la langue, chemin du
+ * module, domaine réel. Les `hreflang` ne listent que les langues publiées :
+ * déclarer une alternative absente est pire que ne rien déclarer, les moteurs
+ * ignorent le groupe entier quand la réciprocité n'est pas vérifiable.
  */
-function preparePage(html) {
-  let out = html
+function preparePage(template, locale, page) {
+  return renderPage(template, locale, { page, locales: LOCALES })
     .replace('from "/src/index.ts"', 'from "/assets/index.js"')
     .replace('import("/src/index.ts")', 'import("/assets/index.js")')
     .replaceAll("https://exemple.com", SITE_URL);
-
-  for (const locale of ["en", "es"]) {
-    if (LOCALES.includes(locale)) continue;
-    out = out
-      .replace(new RegExp(`\\s*<link rel="alternate" hreflang="${locale}"[^>]*>`, "g"), "")
-      .replace(new RegExp(`\\s*<meta property="og:locale:alternate" content="${locale}[^"]*">`, "g"), "")
-      .replace(new RegExp(`\\s*<a href="/${locale}/"[^>]*>[^<]*</a>`, "g"), "");
-  }
-
-  // x-default doit pointer vers une page qui existe réellement.
-  out = out.replace(
-    /<link rel="alternate" hreflang="x-default" href="[^"]*">/,
-    `<link rel="alternate" hreflang="x-default" href="${SITE_URL}/fr/">`,
-  );
-  return out;
 }
 
 async function buildPages() {
@@ -112,8 +108,8 @@ async function buildPages() {
   for (const locale of LOCALES) {
     await mkdir(join(DIST, locale), { recursive: true });
     for (const page of pages) {
-      const html = await readFile(join(publicDir, page), "utf8");
-      await writeFile(join(DIST, locale, page), preparePage(html));
+      const template = await readFile(join(publicDir, page), "utf8");
+      await writeFile(join(DIST, locale, page), preparePage(template, locale, page));
     }
   }
   return pages;
@@ -147,20 +143,26 @@ async function buildSeo(pages) {
   }
 
   const today = new Date().toISOString().slice(0, 10);
+  // Chaque URL déclare ses traductions : c'est la forme que Google recommande
+  // pour un site multilingue, en complément des hreflang des pages.
   const urls = [];
   for (const locale of LOCALES) {
     for (const page of pages) {
-      const path = page === "index.html" ? `/${locale}/` : `/${locale}/${page}`;
+      const alternates = LOCALES.map(
+        (l) =>
+          `    <xhtml:link rel="alternate" hreflang="${LOCALE_META[l].hreflang}" href="${SITE_URL}${pagePath(l, page)}"/>`,
+      ).join("\n");
       urls.push(
-        `  <url>\n    <loc>${SITE_URL}${path}</loc>\n` +
-          `    <lastmod>${today}</lastmod>\n  </url>`,
+        `  <url>\n    <loc>${SITE_URL}${pagePath(locale, page)}</loc>\n` +
+          `    <lastmod>${today}</lastmod>\n${alternates}\n  </url>`,
       );
     }
   }
   await writeFile(
     join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
-      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
+      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
+      `${urls.join("\n")}\n</urlset>\n`,
   );
   return urls.length;
 }

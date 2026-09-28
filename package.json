@@ -8,12 +8,12 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts && node --experimental-strip-types test/snapshot.ts",
+    "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts && node --experimental-strip-types test/snapshot.ts && node --experimental-strip-types test/pages.ts",
     "typecheck": "npx tsc --noEmit",
-    "build": "node scripts/build.mjs",
+    "build": "node --experimental-strip-types scripts/build.mjs",
     "deploy": "npm run typecheck && npm test && npm run build && wrangler deploy",
     "preview": "wrangler dev",
-    "dev": "node scripts/dev-server.mjs",
+    "dev": "node --experimental-strip-types scripts/dev-server.mjs",
     "build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
     "interop": "node --experimental-strip-types scripts/interop.mjs"
   },
