@@ -2,7 +2,7 @@
 
 import { parseTcx } from "./parse-tcx.ts";
 import { parseGpx } from "./parse-gpx.ts";
-import { fromFitMessages, parseFit, type FitMessages } from "./parse-fit.ts";
+import { parseFit, parseFitBuffer, type FitExtras } from "./parse-fit.ts";
 import { trimPrivacyZone, rebase } from "./privacy.ts";
 import { fillDistance } from "./geo.ts";
 import {
@@ -19,6 +19,8 @@ import {
 import { reduceSamples } from "./reduce.ts";
 import { buildBundle, estimateTokens, streamRows, toCsv, LLM_DIALECT } from "./serialize.ts";
 import { analyzeHrSource, hrSourceLabel, type HrSourceAnalysis } from "./sensor.ts";
+import { classifyActivity, defaultSplitUnit, detectErg, type Classification, type ErgAnalysis } from "./classify.ts";
+import { analyzeSwim, type SwimAnalysis } from "./swim.ts";
 import { analyzeDrift, hrSpeedProfile, type DriftAnalysis, type HrSpeedPoint } from "./drift.ts";
 import { bestEfforts, type BestEffort } from "./efforts.ts";
 import { analyzeAdherence, inferTarget, type AdherenceReport, type BlockTarget } from "./adherence.ts";
@@ -48,7 +50,7 @@ export async function parseAny(
   throw new Error(`Format non reconnu pour « ${filename} ». Formats acceptés : TCX, GPX, FIT.`);
 }
 
-export { fromFitMessages, type FitMessages };
+
 
 function presence(samples: Sample[]): FieldPresence {
   const has = (f: (s: Sample) => unknown) => samples.some((s) => f(s) != null);
@@ -109,6 +111,20 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   const grade = gradeSeries(samples);
   const gap = gapSeries(samples, speed, grade);
 
+  // La classification passe avant tout le reste : elle décide quelles analyses
+  // ont un sens sur cette séance. Le champ Sport du fichier n'y suffit pas.
+  const classification = classifyActivity({ ...activity, samples }, speed);
+  const sport = classification.sport;
+  const swim =
+    classification.tier === "swim"
+      ? analyzeSwim(
+          { ...activity, samples },
+          classification.poolSwim ?? true,
+          classification.poolLengthM ?? opts.fitExtras?.poolLengthM,
+          opts.fitExtras?.lengths,
+        )
+      : undefined;
+
   const session = summarize(
     samples,
     activity.sport,
@@ -116,12 +132,26 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     activity.device,
     activity.source,
     athlete,
+    { gainM: opts.fitExtras?.totalAscentM, lossM: opts.fitExtras?.totalDescentM },
   );
 
-  const splits = computeSplits(samples, splitUnitM, speed, gap);
-  const { blocks, sets } = wantIntervals
-    ? detectIntervals(samples, speed, activity.laps)
+  session.tier = classification.tier;
+  session.reclassified = classification.reclassified;
+  session.declaredSport = classification.declaredSport;
+  session.classificationReasons = classification.reasons;
+  session.sport = sport;
+
+  // Le découpage suit le sport : 1 km à pied, 5 km à vélo, 100 m en nage.
+  const unit = opts.splitUnitM ?? defaultSplitUnit(sport);
+
+  // Hors endurance, on ne produit ni splits ni séries : les chiffres seraient
+  // formellement corrects et trompeurs. Seule la charge est conservée.
+  const analysable = classification.tier === "full";
+  const splits = analysable ? computeSplits(samples, unit, speed, gap) : [];
+  const { blocks, sets } = analysable && wantIntervals
+    ? detectIntervals(samples, speed, activity.laps, 20, sport)
     : { blocks: [], sets: [] };
+  const erg = sport === "cycling" ? detectErg(samples, blocks) : undefined;
 
   const fields = presence(samples);
   if (dropCoordinates) fields.lat = false;
@@ -183,8 +213,8 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   };
 
   // --- Analyses autonomes, lisibles sans passer par un LLM ---
-  const hrSource = analyzeHrSource(samples, speed, activity.sport, opts.hrSensorHint);
-  const drift = analyzeDrift(samples, speed, activity.sport, {
+  const hrSource = analyzeHrSource(samples, speed, sport, opts.hrSensorHint);
+  const drift = analyzeDrift(samples, speed, sport, {
     warmupS: opts.driftWarmupS ?? 600,
     // Les segments où la FC est verrouillée sur la cadence sont faux. Les
     // inclure dans un calcul de dérive reviendrait à mesurer un artefact.
@@ -192,19 +222,40 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     wristMountedTemperature: true,
     externalTemperature: opts.externalTemperature,
   });
-  const adherence = sets.map((set, i) =>
-    analyzeAdherence(blocks, set, opts.blockTargets?.[i] ?? inferTarget(set, blocks)),
-  );
+  // Correction : chaque série ne doit voir QUE ses propres blocs. En lui
+  // passant la totalité, tous les rapports sortaient avec le même coefficient
+  // de variation et la même récupération — chiffres identiques donc forcément
+  // faux dès qu'une séance contenait plus d'une série.
+  const adherence = !analysable ? [] : sets.map((set, i) => {
+    const own = set.workBlockIndices?.length
+      ? blocks.filter(
+          (b) =>
+            set.workBlockIndices!.includes(b.index) ||
+            (b.kind === "rest" &&
+              b.startT >= Math.min(...set.workBlockIndices!.map((k) => blocks.find((x) => x.index === k)?.startT ?? Infinity)) &&
+              b.startT <= Math.max(...set.workBlockIndices!.map((k) => {
+                const w = blocks.find((x) => x.index === k);
+                return w ? w.startT + w.durS : -Infinity;
+              }))),
+        )
+      : blocks;
+    return analyzeAdherence(own, set, opts.blockTargets?.[i] ?? inferTarget(set, own), samples);
+  });
 
   return {
     digest,
     samples,
     speed,
     insights: {
+      classification,
+      swim,
+      erg,
       hrSource,
       drift,
       adherence,
-      efforts: activity.sport === "running" ? bestEfforts(samples) : [],
+      // Les meilleurs efforts alimentent le modèle de vitesse critique : les
+      // calculer hors course à pied mélangerait des référentiels incomparables.
+      efforts: sport === "running" && analysable ? bestEfforts(samples) : [],
       hrSpeed: hrSpeedProfile(samples, speed),
     },
   };
@@ -212,6 +263,9 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
 /** Analyses lisibles telles quelles, sans passer par un LLM. */
 export interface Insights {
+  classification: Classification;
+  swim?: SwimAnalysis;
+  erg?: ErgAnalysis;
   hrSource: HrSourceAnalysis;
   drift: DriftAnalysis;
   adherence: AdherenceReport[];

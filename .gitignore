@@ -25,6 +25,9 @@ build/
 !test/fixtures/*.tcx
 !test/fixtures/*.gpx
 
+# Bundle éventuellement exporté depuis le banc d'essai
+gps-digest.txt
+
 # Éditeurs et OS
 .DS_Store
 Thumbs.db

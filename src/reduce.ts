@@ -174,3 +174,170 @@ export function reduceSamples(
     };
   });
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Rééchantillonnage sur grille régulière
+//
+// La réduction adaptative ci-dessus est optimale pour reconstruire une courbe
+// à budget donné. Mais un LLM ne reconstruit pas une courbe : il lit des
+// nombres et les compare. Or des pas de temps irréguliers lui compliquent la
+// tâche — « compare la minute 10 à la minute 40 » devient un calcul, et un
+// écart entre deux lignes ressemble à une donnée manquante.
+//
+// D'où ce second mode, qui est le bon défaut pour l'export : une grille
+// régulière, où chaque ligne couvre exactement la même durée que la
+// précédente. La précision des ruptures n'est pas perdue pour autant : elle
+// vit dans les blocs `splits`, `laps` et `intervals`, qui portent les temps
+// exacts. Le flux porte la forme, les tableaux portent la précision.
+// ─────────────────────────────────────────────────────────────────────────
+
+/** Valeur agrégée sur un intervalle, avec les grandeurs dérivées utiles. */
+export interface GridPoint {
+  t: number;
+  dist?: number;
+  ele?: number;
+  hr?: number;
+  cad?: number;
+  pw?: number;
+  temp?: number;
+  lat?: number;
+  lon?: number;
+  /** Allure sur l'intervalle, en s/km. Épargne au modèle un calcul qu'il fait mal. */
+  paceSPerKm?: number;
+  /** Pente moyenne sur l'intervalle, en %. */
+  gradePct?: number;
+}
+
+function bucketMean(values: (number | undefined)[]): number | undefined {
+  let sum = 0;
+  let n = 0;
+  for (const v of values) {
+    if (v != null && Number.isFinite(v)) {
+      sum += v;
+      n++;
+    }
+  }
+  return n ? sum / n : undefined;
+}
+
+/**
+ * Rééchantillonne sur une grille temporelle régulière.
+ *
+ * Chaque point **moyenne** les échantillons de son intervalle au lieu de
+ * prendre la valeur instantanée à t = 0, 10, 20 s. La différence n'est pas
+ * cosmétique : une FC lue toutes les 10 s échantillonne le bruit, alors qu'une
+ * FC moyennée sur 10 s décrit l'effort.
+ */
+export function resampleByTime(
+  samples: Sample[],
+  intervalS: number,
+  opts: { dropCoordinates?: boolean } = {},
+): GridPoint[] {
+  if (!samples.length || intervalS <= 0) return [];
+
+  const r = (v: number | undefined, d: number) =>
+    v == null || !Number.isFinite(v) ? undefined : Math.round(v * 10 ** d) / 10 ** d;
+
+  const out: GridPoint[] = [];
+  const endT = samples[samples.length - 1].t;
+  let i = 0;
+  let prevDist = samples[0].dist ?? 0;
+  let prevEle: number | undefined;
+
+  for (let t = samples[0].t; t <= endT; t += intervalS) {
+    const bucket: Sample[] = [];
+    while (i < samples.length && samples[i].t < t + intervalS) {
+      bucket.push(samples[i]);
+      i++;
+    }
+    if (!bucket.length) continue;
+
+    const last = bucket[bucket.length - 1];
+    const dist = last.dist ?? prevDist;
+    const dDist = dist - prevDist;
+    const dt = Math.min(intervalS, last.t - (t - intervalS) || intervalS);
+    const ele = bucketMean(bucket.map((s) => s.ele));
+
+    out.push({
+      t: Math.round(t),
+      dist: r(dist, 0),
+      ele: r(ele, 1),
+      hr: r(bucketMean(bucket.map((s) => s.hr)), 0),
+      cad: r(bucketMean(bucket.map((s) => s.cad)), 0),
+      pw: r(bucketMean(bucket.map((s) => s.pw)), 0),
+      temp: r(bucketMean(bucket.map((s) => s.temp)), 0),
+      lat: opts.dropCoordinates ? undefined : r(last.lat, 5),
+      lon: opts.dropCoordinates ? undefined : r(last.lon, 5),
+      // En dessous de 0,5 m parcourus, l'athlète est à l'arrêt : afficher une
+      // allure y produirait des valeurs absurdes plutôt qu'une information.
+      paceSPerKm: dDist > 0.5 && dt > 0 ? Math.round((dt / dDist) * 1000) : undefined,
+      gradePct:
+        prevEle != null && ele != null && dDist > 1
+          ? Math.round(((ele - prevEle) / dDist) * 1000) / 10
+          : undefined,
+    });
+
+    prevDist = dist;
+    if (ele != null) prevEle = ele;
+  }
+  return out;
+}
+
+/**
+ * Rééchantillonne tous les N mètres.
+ *
+ * Utile en course : chaque ligne couvre la même distance, donc les allures se
+ * comparent directement sans pondération. Défaut à connaître : à l'arrêt, la
+ * distance n'avance plus — une pause de dix minutes disparaît complètement du
+ * flux. À réserver aux séances sans arrêt, ou à accompagner du flux temporel.
+ */
+export function resampleByDistance(
+  samples: Sample[],
+  intervalM: number,
+  opts: { dropCoordinates?: boolean } = {},
+): GridPoint[] {
+  if (!samples.length || intervalM <= 0) return [];
+
+  const r = (v: number | undefined, d: number) =>
+    v == null || !Number.isFinite(v) ? undefined : Math.round(v * 10 ** d) / 10 ** d;
+
+  const out: GridPoint[] = [];
+  const total = samples[samples.length - 1].dist ?? 0;
+  let i = 0;
+  let prevT = samples[0].t;
+  let prevEle: number | undefined;
+
+  for (let mark = intervalM; mark <= total; mark += intervalM) {
+    const bucket: Sample[] = [];
+    while (i < samples.length && (samples[i].dist ?? 0) < mark) {
+      bucket.push(samples[i]);
+      i++;
+    }
+    if (!bucket.length) continue;
+
+    const last = bucket[bucket.length - 1];
+    const dt = last.t - prevT;
+    const ele = bucketMean(bucket.map((s) => s.ele));
+
+    out.push({
+      t: Math.round(last.t),
+      dist: mark,
+      ele: r(ele, 1),
+      hr: r(bucketMean(bucket.map((s) => s.hr)), 0),
+      cad: r(bucketMean(bucket.map((s) => s.cad)), 0),
+      pw: r(bucketMean(bucket.map((s) => s.pw)), 0),
+      temp: r(bucketMean(bucket.map((s) => s.temp)), 0),
+      lat: opts.dropCoordinates ? undefined : r(last.lat, 5),
+      lon: opts.dropCoordinates ? undefined : r(last.lon, 5),
+      paceSPerKm: dt > 0 ? Math.round((dt / intervalM) * 1000) : undefined,
+      gradePct:
+        prevEle != null && ele != null
+          ? Math.round(((ele - prevEle) / intervalM) * 1000) / 10
+          : undefined,
+    });
+
+    prevT = last.t;
+    if (ele != null) prevEle = ele;
+  }
+  return out;
+}

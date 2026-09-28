@@ -182,6 +182,32 @@ export function parseTcx(xml: string): Activity {
   sanitizeSamples(samples);
   if (samples.length && samples[0].dist == null) fillDistance(samples);
 
+  // Natation en bassin : la montre compte des longueurs, pas des mètres. La
+  // distance vit alors dans les <Lap> et le flux de points n'en porte aucune —
+  // ce qui faisait rendre « 0,00 km » pour une séance de 1 500 m. On la
+  // reconstruit en la répartissant linéairement sur la durée de chaque tour.
+  const trackDist = samples.length ? (samples[samples.length - 1].dist ?? 0) : 0;
+  const lapDist = laps.reduce((sum, l) => sum + l.distM, 0);
+  if (lapDist > 50 && trackDist < lapDist * 0.5) {
+    let cumulative = 0;
+    for (const lap of laps) {
+      const from = lap.startT;
+      const to = lap.startT + lap.durS;
+      for (const s of samples) {
+        if (s.t < from || s.t > to) continue;
+        const frac = lap.durS > 0 ? (s.t - from) / lap.durS : 1;
+        s.dist = cumulative + frac * lap.distM;
+      }
+      cumulative += lap.distM;
+    }
+    // Les points postérieurs au dernier tour gardent la distance finale.
+    let last = 0;
+    for (const s of samples) {
+      if (s.dist == null || s.dist < last) s.dist = last;
+      else last = s.dist;
+    }
+  }
+
   return {
     sport,
     startTime: t0 != null ? new Date(t0 * 1000).toISOString() : undefined,

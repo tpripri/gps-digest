@@ -24,6 +24,13 @@
  *
  * En FIT, `device_info` donne parfois la vérité terrain. On la privilégie
  * toujours ; l'heuristique ne sert que pour le TCX, le GPX et les FIT muets.
+ *
+ * ── Limite à connaître ──────────────────────────────────────────────────
+ * Les seuils ci-dessous ont été calibrés sur des fichiers réels d'un seul
+ * athlète et d'un seul modèle de montre. Ils sont donc *calibrés*, pas
+ * *validés* : la dynamique cardiaque varie d'une personne à l'autre, et
+ * l'algorithme de lissage varie d'un constructeur à l'autre. D'où la confiance
+ * plafonnée à 0,90 en l'absence de métadonnée constructeur.
  */
 
 import { smoothByTime, mean } from "./geo.ts";
@@ -51,26 +58,55 @@ export interface HrSourceAnalysis {
   suspectRanges: { fromS: number; toS: number; reason: string }[];
 }
 
-/** Écart-type des différences seconde à seconde, normalisé par la durée. */
-function stepStatistics(samples: Sample[]): { medianAbsStep: number; zeroStepPct: number } {
-  const steps: number[] = [];
+/**
+ * Statistiques de variation de la FC seconde à seconde.
+ *
+ * Piège découvert sur des fichiers réels : la **médiane** de ces variations
+ * vaut zéro pour tous les capteurs. À 1 Hz, une FC entière change rarement
+ * d'une seconde à l'autre — 55 à 70 % des intervalles sont identiques selon le
+ * capteur, donc la médiane est écrasée à 0 dans les deux cas et ne discrimine
+ * rien. C'est la **moyenne** qui sépare : mesurée sur un même athlète, environ
+ * 0,31 bpm/s au poignet contre 0,51 à la ceinture.
+ */
+function stepStatistics(samples: Sample[]): {
+  meanAbsStep: number;
+  zeroStepPct: number;
+  plateauTimePct: number;
+} {
+  let sum = 0;
   let zero = 0;
   let total = 0;
   for (let i = 1; i < samples.length; i++) {
     const a = samples[i - 1].hr;
     const b = samples[i].hr;
     const dt = samples[i].t - samples[i - 1].t;
-    if (a == null || b == null || dt <= 0 || dt > 5) continue;
+    if (a == null || b == null || dt <= 0 || dt > 3) continue;
     const perSecond = Math.abs(b - a) / dt;
-    steps.push(perSecond);
+    sum += perSecond;
     if (perSecond < 1e-9) zero++;
     total++;
   }
-  if (!steps.length) return { medianAbsStep: 0, zeroStepPct: 0 };
-  steps.sort((x, y) => x - y);
+
+  // Part du temps passée dans un palier de plus de 5 s. Le lissage optique en
+  // produit deux fois plus que la mesure électrique.
+  let inPlateau = 0;
+  let run = 1;
+  let counted = 0;
+  for (let i = 1; i < samples.length; i++) {
+    if (samples[i].hr == null) continue;
+    counted++;
+    if (samples[i].hr === samples[i - 1].hr) run++;
+    else {
+      if (run > 5) inPlateau += run;
+      run = 1;
+    }
+  }
+  if (run > 5) inPlateau += run;
+
   return {
-    medianAbsStep: steps[Math.floor(steps.length / 2)],
+    meanAbsStep: total ? sum / total : 0,
     zeroStepPct: total ? (zero / total) * 100 : 0,
+    plateauTimePct: counted ? (inPlateau / counted) * 100 : 0,
   };
 }
 
@@ -237,7 +273,7 @@ export function analyzeHrSource(
 
   const signals: HrSignal[] = [];
   const lock = cadenceLock(samples, speed);
-  const { medianAbsStep, zeroStepPct } = stepStatistics(samples);
+  const { meanAbsStep, zeroStepPct, plateauTimePct } = stepStatistics(samples);
   const plateau = longestPlateauS(samples);
   const lag = responseLagS(samples, speed);
   const spike = startupSpike(samples, speed);
@@ -252,7 +288,7 @@ export function analyzeHrSource(
     signals.push({
       name: "Verrouillage sur la cadence",
       value: Math.round(lock.pct * 10) / 10,
-      unit: "%",
+      unit: " %",
       points: lock.pct > 8 ? "optical" : lock.pct < 2 ? "chest_strap" : "neutral",
       note:
         lock.pct > 8
@@ -267,42 +303,51 @@ export function analyzeHrSource(
   signals.push({
     name: "Plateau le plus long",
     value: Math.round(plateau),
-    unit: "s",
-    points: plateau > 25 ? "optical" : plateau < 10 ? "chest_strap" : "neutral",
+    unit: " s",
+    points: plateau > 30 ? "optical" : plateau < 20 ? "chest_strap" : "neutral",
     note:
-      plateau > 25
+      plateau > 30
         ? "Longue séquence de FC strictement constante : signature du lissage optique."
-        : "Variabilité battement à battement conservée.",
+        : "Pas de palier anormalement long.",
   });
-  if (plateau > 40) score -= 2;
-  else if (plateau > 25) score -= 1;
-  else if (plateau < 10) score += 1;
+  if (plateau > 45) score -= 2;
+  else if (plateau > 30) score -= 1;
+  else if (plateau < 20) score += 1;
 
   signals.push({
-    name: "Variation médiane",
-    value: Math.round(medianAbsStep * 100) / 100,
-    unit: "bpm/s",
-    points: medianAbsStep > 0.6 ? "chest_strap" : medianAbsStep < 0.25 ? "optical" : "neutral",
+    name: "Temps en palier",
+    value: Math.round(plateauTimePct),
+    unit: " %",
+    points: plateauTimePct > 35 ? "optical" : plateauTimePct < 25 ? "chest_strap" : "neutral",
+    note: `Part du temps où la FC ne bouge pas pendant plus de 5 s.`,
+  });
+  if (plateauTimePct > 35) score -= 1;
+  else if (plateauTimePct < 25) score += 1;
+
+  signals.push({
+    name: "Variation moyenne",
+    value: Math.round(meanAbsStep * 1000) / 1000,
+    unit: " bpm/s",
+    points: meanAbsStep > 0.45 ? "chest_strap" : meanAbsStep < 0.35 ? "optical" : "neutral",
     note: `${Math.round(zeroStepPct)} % des intervalles sans aucune variation.`,
   });
-  if (medianAbsStep > 0.8) score += 2;
-  else if (medianAbsStep > 0.6) score += 1;
-  else if (medianAbsStep < 0.25) score -= 1;
+  if (meanAbsStep > 0.45) score += 1;
+  else if (meanAbsStep < 0.35) score -= 1;
 
   if (lag != null) {
     signals.push({
       name: "Latence de réponse",
       value: lag,
-      unit: "s",
-      points: lag > 20 ? "optical" : lag < 12 ? "chest_strap" : "neutral",
+      unit: " s",
+      points: lag > 15 ? "optical" : lag < 8 ? "chest_strap" : "neutral",
       note:
         lag > 20
           ? "La FC réagit avec un retard important aux changements d'allure."
           : "Réponse rapide aux changements d'allure.",
     });
-    if (lag > 25) score -= 2;
-    else if (lag > 20) score -= 1;
-    else if (lag < 12) score += 1;
+    if (lag > 22) score -= 2;
+    else if (lag > 15) score -= 1;
+    else if (lag < 8) score += 1;
   }
 
   if (spike) {

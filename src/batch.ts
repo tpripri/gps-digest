@@ -21,6 +21,10 @@ import type { BestEffort, CriticalSpeedModel, RaceProjection } from "./efforts.t
 import type { HrSource, HrSourceAnalysis } from "./sensor.ts";
 import type { DriftAnalysis } from "./drift.ts";
 import type { AdherenceReport } from "./adherence.ts";
+import { analyzeProgression, type ProgressionAnalysis } from "./progression.ts";
+import { hrSpeedProfile, type HrSpeedPoint } from "./drift.ts";
+import type { WeatherObservation } from "./weather.ts";
+import type { SwimAnalysis } from "./swim.ts";
 import type { Digest, Sample, Sport } from "./types.ts";
 
 export interface FileAnalysis {
@@ -31,6 +35,12 @@ export interface FileAnalysis {
   adherence: AdherenceReport[];
   efforts: BestEffort[];
   samples: Sample[];
+  /** Profil FC/allure, base du suivi de progression. */
+  hrSpeed?: HrSpeedPoint[];
+  /** Météo réelle au lieu et à l'heure, si récupérée. */
+  weather?: WeatherObservation | null;
+  /** Analyse de natation, quand la séance en est une. */
+  swim?: SwimAnalysis;
 }
 
 export interface SensorChange {
@@ -65,6 +75,7 @@ export interface BatchAnalysis {
   criticalSpeed: CriticalSpeedModel | null;
   projections: RaceProjection[];
   sensorChanges: SensorChange[];
+  progression: ProgressionAnalysis;
   warnings: string[];
 }
 
@@ -164,7 +175,12 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
 
   // Seuls les efforts en course alimentent le modèle : mélanger vélo et course
   // dans une courbe durée–vitesse n'a aucun sens.
-  const runFiles = sorted.filter((f) => f.digest.session.sport === "running");
+  // Seules les séances classées « full » en course alimentent le modèle :
+  // une séance de renforcement entrecoupée de 400 m y injecterait des
+  // meilleurs efforts flatteurs et fausserait toutes les projections.
+  const runFiles = sorted.filter(
+    (f) => f.digest.session.sport === "running" && f.digest.session.tier === "full",
+  );
   const runEfforts = consolidatedEfforts.filter((e) =>
     runFiles.some((f) => f.filename === e.sourceFile),
   );
@@ -195,7 +211,34 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     }
   }
 
+  // --- Progression aérobie, séparée par capteur ---
+  const progression = analyzeProgression(
+    sorted.map((f) => ({
+      filename: f.filename,
+      date: f.digest.session.startTimeUtc?.slice(0, 10),
+      hrSource: f.hrSource.verdict,
+      hrSpeed: f.hrSpeed ?? [],
+      tempC: f.weather?.tempC,
+      sport: f.digest.session.tier === "full" ? f.digest.session.sport : "excluded",
+    })),
+  );
+
   const warnings: string[] = [];
+
+  const reclassified = sorted.filter((f) => f.digest.session.reclassified);
+  if (reclassified.length) {
+    warnings.push(
+      `${reclassified.length} séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (${reclassified
+        .map((f) => `${f.digest.session.startTimeUtc?.slice(0, 10)} ${f.digest.session.declaredSport}→${f.digest.session.sport}`)
+        .join(", ")}).`,
+    );
+  }
+  const loadOnly = sorted.filter((f) => f.digest.session.tier === "load");
+  if (loadOnly.length) {
+    warnings.push(
+      `${loadOnly.length} séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.`,
+    );
+  }
 
   if (sensorChanges.length) {
     const c = sensorChanges[sensorChanges.length - 1];
@@ -233,6 +276,18 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     );
   }
 
+  warnings.push(...progression.warnings);
+
+  // Une FC max mal réglée décale toutes les zones sans rien signaler.
+  if (opts.maxHr) {
+    const observed = Math.max(0, ...sorted.map((f) => f.digest.session.hrMax ?? 0));
+    if (observed > opts.maxHr) {
+      warnings.push(
+        `FC max observée (${observed} bpm) supérieure à celle renseignée (${opts.maxHr} bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.`,
+      );
+    }
+  }
+
   return {
     files: sorted,
     sports,
@@ -245,6 +300,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     criticalSpeed,
     projections,
     sensorChanges,
+    progression,
     warnings,
   };
 }

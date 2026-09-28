@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité — ce qui sort de votre navigateur, et ce qui n'en sort jamais</title>
+<meta name="description" content="Vos fichiers GPS ne sont jamais envoyés sur un serveur : tout le calcul se fait dans votre navigateur. Seule exception, la météo, qui transmet le milieu du parcours arrondi à environ un kilomètre. Détail technique complet et vérifiable.">
+<link rel="canonical" href="https://exemple.com/fr/confidentialite.html">
+<link rel="alternate" hreflang="fr" href="https://exemple.com/fr/confidentialite.html">
+<link rel="alternate" hreflang="x-default" href="https://exemple.com/fr/confidentialite.html">
+<meta name="robots" content="index,follow">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "fr",
+  "mainEntity": [
+    { "@type": "Question", "name": "Les fichiers GPS sont-ils envoyés sur un serveur ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non. Le parsing et l'analyse s'exécutent dans le navigateur, en JavaScript, sur l'appareil de l'utilisateur. Aucun fichier n'est transmis, ce qui est vérifiable dans l'onglet Réseau des outils de développement : aucune requête ne contient le contenu d'un fichier." } },
+    { "@type": "Question", "name": "Qu'est-ce qui est transmis à un tiers ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Uniquement la requête météo, quand elle est activée : le point milieu du parcours arrondi à deux décimales (environ 1,1 km de résolution) et la date de la séance, envoyés à Open-Meteo. Jamais le point de départ, qui correspond généralement au domicile, et jamais de donnée physiologique ni d'identifiant." } },
+    { "@type": "Question", "name": "Pourquoi l'outil rogne-t-il le début et la fin de la trace ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Parce que les premiers et derniers points d'une trace GPS révèlent l'adresse du domicile au mètre près. Ce rognage est actif par défaut sur 250 mètres et s'applique avant tout export, y compris celui destiné à une intelligence artificielle." } }
+  ]
+}
+</script>
+
+<style>
+:root{--ink:#14181d;--ink-soft:#4a5560;--line:#d4dae0;--bg:#fff;--panel:#f5f7f9;
+  --accent:#0b5d3f;--warn-bg:#fdf6e3;--warn-line:#b8860b;--warn-ink:#6b4e00;--radius:6px}
+@media (prefers-color-scheme:dark){:root{--ink:#eef2f5;--ink-soft:#a8b4bf;--line:#39424c;
+  --bg:#12161a;--panel:#1b2127;--accent:#4ade9f;--warn-bg:#2a2314;--warn-line:#c9a227;--warn-ink:#f0d98a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:1rem/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:48rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+h1{font-size:1.7rem;line-height:1.25;margin:0 0 .5rem;letter-spacing:-.015em}
+h2{font-size:1.2rem;margin:2.4rem 0 .6rem}
+h3{font-size:1rem;margin:1.4rem 0 .3rem}
+.lede{color:var(--ink-soft);margin:0 0 1.6rem;font-size:1.05rem}
+a{color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin:.8rem 0}
+th,td{text-align:left;padding:.5rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--ink-soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.03em}
+code{background:var(--panel);padding:.1rem .3rem;border-radius:3px;font-size:.88em}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.8rem;overflow-x:auto;font-size:.8rem}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);
+  border-radius:var(--radius);padding:.8rem 1rem;margin:1rem 0;font-size:.92rem}
+.note strong{display:block;margin-bottom:.2rem}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--ink-soft)}
+footer a{margin-right:1rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p style="font-size:.85rem"><a href="/fr/">← Retour à l'outil</a></p>
+
+<h1>Confidentialité</h1>
+<p class="lede">
+  Une trace GPS contient l'adresse de votre domicile au mètre près. Cette page dit
+  précisément ce qui reste sur votre appareil, ce qui en sort, et comment le vérifier
+  vous-même.
+</p>
+
+<h2>Le principe</h2>
+<p>
+  <strong>Vos fichiers ne sont jamais transmis.</strong> Le décodage et l'analyse
+  s'exécutent en JavaScript, dans votre navigateur, sur votre appareil. Il n'existe
+  aucun serveur qui les reçoive — ce n'est pas une politique, c'est une absence
+  d'infrastructure.
+</p>
+<p>
+  Concrètement : vous pouvez couper votre connexion internet après le chargement de la
+  page, déposer vos fichiers, et l'analyse fonctionnera. Seule la météo échouera, ce
+  qui est justement la preuve qu'elle est la seule chose à sortir.
+</p>
+
+<h2>Ce qui sort, ce qui ne sort pas</h2>
+<table>
+  <thead><tr><th>Donnée</th><th>Transmise ?</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Le fichier de votre montre</th><td><strong>Jamais.</strong> Lu depuis le disque par le navigateur, analysé en mémoire.</td></tr>
+    <tr><th scope="row">Votre trace GPS</th><td><strong>Jamais.</strong></td></tr>
+    <tr><th scope="row">Fréquence cardiaque, allures, puissance</th><td><strong>Jamais.</strong></td></tr>
+    <tr><th scope="row">FC maximale, allure seuil, chronos saisis</th><td><strong>Jamais.</strong> Conservés en mémoire le temps de la session, et perdus à la fermeture de l'onglet.</td></tr>
+    <tr><th scope="row">Le dossier généré</th><td><strong>Jamais</strong> par l'outil. Vous seul le copiez ou le téléchargez — et ce que vous en faites ensuite dépend de vous.</td></tr>
+    <tr><th scope="row">Point milieu du parcours, arrondi</th><td><strong>Oui</strong>, si la météo est activée. Voir ci-dessous.</td></tr>
+  </tbody>
+</table>
+
+<h2>La météo : la seule exception</h2>
+<p>
+  Le capteur de température d'une montre est porté au poignet et chauffé par le corps :
+  il surestime de 3 à 8 °C et ignore l'humidité et le vent. Or la chaleur est le premier
+  facteur confondant de la dérive cardiaque — sans température réelle, on attribue à la
+  méforme ce qui n'est que le coût thermique normal.
+</p>
+<p>La requête est donc construite pour être inexploitable comme donnée de localisation :</p>
+
+<h3>On envoie le milieu du parcours, jamais le départ</h3>
+<p>
+  Le point de départ, c'est votre domicile. Le point milieu est un endroit quelconque,
+  sans rapport avec l'endroit où vous dormez.
+</p>
+
+<h3>Les coordonnées sont arrondies à deux décimales</h3>
+<p>
+  Soit environ 1,1 km de résolution. La météo est un phénomène régional : on ne perd
+  rien en précision, et la requête cesse de désigner un lieu identifiable.
+</p>
+
+<h3>Rien d'autre n'est joint</h3>
+<p>
+  Pas de fréquence cardiaque, pas d'allure, pas de trace, pas d'identifiant, pas de
+  cookie. Une latitude arrondie, une longitude arrondie, une date. La requête complète
+  ressemble à ceci :
+</p>
+<pre>https://archive-api.open-meteo.com/v1/archive
+  ?latitude=48.87&amp;longitude=2.34
+  &amp;start_date=2026-09-23&amp;end_date=2026-09-23
+  &amp;hourly=temperature_2m,relative_humidity_2m,wind_speed_10m</pre>
+<p>
+  Le destinataire est <a href="https://open-meteo.com" rel="nofollow noopener">Open-Meteo</a>,
+  service météo ouvert. La fonction se désactive d'un menu déroulant sur la page
+  d'accueil, et l'outil continue de fonctionner sans elle.
+</p>
+
+<h2>Le rognage du domicile</h2>
+<p>
+  Les premiers et derniers points d'une trace révèlent votre porte d'entrée. L'outil en
+  retire <strong>250 mètres par défaut</strong>, au départ comme à l'arrivée, avant toute
+  analyse et avant tout export. Le réglage est modifiable, et une option permet de
+  retirer complètement les coordonnées tout en conservant profil, allures et fréquence
+  cardiaque.
+</p>
+
+<div class="note">
+  <strong>Ce que nous ne contrôlons pas</strong>
+  Le dossier que vous copiez dans ChatGPT, Gemini ou Claude quitte votre navigateur au
+  moment où vous le collez, et il est alors soumis aux conditions de ce service, pas aux
+  nôtres. Si le dossier contient encore des coordonnées, elles partent avec. C'est
+  précisément pourquoi l'option « retirer les coordonnées » est active par défaut à
+  l'export.
+</div>
+
+<h2>Ce que nous ne faisons pas</h2>
+<ul>
+  <li>Aucun compte, aucune inscription, aucun mot de passe.</li>
+  <li>Aucun cookie, aucun traceur publicitaire, aucun pixel.</li>
+  <li>Aucune publicité, donc aucun intérêt à collecter quoi que ce soit.</li>
+  <li>Aucune revente de données — il n'y en a aucune à revendre.</li>
+</ul>
+<p>
+  Si une mesure d'audience est mise en place, elle le sera sans cookie ni identifiant
+  persistant, et cette page sera mise à jour avant.
+</p>
+
+<h2>Le vérifier vous-même</h2>
+<p>
+  Ne nous croyez pas sur parole. Ouvrez les outils de développement de votre navigateur
+  (<code>F12</code>), onglet <strong>Réseau</strong>, puis déposez un fichier. Vous verrez
+  le chargement de la page, et — si la météo est activée — une requête vers
+  <code>open-meteo.com</code>. Rien d'autre. Aucune requête ne contient le contenu de
+  votre fichier.
+</p>
+<p>
+  Le <a href="https://github.com/tpripri/gps-digest" rel="noopener">code source est
+  ouvert</a>, sous licence MIT : ce que fait la page est lisible ligne à ligne.
+</p>
+
+<h2>Vos droits</h2>
+<p>
+  Aucune donnée personnelle n'étant collectée ni conservée, il n'y a pas de fichier à
+  consulter, corriger ou supprimer : fermer l'onglet suffit à tout effacer. Pour toute
+  question, le dépôt GitHub ci-dessus permet d'ouvrir une discussion.
+</p>
+
+<footer>
+  <nav><a href="/fr/">L'outil</a><a href="https://github.com/tpripri/gps-digest" rel="noopener">Code source</a></nav>
+  <p>Dernière mise à jour : <time datetime="2026-09-25">25 septembre 2026</time>.</p>
+</footer>
+
+</div>
+</body>
+</html>
