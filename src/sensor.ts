@@ -259,6 +259,30 @@ export function analyzeHrSource(
   sport: Sport,
   deviceHint?: { hrSensor?: HrSource },
 ): HrSourceAnalysis {
+  // En natation, la détection n'a aucun sens : sous l'eau, un capteur optique
+  // ne lit pas et une ceinture ne transmet pas — elle enregistre puis déverse
+  // ses données à la sortie. Les « variations » observées décrivent le mode de
+  // stockage de la montre, pas le capteur. Mieux vaut le dire que produire un
+  // verdict qui n'a rien mesuré.
+  if (sport === "swimming" && !deviceHint?.hrSensor) {
+    return {
+      verdict: "unknown",
+      confidence: 0,
+      fromDeviceMetadata: false,
+      signals: [
+        {
+          name: "Détection non applicable",
+          value: 0,
+          unit: "",
+          points: "neutral",
+          note: "En natation, la FC est bufferisée puis déversée à la sortie de l'eau : la forme du signal ne dit rien du capteur. Déposer le fichier FIT permet en revanche de lire directement le matériel appairé.",
+        },
+      ],
+      cadenceLockPct: 0,
+      suspectRanges: [],
+    };
+  }
+
   const withHr = samples.filter((s) => s.hr != null);
   if (withHr.length < 30) {
     return {
@@ -370,6 +394,18 @@ export function analyzeHrSource(
   } else {
     const magnitude = Math.abs(score);
     verdict = score >= 2 ? "chest_strap" : score <= -2 ? "optical" : "unknown";
+    // Les seuils ont été calibrés sur des fichiers de course à pied. À vélo,
+    // l'absence de balancement des bras et la régularité de l'effort décalent
+    // les signaux : un verdict incertain y est la règle, pas l'exception.
+    if (verdict === "unknown" && sport === "cycling") {
+      signals.push({
+        name: "Calibration",
+        value: 0,
+        unit: "",
+        points: "neutral",
+        note: "Seuils établis sur la course à pied : à vélo, les signaux sont moins tranchés et le verdict reste souvent indéterminé. Le fichier FIT lève le doute en donnant le matériel appairé.",
+      });
+    }
     // Saturation à 0,9 : sans métadonnée constructeur, une heuristique ne
     // devrait jamais s'annoncer certaine.
     confidence = verdict === "unknown" ? 0.3 : Math.min(0.9, 0.45 + magnitude * 0.12);

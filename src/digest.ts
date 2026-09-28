@@ -239,7 +239,9 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
               }))),
         )
       : blocks;
-    return analyzeAdherence(own, set, opts.blockTargets?.[i] ?? inferTarget(set, own), samples);
+    return analyzeAdherence(
+      own, set, opts.blockTargets?.[i] ?? inferTarget(set, own, sport), samples, sport,
+    );
   });
 
   return {

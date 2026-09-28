@@ -25,7 +25,27 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
-const SITE_URL = process.env.SITE_URL ?? "https://exemple.com";
+/**
+ * Domaine du site. Obligatoire : il est injecté dans les URL canoniques, les
+ * balises hreflang, le JSON-LD et le sitemap. Un build qui le laisse à sa
+ * valeur d'exemple produit un site en apparence correct dont TOUTES les
+ * métadonnées pointent ailleurs — les moteurs suivent alors un domaine qui ne
+ * vous appartient pas. Échouer bruyamment vaut mieux que livrer ça.
+ */
+const SITE_URL = process.env.SITE_URL;
+if (!SITE_URL || SITE_URL.includes("exemple.com")) {
+  console.error(`
+  ✗ SITE_URL n'est pas défini.
+
+    Ce domaine est injecté dans les URL canoniques, les hreflang, le JSON-LD
+    et le sitemap. Sans lui, le site déployé renverrait les moteurs de
+    recherche vers un domaine d'exemple.
+
+    PowerShell :   $env:SITE_URL="https://votre-domaine.com"; npm run build
+    bash / zsh :   SITE_URL=https://votre-domaine.com npm run build
+`);
+  process.exit(1);
+}
 
 /** Langues effectivement publiées. Ajouter ici quand une traduction existe. */
 const LOCALES = ["fr"];
@@ -147,9 +167,4 @@ console.log(`  ✓ ${pages.length * LOCALES.length} page(s) : ${pages.join(", ")
 const urlCount = await buildSeo(pages);
 console.log(`  ✓ robots.txt, llms.txt, sitemap.xml (${urlCount} URL)`);
 
-if (SITE_URL.includes("exemple.com")) {
-  console.log(
-    `\n  ⚠ Domaine non configuré. Relancer avec SITE_URL=https://votre-domaine.com`,
-  );
-}
 console.log(`\n  dist/ prêt — « npx wrangler deploy » pour publier\n`);
