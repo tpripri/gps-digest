@@ -1,30 +1,28 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{htmlLang}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- ═══ SEO / GEO — le domaine est injecté au build (SITE_URL) ═══ -->
-<title>Convertir un fichier TCX, GPX ou FIT en CSV pour ChatGPT ou Gemini — gps-digest</title>
-<meta name="description" content="Outil gratuit qui transforme vos fichiers de montre GPS en dossier d'entraînement lisible par une IA. Détecte la ceinture cardio, calcule la dérive cardiaque, vérifie le respect des blocs et projette vos chronos. Tout est calculé dans votre navigateur : aucun fichier n'est envoyé.">
+<!-- ═══ Gabarit : textes dans src/page-i18n.ts, rendu par langue au build ═══ -->
+<title>{{home.title}}</title>
+<meta name="description" content="{{attr:home.description}}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0b5d3f">
-<link rel="canonical" href="https://exemple.com/fr/">
-<link rel="alternate" hreflang="fr" href="https://exemple.com/fr/">
-<link rel="alternate" hreflang="en" href="https://exemple.com/en/">
-<link rel="alternate" hreflang="es" href="https://exemple.com/es/">
-<link rel="alternate" hreflang="x-default" href="https://exemple.com/en/">
+<link rel="canonical" href="https://exemple.com/{{locale}}/">
+{{alternates}}
 <meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="https://exemple.com/fr/">
+<meta property="og:locale" content="{{ogLocale}}">
+{{ogAlternates}}
+<meta property="og:url" content="https://exemple.com/{{locale}}/">
 <meta property="og:site_name" content="gps-digest">
-<meta property="og:title" content="Faites analyser vos séances de course par une IA">
-<meta property="og:description" content="Vos fichiers de montre sont trop volumineux pour une IA. Cet outil en fait un dossier structuré qu'elle peut vraiment analyser.">
+<meta property="og:title" content="{{attr:home.h1}}">
+<meta property="og:description" content="{{attr:home.og.description}}">
 <meta property="og:image" content="https://exemple.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
-<meta property="og:image:alt" content="Un fichier de montre GPS transformé en dossier d'entraînement structuré.">
+<meta property="og:image:alt" content="{{attr:home.og.imageAlt}}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 
@@ -35,60 +33,60 @@
     { "@type": "Organization", "@id": "https://exemple.com/#organization",
       "name": "gps-digest", "url": "https://exemple.com" },
     { "@type": "WebSite", "@id": "https://exemple.com/#website",
-      "url": "https://exemple.com", "name": "gps-digest", "inLanguage": "fr",
+      "url": "https://exemple.com", "name": "gps-digest", "inLanguage": "{{htmlLang}}",
       "publisher": { "@id": "https://exemple.com/#organization" } },
     {
       "@type": "SoftwareApplication",
       "name": "gps-digest",
-      "url": "https://exemple.com/fr/",
+      "url": "https://exemple.com/{{locale}}/",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Web",
-      "inLanguage": "fr",
-      "description": "Transforme les fichiers de montres GPS (TCX, GPX, FIT) en dossier d'entraînement structuré, analysable par un modèle de langage.",
+      "inLanguage": "{{htmlLang}}",
+      "description": {{json:home.ld.description}},
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
       "featureList": [
-        "Conversion TCX, GPX et FIT vers CSV structuré",
-        "Traitement intégral dans le navigateur, aucun fichier envoyé",
-        "Détection du capteur de fréquence cardiaque (ceinture ou poignet)",
-        "Dérive cardiaque avec contrôle de validité",
-        "Analyse du respect des blocs d'entraînement",
-        "Projections de chrono sur 5 km, 10 km, semi et marathon",
-        "Nombre de fichiers illimité"
+        {{json:home.ld.feature1}},
+        {{json:home.ld.feature2}},
+        {{json:home.ld.feature3}},
+        {{json:home.ld.feature4}},
+        {{json:home.ld.feature5}},
+        {{json:home.ld.feature6}},
+        {{json:home.ld.feature7}}
       ],
       "publisher": { "@id": "https://exemple.com/#organization" }
     },
     {
       "@type": "HowTo",
-      "name": "Faire analyser ses séances de course par une IA",
-      "inLanguage": "fr",
+      "name": {{json:home.ld.howto}},
+      "inLanguage": "{{htmlLang}}",
       "totalTime": "PT2M",
       "step": [
-        { "@type": "HowToStep", "position": 1, "name": "Déposer ses fichiers",
-          "text": "Glissez vos fichiers TCX, GPX ou FIT exportés de votre montre. Le nombre n'est pas limité." },
-        { "@type": "HowToStep", "position": 2, "name": "Renseigner ses repères",
-          "text": "Indiquez votre fréquence cardiaque maximale mesurée et un chrono de course récent." },
-        { "@type": "HowToStep", "position": 3, "name": "Lire les avertissements",
-          "text": "L'outil signale les changements de capteur cardiaque et les séances dont la fréquence cardiaque n'est pas fiable." },
-        { "@type": "HowToStep", "position": 4, "name": "Copier le dossier dans l'IA",
-          "text": "Copiez le dossier généré et collez-le dans ChatGPT, Gemini ou Claude avec votre question." }
+        { "@type": "HowToStep", "position": 1, "name": {{json:home.ld.step1.name}},
+          "text": {{json:home.ld.step1.text}} },
+        { "@type": "HowToStep", "position": 2, "name": {{json:home.ld.step2.name}},
+          "text": {{json:home.ld.step2.text}} },
+        { "@type": "HowToStep", "position": 3, "name": {{json:home.ld.step3.name}},
+          "text": {{json:home.ld.step3.text}} },
+        { "@type": "HowToStep", "position": 4, "name": {{json:home.ld.step4.name}},
+          "text": {{json:home.ld.step4.text}} }
       ]
     },
     {
       "@type": "FAQPage",
-      "inLanguage": "fr",
+      "inLanguage": "{{htmlLang}}",
       "mainEntity": [
-        { "@type": "Question", "name": "Pourquoi mon fichier TCX est-il trop gros pour une IA ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Un TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de balises XML, soit à peu près 533 000 tokens. Même quand ce volume tient dans la fenêtre de contexte, le modèle raisonne mal : on lui demande une analyse d'entraînement à partir de milliers de lignes de coordonnées brutes." } },
-        { "@type": "Question", "name": "Mes fichiers GPS sont-ils envoyés sur un serveur ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Non. Tout le calcul s'exécute dans votre navigateur. Aucun fichier ne transite par un serveur, ce que vous pouvez vérifier dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près : l'outil rogne par défaut le départ et l'arrivée." } },
-        { "@type": "Question", "name": "Comment savoir si une séance vient d'une ceinture ou du capteur du poignet ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Le fichier ne le dit presque jamais. L'outil le déduit de la signature du signal, dont le marqueur le plus caractéristique est le verrouillage sur la cadence : le capteur optique confond le rythme des foulées avec les pulsations et affiche par exemple 172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut pas produire cette erreur." } },
-        { "@type": "Question", "name": "Peut-on comparer une fréquence cardiaque au poignet et à la ceinture ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Non. Les deux technologies divergent nettement à l'effort, et le capteur optique se dégrade quand l'intensité varie. Un changement de capteur au milieu d'une période fausse silencieusement zones, dérives et tendances. L'outil détecte ce changement, le date et analyse les deux périodes séparément." } },
-        { "@type": "Question", "name": "Quelle est la fiabilité d'une projection marathon ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Faible. Une étude sur 2 303 coureurs amateurs a montré que la formule de Riegel est bien calibrée jusqu'au semi-marathon mais donne des prévisions marathon au moins dix minutes trop rapides pour la moitié des coureurs. Un modèle fondé sur un ou deux résultats de course réels divise l'erreur par environ deux." } },
-        { "@type": "Question", "name": "La température affichée par ma montre est-elle celle de l'air ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Non. Le capteur est porté au poignet et chauffé par le corps : il surestime généralement de 3 à 8 °C. L'outil affiche la valeur mais l'accompagne toujours de cet avertissement, y compris dans le dossier transmis à l'IA." } }
+        { "@type": "Question", "name": {{json:home.ld.faq1.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq1.a}} } },
+        { "@type": "Question", "name": {{json:home.ld.faq2.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq2.a}} } },
+        { "@type": "Question", "name": {{json:home.ld.faq3.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq3.a}} } },
+        { "@type": "Question", "name": {{json:home.ld.faq4.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq4.a}} } },
+        { "@type": "Question", "name": {{json:home.ld.faq5.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq5.a}} } },
+        { "@type": "Question", "name": {{json:home.ld.faq6.q}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:home.ld.faq6.a}} } }
       ]
     }
   ]
@@ -120,7 +118,7 @@ h3{font-size:1.02rem;margin:1.5rem 0 .4rem}
 .lede{color:var(--ink-soft);margin:0 0 1.5rem;max-width:46rem;font-size:1.05rem}
 a{color:var(--accent)}
 nav.langs{font-size:.85rem;margin-bottom:1rem}
-nav.langs a{margin-right:.7rem}
+nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
 .promise{display:flex;gap:.6rem;align-items:flex-start;border-left:3px solid var(--accent);
   background:var(--panel);padding:.8rem 1rem;border-radius:0 var(--radius) var(--radius) 0;
   margin:0 0 1.8rem;font-size:.93rem}
@@ -187,134 +185,109 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 <body>
 <div class="wrap">
 
-<nav class="langs" aria-label="Langue">
-  <span><strong>Français</strong></span>
-  <a href="/en/" hreflang="en">English</a>
-  <a href="/es/" hreflang="es">Español</a>
-</nav>
+{{langNav}}
 
 <header>
-  <h1>Faites analyser vos séances de course par une IA</h1>
-  <p class="lede">
-    Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude.
-    Cet outil en fait un dossier d'entraînement structuré — allures, tours, zones,
-    répétitions, dérive cardiaque — que l'IA peut vraiment analyser.
-  </p>
+  <h1>{{home.h1}}</h1>
+  <p class="lede">{{home.lede}}</p>
 </header>
 
 <p class="promise">
   <span aria-hidden="true">🔒</span>
-  <span><strong>Vos fichiers ne quittent pas votre navigateur.</strong>
-  Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet
-  Réseau. Une trace GPS contient votre adresse au mètre près : le départ et
-  l'arrivée sont rognés par défaut.
-  <a href="/fr/confidentialite.html">Ce qui sort, et ce qui n'en sort jamais</a>.</span>
+  <span>{{home.promise}}</span>
 </p>
 
 <main>
 
 <div class="steps">
-  <div class="step"><span class="n">1</span><h3>Déposez vos fichiers</h3>
-    <p>Autant que vous voulez, en TCX, GPX ou FIT, exportés de votre montre ou de Strava.</p></div>
-  <div class="step"><span class="n">2</span><h3>Renseignez vos repères</h3>
-    <p>FC maximale et dernier chrono. Sans eux, zones et projections restent approximatives.</p></div>
-  <div class="step"><span class="n">3</span><h3>Lisez les avertissements</h3>
-    <p>Changement de capteur, FC peu fiable : ils conditionnent la validité du reste.</p></div>
-  <div class="step"><span class="n">4</span><h3>Récupérez le dossier</h3>
-    <p>Un fichier texte complet et annoté, à glisser dans ChatGPT, Gemini ou Claude.</p></div>
+  <div class="step"><span class="n">1</span><h3>{{home.step1.title}}</h3>
+    <p>{{home.step1.text}}</p></div>
+  <div class="step"><span class="n">2</span><h3>{{home.step2.title}}</h3>
+    <p>{{home.step2.text}}</p></div>
+  <div class="step"><span class="n">3</span><h3>{{home.step3.title}}</h3>
+    <p>{{home.step3.text}}</p></div>
+  <div class="step"><span class="n">4</span><h3>{{home.step4.title}}</h3>
+    <p>{{home.step4.text}}</p></div>
 </div>
 
 <section aria-labelledby="pourquoi">
-  <h2 id="pourquoi">Pourquoi passer par cet outil ?</h2>
-  <p>
-    Un fichier TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, dont près de
-    90 % de balises XML — soit à peu près <strong>533 000 tokens</strong>. Même quand
-    ce volume tient dans la fenêtre de contexte, le modèle raisonne mal : on lui demande
-    une analyse d'entraînement à partir de milliers de lignes de coordonnées brutes.
-  </p>
-  <p>
-    Le dossier produit ici fait quelques dizaines de milliers de tokens et contient des
-    objets qu'un modèle sait interpréter : splits au kilomètre, tours, temps par zone,
-    répétitions une à une, meilleurs efforts, projections. <strong>L'analyse est
-    meilleure qu'avec le fichier complet</strong>, pas seulement moins coûteuse.
-  </p>
+  <h2 id="pourquoi">{{home.why.title}}</h2>
+  <p>{{home.why.p1}}</p>
+  <p>{{home.why.p2}}</p>
 
-  <h3>Ce que l'outil calcule tout seul</h3>
+  <h3>{{home.why.tableTitle}}</h3>
   <div class="scroll">
   <table>
-    <thead><tr><th>Analyse</th><th>Ce qu'elle répond</th></tr></thead>
+    <thead><tr><th>{{home.why.colAnalysis}}</th><th>{{home.why.colAnswer}}</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Source de la FC</th>
-        <td>Ceinture ou capteur du poignet ? Le fichier ne le dit presque jamais. L'outil le déduit du signal, en particulier du verrouillage sur la cadence — quand la montre confond les foulées avec les pulsations.</td></tr>
-      <tr><th scope="row">Dérive cardiaque</th>
-        <td>Votre rendement se dégrade-t-il en seconde moitié d'effort ? Au-delà de 5 %, l'endurance de base est en cause. L'outil refuse de calculer une dérive sur du fractionné, où le chiffre n'aurait aucun sens.</td></tr>
-      <tr><th scope="row">Respect des blocs</th>
-        <td>Vos répétitions sont-elles régulières ? L'allure se dégrade-t-elle ? La FC monte-t-elle à allure tenue — signe de fatigue avant que les jambes ne lâchent ?</td></tr>
-      <tr><th scope="row">Projections de chrono</th>
-        <td>5 km, 10 km, semi, marathon, avec fourchette et niveau de fiabilité. Un chrono de course pèse plus qu'un effort d'entraînement, et son poids décroît avec l'ancienneté.</td></tr>
-      <tr><th scope="row">Changement de matériel</th>
-        <td>Sur plusieurs séances, l'outil détecte et date un changement de capteur cardiaque — qui invaliderait silencieusement toute comparaison de FC.</td></tr>
+      <tr><th scope="row">{{home.why.sensor}}</th>
+        <td>{{home.why.sensorText}}</td></tr>
+      <tr><th scope="row">{{home.why.drift}}</th>
+        <td>{{home.why.driftText}}</td></tr>
+      <tr><th scope="row">{{home.why.blocks}}</th>
+        <td>{{home.why.blocksText}}</td></tr>
+      <tr><th scope="row">{{home.why.projections}}</th>
+        <td>{{home.why.projectionsText}}</td></tr>
+      <tr><th scope="row">{{home.why.hardware}}</th>
+        <td>{{home.why.hardwareText}}</td></tr>
     </tbody>
   </table>
   </div>
 </section>
 
 <section aria-labelledby="reperes">
-  <h2 id="reperes">1. Vos repères</h2>
-  <p class="sig">Facultatif, mais sans ces valeurs les zones sont estimées sur la FC
-    maximale observée dans les fichiers, ce qui est approximatif.</p>
+  <h2 id="reperes">{{home.set.title}}</h2>
+  <p class="sig">{{home.set.intro}}</p>
   <div class="settings">
     <div class="field">
-      <label for="fcmax">FC maximale <span class="hint">Mesurée, pas 220 moins l'âge</span></label>
-      <input type="number" id="fcmax" min="120" max="230" placeholder="ex. 185">
+      <label for="fcmax">{{home.set.fcmax}} <span class="hint">{{home.set.fcmaxHint}}</span></label>
+      <input type="number" id="fcmax" min="120" max="230" placeholder="{{attr:home.set.fcmaxPlaceholder}}">
     </div>
     <div class="field">
-      <label for="seuil">Allure seuil <span class="hint">Tenue environ 1 h</span></label>
+      <label for="seuil">{{home.set.threshold}} <span class="hint">{{home.set.thresholdHint}}</span></label>
       <input type="text" id="seuil" inputmode="numeric" placeholder="4:35">
     </div>
     <div class="field">
-      <label for="refdist">Chrono de référence <span class="hint">Distance</span></label>
+      <label for="refdist">{{home.set.refDist}} <span class="hint">{{home.set.refDistHint}}</span></label>
       <select id="refdist">
-        <option value="">Aucun</option>
-        <option value="5000">5 km</option>
-        <option value="10000">10 km</option>
-        <option value="21097.5">Semi-marathon</option>
-        <option value="42195">Marathon</option>
+        <option value="">{{home.set.refNone}}</option>
+        <option value="5000">{{home.set.ref5k}}</option>
+        <option value="10000">{{home.set.ref10k}}</option>
+        <option value="21097.5">{{home.set.refHalf}}</option>
+        <option value="42195">{{home.set.refMarathon}}</option>
       </select>
     </div>
     <div class="field">
-      <label for="reftime">Temps <span class="hint">h:mm:ss</span></label>
+      <label for="reftime">{{home.set.refTime}} <span class="hint">{{home.set.refTimeHint}}</span></label>
       <input type="text" id="reftime" inputmode="numeric" placeholder="3:29:00">
     </div>
     <div class="field">
-      <label for="refdate">Date du chrono <span class="hint">Pondère l'ancienneté</span></label>
+      <label for="refdate">{{home.set.refDate}} <span class="hint">{{home.set.refDateHint}}</span></label>
       <input type="date" id="refdate">
     </div>
     <div class="field">
-      <label for="privacy">Rognage vie privée <span class="hint">Mètres au départ et à l'arrivée</span></label>
+      <label for="privacy">{{home.set.privacy}} <span class="hint">{{home.set.privacyHint}}</span></label>
       <input type="number" id="privacy" value="250" min="0" max="2000" step="50">
     </div>
     <div class="field">
-      <label for="weather">Température de l'air</label>
+      <label for="weather">{{home.set.weather}}</label>
       <select id="weather">
-        <option value="on" selected>Récupérer la météo réelle</option>
-        <option value="off">Ne rien envoyer</option>
+        <option value="on" selected>{{home.set.weatherOn}}</option>
+        <option value="off">{{home.set.weatherOff}}</option>
       </select>
-      <span class="hint">Envoie le <strong>milieu</strong> du parcours arrondi à ~1 km et la date
-        à Open-Meteo. Jamais votre départ, jamais vos données.</span>
+      <span class="hint">{{home.set.weatherHint}}</span>
     </div>
   </div>
 </section>
 
 <section aria-labelledby="depot">
-  <h2 id="depot">2. Vos fichiers</h2>
+  <h2 id="depot">{{home.files.title}}</h2>
   <div class="drop" id="drop">
-    <p><strong>Déposez vos fichiers ici</strong></p>
-    <p>TCX, GPX ou FIT — autant que vous voulez, une saison entière si besoin</p>
-    <p style="font-size:.85rem">Le FIT est le format natif de votre montre : c'est le
-      seul à porter les longueurs de bassin et le capteur cardiaque réellement appairé.</p>
+    <p><strong>{{home.files.drop}}</strong></p>
+    <p>{{home.files.formats}}</p>
+    <p style="font-size:.85rem">{{home.files.fit}}</p>
     <p style="margin-top:1rem">
-      <button class="btn" type="button" id="pick">Choisir des fichiers</button>
+      <button class="btn" type="button" id="pick">{{home.files.pick}}</button>
     </p>
     <input type="file" id="files" multiple accept=".tcx,.gpx,.fit" class="hidden">
   </div>
@@ -326,33 +299,29 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 </section>
 
 <section id="export-section" class="hidden">
-  <h2>3. Votre dossier, prêt à analyser</h2>
-  <p class="sig">
-    Les fenêtres de contexte actuelles absorbent largement 100 000 tokens. Le réglage
-    par défaut privilégie donc le détail. Descendez d'un cran si votre modèle est plus
-    limité, ou si vous chargez beaucoup de séances.
-  </p>
+  <h2>{{home.export.title}}</h2>
+  <p class="sig">{{home.export.intro}}</p>
 
   <div class="settings" style="margin-bottom:.5rem">
     <div class="field">
-      <label for="resolution">Finesse du relevé</label>
+      <label for="resolution">{{home.export.resolution}}</label>
       <select id="resolution">
-        <option value="time:5">Un point toutes les 5 s — maximum</option>
-        <option value="time:10" selected>Un point toutes les 10 s — recommandé</option>
-        <option value="time:30">Un point toutes les 30 s — allégé</option>
-        <option value="distance:100">Un point tous les 100 m</option>
-        <option value="distance:10">Un point tous les 10 m — très détaillé</option>
-        <option value="none">Tableaux seuls, sans relevé continu</option>
-        <option value="summary">Synthèse courte, sans détail par séance</option>
+        <option value="time:5">{{home.export.res5s}}</option>
+        <option value="time:10" selected>{{home.export.res10s}}</option>
+        <option value="time:30">{{home.export.res30s}}</option>
+        <option value="distance:100">{{home.export.res100m}}</option>
+        <option value="distance:10">{{home.export.res10m}}</option>
+        <option value="none">{{home.export.resNone}}</option>
+        <option value="summary">{{home.export.resSummary}}</option>
       </select>
     </div>
     <div class="field">
-      <label for="coords">Coordonnées GPS</label>
+      <label for="coords">{{home.export.coords}}</label>
       <select id="coords">
-        <option value="drop" selected>Retirer — recommandé</option>
-        <option value="keep">Conserver</option>
+        <option value="drop" selected>{{home.export.coordsDrop}}</option>
+        <option value="keep">{{home.export.coordsKeep}}</option>
       </select>
-      <span class="hint">Profil, allures et FC sont conservés dans tous les cas.</span>
+      <span class="hint">{{home.export.coordsHint}}</span>
     </div>
   </div>
 
@@ -360,200 +329,135 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <div id="export-warnings"></div>
 
   <div class="actions">
-    <button class="btn" type="button" id="download">Télécharger le dossier (.txt)</button>
-    <button class="btn secondary" type="button" id="copy">Copier dans le presse-papiers</button>
+    <button class="btn" type="button" id="download">{{js.download}}</button>
+    <button class="btn secondary" type="button" id="copy">{{js.copy}}</button>
   </div>
 
   <details>
-    <summary>Questions à poser à votre IA</summary>
+    <summary>{{home.export.questions}}</summary>
     <ul style="margin:.5rem 0;padding-left:1.2rem;font-size:.9rem">
-      <li>Analyse ma dérive cardiaque en tenant compte de la température, et dis-moi si mon endurance de base est un facteur limitant.</li>
-      <li>Mes blocs sont-ils respectés ? Que corriger sur la prochaine séance ?</li>
-      <li>Compare les périodes de capteur séparément et dis-moi ce qui a changé.</li>
-      <li>À partir de cette charge, propose ma semaine d'entraînement.</li>
-      <li>Ma répartition d'intensités est-elle cohérente avec mon objectif ?</li>
+      <li>{{home.export.q1}}</li>
+      <li>{{home.export.q2}}</li>
+      <li>{{home.export.q3}}</li>
+      <li>{{home.export.q4}}</li>
+      <li>{{home.export.q5}}</li>
     </ul>
   </details>
 
   <details>
-    <summary>Voir le dossier généré</summary>
+    <summary>{{home.export.preview}}</summary>
     <pre id="bundle"></pre>
   </details>
 </section>
 
 <section id="results" class="hidden">
-  <h2>4. Le détail, si vous voulez creuser</h2>
+  <h2>{{home.results.title}}</h2>
   <div id="warnings"></div>
 
-  <h3>Vue d'ensemble</h3>
+  <h3>{{home.results.overview}}</h3>
   <div class="scroll">
     <table>
       <thead><tr>
-        <th>Fichier</th><th>Date</th><th class="num">Dist.</th>
-        <th class="num">En mouvement</th><th class="num">Écoulé</th>
-        <th class="num">Allure / vitesse</th><th class="num">FC moy</th><th>Capteur</th>
-        <th class="num">Dérive</th><th>Blocs</th>
+        <th>{{home.results.colFile}}</th><th>{{home.results.colDate}}</th><th class="num">{{home.results.colDist}}</th>
+        <th class="num">{{home.results.colMoving}}</th><th class="num">{{home.results.colElapsed}}</th>
+        <th class="num">{{home.results.colSpeed}}</th><th class="num">{{home.results.colHr}}</th><th>{{home.results.colSensor}}</th>
+        <th class="num">{{home.results.colDrift}}</th><th>{{home.results.colBlocks}}</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
 
-  <h3>Détail par séance</h3>
-  <p class="sig">Dépliez une séance pour voir les signaux derrière chaque verdict.
-    Utile en particulier pour juger la détection du capteur : vous seul savez quelles
-    séances ont été faites à la ceinture.</p>
+  <h3>{{home.results.detail}}</h3>
+  <p class="sig">{{home.results.detailIntro}}</p>
   <div id="sensors"></div>
 
-  <h3>Charge d'entraînement</h3>
+  <h3>{{home.results.load}}</h3>
   <div id="chart-load"></div>
 
-  <h3>Progression aérobie</h3>
-  <p class="sig">FC à allure identique dans le temps : le seul indicateur de forme qui
-    ne dépende ni du parcours ni de l'envie du jour. Les capteurs sont traités séparément.</p>
+  <h3>{{home.results.progression}}</h3>
+  <p class="sig">{{home.results.progressionIntro}}</p>
   <div id="progression"></div>
   <div id="chart-trend"></div>
 
-  <h3>Projections</h3>
+  <h3>{{home.results.projections}}</h3>
   <div id="projections"></div>
 </section>
 
 <section aria-labelledby="faq">
-  <h2 id="faq">Questions fréquentes</h2>
+  <h2 id="faq">{{home.faq.title}}</h2>
 
-  <h3>Pourquoi mon fichier TCX est-il trop gros pour Gemini ou ChatGPT ?</h3>
-  <p>Un TCX d'une heure à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de balises XML,
-  soit à peu près 533 000 tokens. Même quand ce volume tient dans la fenêtre de contexte,
-  le modèle raisonne mal sur des milliers de lignes de coordonnées brutes.</p>
+  <h3>{{home.faq.q1}}</h3>
+  <p>{{home.faq.a1}}</p>
 
-  <h3>Mes fichiers sont-ils envoyés sur un serveur ?</h3>
-  <p>Non. Tout le calcul s'exécute dans votre navigateur, et vous pouvez le vérifier
-  dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près
-  dans ses premiers et derniers points : l'outil les rogne par défaut.</p>
+  <h3>{{home.faq.q2}}</h3>
+  <p>{{home.faq.a2}}</p>
 
-  <h3>Comment l'outil devine-t-il si j'avais une ceinture ?</h3>
-  <p>Le marqueur le plus caractéristique est le verrouillage sur la cadence : un capteur
-  optique confond le rythme des foulées avec les pulsations et affiche par exemple
-  172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut pas
-  produire cette erreur. S'y ajoutent la longueur des plateaux de valeurs identiques,
-  la granularité battement à battement et la latence de réponse aux changements d'allure.
-  C'est une heuristique : sa confiance est plafonnée, et affichée.</p>
+  <h3>{{home.faq.q3}}</h3>
+  <p>{{home.faq.a3}}</p>
 
-  <h3>Pourquoi la dérive n'est-elle pas calculée sur certaines séances ?</h3>
-  <p>Parce qu'elle n'y voudrait rien dire. La dérive compare le rendement entre les deux
-  moitiés d'un effort <em>continu</em>. Sur du fractionné, le rapport vitesse/FC oscille
-  entre répétitions et récupérations : le chiffre obtenu serait un artefact. L'outil
-  préfère annoncer qu'il ne mesure pas plutôt que produire un nombre trompeur.</p>
+  <h3>{{home.faq.q4}}</h3>
+  <p>{{home.faq.a4}}</p>
 
-  <h3>La température affichée est-elle celle de l'air ?</h3>
-  <p>Non. Le capteur est au poignet, chauffé par le corps : il surestime généralement
-  de 3 à 8 °C. La valeur est affichée mais toujours accompagnée de cet avertissement,
-  y compris dans le dossier transmis à l'IA.</p>
+  <h3>{{home.faq.q5}}</h3>
+  <p>{{home.faq.a5}}</p>
 
-  <h3>Quelle est la fiabilité d'une projection marathon ?</h3>
-  <p>Faible, et il faut le dire. Une étude sur 2 303 coureurs amateurs a montré que la
-  formule de Riegel est bien calibrée jusqu'au semi mais donne des prévisions marathon
-  au moins dix minutes trop rapides pour la moitié des coureurs. Un modèle fondé sur des
-  résultats de course réels divise l'erreur par environ deux.</p>
+  <h3>{{home.faq.q6}}</h3>
+  <p>{{home.faq.a6}}</p>
 
-  <h3>Quels formats sont acceptés ?</h3>
-  <p>TCX, GPX et FIT. <strong>Privilégiez le FIT</strong> : c'est le format natif de la
-  plupart des montres Garmin, Coros, Wahoo et Suunto, et le seul à porter les longueurs
-  de bassin une par une ainsi que la liste du matériel appairé — ce qui permet de savoir
-  avec certitude, et non par estimation, si vous portiez une ceinture cardiaque.
-  L'export TCX de Garmin Connect écrase les longueurs d'une séance de natation en une
-  seule ligne.</p>
+  <h3>{{home.faq.q7}}</h3>
+  <p>{{home.faq.a7}}</p>
 
-  <h3>L'allure affichée ne correspond pas à celle de Garmin Connect</h3>
-  <p>C'est une différence de convention, pas une erreur. L'allure est calculée ici sur
-  le <strong>temps en mouvement</strong>, comme le fait Strava : les arrêts aux feux et
-  les pauses sont exclus. Garmin Connect divise par la durée totale et affiche donc une
-  allure plus lente. Sur une sortie de 16 km en ville, l'écart atteint facilement
-  quinze secondes au kilomètre. Les deux durées sont affichées côte à côte pour que la
-  différence soit lisible, et le dossier transmis à l'IA précise la convention employée
-  — sans quoi un modèle comparerait des chiffres qui ne se comparent pas.</p>
+  <h3>{{home.faq.q8}}</h3>
+  <p>{{home.faq.a8}}</p>
 
-  <h3>Le dénivelé ne correspond pas non plus</h3>
-  <p>Si vous déposez un fichier FIT, l'outil reprend le dénivelé mesuré par l'altimètre
-  barométrique de votre montre. En TCX ou en GPX, cette information n'existe pas : elle
-  est recalculée depuis l'altitude GPS, ce qui la sous-estime généralement de 30 à 50 %.
-  Sur une sortie réelle de 16 km, 61 mètres calculés contre 140 mesurés. C'est une des
-  raisons de préférer le FIT.</p>
+  <h3>{{home.faq.q9}}</h3>
+  <p>{{home.faq.a9}}</p>
 
-  <h3>Le sport détecté est faux, pourquoi ?</h3>
-  <p>L'outil ne fait pas confiance au libellé du fichier, parce qu'il est souvent
-  inexact : une séance de renforcement entrecoupée de portions courues est étiquetée
-  « course », et une séance en bassin est étiquetée « autre ». La classification se fait
-  donc sur la forme des données. Chaque séance reçoit un niveau : analyse complète pour
-  la course et le vélo, traitement dédié pour la natation, et comptage en charge
-  uniquement pour tout le reste — une séance de renforcement pèse sur la récupération
-  même si son allure ne veut rien dire.</p>
+  <h3>{{home.faq.q10}}</h3>
+  <p>{{home.faq.a10}}</p>
 </section>
 
 <section aria-labelledby="refs">
-  <h2 id="refs">Sur quoi reposent ces calculs</h2>
-  <p class="sig">Chaque métrique s'appuie sur un travail publié. Voici lesquels, et ce
-    que chacun ne dit pas.</p>
+  <h2 id="refs">{{home.refs.title}}</h2>
+  <p class="sig">{{home.refs.intro}}</p>
   <ol class="refs">
-    <li><strong>Allure ajustée à la pente.</strong> Minetti AE, et al. <em>Energy cost of
-      walking and running at extreme uphill and downhill slopes.</em> J Appl Physiol.
-      2002;93(3):1039–46.
-      <a href="https://doi.org/10.1152/japplphysiol.01177.2001" rel="nofollow">doi</a> ·
-      <a href="https://pubmed.ncbi.nlm.nih.gov/12183501/" rel="nofollow">PubMed</a>.
-      Établi sur tapis roulant : ne tient compte ni du terrain technique ni de la casse
-      musculaire en descente prolongée.</li>
-    <li><strong>Écart entre capteurs de FC.</strong> Gillinov S, et al. Med Sci Sports
-      Exerc. 2017;49(8):1697–703. · Pasadyn SR, et al. Cardiovasc Diagn Ther.
-      2019;9(4):379–85. <a href="https://doi.org/10.21037/cdt.2019.06.05" rel="nofollow">doi</a>.
-      Ces travaux mesurent l'erreur du capteur optique ; ils ne proposent pas de méthode
-      pour l'identifier à partir du seul fichier. Notre détection en est dérivée : ce
-      n'est pas un protocole validé.</li>
-    <li><strong>Projection de chrono.</strong> Riegel PS. <em>Athletic records and human
-      endurance.</em> American Scientist. 1981;69(3):285–90. Calibré sur des records du
-      monde, sur route plate.</li>
-    <li><strong>Correction pour coureurs amateurs.</strong> Vickers AJ, Vertosick EA.
-      <em>An empirical study of race times in recreational endurance runners.</em>
-      BMC Sports Sci Med Rehabil. 2016;8:26.
-      <a href="https://doi.org/10.1186/s13102-016-0052-y" rel="nofollow">doi</a>.
-      Raison directe pour laquelle un chrono de course pèse davantage qu'un effort
-      d'entraînement.</li>
-    <li><strong>Vitesse critique.</strong> Jones AM, et al. <em>Critical power:
-      implications for determination of V̇O₂max and exercise tolerance.</em> Med Sci
-      Sports Exerc. 2010;42(10):1876–90.
-      <a href="https://doi.org/10.1249/MSS.0b013e3181d9cf7f" rel="nofollow">doi</a>.
-      Le modèle suppose la vitesse critique tenable indéfiniment, ce qui est faux au-delà
-      d'environ 90 minutes.</li>
-    <li><strong>Puissance normalisée, TSS, dérive Pa:Hr.</strong> Méthodologies
-      d'entraînement (Coggan, Friel) largement adoptées, mais pas des articles évalués
-      par les pairs. La distinction compte.</li>
+    <li>{{home.refs.minetti}}</li>
+    <li>{{home.refs.sensors}}</li>
+    <li>{{home.refs.riegel}}</li>
+    <li>{{home.refs.vickers}}</li>
+    <li>{{home.refs.cs}}</li>
+    <li>{{home.refs.coggan}}</li>
   </ol>
-  <p class="note"><strong>Ce que ces références ne garantissent pas</strong>
-    Elles fondent les formules, pas les conclusions. Un chiffre calculé correctement à
-    partir d'un capteur défaillant reste faux. En cas de douleur, ou avant de modifier un
-    plan d'entraînement, l'avis d'un professionnel prime sur cet outil comme sur l'IA à
-    qui vous transmettrez ses résultats.</p>
+  <p class="note"><strong>{{home.refs.noteTitle}}</strong>
+    {{home.refs.note}}</p>
 </section>
 
 </main>
 
 <footer>
-  <nav aria-label="Pied de page">
-    <a href="/fr/confidentialite.html">Confidentialité</a>
-    <a href="https://github.com/tpripri/gps-digest" rel="noopener">Code source</a>
+  <nav aria-label="{{attr:common.footerNav}}">
+    <a href="/{{locale}}/confidentialite.html">{{common.privacy}}</a>
+    <a href="https://github.com/tpripri/gps-digest" rel="noopener">{{common.source}}</a>
   </nav>
-  <p>Licence MIT. Aucun compte, aucune publicité, aucun traceur.</p>
+  <p>{{home.footer}}</p>
 </footer>
 
 </div>
 
 <script type="module">
+// Langue de la page et textes du script, injectés au rendu (src/page-i18n.ts).
+const PAGE = {{pageJson}};
+const LOCALE = PAGE.locale;
+/** Texte d'interface : « {nom} » remplacé par params.nom, déjà échappé. */
+const tx = (key, params = {}) =>
+  (PAGE.ui[key] ?? key).replace(/\{(\w+)\}/g, (_, n) => String(params[n] ?? ""));
+
 let lib;
 try {
   lib = await import("/src/index.ts");
 } catch (e) {
   document.body.insertAdjacentHTML("afterbegin",
-    '<div class="err" style="margin:1rem"><strong>La bibliothèque n\'a pas pu être chargée.</strong>' +
-    'Lancez la page via <code>npm run dev</code> : l\'ouvrir directement depuis ' +
-    'l\'explorateur de fichiers ne fonctionne pas.<br><br>' + e.message + "</div>");
+    '<div class="err" style="margin:1rem">' + tx("js.libError") + "<br><br>" + e.message + "</div>");
   throw e;
 }
 
@@ -561,7 +465,11 @@ const {
   digestFile, digestActivity, analyzeBatch, buildDossier, formatDuration, paceLabel,
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
   formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
+  gradeLabel, driftQualityLabel, confidenceLabel, t,
 } = lib;
+
+/** « 3.7 % » en français, « 3.7% » en anglais : l'unité suit la langue. */
+const pct = (v, digits = 0) => v.toFixed(digits) + t(LOCALE, "unit.percent");
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) =>
@@ -577,11 +485,6 @@ function parseClock(text) {
   if (parts.length === 2) return parts[0] * 60 + parts[1];
   return undefined;
 }
-
-// Langue des analyses et du dossier exporté, via ?lang=en (es, pt, de, zh, ja).
-// Provisoire : l'étape 2 produira une page par langue et retirera ce paramètre.
-// Sans paramètre, tout reste en français.
-const LOCALE = new URLSearchParams(location.search).get("lang") || undefined;
 
 function readSettings() {
   const maxHr = Number($("fcmax").value) || undefined;
@@ -716,6 +619,7 @@ function sessionSvg(f) {
       grid.map((g) => ({ t: g.t, hr: g.hr, paceSPerKm: g.paceSPerKm, powerW: g.pw })),
       {
         usePower,
+        locale: LOCALE,
         window: f.drift.window
           ? { fromS: f.drift.window.fromS, toS: f.drift.window.toS }
           : undefined,
@@ -737,7 +641,7 @@ function renderAnalysis(batch) {
   const ew = $("export-warnings");
   if (ew) {
     ew.innerHTML = batch.warnings.length
-      ? `<details><summary>${batch.warnings.length} point(s) de vigilance inclus dans le dossier</summary>${notes}</details>`
+      ? `<details><summary>${esc(tx("js.vigilance", { n: batch.warnings.length }))}</summary>${notes}</details>`
       : "";
   }
 
@@ -745,7 +649,7 @@ function renderAnalysis(batch) {
     const s = f.digest.session;
     const grades = f.adherence.map((a) =>
       `<span class="badge ${a.grade === "conforme" ? "ok" :
-        a.grade === "acceptable" ? "mid" : "bad"}">${esc(a.grade)}</span>`).join(" ");
+        a.grade === "acceptable" ? "mid" : "bad"}">${esc(gradeLabel(a.grade, LOCALE))}</span>`).join(" ");
     return `<tr>
       <td>${esc(f.filename)}</td>
       <td>${esc(s.startTimeUtc?.slice(0, 10) ?? "?")}</td>
@@ -756,10 +660,10 @@ function renderAnalysis(batch) {
       <td class="num">${s.hrAvg ? Math.round(s.hrAvg) : "—"}</td>
       <td><span class="badge ${f.hrSource.verdict === "chest_strap" ? "ok" :
         f.hrSource.verdict === "optical" ? "mid" : "bad"}">${
-        esc(hrSourceLabel(f.hrSource.verdict))}</span></td>
+        esc(hrSourceLabel(f.hrSource.verdict, LOCALE))}</span></td>
       <td class="num">${f.drift.applicable
-        ? f.drift.decouplingPct.toFixed(1) + " %" +
-          (f.drift.quality === "indicatif" ? ' <span class="badge mid">indic.</span>' : "")
+        ? pct(f.drift.decouplingPct, 1) +
+          (f.drift.quality === "indicatif" ? ` <span class="badge mid">${esc(tx("js.indicShort"))}</span>` : "")
         : '<span class="badge mid">n/a</span>'}</td>
       <td>${grades || "—"}</td>
     </tr>`;
@@ -768,35 +672,52 @@ function renderAnalysis(batch) {
   $("sensors").innerHTML = batch.files.map((f) => {
     const h = f.hrSource;
     const sigs = h.signals.map((s) =>
-      `<p class="sig">${esc(s.name)} : <b>${s.value}${esc(s.unit)}</b> — ${esc(s.note)}</p>`).join("");
+      `<p class="sig">${tx("js.signal", { name: esc(s.name), value: esc(s.value + s.unit), note: esc(s.note) })}</p>`).join("");
     const sets = f.digest.intervalSets.map((s) => s.description).join(" + ");
     return `<details>
-      <summary>${esc(f.filename)} — ${esc(hrSourceLabel(h.verdict))}
-        (confiance ${h.confidence.toFixed(2)})</summary>
-      ${sigs || '<p class="sig">Aucun signal exploitable.</p>'}
-      <p class="sig">Verrouillage cadence : <b>${h.cadenceLockPct.toFixed(1)} %</b>,
-        <b>${h.suspectRanges.length}</b> plage(s) écartée(s) du calcul de dérive.</p>
-      ${sets ? `<p class="sig">Séries détectées : <b>${esc(sets)}</b></p>` : ""}
+      <summary>${tx("js.sensorSummary", {
+        file: esc(f.filename),
+        label: esc(hrSourceLabel(h.verdict, LOCALE)),
+        confidence: h.confidence.toFixed(2),
+      })}</summary>
+      ${sigs || `<p class="sig">${esc(tx("js.noSignal"))}</p>`}
+      <p class="sig">${tx("js.lock", { pct: pct(h.cadenceLockPct, 1), n: h.suspectRanges.length })}</p>
+      ${sets ? `<p class="sig">${tx("js.sets", { sets: esc(sets) })}</p>` : ""}
       ${f.weather
-        ? `<p class="sig">Air <b>${Math.round(f.weather.tempC)} °C</b>${
-            f.weather.apparentC != null ? ` (ressenti ${Math.round(f.weather.apparentC)})` : ""}${
-            f.weather.humidityPct != null ? `, ${Math.round(f.weather.humidityPct)} % HR` : ""}${
-            f.weather.windKmh != null ? `, vent ${Math.round(f.weather.windKmh)} km/h` : ""}
-            — Open-Meteo${heatStressNote(f.weather) ? `. ${esc(heatStressNote(f.weather))}` : ""}</p>`
+        ? `<p class="sig">${tx("js.weather", {
+            temp: Math.round(f.weather.tempC),
+            feels: f.weather.apparentC != null
+              ? tx("js.weatherFeels", { temp: Math.round(f.weather.apparentC) }) : "",
+            humidity: f.weather.humidityPct != null
+              ? tx("js.weatherHumidity", { pct: pct(f.weather.humidityPct) }) : "",
+            wind: f.weather.windKmh != null
+              ? tx("js.weatherWind", { kmh: Math.round(f.weather.windKmh) }) : "",
+          })}${heatStressNote(f.weather, LOCALE) ? `. ${esc(heatStressNote(f.weather, LOCALE))}` : ""}</p>`
         : ""}
       ${f.drift.applicable
-        ? `<p class="sig">Dérive <b>${f.drift.decouplingPct.toFixed(1)} %</b>
-             <span class="badge ${f.drift.quality === "solide" ? "ok" : "mid"}">${esc(f.drift.quality)}</span>
-             sur ${Math.round(f.drift.window.durationS / 60)} min à ${esc(paceLabel(f.drift.window.paceSPerKm) ?? "?")}
-             (${Math.round(f.drift.windowCoveragePct)} % de la séance) — ${esc(f.drift.interpretation)}
+        ? `<p class="sig">${tx("js.drift", {
+             pct: pct(f.drift.decouplingPct, 1),
+             badge: `<span class="badge ${f.drift.quality === "solide" ? "ok" : "mid"}">${
+               esc(driftQualityLabel(f.drift.quality, LOCALE))}</span>`,
+             min: Math.round(f.drift.window.durationS / 60),
+             pace: esc(paceLabel(f.drift.window.paceSPerKm) ?? "?"),
+             coverage: pct(f.drift.windowCoveragePct),
+             interpretation: esc(f.drift.interpretation),
+           })}
              ${f.drift.qualityNote ? `<br><em>${esc(f.drift.qualityNote)}</em>` : ""}</p>`
-        : `<p class="sig">Dérive non calculée : ${esc(f.drift.reason ?? "")}</p>`}
+        : `<p class="sig">${esc(tx("js.driftNone", { reason: f.drift.reason ?? "" }))}</p>`}
       ${f.adherence.filter((a) => a.hrr60AvgBpm != null).map((a) =>
-        `<p class="sig">Récupération cardiaque : <b>${a.hrr60AvgBpm.toFixed(0)} bpm</b> en 60 s${
-          a.hrr60DeclinePerRep != null && Math.abs(a.hrr60DeclinePerRep) >= 1
-            ? `, érosion ${a.hrr60DeclinePerRep.toFixed(1)} bpm/répétition` : ""}</p>`).join("")}
+        `<p class="sig">${tx("js.hrr", {
+          bpm: a.hrr60AvgBpm.toFixed(0),
+          erosion: a.hrr60DeclinePerRep != null && Math.abs(a.hrr60DeclinePerRep) >= 1
+            ? tx("js.hrrErosion", { bpm: a.hrr60DeclinePerRep.toFixed(1) }) : "",
+        })}</p>`).join("")}
       ${f.adherence.map((a) =>
-        `<p class="sig"><b>${esc(a.setDescription)}</b> — ${esc(a.grade)} : ${esc(a.verdicts.join(" "))}</p>`).join("")}
+        `<p class="sig">${tx("js.adherence", {
+          set: esc(a.setDescription),
+          grade: esc(gradeLabel(a.grade, LOCALE)),
+          verdicts: esc(a.verdicts.join(" ")),
+        })}</p>`).join("")}
       ${sessionSvg(f)}
       ${f.adherence.map((a) => repsChart(
           a.reps.map((r) => ({
@@ -804,23 +725,22 @@ function renderAnalysis(batch) {
             value: a.basis === "power" ? (r.pwAvgW ?? 0) : (r.paceSPerKm ?? 0),
             hr: r.hrAvg,
           })).filter((r) => r.value > 0),
-          { unit: a.basis === "power" ? "power" : "pace", title: a.setDescription },
+          { unit: a.basis === "power" ? "power" : "pace", title: a.setDescription, locale: LOCALE },
         )).join("")}
     </details>`;
   }).join("");
 
   const prog = batch.progression;
   $("progression").innerHTML = prog.series.length
-    ? `<div class="scroll"><table><thead><tr><th>Allure</th><th>Capteur</th>
-        <th class="num">Points</th><th class="num">Tendance</th><th>Lecture</th></tr></thead><tbody>` +
+    ? `<div class="scroll"><table><thead><tr><th>${tx("js.progPace")}</th><th>${tx("js.progSensor")}</th>
+        <th class="num">${tx("js.progPoints")}</th><th class="num">${tx("js.progTrend")}</th><th>${tx("js.progReading")}</th></tr></thead><tbody>` +
       prog.series.map((s) => `<tr>
-        <td>${esc(s.paceLabel)}</td><td>${esc(hrSourceLabel(s.hrSource))}</td>
+        <td>${esc(s.paceLabel)}</td><td>${esc(hrSourceLabel(s.hrSource, LOCALE))}</td>
         <td class="num">${s.points.length}</td>
         <td class="num">${s.hrTrendBpmPerWeek != null
-          ? (s.hrTrendBpmPerWeek > 0 ? "+" : "") + s.hrTrendBpmPerWeek.toFixed(2) + " bpm/sem" : "—"}</td>
+          ? tx("js.perWeek", { value: (s.hrTrendBpmPerWeek > 0 ? "+" : "") + s.hrTrendBpmPerWeek.toFixed(2) }) : "—"}</td>
         <td class="sig">${esc(s.verdict ?? "")}</td></tr>`).join("") + `</tbody></table></div>`
-    : `<p class="sig">Pas encore de suivi possible : il faut au moins trois séances de course
-       tenant une allure comparable, avec le même capteur de FC.</p>`;
+    : `<p class="sig">${tx("js.progNone")}</p>`;
 
   $("chart-load").innerHTML = loadChart(
     batch.weeks.map((w) => {
@@ -831,29 +751,33 @@ function renderAnalysis(batch) {
         hardPct: total > 0 ? ((w.moderateS + w.hardS) / total) * 100 : 0,
       };
     }),
+    LOCALE,
   );
 
   $("chart-trend").innerHTML = prog.series
     .map((s) => trendChart(
       s.points.map((p) => ({ date: p.date, value: p.hrBpm })),
-      `FC à ${s.paceLabel} — ${hrSourceLabel(s.hrSource)}`,
+      tx("js.trendTitle", { pace: s.paceLabel, source: hrSourceLabel(s.hrSource, LOCALE) }),
+      LOCALE,
     ))
     .join("");
 
   $("projections").innerHTML = batch.projections.length
-    ? `<div class="scroll"><table><thead><tr><th>Distance</th><th class="num">Estimation</th>
-        <th class="num">Fourchette</th><th>Fiabilité</th><th>Méthode</th></tr></thead><tbody>` +
+    ? `<div class="scroll"><table><thead><tr><th>${tx("js.projDistance")}</th><th class="num">${tx("js.projEstimate")}</th>
+        <th class="num">${tx("js.projRange")}</th><th>${tx("js.projReliability")}</th><th>${tx("js.projMethod")}</th></tr></thead><tbody>` +
       batch.projections.map((p) => `<tr>
         <td>${esc(p.label)}</td><td class="num">${formatDuration(p.timeS)}</td>
         <td class="num">${formatDuration(p.lowS)} – ${formatDuration(p.highS)}</td>
         <td><span class="badge ${p.confidence === "haute" ? "ok" :
-          p.confidence === "moyenne" ? "mid" : "bad"}">${esc(p.confidence)}</span></td>
+          p.confidence === "moyenne" ? "mid" : "bad"}">${esc(confidenceLabel(p.confidence, LOCALE))}</span></td>
         <td class="sig">${esc(p.method)}</td></tr>`).join("") + `</tbody></table></div>` +
       (batch.criticalSpeed
-        ? `<p class="sig">Vitesse critique <b>${esc(paceLabel(batch.criticalSpeed.csPaceSPerKm))}/km</b>,
-           D' <b>${Math.round(batch.criticalSpeed.dPrimeM)} m</b>,
-           R² <b>${batch.criticalSpeed.r2.toFixed(3)}</b></p>` : "")
-    : `<p class="sig">Aucune projection : il faut au moins une séance de course à pied.</p>`;
+        ? `<p class="sig">${tx("js.cs", {
+            pace: esc(paceLabel(batch.criticalSpeed.csPaceSPerKm)),
+            d: Math.round(batch.criticalSpeed.dPrimeM),
+            r2: batch.criticalSpeed.r2.toFixed(3),
+          })}</p>` : "")
+    : `<p class="sig">${tx("js.projNone")}</p>`;
 }
 
 function renderDossier() {
@@ -862,24 +786,25 @@ function renderDossier() {
   const tokens = Math.ceil(lastDossier.length / 3.2);
   const rawTokens = Math.round(rawBytesTotal / 3.2);
 
+  const num = (v) => v.toLocaleString(PAGE.numberLocale);
   $("reduction").innerHTML = `
-    <div class="stat"><span>Vos fichiers d'origine</span>
-      <b>${(rawBytesTotal / 1e6).toFixed(2)} Mo — ~${rawTokens.toLocaleString("fr-FR")} tokens</b></div>
-    <div class="stat"><span>Dossier généré</span>
-      <b>${(lastDossier.length / 1024).toFixed(0)} Ko — ~${tokens.toLocaleString("fr-FR")} tokens</b></div>
-    <div class="stat"><span>Réduction</span>
-      <b>${rawBytesTotal ? (100 - (lastDossier.length / rawBytesTotal) * 100).toFixed(1) : "—"} %</b></div>
-    <div class="stat"><span>Compatibilité</span><b>${
+    <div class="stat"><span>${tx("js.redOriginal")}</span>
+      <b>${tx("js.sizeMb", { value: (rawBytesTotal / 1e6).toFixed(2), tokens: num(rawTokens) })}</b></div>
+    <div class="stat"><span>${tx("js.redGenerated")}</span>
+      <b>${tx("js.sizeKb", { value: (lastDossier.length / 1024).toFixed(0), tokens: num(tokens) })}</b></div>
+    <div class="stat"><span>${tx("js.redReduction")}</span>
+      <b>${rawBytesTotal ? pct(100 - (lastDossier.length / rawBytesTotal) * 100, 1) : "—"}</b></div>
+    <div class="stat"><span>${tx("js.redCompat")}</span><b>${
       tokens > 120000
-        ? "⚠ trop volumineux pour ChatGPT — réduisez la finesse"
+        ? tx("js.compatTooBig")
         : tokens > 180000
-          ? "⚠ Gemini uniquement"
-          : "✓ ChatGPT, Claude et Gemini"}</b></div>`;
+          ? tx("js.compatGemini")
+          : tx("js.compatOk")}</b></div>`;
 
   // L'aperçu est tronqué pour ne pas figer la page sur un gros dossier ;
   // la copie et le téléchargement portent bien sur le fichier entier.
   $("bundle").textContent = lastDossier.slice(0, 40000) +
-    (lastDossier.length > 40000 ? "\n\n… aperçu tronqué — la copie contient tout." : "");
+    (lastDossier.length > 40000 ? "\n\n" + tx("js.truncated") : "");
 }
 
 const drop = $("drop");
@@ -898,15 +823,15 @@ drop.addEventListener("drop", (e) => run(e.dataTransfer.files));
 
 $("copy").addEventListener("click", async () => {
   await navigator.clipboard.writeText(lastDossier);
-  $("copy").textContent = "Copié";
-  setTimeout(() => ($("copy").textContent = "Copier dans le presse-papiers"), 1500);
+  $("copy").textContent = tx("js.copied");
+  setTimeout(() => ($("copy").textContent = tx("js.copy")), 1500);
 });
 
 $("download").addEventListener("click", () => {
   const url = URL.createObjectURL(new Blob([lastDossier], { type: "text/plain;charset=utf-8" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = "dossier-entrainement.txt";
+  a.download = tx("js.filename");
   a.click();
   URL.revokeObjectURL(url);
 });

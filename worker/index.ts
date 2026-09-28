@@ -16,8 +16,10 @@ interface Env {
 
 // Seules les langues réellement publiées. En ajouter une ici sans la page
 // correspondante enverrait les visiteurs sur une 404.
-const LOCALES = ["fr"] as const;
-const DEFAULT_LOCALE = "fr";
+const LOCALES = ["fr", "en", "es", "pt", "de", "zh", "ja"] as const;
+// Visiteur dont aucune langue n'est publiée (italien, néerlandais…) : l'anglais
+// lui est plus utile que le français. Cohérent avec le hreflang x-default.
+const DEFAULT_LOCALE = "en";
 
 /**
  * Choisit la langue depuis l'en-tête Accept-Language, en respectant les
