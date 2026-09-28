@@ -7,6 +7,7 @@
  */
 
 import { smoothByTime, elevationGainLoss, mean, speedSeries } from "./geo.ts";
+import { t } from "./i18n.ts";
 import {
   movingTime,
   gradeSeries,
@@ -98,6 +99,12 @@ export function computeSplits(
 
 // ----------------------------------------------------------------- zones
 
+/** Libellés des n premières zones : Z1 récup, Z2 endurance… */
+function zoneLabels(n: 5 | 7, locale?: string): string[] {
+  const keys = ["zone.1", "zone.2", "zone.3", "zone.4", "zone.5", "zone.6", "zone.7"] as const;
+  return keys.slice(0, n).map((k) => t(locale, k));
+}
+
 function binTime(
   samples: Sample[],
   value: (i: number) => number | undefined,
@@ -135,7 +142,7 @@ function binTime(
  * **observée dans le fichier** : approximatif, mais toujours plus utile que rien
  * — et le bundle l'annonce explicitement au modèle.
  */
-export function hrZones(samples: Sample[], athlete?: AthleteProfile): ZoneBin[] {
+export function hrZones(samples: Sample[], athlete?: AthleteProfile, locale?: string): ZoneBin[] {
   const observed = Math.max(0, ...samples.map((s) => s.hr ?? 0));
   if (observed < 60) return [];
 
@@ -149,12 +156,12 @@ export function hrZones(samples: Sample[], athlete?: AthleteProfile): ZoneBin[] 
     samples,
     (i) => samples[i].hr,
     bounds,
-    ["Z1 récup", "Z2 endurance", "Z3 tempo", "Z4 seuil", "Z5 VO2max"],
+    zoneLabels(5, locale),
   );
 }
 
 /** Zones de puissance Coggan (7 niveaux, % FTP). Nécessite la FTP. */
-export function powerZones(samples: Sample[], athlete?: AthleteProfile): ZoneBin[] {
+export function powerZones(samples: Sample[], athlete?: AthleteProfile, locale?: string): ZoneBin[] {
   const ftp = athlete?.ftpW;
   if (!ftp || !samples.some((s) => s.pw != null)) return [];
   const bounds = [0, 0.56, 0.76, 0.91, 1.06, 1.21, 1.5].map((p) => p * ftp);
@@ -162,7 +169,7 @@ export function powerZones(samples: Sample[], athlete?: AthleteProfile): ZoneBin
     samples,
     (i) => samples[i].pw,
     bounds,
-    ["Z1 récup", "Z2 endurance", "Z3 tempo", "Z4 seuil", "Z5 VO2max", "Z6 anaérobie", "Z7 neuro"],
+    zoneLabels(7, locale),
   );
 }
 
@@ -171,6 +178,7 @@ export function paceZones(
   samples: Sample[],
   speed: number[],
   athlete?: AthleteProfile,
+  locale?: string,
 ): ZoneBin[] {
   const thr = athlete?.thresholdPaceSPerKm;
   if (!thr) return [];
@@ -180,7 +188,7 @@ export function paceZones(
     samples,
     (i) => (speed[i] > 0.3 ? speed[i] : undefined),
     bounds,
-    ["Z1 récup", "Z2 endurance", "Z3 tempo", "Z4 seuil", "Z5 VO2max"],
+    zoneLabels(5, locale),
   );
 }
 
@@ -221,6 +229,7 @@ export function detectIntervals(
   laps: Lap[],
   minBlockS = 20,
   sport: Sport = "running",
+  locale?: string,
 ): { blocks: IntervalBlock[]; sets: IntervalSet[] } {
   const nativeRest = laps.filter((l) => /rest/i.test(l.intensity ?? "")).length;
   if (nativeRest >= 2 && laps.length >= 4) {
@@ -234,7 +243,7 @@ export function detectIntervals(
       hrAvg: l.hrAvg,
       hrMax: l.hrMax,
     }));
-    return { blocks, sets: groupSets(blocks, sport) };
+    return { blocks, sets: groupSets(blocks, sport, locale) };
   }
 
   const hasPower = samples.some((s) => s.pw != null);
@@ -299,7 +308,7 @@ export function detectIntervals(
   const workCount = blocks.filter((b) => b.kind === "work").length;
   if (workCount < 2) return { blocks: [], sets: [] };
   const totalMoving = samples[samples.length - 1].t - samples[0].t;
-  return { blocks, sets: filterMeaningfulSets(groupSets(blocks, sport), blocks, totalMoving) };
+  return { blocks, sets: filterMeaningfulSets(groupSets(blocks, sport, locale), blocks, totalMoving) };
 }
 
 /**
@@ -354,10 +363,11 @@ function describeSet(
   avgRest: number,
   avgPw: number | undefined,
   sport: Sport,
+  locale?: string,
 ): string {
-  const rest = avgRest > 3 ? `, récup ${Math.round(avgRest)} s` : "";
+  const rest = avgRest > 3 ? t(locale, "set.rest", { s: Math.round(avgRest) }) : "";
   if (sport === "cycling") {
-    const power = avgPw != null ? ` à ${Math.round(avgPw)} W` : "";
+    const power = avgPw != null ? t(locale, "set.power", { w: Math.round(avgPw) }) : "";
     return `${reps} × ${Math.round(avgDur)} s${power}${rest}`;
   }
   return kind === "distance"
@@ -366,7 +376,11 @@ function describeSet(
 }
 
 /** Regroupe les répétitions homogènes : "8 × 400 m, récup 90 s". */
-function groupSets(blocks: IntervalBlock[], sport: Sport = "running"): IntervalSet[] {
+function groupSets(
+  blocks: IntervalBlock[],
+  sport: Sport = "running",
+  locale?: string,
+): IntervalSet[] {
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
   if (work.length < 2) return [];
@@ -412,7 +426,7 @@ function groupSets(blocks: IntervalBlock[], sport: Sport = "running"): IntervalS
       avgWorkPaceSPerKm: avgPace,
       avgWorkPwW: avgPw,
       avgRestDurS: Math.round(avgRest),
-      description: describeSet(group.length, kind, target, avgDur, avgRest, avgPw, sport),
+      description: describeSet(group.length, kind, target, avgDur, avgRest, avgPw, sport, locale),
     });
     group = [];
   };

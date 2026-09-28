@@ -31,7 +31,10 @@ import { progressionRows } from "./progression.ts";
 import { swimRows, paceLabel100 } from "./swim.ts";
 import { formatSpeed } from "./classify.ts";
 import { heatStressNote } from "./weather.ts";
-import { formatDuration, RACE_LABELS } from "./efforts.ts";
+import { formatDuration, raceLabel, confidenceLabel } from "./efforts.ts";
+import { gradeLabel } from "./adherence.ts";
+import { driftQualityLabel } from "./drift.ts";
+import { resolveLocale, translator, type Locale, type MessageKey, type MessageParams } from "./i18n.ts";
 import type { BatchAnalysis, FileAnalysis } from "./batch.ts";
 
 export type StreamMode = "time" | "distance" | "adaptive" | "none";
@@ -48,48 +51,14 @@ export interface DossierOptions {
   /** Inclut le détail séance par séance. Le désactiver ne laisse que la synthèse. */
   perSessionDetail?: boolean;
   splitUnitM?: number;
+  /** Langue du dossier. Par défaut, celle de l'analyse multi-fichiers. */
+  locale?: string;
 }
 
-const GUIDE = `# ─────────────────────────────────────────────────────────────────────
-# COMMENT LIRE CE DOSSIER
-#
-# Structure : d'abord des tableaux transversaux (toutes séances confondues),
-# puis le détail de chaque séance, chacune introduite par « ═══ SÉANCE n ═══ ».
-# Chaque bloc commence par « ## nom_du_bloc » et contient un CSV avec en-tête.
-#
-# Unités : mètres, secondes, bpm, watts, degrés Celsius. Séparateur décimal
-# = point. Séparateur de colonnes = virgule.
-#
-# Colonnes principales
-#   t_s          secondes écoulées depuis le départ de la séance
-#   dist_m       distance cumulée depuis le départ, en mètres
-#   speed        allure ou vitesse selon le sport : min/km à pied, km/h à vélo,
-#                min/100m en natation. Ne jamais convertir l'une en l'autre.
-#   pace_s_km    allure en secondes par kilomètre (300 = 5:00/km), calculée sur
-#                le temps EN MOUVEMENT, comme Strava. Garmin Connect divise par
-#                la durée totale : ses allures sont donc plus lentes. Ne pas
-#                conclure à une contre-performance sur cette seule différence.
-#   pace_mmss    la même allure en minutes:secondes, pour la lecture
-#   gap_s_km     allure ajustée à la pente (Minetti 2002) : comparable entre
-#                une sortie vallonnée et une sortie plate
-#   grade_pct    pente moyenne du segment, en pourcentage
-#   hr_bpm       fréquence cardiaque
-#   cad_spm      cadence en pas par minute (course) ou tours/min (vélo)
-#   pw_w         puissance en watts
-#
-# Précautions de lecture, dans cet ordre d'importance
-#   1. hr_source indique le capteur cardiaque estimé. Ne JAMAIS comparer des
-#      valeurs de FC entre deux séances de sources différentes : l'écart
-#      mesuré serait un artefact de matériel, pas un changement de forme.
-#   2. drift_applicable = no signifie que la séance ne se prête pas au calcul
-#      de dérive (effort trop irrégulier ou trop court). Ce n'est pas une
-#      dérive nulle : c'est l'absence de mesure valide.
-#   3. temp_c provient du capteur de la montre, porté au poignet. Il surestime
-#      la température de l'air de 3 à 8 °C. Ce n'est PAS la météo.
-#   4. Le flux détaillé est une moyenne par intervalle, pas un relevé
-#      instantané. Les temps exacts sont dans les blocs splits, laps et
-#      intervals.
-# ─────────────────────────────────────────────────────────────────────`;
+type Tr = (key: MessageKey, params?: MessageParams) => string;
+
+// Le guide de lecture vit dans le catalogue (clé dossier.guide) : il se
+// traduit en bloc, avec ses préfixes « # ».
 
 function streamRowsFrom(points: GridPoint[], withCoords: boolean) {
   return points.map((p) => {
@@ -130,11 +99,17 @@ export function buildStream(file: FileAnalysis, opts: DossierOptions): GridPoint
 }
 
 /** Un bloc de séance, prêt à concaténer. */
-function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): string[] {
+function sessionBlocks(
+  file: FileAnalysis,
+  n: number,
+  opts: DossierOptions,
+  locale: Locale,
+  tr: Tr,
+): string[] {
   const out: string[] = [];
   const s = file.digest.session;
   const p = `s${n}`;
-  const date = s.startTimeUtc?.slice(0, 10) ?? "date inconnue";
+  const date = s.startTimeUtc?.slice(0, 10) ?? tr("dossier.unknownDate");
 
   const push = (name: string, csv: string) => {
     if (csv.trim()) out.push(`## ${p}_${name}\n${csv.trim()}\n`);
@@ -144,8 +119,8 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
     ? file.digest.intervalSets.map((x) => x.description).join(" + ")
     : `${(s.distM / 1000).toFixed(1)} km`;
 
-  out.push(`\n# ═══ SÉANCE ${n} — ${date} — ${s.sport} — ${label} ═══`);
-  out.push(`# fichier : ${file.filename}`);
+  out.push(`\n# ${tr("dossier.sessionHeader", { n, date, sport: s.sport, label })}`);
+  out.push(`# ${tr("dossier.file", { name: file.filename })}`);
 
   // --- Résumé ---
   const summary: [string, string | number | undefined][] = [
@@ -159,16 +134,14 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
     ["dur_moving_s", s.durMovingS],
     ["dur_moving", formatDuration(s.durMovingS)],
     ["pace_avg_s_km", s.paceAvgSPerKm != null ? Math.round(s.paceAvgSPerKm) : undefined],
-    ["pace_basis", "temps en mouvement (convention Strava) — Garmin Connect divise par la durée totale et affiche donc une allure plus lente"],
+    ["pace_basis", tr("dossier.paceBasis")],
     ["pace_avg_mmss", paceLabel(s.paceAvgSPerKm)],
     ["speed_avg_display", formatSpeed(s.sport, s.speedAvgMS)],
     ["gap_avg_s_km", s.gapAvgSPerKm != null ? Math.round(s.gapAvgSPerKm) : undefined],
     ["gap_avg_mmss", paceLabel(s.gapAvgSPerKm)],
     ["ele_gain_m", s.eleGainM],
     ["ele_loss_m", s.eleLossM],
-    ["ele_source", s.elevationFromDevice
-      ? "altimètre barométrique de la montre"
-      : "calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %"],
+    ["ele_source", s.elevationFromDevice ? tr("dossier.eleDevice") : tr("dossier.eleGps")],
     ["hr_avg", s.hrAvg != null ? Math.round(s.hrAvg) : undefined],
     ["hr_max", s.hrMax],
     ["cad_avg", s.cadAvg != null ? Math.round(s.cadAvg) : undefined],
@@ -182,8 +155,8 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
     ["humidity_pct",
       file.weather?.humidityPct != null ? Math.round(file.weather.humidityPct) : undefined],
     ["wind_kmh", file.weather?.windKmh != null ? Math.round(file.weather.windKmh) : undefined],
-    ["power_is_estimated", s.pwIsEstimated ? "yes (montre, non comparable au vélo)" : undefined],
-    ["drift_window_quality", file.drift.quality],
+    ["power_is_estimated", s.pwIsEstimated ? tr("dossier.powerEstimated") : undefined],
+    ["drift_window_quality", file.drift.quality && driftQualityLabel(file.drift.quality, locale)],
     ["drift_window_from_s", file.drift.window?.fromS],
     ["drift_window_to_s", file.drift.window?.toS],
     ["drift_window_coverage_pct",
@@ -192,7 +165,7 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
       file.adherence[0]?.hrr60AvgBpm != null
         ? Math.round(file.adherence[0].hrr60AvgBpm)
         : undefined],
-    ["hr_source", hrSourceLabel(file.hrSource.verdict)],
+    ["hr_source", hrSourceLabel(file.hrSource.verdict, locale)],
     ["hr_source_confidence", file.hrSource.confidence.toFixed(2)],
     ["hr_cadence_lock_pct",
       file.hrSource.cadenceLockPct > 1 ? file.hrSource.cadenceLockPct.toFixed(1) : undefined],
@@ -224,17 +197,17 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
   );
 
   if (file.drift.interpretation) {
-    out.push(`# lecture de la dérive : ${file.drift.interpretation}`);
+    out.push(`# ${tr("dossier.driftReading", { text: file.drift.interpretation })}`);
   }
-  if (file.drift.qualityNote) out.push(`# représentativité : ${file.drift.qualityNote}`);
+  if (file.drift.qualityNote) out.push(`# ${tr("dossier.representativeness", { text: file.drift.qualityNote })}`);
   if (file.drift.basisNote) out.push(`# ${file.drift.basisNote}`);
   if (file.weather) {
-    const note = heatStressNote(file.weather);
-    if (note) out.push(`# conditions : ${note}`);
+    const note = heatStressNote(file.weather, locale);
+    if (note) out.push(`# ${tr("dossier.conditions", { text: note })}`);
   }
   out.push("");
 
-  for (const r of s.classificationReasons ?? []) out.push(`# classification : ${r}`);
+  for (const r of s.classificationReasons ?? []) out.push(`# ${tr("dossier.classification", { text: r })}`);
 
   // --- Natation : métriques propres, aucune reprise des blocs de course ---
   const sw = file.swim;
@@ -259,7 +232,7 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
       ),
     );
     if (sw.sets.length) {
-      out.push(`# séries : ${sw.sets.map((x) => x.description).join(" + ")}`);
+      out.push(`# ${tr("dossier.swimSets", { list: sw.sets.map((x) => x.description).join(" + ") })}`);
     }
     push("swim_lengths", toCsv(swimRows(sw), LLM_DIALECT));
     for (const c of sw.caveats) out.push(`# ⚠ ${c}`);
@@ -295,7 +268,11 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
         LLM_DIALECT,
       ),
     );
-    out.push(`# ${a.setDescription} — ${a.grade} : ${a.verdicts.join(" ")}\n`);
+    out.push(`# ${tr("dossier.adherence", {
+      set: a.setDescription,
+      grade: gradeLabel(a.grade, locale),
+      verdicts: a.verdicts.join(" "),
+    })}\n`);
   }
 
   if (file.efforts.length) {
@@ -303,7 +280,7 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
       "best_efforts",
       toCsv(
         file.efforts.map((e) => ({
-          distance: RACE_LABELS[e.distanceM] ?? `${Math.round(e.distanceM)} m`,
+          distance: raceLabel(e.distanceM, locale) ?? `${Math.round(e.distanceM)} m`,
           time: formatDuration(e.timeS),
           time_s: Math.round(e.timeS),
           pace_mmss: paceLabel(e.paceSPerKm),
@@ -319,7 +296,7 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
   if (points.length) {
     const mode = opts.streamMode ?? "time";
     const step = mode === "distance" ? `${opts.intervalM ?? 100} m` : `${opts.intervalS ?? 10} s`;
-    out.push(`# flux ci-dessous : un point tous les ${step}, valeurs moyennées sur l'intervalle`);
+    out.push(`# ${tr("dossier.streamNote", { step })}`);
     push("stream", toCsv(streamRowsFrom(points, !opts.dropCoordinates), LLM_DIALECT));
   }
 
@@ -327,27 +304,31 @@ function sessionBlocks(file: FileAnalysis, n: number, opts: DossierOptions): str
 }
 
 export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): string {
+  const locale = resolveLocale(opts.locale ?? batch.locale);
+  const tr = translator(locale);
   const detail = opts.perSessionDetail !== false;
   const out: string[] = [];
   const block = (name: string, csv: string) => {
     if (csv.trim()) out.push(`## ${name}\n${csv.trim()}\n`);
   };
 
-  out.push("# gps-digest — dossier d'entraînement");
+  out.push(`# ${tr("dossier.title")}`);
   out.push(
-    `# ${batch.files.length} séance(s) du ${batch.dateFrom ?? "?"} au ${batch.dateTo ?? "?"}`,
+    `# ${tr("dossier.range", { n: batch.files.length, from: batch.dateFrom ?? "?", to: batch.dateTo ?? "?" })}`,
   );
   out.push(
-    `# volume : ${(batch.totalDistanceM / 1000).toFixed(1)} km, ` +
-      `${formatDuration(batch.totalMovingS)} en mouvement`,
+    `# ${tr("dossier.volume", {
+      km: (batch.totalDistanceM / 1000).toFixed(1),
+      dur: formatDuration(batch.totalMovingS),
+    })}`,
   );
-  if (opts.maxHr) out.push(`# FC max de référence : ${opts.maxHr} bpm`);
+  if (opts.maxHr) out.push(`# ${tr("common.refMaxHr", { hr: opts.maxHr })}`);
   out.push("");
-  out.push(GUIDE);
+  out.push(tr("dossier.guide"));
   out.push("");
 
   if (batch.warnings.length) {
-    out.push("# ⚠ AVERTISSEMENTS — à lire avant toute conclusion");
+    out.push(`# ${tr("dossier.warningsHeader")}`);
     for (const w of batch.warnings) out.push(`# ⚠ ${w}`);
     out.push("");
   }
@@ -372,11 +353,11 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           ele_gain_m: s.eleGainM,
           hr_avg: s.hrAvg != null ? Math.round(s.hrAvg) : undefined,
           hr_max: s.hrMax,
-          hr_source: hrSourceLabel(f.hrSource.verdict),
+          hr_source: hrSourceLabel(f.hrSource.verdict, locale),
           drift_pct: f.drift.applicable ? f.drift.decouplingPct!.toFixed(1) : "n/a",
           temp_c: s.tempAvgC != null ? Math.round(s.tempAvgC) : undefined,
           intervals: f.digest.intervalSets.map((x) => x.description).join(" + ") || undefined,
-          adherence: f.adherence.map((a) => a.grade).join("/") || undefined,
+          adherence: f.adherence.map((a) => gradeLabel(a.grade, locale)).join("/") || undefined,
           file: f.filename,
         };
       }),
@@ -409,7 +390,7 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     "best_efforts_all_sessions",
     toCsv(
       batch.consolidatedEfforts.map((e) => ({
-        distance: RACE_LABELS[e.distanceM] ?? `${Math.round(e.distanceM)} m`,
+        distance: raceLabel(e.distanceM, locale) ?? `${Math.round(e.distanceM)} m`,
         time: formatDuration(e.timeS),
         pace_mmss: paceLabel(e.paceSPerKm),
         date: e.sourceDate,
@@ -445,7 +426,7 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
         range_low: formatDuration(p.lowS),
         range_high: formatDuration(p.highS),
         pace_mmss: paceLabel(p.paceSPerKm),
-        confidence: p.confidence,
+        confidence: confidenceLabel(p.confidence, locale),
         method: p.method,
       })),
       LLM_DIALECT,
@@ -455,18 +436,23 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
   // Progression aérobie : le bloc transversal le plus informatif du dossier.
   const progRows = progressionRows(batch.progression);
   if (progRows.length) {
-    out.push("# FC à allure de référence, dans le temps. Comparer uniquement");
-    out.push("# des lignes de même hr_source : deux capteurs ne sont pas comparables.");
+    for (const line of tr("dossier.progNote").split("\n")) out.push(`# ${line}`);
     block("aerobic_progression", toCsv(progRows, LLM_DIALECT));
     for (const s of batch.progression.series) {
-      if (s.verdict) out.push(`# ${s.paceLabel} (${hrSourceLabel(s.hrSource)}) : ${s.verdict}`);
+      if (s.verdict) {
+        out.push(`# ${tr("dossier.progVerdict", {
+          pace: s.paceLabel,
+          source: hrSourceLabel(s.hrSource, locale),
+          verdict: s.verdict,
+        })}`);
+      }
     }
     out.push("");
   }
 
   if (detail) {
     for (let i = 0; i < batch.files.length; i++) {
-      out.push(...sessionBlocks(batch.files[i], i + 1, opts));
+      out.push(...sessionBlocks(batch.files[i], i + 1, opts, locale, tr));
     }
   }
 

@@ -19,6 +19,7 @@ import {
   decodeFit, GLOBAL, fitTimeToUnix, semicircles, scaled,
   FIT_SPORT, FIT_SUB_SPORT, SWIM_STROKE, FIT_MANUFACTURER, type FitMessage,
 } from "./fit-decode.ts";
+import { translator } from "./i18n.ts";
 import { fillDistance, sanitizeSamples } from "./geo.ts";
 import type { Activity, Lap, Sample, Sport } from "./types.ts";
 
@@ -69,10 +70,11 @@ const SOURCE_LABEL: Record<number, string> = {
   0: "ANT", 1: "ANT+", 2: "Bluetooth", 3: "Bluetooth LE",
 };
 
-function detectHrSensor(devices: FitMessage[]): {
+function detectHrSensor(devices: FitMessage[], locale?: string): {
   verdict?: "chest_strap" | "optical" | "unknown";
   evidence?: string;
 } {
+  const tr = translator(locale);
   for (const d of devices) {
     const deviceType = d[1] as number | undefined;
     const sourceType = d[25] as number | undefined;
@@ -87,20 +89,20 @@ function detectHrSensor(devices: FitMessage[]): {
     const product = d[4] as number | undefined;
     return {
       verdict: "chest_strap",
-      evidence:
-        `Capteur cardiaque externe appairé en ${SOURCE_LABEL[sourceType] ?? `source ${sourceType}`}` +
-        (product != null ? ` (produit ${product})` : "") +
-        " : information lue dans le fichier, pas estimée.",
+      evidence: tr("fit.hrEvidence", {
+        source: SOURCE_LABEL[sourceType] ?? tr("fit.sourceN", { n: sourceType }),
+        product: product != null ? tr("fit.hrEvidenceProduct", { id: product }) : "",
+      }),
     };
   }
   return {};
 }
 
-export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array): {
+export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array, locale?: string): {
   activity: Activity;
   extras: FitExtras;
 } {
-  const fit = decodeFit(buffer);
+  const fit = decodeFit(buffer, locale);
   const records = fit.byGlobal.get(GLOBAL.RECORD) ?? [];
   const session = (fit.byGlobal.get(GLOBAL.SESSION) ?? [])[0];
   const lapMsgs = fit.byGlobal.get(GLOBAL.LAP) ?? [];
@@ -229,7 +231,7 @@ export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array): {
     for (const s of samples) if (s.cad != null && s.cad < 130) s.cad *= 2;
   }
 
-  const hr = detectHrSensor(devices);
+  const hr = detectHrSensor(devices, locale);
   const manufacturerId = fileId?.[1] as number | undefined;
   const manufacturer =
     manufacturerId != null
@@ -264,6 +266,6 @@ export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array): {
 }
 
 /** Décode un .fit. Plus aucune dépendance externe ni import dynamique. */
-export async function parseFit(buf: ArrayBuffer | Uint8Array): Promise<Activity> {
-  return parseFitBuffer(buf).activity;
+export async function parseFit(buf: ArrayBuffer | Uint8Array, locale?: string): Promise<Activity> {
+  return parseFitBuffer(buf, locale).activity;
 }

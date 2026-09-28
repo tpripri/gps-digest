@@ -26,6 +26,8 @@
  *   fichier : c'est pourquoi les définitions vivent dans une table mutable.
  */
 
+import { t } from "./i18n.ts";
+
 /** Origine des horodatages FIT : 31 décembre 1989 à 00:00 UTC. */
 const FIT_EPOCH_S = 631065600;
 
@@ -92,16 +94,16 @@ export const GLOBAL = {
  * transfert interrompu reste largement exploitable, et refuser de le lire
  * rendrait un mauvais service.
  */
-export function decodeFit(buffer: ArrayBuffer | Uint8Array): FitFile {
+export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): FitFile {
   const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
   const headerSize = bytes[0];
   if (headerSize !== 12 && headerSize !== 14) {
-    throw new Error("Fichier FIT invalide : en-tête inattendu.");
+    throw new Error(t(locale, "fit.errHeader"));
   }
   const magic = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
-  if (magic !== ".FIT") throw new Error("Fichier FIT invalide : signature absente.");
+  if (magic !== ".FIT") throw new Error(t(locale, "fit.errSignature"));
 
   const dataSize = view.getUint32(4, true);
   const end = Math.min(headerSize + dataSize, bytes.length);

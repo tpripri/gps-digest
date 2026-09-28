@@ -11,6 +11,7 @@
  * Gemini un fichier où "3,45" est lu comme deux champs.
  */
 
+import { translator } from "./i18n.ts";
 import type { Digest, Lap, Sample, Split, ZoneBin, IntervalBlock } from "./types.ts";
 
 export interface CsvDialect {
@@ -158,15 +159,6 @@ export function streamRows(stream: Sample[], fields: Digest["fields"]): Row[] {
   });
 }
 
-const GLOSSARY = [
-  "t_s = secondes depuis le départ | dist_m = distance cumulée (m)",
-  "pace_s_km = allure en secondes/km | gap_s_km = allure ajustée à la pente (Minetti 2002)",
-  "hr_bpm = fréquence cardiaque | cad_spm = cadence (pas/min ou tr/min) | pw_w = puissance (W)",
-  "decoupling_pct = dérive aérobie entre 1re et 2e moitié ; > 5 % = endurance limitante",
-  "hr_source = capteur de FC estimé ; ne JAMAIS comparer des FC de sources différentes",
-  "drift_applicable = no signifie que la séance ne permet pas ce calcul, pas qu'il vaut zéro",
-];
-
 /**
  * Assemble le bundle final. Un seul fichier, plusieurs blocs préfixés `##`.
  * Les LLM parsent ce format sans instruction particulière, et l'en-tête `#`
@@ -188,6 +180,7 @@ export interface BundleInsights {
   };
   adherence: {
     setDescription: string;
+    /** Libellé déjà traduit : le bundle l'écrit tel quel. */
     grade: string;
     paceCvPct?: number;
     fadePctPerRep?: number;
@@ -201,17 +194,27 @@ export interface BundleInsights {
 
 export function buildBundle(
   digest: Digest,
-  opts: { includeStream?: boolean; warnings?: string[]; insights?: BundleInsights } = {},
+  opts: {
+    includeStream?: boolean;
+    warnings?: string[];
+    insights?: BundleInsights;
+    locale?: string;
+  } = {},
 ): string {
+  const tr = translator(opts.locale);
   const { session } = digest;
   const out: string[] = [];
   const block = (name: string, csv: string) => {
     if (csv.trim()) out.push(`## ${name}\n${csv.trim()}\n`);
   };
 
-  out.push("# gps-digest v1 — résumé d'activité compacté pour analyse par un LLM");
-  out.push(`# source: ${session.sourceFormat} | ${session.sampleCountRaw} points bruts -> ${digest.reduction.keptSamples} conservés`);
-  for (const g of GLOSSARY) out.push(`# ${g}`);
+  out.push(`# ${tr("bundle.title")}`);
+  out.push(`# ${tr("bundle.source", {
+    format: session.sourceFormat,
+    raw: session.sampleCountRaw,
+    kept: digest.reduction.keptSamples,
+  })}`);
+  for (const g of tr("bundle.glossary").split("\n")) out.push(`# ${g}`);
   for (const w of opts.warnings ?? []) out.push(`# ⚠ ${w}`);
   out.push("");
 
@@ -297,8 +300,8 @@ export function buildBundle(
       rows.push({
         key: "temp_source",
         value: ins.drift.temperature.fromWristSensor
-          ? "capteur montre (surestime de 3 à 8 °C, ce n'est PAS la température de l'air)"
-          : "externe",
+          ? tr("bundle.tempWrist")
+          : tr("bundle.tempExternal"),
       });
     }
     if (ins.drift.temperature?.externalAvgC != null) {

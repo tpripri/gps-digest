@@ -22,6 +22,7 @@
  */
 
 import { sanitizeSamples, fillDistance } from "./geo.ts";
+import { t } from "./i18n.ts";
 import type { Activity, Lap, Sample, Sport } from "./types.ts";
 
 /** Réponse de `Strava:get_activity_streams`, canaux optionnels. */
@@ -71,10 +72,14 @@ const SPORT_MAP: Record<string, Sport> = {
   Walk: "hiking",
 };
 
-export function fromStravaStreams(meta: StravaActivityMeta, streams: StravaStreams): Activity {
+export function fromStravaStreams(
+  meta: StravaActivityMeta,
+  streams: StravaStreams,
+  locale?: string,
+): Activity {
   const time = streams.time ?? [];
   const n = time.length;
-  if (!n) throw new Error(`Activité Strava ${meta.id} : flux temporel absent.`);
+  if (!n) throw new Error(t(locale, "strava.errNoTime", { id: meta.id }));
 
   const sport = SPORT_MAP[meta.sport_type ?? ""] ?? "other";
   const at = <T>(arr: T[] | undefined, i: number): T | undefined => arr?.[i];
@@ -126,8 +131,12 @@ export function fromStravaStreams(meta: StravaActivityMeta, streams: StravaStrea
  * Détection de capteur de FC : Strava lisse ses flux, ce qui atténue les
  * signatures. Cet indice permet à `analyzeHrSource` d'être plus prudent.
  */
-export const STRAVA_SENSOR_CAVEAT =
-  "Flux Strava : lissage serveur. La détection du capteur de FC est moins fiable qu'à partir d'un fichier FIT d'origine.";
+export const STRAVA_SENSOR_CAVEAT = t("fr", "strava.sensorCaveat");
+
+/** Même réserve, dans la langue demandée. */
+export function stravaSensorCaveat(locale?: string): string {
+  return t(locale, "strava.sensorCaveat");
+}
 
 /**
  * Séquence d'appels recommandée côté application.

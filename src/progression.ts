@@ -23,6 +23,7 @@
 import { mean } from "./geo.ts";
 import type { HrSpeedPoint } from "./drift.ts";
 import type { HrSource } from "./sensor.ts";
+import { translator } from "./i18n.ts";
 
 /** Allures de référence auxquelles on interroge chaque séance, en s/km. */
 export const REFERENCE_PACES = [270, 300, 330, 360] as const;
@@ -148,24 +149,21 @@ function weightedSlope(
   return den === 0 ? undefined : num / den;
 }
 
-export function analyzeProgression(sessions: SessionProfile[]): ProgressionAnalysis {
+export function analyzeProgression(sessions: SessionProfile[], locale?: string): ProgressionAnalysis {
+  const tr = translator(locale);
   const warnings: string[] = [];
   const runs = sessions.filter((s) => s.sport === "running" && s.date && s.hrSpeed.length >= 2);
 
   if (runs.length < 3) {
     return {
       series: [],
-      warnings: [
-        "Moins de trois séances de course exploitables : un suivi de progression demande davantage de points.",
-      ],
+      warnings: [tr("prog.tooFew")],
     };
   }
 
   const sources = new Set(runs.map((r) => r.hrSource));
   if (sources.size > 1) {
-    warnings.push(
-      "Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.",
-    );
+    warnings.push(tr("prog.multiSource"));
   }
 
   const series: ProgressionSeries[] = [];
@@ -212,13 +210,13 @@ export function analyzeProgression(sessions: SessionProfile[]): ProgressionAnaly
       // variations du quotidien : sommeil, chaleur, fatigue résiduelle.
       let verdict: string | undefined;
       if (spanDays < 21) {
-        verdict = "Période trop courte pour distinguer une progression des variations quotidiennes.";
+        verdict = tr("prog.shortSpan");
       } else if (trend != null && trend <= -0.4) {
-        verdict = `Progression nette : environ ${Math.abs(trend).toFixed(1)} bpm de moins par semaine à ${paceText(target)}/km.`;
+        verdict = tr("prog.improving", { bpm: Math.abs(trend).toFixed(1), pace: paceText(target) });
       } else if (trend != null && trend >= 0.4) {
-        verdict = `Coût cardiaque en hausse à ${paceText(target)}/km. Chaleur, fatigue accumulée ou charge trop dense sont les explications à écarter d'abord.`;
+        verdict = tr("prog.worsening", { pace: paceText(target) });
       } else {
-        verdict = "Stable : pas d'évolution mesurable du coût cardiaque sur la période.";
+        verdict = tr("prog.stable");
       }
 
       series.push({
@@ -235,9 +233,7 @@ export function analyzeProgression(sessions: SessionProfile[]): ProgressionAnaly
   }
 
   if (!series.length) {
-    warnings.push(
-      "Aucune allure de référence n'est tenue assez longtemps sur au moins trois séances comparables. Des footings de durée régulière à allure constante rendraient ce suivi possible.",
-    );
+    warnings.push(tr("prog.none"));
   }
 
   const withTemp = runs.filter((r) => r.tempC != null);
@@ -245,9 +241,7 @@ export function analyzeProgression(sessions: SessionProfile[]): ProgressionAnaly
     const temps = withTemp.map((r) => r.tempC!);
     const spread = Math.max(...temps) - Math.min(...temps);
     if (spread >= 10) {
-      warnings.push(
-        `Les températures du lot s'étalent sur ${Math.round(spread)} °C. À allure identique, la chaleur coûte 5 à 10 bpm : une partie de la tendance observée peut n'être que saisonnière.`,
-      );
+      warnings.push(tr("prog.tempSpread", { spread: Math.round(spread) }));
     }
   }
 

@@ -13,6 +13,8 @@
  * haut. C'est ce qu'attend un coureur, et l'inverse déroute tout le monde.
  */
 
+import { translator } from "./i18n.ts";
+
 const W = 720;
 const H = 220;
 const PAD = { top: 14, right: 52, bottom: 26, left: 48 };
@@ -114,8 +116,14 @@ export interface SessionPoint {
  */
 export function sessionChart(
   points: SessionPoint[],
-  opts: { window?: { fromS: number; toS: number }; usePower?: boolean; title?: string } = {},
+  opts: {
+    window?: { fromS: number; toS: number };
+    usePower?: boolean;
+    title?: string;
+    locale?: string;
+  } = {},
 ): string {
+  const tr = translator(opts.locale);
   const usable = points.filter(
     (p) => p.hr != null && (opts.usePower ? p.powerW != null : p.paceSPerKm != null && p.paceSPerKm > 0),
   );
@@ -148,9 +156,9 @@ export function sessionChart(
   body += `<text class="lbl" x="${PAD.left + PLOT_W}" y="${H - 8}" text-anchor="end">${Math.round(tMax / 60)} min</text>`;
 
   return frame(
-    opts.title ?? (opts.usePower ? "Puissance et fréquence cardiaque" : "Allure et fréquence cardiaque"),
+    opts.title ?? tr(opts.usePower ? "chart.sessionPower" : "chart.sessionPace"),
     body,
-    opts.window ? "zone ombrée : portion analysée pour la dérive" : undefined,
+    opts.window ? tr("chart.windowNote") : undefined,
   );
 }
 
@@ -172,8 +180,9 @@ export interface RepBar {
  */
 export function repsChart(
   reps: RepBar[],
-  opts: { unit: "pace" | "power"; title?: string } = { unit: "pace" },
+  opts: { unit: "pace" | "power"; title?: string; locale?: string } = { unit: "pace" },
 ): string {
+  const tr = translator(opts.locale);
   if (reps.length < 2) return "";
   const vals = reps.map((r) => r.value);
   const s = scaleY([0, ...vals], false, 0.02);
@@ -205,9 +214,9 @@ export function repsChart(
   }
 
   return frame(
-    opts.title ?? "Répétitions",
+    opts.title ?? tr("chart.reps"),
     body,
-    sHr ? "barres : effort — points : fréquence cardiaque" : undefined,
+    sHr ? tr("chart.repsNote") : undefined,
   );
 }
 
@@ -219,7 +228,7 @@ export interface TrendPoint {
 }
 
 /** FC à allure de référence dans le temps. Une baisse est une progression. */
-export function trendChart(series: TrendPoint[], title: string): string {
+export function trendChart(series: TrendPoint[], title: string, locale?: string): string {
   if (series.length < 3) return "";
   const sorted = [...series].sort((a, b) => a.date.localeCompare(b.date));
   const t0 = Date.parse(sorted[0].date);
@@ -234,7 +243,7 @@ export function trendChart(series: TrendPoint[], title: string): string {
   body += `<text class="lbl" x="${PAD.left}" y="${H - 8}">${esc(sorted[0].date)}</text>`;
   body += `<text class="lbl" x="${PAD.left + PLOT_W}" y="${H - 8}" text-anchor="end">${esc(sorted[sorted.length - 1].date)}</text>`;
 
-  return frame(title, body, "FC en bpm — une baisse est une progression");
+  return frame(title, body, translator(locale)("chart.trendNote"));
 }
 
 // ──────────────────────────────────────────────── charge hebdomadaire
@@ -245,7 +254,7 @@ export interface WeekBar {
   hardPct?: number;
 }
 
-export function loadChart(weeks: WeekBar[]): string {
+export function loadChart(weeks: WeekBar[], locale?: string): string {
   if (weeks.length < 2) return "";
   const s = scaleY([0, ...weeks.map((w) => w.km)], false, 0.05);
   const slot = PLOT_W / weeks.length;
@@ -267,5 +276,6 @@ export function loadChart(weeks: WeekBar[]): string {
     }
   });
 
-  return frame("Charge hebdomadaire", body, "partie foncée : temps passé en intensité élevée");
+  const tr = translator(locale);
+  return frame(tr("chart.load"), body, tr("chart.loadNote"));
 }

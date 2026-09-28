@@ -21,6 +21,8 @@ import { parseGpx } from "../src/parse-gpx.ts";
 import { haversine } from "../src/geo.ts";
 import { speedSeries } from "../src/analyze.ts";
 import { estimateTokens, paceLabel } from "../src/serialize.ts";
+import { buildDossier } from "../src/dossier.ts";
+import { coverage, LOCALES, MESSAGE_KEYS, resolveLocale, t } from "../src/i18n.ts";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -410,6 +412,81 @@ check("tours repris", stravaActivity.laps.length === 1);
 const stravaBuilt = buildFull(stravaActivity, { athlete: { maxHr: 168 }, driftWarmupS: 300 });
 check("même pipeline appliqué", stravaBuilt.digest.splits.length >= 8,
   `${stravaBuilt.digest.splits.length} splits`);
+
+// ------------------------------------------------------------ 9. Multilingue
+
+section("Multilingue");
+
+{
+  const cov = coverage();
+  const missing = LOCALES.flatMap((l) => cov[l].missing.map((k) => `${l}:${k}`));
+  check("catalogues complets dans les sept langues", missing.length === 0, missing.slice(0, 3).join(", "));
+  check("paramètres cohérents avec le français dans toutes les langues",
+    LOCALES.every((l) => cov[l].badParams.length === 0),
+    LOCALES.flatMap((l) => cov[l].badParams.map((k) => `${l}:${k}`)).slice(0, 3).join(", "));
+  check("locale absente : français", resolveLocale(undefined) === "fr");
+  check("locale régionale ramenée à la langue", resolveLocale("pt-BR") === "pt");
+  check("locale inconnue : anglais", resolveLocale("it") === "en"
+    && t("it", "digest.warnNoFtp") === t("en", "digest.warnNoFtp"));
+
+  // Fragments de texte propres au français : tout ce que le catalogue français
+  // contient et qu'aucune autre langue ne reprend telle quelle. En retrouver un
+  // dans une sortie traduite signale une chaîne restée en dur.
+  const frenchFragments = (loc: string) => {
+    const target = MESSAGE_KEYS.map((k) => t(loc, k)).join("\n");
+    const frags = new Set<string>();
+    for (const k of MESSAGE_KEYS) {
+      for (const part of t("fr", k).split(/\{\w+\}|\n/)) {
+        const f = part.trim();
+        if (f.length >= 14 && /[a-zé]/i.test(f) && !target.includes(f)) frags.add(f);
+      }
+    }
+    return [...frags];
+  };
+  const frenchWords = /\b(séance|allure|dérive|capteur|récup|avec|pour)\b/i;
+
+  // Mêmes séances, mêmes analyses, dans chaque langue : seuls les textes
+  // changent. Les textes d'une séance sont rédigés à l'analyse, donc tout le
+  // lot doit être analysé dans la langue voulue.
+  for (const loc of LOCALES.filter((l) => l !== "fr")) {
+    const opts = { athlete: { maxHr: 168 }, streamTokenBudget: 3000, driftWarmupS: 300, locale: loc };
+    const analyzeIn = (xml: string, filename: string) => {
+      const res = finalize(buildFull(parseTcx(xml), opts), xml.length, opts);
+      const file: FileAnalysis = {
+        filename, digest: res.digest, hrSource: res.insights.hrSource,
+        drift: res.insights.drift, adherence: res.insights.adherence,
+        efforts: res.insights.efforts, samples: res.samples,
+      };
+      return { file, bundle: res.bundle, warnings: res.warnings };
+    };
+    const main = analyzeIn(intervalsXml, "intervals.tcx");
+    const batchLoc = analyzeBatch(
+      [main.file, analyzeIn(strapXml, "strap.tcx").file, analyzeIn(opticalXml, "optical.tcx").file],
+      { maxHr: 168, locale: loc },
+    );
+    const dossier = buildDossier(batchLoc, { streamMode: "none" });
+    const lines = [main.bundle, ...main.warnings, buildBatchBundle(batchLoc), dossier]
+      .flatMap((txt) => txt.split("\n"));
+    const frags = frenchFragments(loc);
+    const leak = lines.find((line) => frenchWords.test(line) || frags.some((f) => line.includes(f)));
+    check(`${loc} : aucun reste de français`, leak == null, leak?.slice(0, 70));
+    check(`${loc} : le dossier suit la langue de l'analyse`,
+      dossier.includes(t(loc, "dossier.title")) && dossier.includes(t(loc, "dossier.guide")));
+    check(`${loc} : mêmes chiffres qu'en français`,
+      main.file.drift.decouplingPct === intervals.drift.decouplingPct
+        && main.file.adherence[0]?.paceCvPct === intervals.adherence[0]?.paceCvPct);
+    if (loc === "zh" || loc === "ja") {
+      // Typographie : pas d'espace avant « % », pas de ponctuation latine
+      // collée à un idéogramme dans les commentaires du dossier.
+      const bad = lines
+        .filter((line) => line.startsWith("#"))
+        .find((line) => /\d %/.test(line) || /[\u3040-\u30ff\u4e00-\u9fff][,:;]/.test(line));
+      check(`${loc} : ponctuation et unités à la typographie locale`, bad == null, bad?.slice(0, 70));
+    }
+  }
+  check("libellé de capteur traduit", hrSourceLabel("chest_strap", "en") === "chest strap"
+    && hrSourceLabel("chest_strap", "de") === "Brustgurt");
+}
 
 // ---------------------------------------------------------------- sortie
 
