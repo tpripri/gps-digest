@@ -122,6 +122,25 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     (a.digest.session.startTimeUtc ?? "").localeCompare(b.digest.session.startTimeUtc ?? ""),
   );
 
+  // Déposer deux fois le même fichier (Windows renomme volontiers en
+  // « activity (1).tcx ») doublerait le volume hebdomadaire et fausserait
+  // charge comme progression. Deux séances qui partagent seconde de départ et
+  // distance au mètre près sont le même enregistrement.
+  const seen = new Map<string, string>();
+  const duplicates: string[] = [];
+  const unique: FileAnalysis[] = [];
+  for (const f of sorted) {
+    const key = `${f.digest.session.startTimeUtc ?? "?"}|${f.digest.session.distM}`;
+    const first = seen.get(key);
+    if (first) duplicates.push(`${f.filename} (identique à ${first})`);
+    else {
+      seen.set(key, f.filename);
+      unique.push(f);
+    }
+  }
+  sorted.length = 0;
+  sorted.push(...unique);
+
   const sports: Partial<Record<Sport, number>> = {};
   const weekMap = new Map<string, WeekBucket>();
   let totalDistanceM = 0;
@@ -224,6 +243,12 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   );
 
   const warnings: string[] = [];
+
+  if (duplicates.length) {
+    warnings.push(
+      `${duplicates.length} doublon(s) écarté(s) — même horodatage de départ et même distance : ${duplicates.join(", ")}.`,
+    );
+  }
 
   const reclassified = sorted.filter((f) => f.digest.session.reclassified);
   if (reclassified.length) {
