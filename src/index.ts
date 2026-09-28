@@ -33,6 +33,8 @@ export { analyzeDrift, hrSpeedProfile, temperatureContext, findHomogeneousWindow
 export type { DriftAnalysis, TemperatureContext, HrSpeedPoint, DriftWindow } from "./drift.ts";
 export { analyzeProgression, progressionRows, REFERENCE_PACES } from "./progression.ts";
 export type { ProgressionAnalysis, ProgressionSeries, ProgressionPoint, SessionProfile } from "./progression.ts";
+export { sessionChart, repsChart, trendChart, loadChart } from "./charts.ts";
+export type { SessionPoint, RepBar, TrendPoint, WeekBar } from "./charts.ts";
 export { classifyActivity, defaultSplitUnit, formatSpeed } from "./classify.ts";
 export type { Classification, ActivityTier } from "./classify.ts";
 export { analyzeSwim, swimRows, paceLabel100 } from "./swim.ts";
