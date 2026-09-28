@@ -63,6 +63,8 @@ const GUIDE = `# ─────────────────────
 # Colonnes principales
 #   t_s          secondes écoulées depuis le départ de la séance
 #   dist_m       distance cumulée depuis le départ, en mètres
+#   speed        allure ou vitesse selon le sport : min/km à pied, km/h à vélo,
+#                min/100m en natation. Ne jamais convertir l'une en l'autre.
 #   pace_s_km    allure en secondes par kilomètre (300 = 5:00/km), calculée sur
 #                le temps EN MOUVEMENT, comme Strava. Garmin Connect divise par
 #                la durée totale : ses allures sont donc plus lentes. Ne pas
@@ -362,8 +364,11 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           sport: s.sport,
           dist_km: (s.distM / 1000).toFixed(2),
           dur_moving: formatDuration(s.durMovingS),
-          pace_mmss: paceLabel(s.paceAvgSPerKm),
-          gap_mmss: paceLabel(s.gapAvgSPerKm),
+          // Unité propre au sport : des minutes par kilomètre à vélo ou en
+          // natation ne veulent rien dire, et un modèle les lirait comme des
+          // allures de course aberrantes.
+          speed: formatSpeed(s.sport, s.speedAvgMS),
+          gap_mmss: s.sport === "running" ? paceLabel(s.gapAvgSPerKm) : undefined,
           ele_gain_m: s.eleGainM,
           hr_avg: s.hrAvg != null ? Math.round(s.hrAvg) : undefined,
           hr_max: s.hrMax,

@@ -7,6 +7,9 @@
 <!-- ═══ SEO / GEO — le domaine est injecté au build (SITE_URL) ═══ -->
 <title>Convertir un fichier TCX, GPX ou FIT en CSV pour ChatGPT ou Gemini — gps-digest</title>
 <meta name="description" content="Outil gratuit qui transforme vos fichiers de montre GPS en dossier d'entraînement lisible par une IA. Détecte la ceinture cardio, calcule la dérive cardiaque, vérifie le respect des blocs et projette vos chronos. Tout est calculé dans votre navigateur : aucun fichier n'est envoyé.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0b5d3f">
 <link rel="canonical" href="https://exemple.com/fr/">
 <link rel="alternate" hreflang="fr" href="https://exemple.com/fr/">
 <link rel="alternate" hreflang="en" href="https://exemple.com/en/">
@@ -18,6 +21,11 @@
 <meta property="og:site_name" content="gps-digest">
 <meta property="og:title" content="Faites analyser vos séances de course par une IA">
 <meta property="og:description" content="Vos fichiers de montre sont trop volumineux pour une IA. Cet outil en fait un dossier structuré qu'elle peut vraiment analyser.">
+<meta property="og:image" content="https://exemple.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Un fichier de montre GPS transformé en dossier d'entraînement structuré.">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 
 <script type="application/ld+json">
@@ -45,7 +53,7 @@
         "Dérive cardiaque avec contrôle de validité",
         "Analyse du respect des blocs d'entraînement",
         "Projections de chrono sur 5 km, 10 km, semi et marathon",
-        "Jusqu'à 20 fichiers analysés ensemble"
+        "Nombre de fichiers illimité"
       ],
       "publisher": { "@id": "https://exemple.com/#organization" }
     },
@@ -56,7 +64,7 @@
       "totalTime": "PT2M",
       "step": [
         { "@type": "HowToStep", "position": 1, "name": "Déposer ses fichiers",
-          "text": "Glissez jusqu'à 20 fichiers TCX ou GPX exportés de votre montre." },
+          "text": "Glissez vos fichiers TCX, GPX ou FIT exportés de votre montre. Le nombre n'est pas limité." },
         { "@type": "HowToStep", "position": 2, "name": "Renseigner ses repères",
           "text": "Indiquez votre fréquence cardiaque maximale mesurée et un chrono de course récent." },
         { "@type": "HowToStep", "position": 3, "name": "Lire les avertissements",
@@ -159,6 +167,10 @@ summary{cursor:pointer;font-weight:600;min-height:30px}
 .sig{font-size:.84rem;color:var(--ink-soft);margin:.25rem 0}
 .sig b{color:var(--ink);font-variant-numeric:tabular-nums}
 .hidden{display:none}
+.chart{margin:1rem 0;padding:.6rem;border:1px solid var(--line);border-radius:var(--radius)}
+.chart svg{width:100%;height:auto;display:block}
+.chart figcaption{font-size:.82rem;color:var(--ink-soft);margin-top:.4rem;text-align:center}
+.chart figcaption span{font-style:italic}
 progress{width:100%;height:8px}
 .stat{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;
   border-bottom:1px solid var(--line);font-size:.9rem}
@@ -203,13 +215,13 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 
 <div class="steps">
   <div class="step"><span class="n">1</span><h3>Déposez vos fichiers</h3>
-    <p>Jusqu'à 20 séances, en TCX ou GPX, exportées de votre montre ou de Strava.</p></div>
+    <p>Autant que vous voulez, en TCX, GPX ou FIT, exportés de votre montre ou de Strava.</p></div>
   <div class="step"><span class="n">2</span><h3>Renseignez vos repères</h3>
     <p>FC maximale et dernier chrono. Sans eux, zones et projections restent approximatives.</p></div>
   <div class="step"><span class="n">3</span><h3>Lisez les avertissements</h3>
     <p>Changement de capteur, FC peu fiable : ils conditionnent la validité du reste.</p></div>
-  <div class="step"><span class="n">4</span><h3>Collez dans votre IA</h3>
-    <p>Un dossier complet, structuré et annoté, prêt pour n'importe quel modèle.</p></div>
+  <div class="step"><span class="n">4</span><h3>Récupérez le dossier</h3>
+    <p>Un fichier texte complet et annoté, à glisser dans ChatGPT, Gemini ou Claude.</p></div>
 </div>
 
 <section aria-labelledby="pourquoi">
@@ -298,7 +310,7 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <h2 id="depot">2. Vos fichiers</h2>
   <div class="drop" id="drop">
     <p><strong>Déposez vos fichiers ici</strong></p>
-    <p>TCX, GPX ou FIT — jusqu'à 20 à la fois</p>
+    <p>TCX, GPX ou FIT — autant que vous voulez, une saison entière si besoin</p>
     <p style="font-size:.85rem">Le FIT est le format natif de votre montre : c'est le
       seul à porter les longueurs de bassin et le capteur cardiaque réellement appairé.</p>
     <p style="margin-top:1rem">
@@ -313,40 +325,8 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <div id="errors"></div>
 </section>
 
-<section id="results" class="hidden">
-  <h2>3. Ce que disent vos fichiers</h2>
-  <div id="warnings"></div>
-
-  <h3>Vue d'ensemble</h3>
-  <div class="scroll">
-    <table>
-      <thead><tr>
-        <th>Fichier</th><th>Date</th><th class="num">Dist.</th>
-        <th class="num">En mouvement</th><th class="num">Écoulé</th>
-        <th class="num">Allure / vitesse</th><th class="num">FC moy</th><th>Capteur</th>
-        <th class="num">Dérive</th><th>Blocs</th>
-      </tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
-
-  <h3>Détail par séance</h3>
-  <p class="sig">Dépliez une séance pour voir les signaux derrière chaque verdict.
-    Utile en particulier pour juger la détection du capteur : vous seul savez quelles
-    séances ont été faites à la ceinture.</p>
-  <div id="sensors"></div>
-
-  <h3>Progression aérobie</h3>
-  <p class="sig">FC à allure identique dans le temps : le seul indicateur de forme qui
-    ne dépende ni du parcours ni de l'envie du jour. Les capteurs sont traités séparément.</p>
-  <div id="progression"></div>
-
-  <h3>Projections</h3>
-  <div id="projections"></div>
-</section>
-
 <section id="export-section" class="hidden">
-  <h2>4. Le dossier pour votre IA</h2>
+  <h2>3. Votre dossier, prêt à analyser</h2>
   <p class="sig">
     Les fenêtres de contexte actuelles absorbent largement 100 000 tokens. Le réglage
     par défaut privilégie donc le détail. Descendez d'un cran si votre modèle est plus
@@ -377,10 +357,11 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   </div>
 
   <div id="reduction"></div>
+  <div id="export-warnings"></div>
 
   <div class="actions">
-    <button class="btn" type="button" id="copy">Copier pour l'IA</button>
-    <button class="btn secondary" type="button" id="download">Télécharger le .txt</button>
+    <button class="btn" type="button" id="download">Télécharger le dossier (.txt)</button>
+    <button class="btn secondary" type="button" id="copy">Copier dans le presse-papiers</button>
   </div>
 
   <details>
@@ -398,6 +379,42 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
     <summary>Voir le dossier généré</summary>
     <pre id="bundle"></pre>
   </details>
+</section>
+
+<section id="results" class="hidden">
+  <h2>4. Le détail, si vous voulez creuser</h2>
+  <div id="warnings"></div>
+
+  <h3>Vue d'ensemble</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>Fichier</th><th>Date</th><th class="num">Dist.</th>
+        <th class="num">En mouvement</th><th class="num">Écoulé</th>
+        <th class="num">Allure / vitesse</th><th class="num">FC moy</th><th>Capteur</th>
+        <th class="num">Dérive</th><th>Blocs</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <h3>Détail par séance</h3>
+  <p class="sig">Dépliez une séance pour voir les signaux derrière chaque verdict.
+    Utile en particulier pour juger la détection du capteur : vous seul savez quelles
+    séances ont été faites à la ceinture.</p>
+  <div id="sensors"></div>
+
+  <h3>Charge d'entraînement</h3>
+  <div id="chart-load"></div>
+
+  <h3>Progression aérobie</h3>
+  <p class="sig">FC à allure identique dans le temps : le seul indicateur de forme qui
+    ne dépende ni du parcours ni de l'envie du jour. Les capteurs sont traités séparément.</p>
+  <div id="progression"></div>
+  <div id="chart-trend"></div>
+
+  <h3>Projections</h3>
+  <div id="projections"></div>
 </section>
 
 <section aria-labelledby="faq">
@@ -543,7 +560,7 @@ try {
 const {
   digestFile, digestActivity, analyzeBatch, buildDossier, formatDuration, paceLabel,
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
-  formatSpeed,
+  formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
 } = lib;
 
 const $ = (id) => document.getElementById(id);
@@ -598,7 +615,7 @@ let lastDossier = "";
 let rawBytesTotal = 0;
 
 async function run(fileList) {
-  const files = [...fileList].slice(0, 20);
+  const files = [...fileList];
   if (!files.length) return;
 
   const settings = readSettings();
@@ -677,12 +694,45 @@ async function run(fileList) {
   $("results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+/**
+ * Courbe effort + FC d'une séance. On rééchantillonne à 15 s : à 1 Hz le SVG
+ * pèserait plusieurs centaines de kilo-octets par séance pour un tracé
+ * strictement identique à l'œil.
+ */
+function sessionSvg(f) {
+  const s = f.digest.session;
+  if (s.tier !== "full") return "";
+  try {
+    const grid = resampleByTime(f.samples, 15, { dropCoordinates: true });
+    const usePower = s.sport === "cycling" && grid.some((g) => g.pw != null);
+    return sessionChart(
+      grid.map((g) => ({ t: g.t, hr: g.hr, paceSPerKm: g.paceSPerKm, powerW: g.pw })),
+      {
+        usePower,
+        window: f.drift.window
+          ? { fromS: f.drift.window.fromS, toS: f.drift.window.toS }
+          : undefined,
+      },
+    );
+  } catch {
+    return "";
+  }
+}
+
 function renderAnalysis(batch) {
   $("results").classList.remove("hidden");
   $("export-section").classList.remove("hidden");
 
-  $("warnings").innerHTML = batch.warnings
-    .map((w) => `<div class="note">${esc(w)}</div>`).join("");
+  const notes = batch.warnings.map((w) => `<div class="note">${esc(w)}</div>`).join("");
+  $("warnings").innerHTML = notes;
+  // Le dossier part avec ces réserves à l'intérieur : les afficher à côté du
+  // bouton évite qu'on l'envoie à une IA sans les avoir lues.
+  const ew = $("export-warnings");
+  if (ew) {
+    ew.innerHTML = batch.warnings.length
+      ? `<details><summary>${batch.warnings.length} point(s) de vigilance inclus dans le dossier</summary>${notes}</details>`
+      : "";
+  }
 
   $("rows").innerHTML = batch.files.map((f) => {
     const s = f.digest.session;
@@ -740,6 +790,15 @@ function renderAnalysis(batch) {
             ? `, érosion ${a.hrr60DeclinePerRep.toFixed(1)} bpm/répétition` : ""}</p>`).join("")}
       ${f.adherence.map((a) =>
         `<p class="sig"><b>${esc(a.setDescription)}</b> — ${esc(a.grade)} : ${esc(a.verdicts.join(" "))}</p>`).join("")}
+      ${sessionSvg(f)}
+      ${f.adherence.map((a) => repsChart(
+          a.reps.map((r) => ({
+            index: r.index,
+            value: a.basis === "power" ? (r.pwAvgW ?? 0) : (r.paceSPerKm ?? 0),
+            hr: r.hrAvg,
+          })).filter((r) => r.value > 0),
+          { unit: a.basis === "power" ? "power" : "pace", title: a.setDescription },
+        )).join("")}
     </details>`;
   }).join("");
 
@@ -755,6 +814,24 @@ function renderAnalysis(batch) {
         <td class="sig">${esc(s.verdict ?? "")}</td></tr>`).join("") + `</tbody></table></div>`
     : `<p class="sig">Pas encore de suivi possible : il faut au moins trois séances de course
        tenant une allure comparable, avec le même capteur de FC.</p>`;
+
+  $("chart-load").innerHTML = loadChart(
+    batch.weeks.map((w) => {
+      const total = w.easyS + w.moderateS + w.hardS;
+      return {
+        label: w.isoWeek,
+        km: w.distanceM / 1000,
+        hardPct: total > 0 ? ((w.moderateS + w.hardS) / total) * 100 : 0,
+      };
+    }),
+  );
+
+  $("chart-trend").innerHTML = prog.series
+    .map((s) => trendChart(
+      s.points.map((p) => ({ date: p.date, value: p.hrBpm })),
+      `FC à ${s.paceLabel} — ${hrSourceLabel(s.hrSource)}`,
+    ))
+    .join("");
 
   $("projections").innerHTML = batch.projections.length
     ? `<div class="scroll"><table><thead><tr><th>Distance</th><th class="num">Estimation</th>
@@ -815,7 +892,7 @@ drop.addEventListener("drop", (e) => run(e.dataTransfer.files));
 $("copy").addEventListener("click", async () => {
   await navigator.clipboard.writeText(lastDossier);
   $("copy").textContent = "Copié";
-  setTimeout(() => ($("copy").textContent = "Copier pour l'IA"), 1500);
+  setTimeout(() => ($("copy").textContent = "Copier dans le presse-papiers"), 1500);
 });
 
 $("download").addEventListener("click", () => {

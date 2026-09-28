@@ -119,6 +119,22 @@ async function buildPages() {
   return pages;
 }
 
+/**
+ * Fichiers servis à la racine : favicon, image de partage, manifeste.
+ * Ils doivent être accessibles depuis « / » et non depuis « /fr/ », parce que
+ * les navigateurs et les réseaux sociaux les cherchent à la racine du domaine.
+ */
+async function copyStatic() {
+  const publicDir = join(ROOT, "public");
+  const assets = (await readdir(publicDir)).filter(
+    (f) => !f.endsWith(".html") && !f.startsWith("."),
+  );
+  for (const file of assets) {
+    await copyFile(join(publicDir, file), join(DIST, file));
+  }
+  return assets;
+}
+
 async function buildSeo(pages) {
   const seoDir = join(ROOT, "site", "seo");
   for (const file of ["robots.txt", "llms.txt"]) {
@@ -163,6 +179,9 @@ console.log(`  ✓ ${src.count} modules transpilés (${(src.bytes / 1024).toFixe
 
 const pages = await buildPages();
 console.log(`  ✓ ${pages.length * LOCALES.length} page(s) : ${pages.join(", ")}`);
+
+const statics = await copyStatic();
+if (statics.length) console.log(`  ✓ ${statics.length} fichier(s) statique(s) : ${statics.join(", ")}`);
 
 const urlCount = await buildSeo(pages);
 console.log(`  ✓ robots.txt, llms.txt, sitemap.xml (${urlCount} URL)`);
