@@ -578,6 +578,11 @@ function parseClock(text) {
   return undefined;
 }
 
+// Langue des analyses et du dossier exporté, via ?lang=en (es, pt, de, zh, ja).
+// Provisoire : l'étape 2 produira une page par langue et retirera ce paramètre.
+// Sans paramètre, tout reste en français.
+const LOCALE = new URLSearchParams(location.search).get("lang") || undefined;
+
 function readSettings() {
   const maxHr = Number($("fcmax").value) || undefined;
   const refDist = Number($("refdist").value) || undefined;
@@ -588,9 +593,11 @@ function readSettings() {
       streamTokenBudget: 6000,
       privacyRadiusM: Number($("privacy").value) || 0,
       driftWarmupS: 600,
+      locale: LOCALE,
     },
     batch: {
       maxHr,
+      locale: LOCALE,
       raceResults: refDist && refTime
         ? [{ distanceM: refDist, timeS: refTime, date: $("refdate").value || undefined }]
         : [],
