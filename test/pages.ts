@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 import { LOCALES } from "../src/i18n.ts";
 import {
-  renderPage, pageCoverage, pageText, PAGE_KEYS, LOCALE_META, X_DEFAULT,
+  renderPage, pageCoverage, pageText, pagePath, PAGE_KEYS, LOCALE_META, ROUTES, X_DEFAULT,
 } from "../src/page-i18n.ts";
 
 let failures = 0;
@@ -27,6 +27,7 @@ function check(label: string, ok: boolean, detail = "") {
 
 const PUBLIC = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 const pages = readdirSync(PUBLIC).filter((f) => f.endsWith(".html"));
+const KNOWN_PATHS = new Set(LOCALES.flatMap((l) => Object.keys(ROUTES).map((p) => pagePath(l, p))));
 
 console.log("\n\u001b[1mPages traduites\u001b[0m");
 
@@ -84,6 +85,12 @@ for (const page of pages) {
         problems.push("PAGE json");
       }
     }
+    // Chaque lien interne doit mener à une page publiée : un slug traduit
+    // mal recopié ferait une 404 silencieuse.
+    const broken = [...html.matchAll(/href="(\/[a-z]{2}\/[^"#?]*)"/g)]
+      .map((m) => m[1])
+      .filter((href) => !KNOWN_PATHS.has(href));
+    if (broken.length) problems.push(`liens morts : ${broken.slice(0, 2).join(", ")}`);
     if (locale !== "fr") {
       const frags = frenchFragments(locale);
       const leak = frags.find((f) => html.includes(f));

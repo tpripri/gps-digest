@@ -59,7 +59,7 @@ export const de: Partial<PageCatalog> = {
   "home.lede":
     "Die Dateien deiner Uhr sind zu groß für ChatGPT, Gemini oder Claude. Dieses Tool macht daraus ein strukturiertes Trainingsdossier (Pace, Runden, Zonen, Wiederholungen, kardiale Drift), das die KI wirklich analysieren kann.",
   "home.promise":
-    "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden Start und Ziel standardmäßig gekürzt. <a href=\"/{{locale}}/confidentialite.html\">Was hinausgeht und was nie hinausgeht</a>.",
+    "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden Start und Ziel standardmäßig gekürzt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
   "home.step1.title": "Dateien hochladen",
   "home.step1.text": "So viele du willst, als TCX, GPX oder FIT, exportiert aus deiner Uhr oder aus Strava.",
   "home.step2.title": "Eckdaten angeben",
@@ -349,4 +349,157 @@ export const de: Partial<PageCatalog> = {
     "Da keine personenbezogenen Daten erhoben oder gespeichert werden, gibt es keine Daten, die du einsehen, berichtigen oder löschen lassen könntest: Den Tab zu schließen, löscht alles. Für Fragen kannst du im oben genannten GitHub-Repository eine Diskussion eröffnen.",
   "privacy.footerTool": "Das Tool",
   "privacy.updated": "Zuletzt aktualisiert: <time datetime=\"2026-09-25\">25. September 2026</time>.",
+  "common.blog": "Blog",
+  "home.why.more":
+    "Warum eine KI ein strukturiertes Dossier statt einer Rohdatei braucht: <a href=\"{{href:post-ia-analyse.html}}\">zum Artikel</a>.",
+
+  "blog.title": "gps-digest Blog: Training, Uhrendaten und KI",
+  "blog.description":
+    "Artikel über KI-gestützte Trainingsanalyse: was ChatGPT, Gemini und Claude mit deinen Einheiten anfangen können und wie du ihnen Daten gibst, die sie wirklich nutzen können.",
+  "blog.lede":
+    "Training, Uhrendaten und künstliche Intelligenz. Kurze Artikel, mit Zahlen belegt und ohne Versprechen, die die Daten nicht halten.",
+  "blog.readMore": "Artikel lesen",
+
+  "post.title": "Lauftraining mit ChatGPT analysieren: die Token-Falle",
+  "post.description":
+    "KI analysiert ein Training hervorragend, aber eine einstündige TCX-Datei hat 533.000 Tokens. Warum das scheitert und wie du es in drei Minuten löst.",
+  "post.kicker": "Training und KI",
+  "post.h1": "ChatGPT kann deine Laufeinheiten analysieren. Vorausgesetzt, es kann sie überhaupt lesen.",
+  "post.meta": "Veröffentlicht am <time datetime=\"2026-09-28\">28. September 2026</time> · 7 Min. Lesezeit",
+  "post.lede":
+    "Frag eine KI, warum sich die Intervalle am Dienstag so hart angefühlt haben, und sie antwortet dir besser als die meisten Trainings-Apps. Unter einer Bedingung: Sie muss deine Daten wirklich sehen. Genau da wird es schwierig, und nicht aus dem Grund, den du vermutest.",
+  "post.tldrTitle": "Das Wichtigste in Kürze",
+  "post.tldr1":
+    "ChatGPT, Gemini und Claude können eine Einheit interpretieren, sie mit deinem Ziel verknüpfen und Folgefragen beantworten, wie ein Coach, der rund um die Uhr erreichbar ist.",
+  "post.tldr2":
+    "Eine einstündige TCX-Datei mit 1 Hz ist etwa 1,7 MB groß, also rund 533.000 Tokens, und fast 90 % davon sind XML-Tags.",
+  "post.tldr3": "Selbst wenn die Datei durchgeht, argumentiert das Modell schlecht über Tausende Zeilen roher Koordinaten.",
+  "post.tldr4":
+    "Die Lösung ist nicht Komprimieren, sondern Umstrukturieren: Kilometerzeiten, Runden, Zonen, Wiederholungen. Eine Einheit passt dann in etwa 5.800 Tokens, und die Analyse wird besser.",
+
+  "post.why.title": "Warum ist KI ein so guter Trainingspartner?",
+  "post.why.p1":
+    "Weil sie von deiner Frage ausgeht, nicht von einem Dashboard. Eine App zeigt dir dieselben Diagramme wie allen anderen. Eine KI kann dir erklären, warum deine Pace bei Kilometer 8 eingebrochen ist, und dabei die Hitze, deine volle Woche und das Ziel berücksichtigen, das du ihr genannt hast.",
+  "post.why.listIntro": "Mit guten Daten kann eine KI:",
+  "post.why.li1": "eine Einheit in einfacher Sprache erklären, ohne Fachjargon;",
+  "post.why.li2":
+    "deine Zahlen mit deinem Ziel verknüpfen: 10 km unter 45 Minuten verlangen andere Einheiten als ein erster Marathon;",
+  "post.why.li3": "mehrere Wochen vergleichen und einen Trend erkennen, den du übersehen hast;",
+  "post.why.li4":
+    "die nächste Frage beantworten und die danach, mit der Geduld eines Coaches, der um 23 Uhr noch erreichbar ist;",
+  "post.why.li5": "die kommende Woche auf Basis deiner tatsächlichen Belastung planen statt nach einem Standardplan.",
+  "post.why.p2":
+    "Diese Personalisierung macht den Unterschied. Sie beruht aber auf einer Annahme, die fast niemand prüft: dass das Modell wirklich Zugriff auf deine Daten hat und nicht nur auf eine dreizeilige Zusammenfassung oder eine unlesbare Datei.",
+
+  "post.tokens.title": "Was ist ein Token, und warum erzeugt deine Uhr so viele davon?",
+  "post.tokens.p1":
+    "Ein Token ist die Texteinheit, die ein Sprachmodell liest und abrechnet: ein Stück eines Wortes, einer Zahl oder eines Satzzeichens. Jedes Modell hat eine Grenze, sein Kontextfenster, jenseits dessen es nichts mehr lesen kann. Je nach Modell und Abo reicht sie heute von einigen Zehntausend bis zu einigen Millionen Tokens.",
+  "post.tokens.p2":
+    "Das Problem: Uhrendateien sind für Software gemacht, nicht zum Lesen. Eine TCX-Datei wiederholt für jede Sekunde deines Laufs dieselben XML-Tags. Das hat unser Benchmark gemessen:",
+  "post.tokens.colCase": "Daten",
+  "post.tokens.colSize": "Größe",
+  "post.tokens.colTokens": "Geschätzte Tokens",
+  "post.tokens.r1": "Eine einstündige Einheit, rohe TCX-Datei",
+  "post.tokens.r1size": "1,7 MB",
+  "post.tokens.r1tokens": "≈ 533.000",
+  "post.tokens.r2": "Dieselbe Einheit als strukturiertes Dossier",
+  "post.tokens.r2size": "≈ 18 KB",
+  "post.tokens.r2tokens": "≈ 5.800",
+  "post.tokens.r3": "15 MB echte Dateien, roh",
+  "post.tokens.r3size": "15 MB",
+  "post.tokens.r3tokens": "≈ 4,7 Millionen",
+  "post.tokens.r4": "Dieselben Dateien als strukturiertes Dossier",
+  "post.tokens.r4size": "≈ 100 KB",
+  "post.tokens.r4tokens": "≈ 32.000",
+  "post.tokens.note":
+    "Schätzung mit 3,2 Zeichen pro Token, dem bei numerischem CSV beobachteten Verhältnis. Die Messungen lassen sich mit dem im Quellcode veröffentlichten Benchmark nachvollziehen.",
+  "post.tokens.p3":
+    "Anders gesagt: Schon eine einzige Rohdatei kann ein normales Abo ausreizen, und eine ganze Saison passt nirgendwo hinein.",
+
+  "post.paste.title": "Was passiert, wenn man eine TCX-Datei in ChatGPT einfügt?",
+  "post.paste.intro": "Drei mögliche Szenarien. Keines davon ist gut.",
+  "post.paste.h1": "1. Die Datei wird abgelehnt",
+  "post.paste.p1":
+    "Das ist der ehrlichste Fall: Die Oberfläche meldet, dass die Datei zu groß ist. Du verlierst Zeit, aber wenigstens weißt du es.",
+  "post.paste.h2": "2. Die Datei wird nur teilweise gelesen, ohne dass du es merkst",
+  "post.paste.p2":
+    "Bei großen Anhängen lesen Assistenten oft nur Auszüge oder übergeben die Datei an ein Skript, das sie zusammenfasst. Die KI antwortet dann selbstsicher auf Basis eines Teils der Einheit. Die Antwort klingt richtig. Sie muss es nicht sein.",
+  "post.paste.h3": "3. Die Datei geht durch, aber die Analyse ist mittelmäßig",
+  "post.paste.p3":
+    "Selbst mit einem großen Kontextfenster nutzt ein Modell Informationen schlecht, die mitten in einem langen Dokument stehen. Forschende der Stanford University haben diesen Effekt als „Lost in the Middle“ beschrieben (Liu et al., 2024). Eine Trainingsanalyse aus 3.600 Zeilen Breiten- und Längengraden zu verlangen, heißt, es Kopfrechnungen machen zu lassen, die ihm schlecht gelingen, mit Daten, die ihm kaum etwas sagen.",
+
+  "post.restructure.title": "Soll man die Datei komprimieren? Nein, umstrukturieren",
+  "post.restructure.p1":
+    "Die Datei kleiner zu machen reicht nicht: Sie muss lesbar werden. Ein Coach liest deine GPS-Koordinaten nicht Sekunde für Sekunde. Er schaut auf deine Kilometerzeiten, deine Wiederholungen und deine Herzfrequenz nach Zonen. Genau das kann ein Sprachmodell interpretieren.",
+  "post.restructure.colRaw": "In der Rohdatei",
+  "post.restructure.colDossier": "In einem strukturierten Dossier",
+  "post.restructure.r1raw": "3.600 Zeilen Breitengrad, Längengrad und Höhe",
+  "post.restructure.r1dossier": "Kilometerzeiten, Runden, Zeit in jeder Zone",
+  "post.restructure.r2raw": "Ein Herzfrequenzwert pro Sekunde",
+  "post.restructure.r2dossier": "Die kardiale Drift bereits berechnet, mit dem gemessenen Abschnitt",
+  "post.restructure.r3raw": "Kein Hinweis auf den Herzfrequenzsensor",
+  "post.restructure.r3dossier": "Brustgurt oder Handgelenk, mit Konfidenzniveau",
+  "post.restructure.r4raw": "XML-Tags, an jedem Punkt wiederholt",
+  "post.restructure.r4dossier": "CSV-Tabellen mit expliziten Einheiten",
+  "post.restructure.p2":
+    "Bei 15 MB echten Dateien umfasst das Dossier etwa 32.000 Tokens. Und die Analyse daraus ist besser als mit den vollständigen Dateien. Nicht nur günstiger: besser, weil das Modell mit Objekten arbeitet, die es versteht.",
+
+  "post.blind.title": "Was kann eine KI nicht von selbst erkennen?",
+  "post.blind.p1":
+    "Manche Fehler sieht man den Zahlen nicht an. Wenn nichts sie kennzeichnet, hält die KI sie für Fakten und baut ihre Analyse darauf auf.",
+  "post.blind.li1":
+    "<strong>Der Herzfrequenzsensor.</strong> Ein Handgelenksensor verwechselt manchmal deine Schrittfrequenz mit deinem Puls und zeigt 172 bpm statt 140. Eine Einheit mit Handgelenksensor mit einer Brustgurt-Einheit zu vergleichen, heißt zwei Messgeräte zu vergleichen, nicht zwei Formzustände.",
+  "post.blind.li2":
+    "<strong>Die Temperatur.</strong> Der Sensor der Uhr wird von deinem Handgelenk erwärmt: Er misst die Luft 3 bis 8 °C zu hoch. Eine KI, die das für das Wetter hält, irrt sich bei der Ursache deiner kardialen Drift.",
+  "post.blind.li3":
+    "<strong>Die Pace.</strong> Strava berechnet sie auf die Bewegungszeit, Garmin Connect auf die Gesamtdauer. Bei einem Lauf in der Stadt beträgt der Unterschied leicht mehr als 15 Sekunden pro Kilometer.",
+  "post.blind.li4":
+    "<strong>Werte ohne Aussagekraft.</strong> Eine kardiale Drift, berechnet auf einem Intervalltraining, bedeutet nichts. Lieber keine Zahl als eine falsche, die glaubwürdig aussieht.",
+  "post.blind.p2":
+    "Ein gutes Dossier fasst nicht nur zusammen. Es sagt, was verlässlich ist und was nicht, damit die KI nicht auf Sand argumentiert.",
+
+  "post.howto.title": "Wie lässt du deine Einheiten in drei Minuten von einer KI analysieren?",
+  "post.howto.step1":
+    "<strong>Exportiere deine Dateien</strong> aus deiner Uhr oder aus Strava, am besten im FIT-Format, dem vollständigsten.",
+  "post.howto.step2":
+    "<strong>Lege sie in gps-digest ab.</strong> Alles wird in deinem Browser berechnet: Keine Datei wird an einen Server geschickt.",
+  "post.howto.step3": "<strong>Kopiere das Dossier</strong> in ChatGPT, Gemini oder Claude und stelle deine Frage.",
+  "post.howto.cta": "Meine Einheiten für die KI vorbereiten",
+
+  "post.prompts.title": "Welche Fragen solltest du deiner KI stellen?",
+  "post.prompts.intro":
+    "Die besten Fragen entstehen aus echtem Zweifel. Hier sind fünf Beispiele, die mit einem strukturierten Dossier gut funktionieren:",
+  "post.prompts.q1": "„Ist meine kardiale Drift im Vergleich zum Vormonat gestiegen, bei ähnlicher Temperatur?“",
+  "post.prompts.q2": "„Habe ich bei den Wiederholungen am Dienstag meine Pace gehalten? Was sollte ich nächstes Mal ändern?“",
+  "post.prompts.q3": "„Bin ich mit dieser Belastung in sechs Wochen bereit für 10 km unter 45 Minuten?“",
+  "post.prompts.q4": "„Passt meine Verteilung zwischen lockeren Läufen und harten Einheiten zu einem Marathon?“",
+  "post.prompts.q5": "„Plan mir die nächste Woche unter Berücksichtigung meiner aktuellen Ermüdung.“",
+
+  "post.faq.title": "Häufige Fragen",
+  "post.faq.q1": "Kann ChatGPT eine FIT- oder TCX-Datei direkt lesen?",
+  "post.faq.a1":
+    "Es kann sie öffnen, aber nicht richtig auswerten. FIT ist ein Binärformat, das die KI mit einem Skript dekodieren muss, und eine einstündige TCX-Datei hat etwa 533.000 Tokens. In beiden Fällen stützt sich die Analyse auf Auszüge oder auf ungeeignete Rohdaten. Ein strukturiertes Dossier löst beide Probleme.",
+  "post.faq.q2": "Warum nicht einfach eine CSV aus Garmin Connect exportieren?",
+  "post.faq.a2":
+    "Weil dieser Export sich im Wesentlichen auf die Runden beschränkt. Er enthält weder die kardiale Drift noch die Sensorerkennung noch die Details der Wiederholungen, und auch nicht den Kontext, der Fehldeutungen verhindert, etwa wie die Pace berechnet wurde.",
+  "post.faq.q3": "Werden meine Daten irgendwohin geschickt?",
+  "post.faq.a3":
+    "Nein. Deine Dateien werden in deinem Browser gelesen und analysiert. Nur das Dossier, das du selbst in eine KI kopierst, verlässt dein Gerät, und die GPS-Koordinaten werden standardmäßig daraus entfernt.",
+  "post.faq.q4": "Kann eine KI einen Trainer ersetzen?",
+  "post.faq.a4":
+    "Nein, und darum geht es auch nicht. Sie erklärt, vergleicht und schlägt vor, aber sie sieht dich nicht laufen und spürt deine Beschwerden nicht. Bei Verletzungen oder ernsthaften Zweifeln hat der Rat einer Fachperson Vorrang.",
+  "post.faq.q5": "Welche KI solltest du nutzen: ChatGPT, Gemini oder Claude?",
+  "post.faq.a5":
+    "Alle drei können ein strukturiertes Dossier analysieren. Der eigentliche Unterschied liegt in der Größe des Kontextfensters deines Abos. Mit einem Dossier von einigen Tausend Tokens pro Einheit spielt die Frage keine Rolle mehr.",
+
+  "post.sources.title": "Quellen",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>.",
+  "post.sources.bench":
+    "Größen- und Token-Messungen: gps-digest-Benchmark, reproduzierbar, im <a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">offenen Quellcode</a>.",
+
+  "post.end.title": "Deine nächste Einheit verdient mehr als ein Standarddiagramm",
+  "post.end.text":
+    "Verwandle deine Uhrendateien in ein Dossier, das ChatGPT, Gemini oder Claude wirklich analysieren können. Kostenlos, ohne Konto, und deine Dateien verlassen deinen Browser nicht.",
+  "post.end.cta": "gps-digest ausprobieren",
 };

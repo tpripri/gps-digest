@@ -59,7 +59,7 @@ export const es: Partial<PageCatalog> = {
   "home.lede":
     "Los archivos de tu reloj son demasiado grandes para ChatGPT, Gemini o Claude. Esta herramienta los convierte en un informe de entrenamiento estructurado (ritmos, vueltas, zonas, repeticiones, deriva cardíaca) que la IA sí puede analizar.",
   "home.promise":
-    "<strong>Tus archivos no salen de tu navegador.</strong> Todo el cálculo se hace en tu dispositivo, y puedes comprobarlo en la pestaña Red. Un recorrido GPS revela tu dirección al metro, así que la salida y la llegada se recortan por defecto. <a href=\"/{{locale}}/confidentialite.html\">Lo que sale y lo que nunca sale</a>.",
+    "<strong>Tus archivos no salen de tu navegador.</strong> Todo el cálculo se hace en tu dispositivo, y puedes comprobarlo en la pestaña Red. Un recorrido GPS revela tu dirección al metro, así que la salida y la llegada se recortan por defecto. <a href=\"{{href:confidentialite.html}}\">Lo que sale y lo que nunca sale</a>.",
   "home.step1.title": "Sube tus archivos",
   "home.step1.text": "Tantos como quieras, en TCX, GPX o FIT, exportados de tu reloj o de Strava.",
   "home.step2.title": "Indica tus referencias",
@@ -349,4 +349,157 @@ export const es: Partial<PageCatalog> = {
     "Como no se recopila ni se conserva ningún dato personal, no hay ningún registro que consultar, corregir o eliminar: cerrar la pestaña basta para borrarlo todo. Para cualquier pregunta, el repositorio de GitHub mencionado arriba permite abrir una discusión.",
   "privacy.footerTool": "La herramienta",
   "privacy.updated": "Última actualización: <time datetime=\"2026-09-25\">25 de septiembre de 2026</time>.",
+  "common.blog": "Blog",
+  "home.why.more":
+    "Por qué una IA necesita un informe estructurado y no un archivo en bruto: <a href=\"{{href:post-ia-analyse.html}}\">leer el artículo</a>.",
+
+  "blog.title": "Blog de gps-digest: entrenamiento, datos del reloj e IA",
+  "blog.description":
+    "Artículos sobre el análisis del entrenamiento con inteligencia artificial: qué pueden hacer ChatGPT, Gemini y Claude con tus sesiones, y cómo darles datos que de verdad puedan usar.",
+  "blog.lede":
+    "Entrenamiento, datos del reloj e inteligencia artificial. Artículos breves, con cifras, y sin promesas que los datos no puedan cumplir.",
+  "blog.readMore": "Leer el artículo",
+
+  "post.title": "Analizar tus entrenamientos con ChatGPT: la trampa de los tokens",
+  "post.description":
+    "Una IA analiza muy bien un entrenamiento, pero un TCX de una hora ocupa 533 000 tokens. Por qué falla, y cómo solucionarlo en tres minutos.",
+  "post.kicker": "Entrenamiento e IA",
+  "post.h1": "ChatGPT puede analizar tus entrenamientos de running. Siempre que consiga leerlos.",
+  "post.meta": "Publicado el <time datetime=\"2026-09-28\">28 de septiembre de 2026</time> · 7 min de lectura",
+  "post.lede":
+    "Pregúntale a una IA por qué las series del martes se te hicieron tan duras y te responderá mejor que la mayoría de las apps de entrenamiento. Con una condición: que vea de verdad tus datos. Y ahí es donde todo se complica, y no por el motivo que imaginas.",
+  "post.tldrTitle": "En resumen",
+  "post.tldr1":
+    "ChatGPT, Gemini y Claude saben interpretar una sesión, relacionarla con tu objetivo y responder a tus preguntas de seguimiento, como un entrenador disponible a cualquier hora.",
+  "post.tldr2":
+    "Un archivo TCX de una hora grabado a 1 Hz pesa unos 1,7 MB, es decir, unos 533 000 tokens, y casi el 90 % son etiquetas XML.",
+  "post.tldr3": "Incluso cuando el archivo entra, el modelo razona mal sobre miles de líneas de coordenadas en bruto.",
+  "post.tldr4":
+    "La solución no es comprimir, sino reestructurar: parciales, vueltas, zonas, repeticiones. Una sesión cabe entonces en unos 5800 tokens, y el análisis mejora.",
+
+  "post.why.title": "¿Por qué una IA es tan buena compañera de entrenamiento?",
+  "post.why.p1":
+    "Porque parte de tu pregunta, no de un panel de control. Una app te enseña los mismos gráficos que a todo el mundo. Una IA puede explicarte por qué tu ritmo cayó en el kilómetro 8, teniendo en cuenta el calor, tu semana cargada y el objetivo que le has dado.",
+  "post.why.listIntro": "Con buenos datos, una IA sabe:",
+  "post.why.li1": "explicar una sesión con palabras sencillas, sin jerga;",
+  "post.why.li2":
+    "relacionar tus cifras con tu objetivo: un 10K por debajo de 45 minutos no pide las mismas sesiones que un primer maratón;",
+  "post.why.li3": "comparar varias semanas y detectar una tendencia que se te había escapado;",
+  "post.why.li4":
+    "responder a la siguiente pregunta, y a la siguiente, con la paciencia de un entrenador disponible a las 11 de la noche;",
+  "post.why.li5": "proponer la semana que viene a partir de tu carga real, no de un plan genérico.",
+  "post.why.p2":
+    "Esa personalización es lo que marca la diferencia. Pero se basa en una suposición que casi nadie comprueba: que el modelo tiene acceso real a tus datos, y no a un resumen de tres líneas o a un archivo ilegible.",
+
+  "post.tokens.title": "¿Qué es un token y por qué tu reloj genera tantos?",
+  "post.tokens.p1":
+    "Un token es la unidad de texto que un modelo de lenguaje lee y cobra: un trozo de palabra, de número o de puntuación. Cada modelo tiene un límite, su ventana de contexto, a partir del cual ya no puede leer nada más. Según el modelo y la suscripción, hoy va de unas decenas de miles a unos pocos millones de tokens.",
+  "post.tokens.p2":
+    "El problema es que los archivos del reloj están pensados para programas, no para ser leídos. Un archivo TCX repite las mismas etiquetas XML en cada segundo de tu salida. Esto es lo que miden nuestras pruebas:",
+  "post.tokens.colCase": "Datos",
+  "post.tokens.colSize": "Tamaño",
+  "post.tokens.colTokens": "Tokens estimados",
+  "post.tokens.r1": "Una sesión de una hora, archivo TCX en bruto",
+  "post.tokens.r1size": "1,7 MB",
+  "post.tokens.r1tokens": "≈ 533 000",
+  "post.tokens.r2": "La misma sesión, como informe estructurado",
+  "post.tokens.r2size": "≈ 18 KB",
+  "post.tokens.r2tokens": "≈ 5800",
+  "post.tokens.r3": "15 MB de archivos reales, en bruto",
+  "post.tokens.r3size": "15 MB",
+  "post.tokens.r3tokens": "≈ 4,7 millones",
+  "post.tokens.r4": "Los mismos archivos, como informe estructurado",
+  "post.tokens.r4size": "≈ 100 KB",
+  "post.tokens.r4tokens": "≈ 32 000",
+  "post.tokens.note":
+    "Estimación a 3,2 caracteres por token, la proporción observada en CSV numérico. Mediciones reproducibles con las pruebas publicadas en el código fuente.",
+  "post.tokens.p3":
+    "Dicho de otro modo: una sola sesión en bruto puede saturar una suscripción estándar, y una temporada entera no cabe en ninguna parte.",
+
+  "post.paste.title": "¿Qué pasa cuando pegas un archivo TCX en ChatGPT?",
+  "post.paste.intro": "Tres escenarios posibles. Ninguno es bueno.",
+  "post.paste.h1": "1. El archivo se rechaza",
+  "post.paste.p1":
+    "Es el caso más honesto: la interfaz te avisa de que el archivo es demasiado grande. Pierdes tiempo, pero al menos lo sabes.",
+  "post.paste.h2": "2. El archivo se lee solo en parte, sin que lo sepas",
+  "post.paste.p2":
+    "Ante un adjunto pesado, los asistentes a menudo solo leen fragmentos, o lo pasan a un script que lo resume. La IA responde entonces con seguridad a partir de solo una parte de la sesión. La respuesta parece correcta. Puede que no lo sea.",
+  "post.paste.h3": "3. El archivo entra, pero el análisis es flojo",
+  "post.paste.p3":
+    "Incluso con una ventana de contexto grande, un modelo aprovecha mal la información enterrada en mitad de un documento largo. Investigadores de Stanford documentaron este efecto con el nombre de «lost in the middle» (Liu et al., 2024). Pedir un análisis de entrenamiento a partir de 3600 líneas de latitudes y longitudes es pedirle que haga de cabeza cálculos que hace mal, sobre datos que casi no le dicen nada.",
+
+  "post.restructure.title": "¿Hay que comprimir el archivo? No, hay que reestructurarlo",
+  "post.restructure.p1":
+    "Hacer el archivo más pequeño no basta: hay que hacerlo legible. Un entrenador no lee tus coordenadas GPS segundo a segundo. Mira tus tiempos por kilómetro, tus repeticiones y tu frecuencia cardíaca por zonas. Justo lo que un modelo de lenguaje sabe interpretar.",
+  "post.restructure.colRaw": "En el archivo en bruto",
+  "post.restructure.colDossier": "En un informe estructurado",
+  "post.restructure.r1raw": "3600 líneas de latitud, longitud y altitud",
+  "post.restructure.r1dossier": "Parciales por kilómetro, vueltas, tiempo en cada zona",
+  "post.restructure.r2raw": "Un valor de frecuencia cardíaca por segundo",
+  "post.restructure.r2dossier": "La deriva cardíaca ya calculada, con el tramo de la sesión medido",
+  "post.restructure.r3raw": "Ninguna indicación sobre el sensor cardíaco",
+  "post.restructure.r3dossier": "Banda pectoral o muñeca, con un nivel de confianza",
+  "post.restructure.r4raw": "Etiquetas XML repetidas en cada punto",
+  "post.restructure.r4dossier": "Tablas CSV con unidades explícitas",
+  "post.restructure.p2":
+    "Con 15 MB de archivos reales, el informe ocupa unos 32 000 tokens. Y el análisis que sale es mejor que con los archivos completos. No solo más barato: mejor, porque el modelo trabaja con objetos que entiende.",
+
+  "post.blind.title": "¿Qué no puede adivinar una IA por sí sola?",
+  "post.blind.p1":
+    "Algunos errores no se ven en las cifras. Si nada los señala, la IA los toma por hechos y construye su análisis sobre ellos.",
+  "post.blind.li1":
+    "<strong>El sensor cardíaco.</strong> Un sensor de muñeca a veces confunde tu cadencia con tu pulso y marca 172 ppm en lugar de 140. Comparar una sesión con sensor de muñeca y otra con banda pectoral es comparar dos instrumentos, no dos estados de forma.",
+  "post.blind.li2":
+    "<strong>La temperatura.</strong> La del reloj la calienta tu muñeca: sobrestima el aire entre 3 y 8 °C. Una IA que la toma por la meteorología se equivoca sobre el origen de tu deriva cardíaca.",
+  "post.blind.li3":
+    "<strong>El ritmo.</strong> Strava lo calcula sobre el tiempo en movimiento; Garmin Connect, sobre la duración total. En una salida por ciudad, la diferencia supera fácilmente los 15 segundos por kilómetro.",
+  "post.blind.li4":
+    "<strong>Las mediciones que no tienen sentido.</strong> Una deriva cardíaca calculada en una sesión de series no significa nada. Mejor ninguna cifra que una cifra falsa que parece creíble.",
+  "post.blind.p2":
+    "Un buen informe no se limita a resumir. Dice qué es fiable y qué no, para que la IA no razone sobre arena.",
+
+  "post.howto.title": "¿Cómo hacer que una IA analice tus sesiones en tres minutos?",
+  "post.howto.step1":
+    "<strong>Exporta tus archivos</strong> desde tu reloj o desde Strava, a ser posible en formato FIT, el más completo.",
+  "post.howto.step2":
+    "<strong>Súbelos a gps-digest.</strong> Todo se calcula en tu navegador: ningún archivo se envía a un servidor.",
+  "post.howto.step3": "<strong>Copia el informe</strong> en ChatGPT, Gemini o Claude y haz tu pregunta.",
+  "post.howto.cta": "Preparar mis sesiones para la IA",
+
+  "post.prompts.title": "¿Qué preguntas hacerle a tu IA?",
+  "post.prompts.intro":
+    "Las mejores preguntas nacen de una duda real. Aquí tienes cinco ejemplos que funcionan bien con un informe estructurado:",
+  "post.prompts.q1": "«¿Ha aumentado mi deriva cardíaca respecto al mes pasado, con una temperatura parecida?»",
+  "post.prompts.q2": "«¿Mantuve el ritmo en las repeticiones del martes? ¿Qué corrijo la próxima vez?»",
+  "post.prompts.q3": "«Con esta carga, ¿estoy listo para bajar de 45 minutos en un 10K dentro de seis semanas?»",
+  "post.prompts.q4": "«¿Es coherente mi reparto entre rodajes suaves y sesiones duras para un maratón?»",
+  "post.prompts.q5": "«Proponme la semana que viene teniendo en cuenta mi fatiga actual.»",
+
+  "post.faq.title": "Preguntas frecuentes",
+  "post.faq.q1": "¿Puede ChatGPT leer directamente un archivo FIT o TCX?",
+  "post.faq.a1":
+    "Puede abrirlo, pero no aprovecharlo bien. El FIT es un formato binario que la IA tiene que decodificar con un script, y un TCX de una hora ocupa unos 533 000 tokens. En ambos casos, el análisis se basa en fragmentos o en datos en bruto poco adecuados. Un informe estructurado resuelve los dos problemas.",
+  "post.faq.q2": "¿Por qué no exportar simplemente un CSV desde Garmin Connect?",
+  "post.faq.a2":
+    "Porque esa exportación se limita básicamente a las vueltas. No incluye la deriva cardíaca, ni la detección del sensor, ni el detalle de las repeticiones, ni el contexto que evita malas interpretaciones, como la forma de calcular el ritmo.",
+  "post.faq.q3": "¿Se envían mis datos a algún sitio?",
+  "post.faq.a3":
+    "No. Tus archivos se leen y analizan en tu navegador. Solo sale de tu dispositivo el informe que tú mismo copias en una IA, y las coordenadas GPS se eliminan de él por defecto.",
+  "post.faq.q4": "¿Puede una IA sustituir a un entrenador?",
+  "post.faq.a4":
+    "No, y no es el objetivo. Explica, compara y propone, pero no te ve correr ni siente tus molestias. Ante una lesión o una duda seria, la opinión de un profesional va primero.",
+  "post.faq.q5": "¿Qué IA elegir: ChatGPT, Gemini o Claude?",
+  "post.faq.a5":
+    "Las tres saben analizar un informe estructurado. La verdadera diferencia está en el tamaño de la ventana de contexto de tu suscripción. Con un informe de unos pocos miles de tokens por sesión, la pregunta deja de importar.",
+
+  "post.sources.title": "Fuentes",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>.",
+  "post.sources.bench":
+    "Mediciones de tamaño y de tokens: pruebas de gps-digest, reproducibles, en el <a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">código fuente abierto</a>.",
+
+  "post.end.title": "Tu próxima sesión merece algo mejor que un gráfico genérico",
+  "post.end.text":
+    "Convierte los archivos de tu reloj en un informe que ChatGPT, Gemini o Claude puedan analizar de verdad. Gratis, sin cuenta, y tus archivos no salen de tu navegador.",
+  "post.end.cta": "Probar gps-digest",
 };

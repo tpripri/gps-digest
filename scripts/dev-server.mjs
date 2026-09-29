@@ -13,7 +13,7 @@
  * remplace pas la vérification de types, qui reste `npx tsc --noEmit`.
  *
  * Les pages sont rendues à la volée dans chaque langue, comme au build :
- * /fr/, /en/, /ja/confidentialite.html… La racine redirige selon la langue du
+ * /fr/, /en/, /ja/confidentialite… La racine redirige selon la langue du
  * navigateur, comme le Worker en production. Après une modification des
  * textes de page (src/page-*.ts), relancer le serveur : Node garde les
  * modules en cache.
@@ -26,7 +26,7 @@ import { readFile } from "node:fs/promises";
 import { stripTypeScriptTypes } from "node:module";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderPage } from "../src/page-i18n.ts";
+import { renderPage, pageFromPath } from "../src/page-i18n.ts";
 import { LOCALES, resolveLocale } from "../src/i18n.ts";
 
 const ROOT = normalize(join(fileURLToPath(import.meta.url), "..", ".."));
@@ -65,15 +65,28 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    // Pages : /xx/ ou /xx/page.html, rendues depuis le gabarit de public/.
-    const localized = pathname.match(/^\/([a-z]{2})\/([\w-]+\.html)?$/);
-    if (localized && LOCALES.includes(localized[1])) {
-      const page = localized[2] ?? "index.html";
-      const template = await readFile(join(ROOT, "public", page), "utf8");
-      const html = renderPage(template, localized[1], { page });
-      res.writeHead(200, { "Content-Type": MIME[".html"], "Cache-Control": "no-store" });
-      res.end(html);
-      return;
+    // Pages : le chemin est résolu par les routes de src/page-i18n.ts, comme
+    // au build. « /fr/blog » sans barre finale redirige vers « /fr/blog/ ».
+    const locale = pathname.match(/^\/([a-z]{2})(\/|$)/)?.[1];
+    if (locale && LOCALES.includes(locale)) {
+      const page = pageFromPath(locale, pathname);
+      if (page) {
+        const template = await readFile(join(ROOT, "public", page), "utf8");
+        const html = renderPage(template, locale, { page });
+        res.writeHead(200, { "Content-Type": MIME[".html"], "Cache-Control": "no-store" });
+        res.end(html);
+        return;
+      }
+      if (!pathname.endsWith("/") && pageFromPath(locale, pathname + "/")) {
+        res.writeHead(301, { Location: pathname + "/" }).end();
+        return;
+      }
+      // Ancienne URL en .html : redirigée comme le fait Cloudflare.
+      const bare = pathname.replace(/\.html$/, "");
+      if (bare !== pathname && pageFromPath(locale, bare)) {
+        res.writeHead(307, { Location: bare }).end();
+        return;
+      }
     }
 
     // Fichiers servis à la racine en production (favicon, og.png) : ils

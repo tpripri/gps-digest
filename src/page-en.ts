@@ -59,7 +59,7 @@ export const en: PageCatalog = {
   "home.lede":
     "Your watch files are too big for ChatGPT, Gemini or Claude. This tool turns them into a structured training file (paces, laps, zones, reps, cardiac drift) that the AI can actually analyze.",
   "home.promise":
-    "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so the start and finish are trimmed by default. <a href=\"/{{locale}}/confidentialite.html\">What leaves, and what never does</a>.",
+    "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so the start and finish are trimmed by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
   "home.step1.title": "Drop your files",
   "home.step1.text": "As many as you like, in TCX, GPX or FIT, exported from your watch or from Strava.",
   "home.step2.title": "Enter your benchmarks",
@@ -349,4 +349,156 @@ export const en: PageCatalog = {
     "Since no personal data is collected or stored, there is no record to access, correct or delete: closing the tab erases everything. For any question, the GitHub repository above lets you open a discussion.",
   "privacy.footerTool": "The tool",
   "privacy.updated": "Last updated: <time datetime=\"2026-09-25\">September 25, 2026</time>.",
+  "common.blog": "Blog",
+  "home.why.more":
+    "Why an AI needs a structured file rather than a raw one: <a href=\"{{href:post-ia-analyse.html}}\">read the article</a>.",
+
+  "blog.title": "gps-digest blog: training, watch data and AI",
+  "blog.description":
+    "Articles on AI-powered training analysis: what ChatGPT, Gemini and Claude can do with your workouts, and how to give them data they can actually use.",
+  "blog.lede":
+    "Training, watch data and artificial intelligence. Short articles, backed by numbers, with no promises the data cannot keep.",
+  "blog.readMore": "Read the article",
+
+  "post.title": "Analyzing your runs with ChatGPT: the token trap",
+  "post.description":
+    "AI is great at analyzing a workout, but a one-hour TCX file is 533,000 tokens. Why that breaks things, and how to get around it in three minutes.",
+  "post.kicker": "Training and AI",
+  "post.h1": "ChatGPT can analyze your running workouts. It just has to be able to read them first.",
+  "post.meta": "Published <time datetime=\"2026-09-28\">September 28, 2026</time> · 7 min read",
+  "post.lede":
+    "Ask an AI why Tuesday's intervals felt so hard, and it will give you a better answer than most training apps. On one condition: it has to actually see your data. That is where things fall apart, and not for the reason you think.",
+  "post.tldrTitle": "Key takeaways",
+  "post.tldr1":
+    "ChatGPT, Gemini and Claude can interpret a workout, connect it to your goal and answer follow-up questions, like a coach who is available at any hour.",
+  "post.tldr2":
+    "A one-hour TCX file recorded at 1 Hz weighs about 1.7 MB, roughly 533,000 tokens, and nearly 90% of it is XML tags.",
+  "post.tldr3": "Even when the file gets through, the model reasons poorly over thousands of lines of raw coordinates.",
+  "post.tldr4":
+    "The fix is not compression but restructuring: splits, laps, zones, reps. A workout then fits in about 5,800 tokens, and the analysis gets better.",
+
+  "post.why.title": "Why is AI such a good training partner?",
+  "post.why.p1":
+    "Because it starts from your question, not from a dashboard. An app shows you the same charts it shows everyone. An AI can explain why your pace dropped at kilometer 8, taking into account the heat, your heavy week and the goal you gave it.",
+  "post.why.listIntro": "With good data, an AI can:",
+  "post.why.li1": "explain a workout in plain language, without jargon;",
+  "post.why.li2":
+    "connect your numbers to your goal: a sub-45 10K does not call for the same sessions as a first marathon;",
+  "post.why.li3": "compare several weeks and spot a trend you had missed;",
+  "post.why.li4": "answer the next question, and the one after that, with the patience of a coach available at 11 pm;",
+  "post.why.li5": "plan the coming week from your actual training load, not from a generic plan.",
+  "post.why.p2":
+    "That personalization is what makes the difference. But it rests on an assumption almost nobody checks: that the model really has access to your data, not to a three-line summary or an unreadable file.",
+
+  "post.tokens.title": "What is a token, and why does your watch produce so many?",
+  "post.tokens.p1":
+    "A token is the unit of text a language model reads and bills for: a piece of a word, a number or punctuation. Every model has a limit, its context window, beyond which it cannot read anything more. Depending on the model and the plan, that limit ranges today from a few tens of thousands to a few million tokens.",
+  "post.tokens.p2":
+    "The problem is that watch files are built for software, not for reading. A TCX file repeats the same XML tags for every second of your run. Here is what our benchmark measures:",
+  "post.tokens.colCase": "Data",
+  "post.tokens.colSize": "Size",
+  "post.tokens.colTokens": "Estimated tokens",
+  "post.tokens.r1": "One one-hour run, raw TCX file",
+  "post.tokens.r1size": "1.7 MB",
+  "post.tokens.r1tokens": "≈ 533,000",
+  "post.tokens.r2": "The same run, as a structured file",
+  "post.tokens.r2size": "≈ 18 KB",
+  "post.tokens.r2tokens": "≈ 5,800",
+  "post.tokens.r3": "15 MB of real files, raw",
+  "post.tokens.r3size": "15 MB",
+  "post.tokens.r3tokens": "≈ 4.7 million",
+  "post.tokens.r4": "The same files, as a structured file",
+  "post.tokens.r4size": "≈ 100 KB",
+  "post.tokens.r4tokens": "≈ 32,000",
+  "post.tokens.note":
+    "Estimated at 3.2 characters per token, the ratio observed on numeric CSV. Measurements can be reproduced with the benchmark published in the source code.",
+  "post.tokens.p3":
+    "In other words, a single raw workout can max out a consumer plan, and a full season fits nowhere.",
+
+  "post.paste.title": "What happens when you paste a TCX file into ChatGPT?",
+  "post.paste.intro": "Three possible outcomes. None of them is good.",
+  "post.paste.h1": "1. The file is rejected",
+  "post.paste.p1":
+    "This is the most honest case: the interface tells you the file is too large. You lose time, but at least you know.",
+  "post.paste.h2": "2. The file is only partly read, and you are not told",
+  "post.paste.p2":
+    "With a large attachment, assistants often read only excerpts of it, or hand it to a script that summarizes it. The AI then answers confidently based on only part of the workout. The answer looks right. It may not be.",
+  "post.paste.h3": "3. The file gets through, but the analysis is poor",
+  "post.paste.p3":
+    "Even with a large context window, a model makes poor use of information buried in the middle of a long document. Stanford researchers documented this effect as \"lost in the middle\" (Liu et al., 2024). Asking for a training analysis from 3,600 lines of latitudes and longitudes means asking it to do mental math it is bad at, on data that tells it almost nothing.",
+
+  "post.restructure.title": "Should you compress the file? No, restructure it",
+  "post.restructure.p1":
+    "Making the file smaller is not enough: it has to become readable. A coach does not read your GPS coordinates second by second. They look at your kilometer splits, your reps and your heart rate by zone. That is exactly what a language model knows how to interpret.",
+  "post.restructure.colRaw": "In the raw file",
+  "post.restructure.colDossier": "In a structured file",
+  "post.restructure.r1raw": "3,600 lines of latitude, longitude and altitude",
+  "post.restructure.r1dossier": "Kilometer splits, laps, time spent in each zone",
+  "post.restructure.r2raw": "One heart rate value per second",
+  "post.restructure.r2dossier": "Cardiac drift already computed, with the portion of the run it covers",
+  "post.restructure.r3raw": "No indication of the heart rate sensor",
+  "post.restructure.r3dossier": "Chest strap or wrist, with a confidence level",
+  "post.restructure.r4raw": "XML tags repeated at every point",
+  "post.restructure.r4dossier": "CSV tables with explicit units",
+  "post.restructure.p2":
+    "On 15 MB of real files, the structured file comes to about 32,000 tokens. And the analysis it produces is better than with the full files. Not just cheaper: better, because the model works with objects it understands.",
+
+  "post.blind.title": "What can an AI not figure out on its own?",
+  "post.blind.p1":
+    "Some errors do not show up in the numbers. If nothing flags them, the AI treats them as facts and builds its analysis on top of them.",
+  "post.blind.li1":
+    "<strong>The heart rate sensor.</strong> A wrist sensor sometimes mistakes your cadence for your pulse and shows 172 bpm instead of 140. Comparing a wrist workout with a chest strap workout means comparing two instruments, not two levels of fitness.",
+  "post.blind.li2":
+    "<strong>Temperature.</strong> Your watch's sensor is warmed by your wrist: it reads the air 3 to 8 °C too high. An AI that takes it for the weather gets the cause of your cardiac drift wrong.",
+  "post.blind.li3":
+    "<strong>Pace.</strong> Strava computes it on moving time, Garmin Connect on total duration. On a city run, the gap easily exceeds 15 seconds per kilometer.",
+  "post.blind.li4":
+    "<strong>Metrics that make no sense.</strong> Cardiac drift computed on an interval session means nothing. No number is better than a wrong number that looks credible.",
+  "post.blind.p2":
+    "A good file does more than summarize. It says what is reliable and what is not, so the AI does not reason on sand.",
+
+  "post.howto.title": "How do you get an AI to analyze your workouts in three minutes?",
+  "post.howto.step1":
+    "<strong>Export your files</strong> from your watch or Strava, ideally in FIT format, the most complete one.",
+  "post.howto.step2":
+    "<strong>Drop them into gps-digest.</strong> Everything is computed in your browser: no file is uploaded to a server.",
+  "post.howto.step3": "<strong>Copy the file</strong> into ChatGPT, Gemini or Claude, then ask your question.",
+  "post.howto.cta": "Prepare my workouts for AI",
+
+  "post.prompts.title": "What should you ask your AI?",
+  "post.prompts.intro":
+    "The best questions start from a real doubt. Here are five examples that work well with a structured file:",
+  "post.prompts.q1": "\"Has my cardiac drift increased compared with last month, at a similar temperature?\"",
+  "post.prompts.q2": "\"Did I hold my target pace on Tuesday's reps? What should I fix next time?\"",
+  "post.prompts.q3": "\"With this training load, am I ready for a sub-45 10K in six weeks?\"",
+  "post.prompts.q4": "\"Is my split between easy runs and hard sessions right for a marathon?\"",
+  "post.prompts.q5": "\"Plan next week for me, taking my current fatigue into account.\"",
+
+  "post.faq.title": "Frequently asked questions",
+  "post.faq.q1": "Can ChatGPT read a FIT or TCX file directly?",
+  "post.faq.a1":
+    "It can open it, but not make proper use of it. FIT is a binary format the AI has to decode with a script, and a one-hour TCX file is about 533,000 tokens. Either way, the analysis relies on excerpts or on raw data that is poorly suited to it. A structured file solves both problems.",
+  "post.faq.q2": "Why not just export a CSV from Garmin Connect?",
+  "post.faq.a2":
+    "Because that export is mostly limited to laps. It contains no cardiac drift, no sensor detection, no rep-by-rep detail, and none of the context that prevents misreadings, such as how pace was calculated.",
+  "post.faq.q3": "Is my data sent anywhere?",
+  "post.faq.a3":
+    "No. Your files are read and analyzed in your browser. Only the file you copy into an AI yourself leaves your device, and GPS coordinates are removed from it by default.",
+  "post.faq.q4": "Can an AI replace a coach?",
+  "post.faq.a4":
+    "No, and that is not the point. It explains, compares and suggests, but it does not see you run and does not feel your pain. If you are injured or seriously unsure, a professional's advice comes first.",
+  "post.faq.q5": "Which AI should you use: ChatGPT, Gemini or Claude?",
+  "post.faq.a5":
+    "All three can analyze a structured file. The real difference is the size of the context window on your plan. With a file of a few thousand tokens per workout, the question no longer matters.",
+
+  "post.sources.title": "Sources",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>.",
+  "post.sources.bench":
+    "Size and token measurements: gps-digest benchmark, reproducible, in the <a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">open source code</a>.",
+
+  "post.end.title": "Your next workout deserves better than a generic chart",
+  "post.end.text":
+    "Turn your watch files into a file that ChatGPT, Gemini or Claude can actually analyze. Free, no account, and your files never leave your browser.",
+  "post.end.cta": "Try gps-digest",
 };
