@@ -32,6 +32,13 @@
   "blogPost": [
     {
       "@type": "BlogPosting",
+      "headline": {{json:coach.h1}},
+      "description": {{json:coach.description}},
+      "url": "{{url:post-ia-coach.html}}",
+      "datePublished": "2026-09-29"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": {{json:post.h1}},
       "description": {{json:post.description}},
       "url": "{{url:post-ia-analyse.html}}",
@@ -76,6 +83,14 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 
 <h1>{{common.blog}}</h1>
 <p class="lede">{{blog.lede}}</p>
+
+<article class="card">
+  <p class="kicker">{{coach.kicker}}</p>
+  <h2><a href="{{href:post-ia-coach.html}}">{{coach.h1}}</a></h2>
+  <p class="meta">{{coach.meta}}</p>
+  <p>{{coach.description}}</p>
+  <p><a href="{{href:post-ia-coach.html}}">{{blog.readMore}} →</a></p>
+</article>
 
 <article class="card">
   <p class="kicker">{{post.kicker}}</p>

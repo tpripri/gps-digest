@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="{{htmlLang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ═══ Article de blog : textes dans src/page-i18n.ts (clés coach.*) ═══ -->
+<title>{{coach.title}} — gps-digest</title>
+<meta name="description" content="{{attr:coach.description}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b5d3f">
+<link rel="canonical" href="{{url:post-ia-coach.html}}">
+<link rel="alternate" type="text/markdown" href="{{url:post-ia-coach.html}}index.html.md">
+{{alternates}}
+<meta property="og:type" content="article">
+<meta property="og:locale" content="{{ogLocale}}">
+{{ogAlternates}}
+<meta property="og:url" content="{{url:post-ia-coach.html}}">
+<meta property="og:site_name" content="gps-digest">
+<meta property="og:title" content="{{attr:coach.h1}}">
+<meta property="og:description" content="{{attr:coach.description}}">
+<meta property="og:image" content="https://exemple.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta property="article:published_time" content="2026-09-29">
+<meta property="article:modified_time" content="2026-09-29">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "headline": {{json:coach.h1}},
+      "description": {{json:coach.description}},
+      "inLanguage": "{{htmlLang}}",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "image": "https://exemple.com/og.png",
+      "mainEntityOfPage": "{{url:post-ia-coach.html}}",
+      "author": { "@type": "Organization", "name": "gps-digest", "url": "https://exemple.com" },
+      "publisher": { "@id": "https://exemple.com/#organization" },
+      "about": ["ChatGPT", "Claude", "Gemini", "Mistral Vibe", "Strava", "Model Context Protocol"],
+      "citation": [
+        "https://arxiv.org/abs/2310.13548",
+        "https://arxiv.org/abs/2307.03172",
+        "https://press.strava.com/articles/strava-launches-mcp-connector"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "gps-digest", "item": "{{url:index.html}}" },
+        { "@type": "ListItem", "position": 2, "name": {{json:common.blog}}, "item": "{{url:blog.html}}" },
+        { "@type": "ListItem", "position": 3, "name": {{json:coach.h1}} }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "inLanguage": "{{htmlLang}}",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:coach.faq.q1}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:coach.faq.a1}} } },
+        { "@type": "Question", "name": {{json:coach.faq.q2}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:coach.faq.a2}} } },
+        { "@type": "Question", "name": {{json:coach.faq.q3}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:coach.faq.a3}} } },
+        { "@type": "Question", "name": {{json:coach.faq.q4}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:coach.faq.a4}} } },
+        { "@type": "Question", "name": {{json:coach.faq.q5}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:coach.faq.a5}} } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+:root{--ink:#14181d;--ink-soft:#4a5560;--line:#d4dae0;--bg:#fff;--panel:#f5f7f9;
+  --accent:#0b5d3f;--accent-ink:#fff;--radius:6px}
+@media (prefers-color-scheme:dark){:root{--ink:#eef2f5;--ink-soft:#a8b4bf;--line:#39424c;
+  --bg:#12161a;--panel:#1b2127;--accent:#4ade9f;--accent-ink:#0d1114}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:1.06rem/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:44rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+nav.langs{font-size:.85rem;margin-bottom:1rem}
+nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
+.crumbs{font-size:.85rem;color:var(--ink-soft);margin:0 0 1.6rem}
+.crumbs a{color:var(--ink-soft)}
+.kicker{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:0 0 .4rem}
+h1{font-size:2.05rem;line-height:1.18;margin:0 0 .8rem;letter-spacing:-.02em}
+h2{font-size:1.38rem;line-height:1.3;margin:2.6rem 0 .7rem;letter-spacing:-.01em}
+h3{font-size:1.08rem;margin:1.6rem 0 .3rem}
+.meta{font-size:.87rem;color:var(--ink-soft);margin:0 0 1.4rem}
+.lede{font-size:1.18rem;line-height:1.6;color:var(--ink-soft);margin:0 0 1.8rem}
+a{color:var(--accent)}
+.tldr{background:var(--panel);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+  padding:1rem 1.2rem;margin:0 0 2rem}
+.tldr strong{display:block;margin-bottom:.3rem}
+.tldr ul{margin:0;padding-left:1.1rem}
+.tldr li{margin:.3rem 0;font-size:.98rem}
+table{width:100%;border-collapse:collapse;font-size:.93rem;margin:1rem 0 .4rem}
+th,td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top;hyphens:auto}
+thead th{font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft)}
+tbody th{font-weight:700}
+.scroll{overflow-x:auto}
+/* Petits écrans : les mots composés allemands doivent tenir sans défilement. */
+@media (max-width:30rem){table{font-size:.86rem}th,td{padding:.5rem .3rem}}
+.prompts li{margin:.45rem 0;font-style:italic}
+.steps li{margin:.5rem 0}
+.copyable{margin:1rem 0 1.2rem}
+.copy{display:block;margin:0 0 .4rem auto;min-height:36px;padding:.3rem .9rem;border:1px solid var(--line);
+  border-radius:var(--radius);background:var(--bg);color:var(--ink);font:inherit;font-size:.85rem;cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+pre{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;
+  white-space:pre-wrap;overflow-wrap:anywhere;font:.9rem/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.btn{display:inline-block;min-height:44px;padding:.7rem 1.2rem;background:var(--accent);color:var(--accent-ink);
+  border-radius:var(--radius);font-weight:700;text-decoration:none;margin:.8rem 0}
+.cta{border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem 1.4rem;margin:2.8rem 0 1rem;background:var(--panel)}
+.cta h2{margin-top:0}
+.cta p{margin:.4rem 0}
+.faq h3{margin-top:1.3rem}
+.sources{font-size:.88rem;color:var(--ink-soft)}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--ink-soft)}
+footer a{margin-right:1rem;display:inline-block;line-height:2}
+:where(a,button):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+{{langNav}}
+
+<p class="crumbs"><a href="{{href:index.html}}">gps-digest</a> › <a href="{{href:blog.html}}">{{common.blog}}</a></p>
+
+<article>
+<header>
+  <p class="kicker">{{coach.kicker}}</p>
+  <h1>{{coach.h1}}</h1>
+  <p class="meta">{{coach.meta}}</p>
+  <p class="lede">{{coach.lede}}</p>
+</header>
+
+<aside class="tldr">
+  <strong>{{post.tldrTitle}}</strong>
+  <ul>
+    <li>{{coach.tldr1}}</li>
+    <li>{{coach.tldr2}}</li>
+    <li>{{coach.tldr3}}</li>
+    <li>{{coach.tldr4}}</li>
+  </ul>
+</aside>
+
+<h2>{{coach.can.title}}</h2>
+<p>{{coach.can.p1}}</p>
+<p>{{coach.can.goodIntro}}</p>
+<ul>
+  <li>{{coach.can.good1}}</li>
+  <li>{{coach.can.good2}}</li>
+  <li>{{coach.can.good3}}</li>
+  <li>{{coach.can.good4}}</li>
+</ul>
+<p>{{coach.can.badIntro}}</p>
+<ul>
+  <li>{{coach.can.bad1}}</li>
+  <li>{{coach.can.bad2}}</li>
+  <li>{{coach.can.bad3}}</li>
+</ul>
+<p>{{coach.can.p2}}</p>
+
+<h2>{{coach.need.title}}</h2>
+<p>{{coach.need.p1}}</p>
+<ol class="steps">
+  <li>{{coach.need.li1}}</li>
+  <li>{{coach.need.li2}}</li>
+  <li>{{coach.need.li3}}</li>
+</ol>
+<h3>{{coach.sheet.title}}</h3>
+<p>{{coach.sheet.intro}}</p>
+<div class="copyable">
+  <button type="button" class="copy" hidden>{{coach.copy}}</button>
+  <pre>{{coach.sheet.text}}</pre>
+</div>
+
+<h2>{{coach.data.title}}</h2>
+<p>{{coach.data.p1}}</p>
+<h3>{{coach.data.strava.title}}</h3>
+<p>{{coach.data.strava.p}}</p>
+<h3>{{coach.data.export.title}}</h3>
+<p>{{coach.data.export.p1}}</p>
+<p>{{coach.data.export.p2}}</p>
+<div class="scroll">
+<table>
+  <thead><tr><td></td><th scope="col">{{coach.data.colStrava}}</th><th scope="col">{{coach.data.colExport}}</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">{{coach.data.r1}}</th><td>{{coach.data.r1strava}}</td><td><strong>{{coach.data.r1export}}</strong></td></tr>
+    <tr><th scope="row">{{coach.data.r2}}</th><td>{{coach.data.r2strava}}</td><td><strong>{{coach.data.r2export}}</strong></td></tr>
+    <tr><th scope="row">{{coach.data.r3}}</th><td>{{coach.data.r3strava}}</td><td>{{coach.data.r3export}}</td></tr>
+    <tr><th scope="row">{{coach.data.r4}}</th><td>{{coach.data.r4strava}}</td><td>{{coach.data.r4export}}</td></tr>
+    <tr><th scope="row">{{coach.data.r5}}</th><td>{{coach.data.r5strava}}</td><td>{{coach.data.r5export}}</td></tr>
+  </tbody>
+</table>
+</div>
+<p>{{coach.data.p3}}</p>
+
+<h2>{{coach.rules.title}}</h2>
+<p>{{coach.rules.intro}}</p>
+<div class="copyable">
+  <button type="button" class="copy" hidden>{{coach.copy}}</button>
+  <pre>{{coach.rules.text}}</pre>
+</div>
+<p>{{coach.rules.note}}</p>
+
+<h2>{{coach.setup.title}}</h2>
+<p>{{coach.setup.intro}}</p>
+<div class="scroll">
+<table>
+  <thead><tr><th scope="col">{{coach.setup.colTool}}</th><th scope="col">{{coach.setup.colWhere}}</th><th scope="col">{{coach.setup.colPlus}}</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">ChatGPT</th><td>{{coach.setup.gpt.where}}</td><td>{{coach.setup.gpt.plus}}</td></tr>
+    <tr><th scope="row">Claude</th><td>{{coach.setup.claude.where}}</td><td>{{coach.setup.claude.plus}}</td></tr>
+    <tr><th scope="row">Gemini</th><td>{{coach.setup.gemini.where}}</td><td>{{coach.setup.gemini.plus}}</td></tr>
+    <tr><th scope="row">Vibe</th><td>{{coach.setup.vibe.where}}</td><td>{{coach.setup.vibe.plus}}</td></tr>
+  </tbody>
+</table>
+</div>
+<h3>{{coach.setup.gpt.title}}</h3>
+<p>{{coach.setup.gpt.text}}</p>
+<h3>{{coach.setup.claude.title}}</h3>
+<p>{{coach.setup.claude.text}}</p>
+<h3>{{coach.setup.gemini.title}}</h3>
+<p>{{coach.setup.gemini.text}}</p>
+<h3>{{coach.setup.vibe.title}}</h3>
+<p>{{coach.setup.vibe.text}}</p>
+<p>{{coach.setup.fallback}}</p>
+
+<h2>{{coach.weekly.title}}</h2>
+<p>{{coach.weekly.intro}}</p>
+<ol class="steps">
+  <li>{{coach.weekly.step1}}</li>
+  <li>{{coach.weekly.step2}}</li>
+  <li>{{coach.weekly.step3}}</li>
+  <li>{{coach.weekly.step4}}</li>
+</ol>
+<p>{{coach.weekly.promptIntro}}</p>
+<div class="copyable">
+  <button type="button" class="copy" hidden>{{coach.copy}}</button>
+  <pre>{{coach.weekly.prompt}}</pre>
+</div>
+<p>{{coach.weekly.feel}}</p>
+<p>{{coach.weekly.fresh}}</p>
+
+<h2>{{coach.more.title}}</h2>
+<p>{{coach.more.intro}}</p>
+<ul class="prompts">
+  <li>{{coach.more.q1}}</li>
+  <li>{{coach.more.q2}}</li>
+  <li>{{coach.more.q3}}</li>
+  <li>{{coach.more.q4}}</li>
+</ul>
+
+<h2>{{coach.traps.title}}</h2>
+<p>{{coach.traps.intro}}</p>
+<ol class="steps">
+  <li>{{coach.traps.li1}}</li>
+  <li>{{coach.traps.li2}}</li>
+  <li>{{coach.traps.li3}}</li>
+  <li>{{coach.traps.li4}}</li>
+  <li>{{coach.traps.li5}}</li>
+</ol>
+
+<h2>{{coach.choose.title}}</h2>
+<p>{{coach.choose.p1}}</p>
+<p><strong>{{coach.choose.p2}}</strong></p>
+
+<section class="faq">
+  <h2>{{post.faq.title}}</h2>
+  <h3>{{coach.faq.q1}}</h3>
+  <p>{{coach.faq.a1}}</p>
+  <h3>{{coach.faq.q2}}</h3>
+  <p>{{coach.faq.a2}}</p>
+  <h3>{{coach.faq.q3}}</h3>
+  <p>{{coach.faq.a3}}</p>
+  <h3>{{coach.faq.q4}}</h3>
+  <p>{{coach.faq.a4}}</p>
+  <h3>{{coach.faq.q5}}</h3>
+  <p>{{coach.faq.a5}}</p>
+</section>
+
+<aside class="cta">
+  <h2>{{coach.end.title}}</h2>
+  <p>{{coach.end.text}}</p>
+  <a class="btn" href="{{href:index.html}}">{{post.end.cta}}</a>
+</aside>
+
+<section class="sources">
+  <h2>{{post.sources.title}}</h2>
+  <ol>
+    <li>{{coach.sources.sharma}}</li>
+    <li>{{post.sources.liu}}</li>
+    <li>{{coach.sources.strava}}</li>
+    <li>{{coach.sources.docs}}</li>
+    <li>{{post.sources.bench}}</li>
+  </ol>
+</section>
+</article>
+
+<footer>
+  <nav><a href="{{href:index.html}}">{{privacy.footerTool}}</a><a href="{{href:blog.html}}">{{common.blog}}</a><a href="{{href:confidentialite.html}}">{{common.privacy}}</a><a href="https://github.com/tpripri/gps-digest" rel="noopener">{{common.source}}</a></nav>
+</footer>
+
+</div>
+<script>
+// Boutons « Copier » : affichés seulement si le presse-papiers est disponible.
+if (navigator.clipboard) {
+  for (const box of document.querySelectorAll(".copyable")) {
+    const button = box.querySelector("button");
+    const label = button.textContent;
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      const pre = box.querySelector("pre");
+      try {
+        await navigator.clipboard.writeText(pre.textContent);
+      } catch {
+        // Presse-papiers refusé (permissions, cadre intégré) : le texte est
+        // sélectionné, un Ctrl+C suffit.
+        getSelection().selectAllChildren(pre);
+        return;
+      }
+      button.textContent = {{json:coach.copied}};
+      setTimeout(() => (button.textContent = label), 2000);
+    });
+  }
+}
+</script>
+{{analyticsScript}}
+</body>
+</html>

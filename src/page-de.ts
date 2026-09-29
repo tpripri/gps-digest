@@ -502,6 +502,203 @@ export const de: Partial<PageCatalog> = {
   "post.end.text":
     "Verwandle deine Uhrendateien in ein Dossier, das ChatGPT, Gemini oder Claude wirklich analysieren können. Kostenlos, ohne Konto, und deine Dateien verlassen deinen Browser nicht.",
   "post.end.cta": "gps-digest ausprobieren",
+  "post.next":
+    "Wie aus diesen Fragen eine echte Begleitung Woche für Woche wird: <a href=\"{{href:post-ia-coach.html}}\">einen KI-Coach in ChatGPT, Claude, Gemini oder Vibe einrichten</a>.",
+
+  "coach.title": "ChatGPT, Claude, Gemini oder Vibe als Lauftrainer nutzen",
+  "coach.description":
+    "Athletenprofil, Coach-Regeln zum Kopieren, Einrichtung in ChatGPT, Claude, Gemini und Vibe, und wie du ihnen deine Einheiten kostenlos gibst.",
+  "coach.kicker": "Praxisleitfaden",
+  "coach.h1": "So machst du ChatGPT, Claude, Gemini oder Vibe zu deinem Lauftrainer",
+  "coach.meta": "Veröffentlicht am <time datetime=\"2026-09-29\">29. September 2026</time> · 11 Min. Lesezeit",
+  "coach.lede":
+    "Ein Coach, der deine Einheiten, dein Ziel und deine empfindliche Wade kennt, um 23 Uhr erreichbar, ohne einen Cent extra: Das versprechen KI-Assistenten. Das Versprechen hält, unter zwei Bedingungen. Du musst sie einmal richtig briefen, sonst behandeln sie dich bei jeder Einheit wie einen Fremden. Und du musst ihnen deine Einheiten geben, was viel schwieriger ist, als es klingt.",
+  "coach.tldr1":
+    "Eine KI ist ein guter Coach, wenn sie drei Dinge hat: dein Profil, deine echten Einheiten und klare Regeln. Ohne sie spult sie einen Standardplan ab.",
+  "coach.tldr2":
+    "Das Schwierigste ist, ihr deine Einheiten zu geben. Der offizielle Strava-Connector kostet Geld und funktioniert nur mit Claude. Der Dateiexport ist kostenlos und funktioniert überall, aber eine Rohdatei ist zu schwer: Sie muss komprimiert werden.",
+  "coach.tldr3":
+    "ChatGPT, Claude und Vibe haben Projekte, Gemini hat Gems: Athletenprofil und Regeln bleiben dort von einem Gespräch zum nächsten erhalten. Alle gibt es in der kostenlosen Version.",
+  "coach.tldr4":
+    "Die Routine, die funktioniert: eine Auswertung pro Woche, in einem neuen Gespräch, mit deinen Einheiten und einer Zeile zu deinem Befinden. Und behalte das Steuer in der Hand: Eine KI neigt dazu, dir recht zu geben.",
+
+  "coach.can.title": "Kann eine KI dich wirklich coachen?",
+  "coach.can.p1":
+    "Ja, für einen großen Teil der Arbeit eines Coaches: deine Einheiten lesen, sie mit deinem Ziel verbinden und das Weitere anpassen. Nein, für alles, wofür man dich sehen oder anfassen muss. Die Grenze ist klar, und es lohnt sich, sie vorher zu kennen.",
+  "coach.can.goodIntro": "Was eine KI gut kann:",
+  "coach.can.good1": "eine Einheit analysieren und mit Zahlen sagen, ob sie ihren Zweck erfüllt hat;",
+  "coach.can.good2":
+    "deine Woche umbauen, wenn das Leben dazwischenkommt: eine Reise, eine Erkältung, ein Meeting, das länger dauert;",
+  "coach.can.good3": "erklären, warum eine Einheit sinnvoll ist, was viele fertige Pläne nie tun;",
+  "coach.can.good4": "um 23 Uhr antworten, ohne von deiner zehnten Frage genervt zu sein.",
+  "coach.can.badIntro": "Was sie nie tun wird:",
+  "coach.can.bad1": "dich laufen sehen, also weder Laufstil noch Haltung korrigieren;",
+  "coach.can.bad2": "merken, dass du müder bist, als du sagst;",
+  "coach.can.bad3": "einen Schmerz diagnostizieren.",
+  "coach.can.p2":
+    "Sieh sie als sehr gut erreichbaren Trainer, der dich nie hat laufen sehen. Alles, was sie über dich weiß, ist das, was du ihr zu lesen gibst. Daher das Folgende.",
+
+  "coach.need.title": "Was muss dein KI-Coach wissen, bevor es losgeht?",
+  "coach.need.p1": "Drei Dinge. Fehlt eines, bricht die Qualität der Ratschläge ein.",
+  "coach.need.li1":
+    "<strong>Dein Profil.</strong> Dein Niveau, dein Ziel, deine Einschränkungen und deine Schwachstellen. Ohne Profil behandelt dich die KI wie einen Durchschnittsläufer, den es nicht gibt.",
+  "coach.need.li2":
+    "<strong>Deine echten Einheiten.</strong> Nicht deine Erinnerungen, sondern deine Daten. Das ist die schwierigste Zutat, dazu gleich mehr.",
+  "coach.need.li3":
+    "<strong>Klare Regeln.</strong> Wie sie denken soll, was sie ablehnen soll, in welcher Form sie antwortet. Das unterscheidet einen Coach von einem Ratschlag-Automaten.",
+  "coach.sheet.title": "Das Athletenprofil, einmal ausfüllen",
+  "coach.sheet.intro":
+    "Kopiere diese Vorlage, fülle sie in fünf Minuten aus und speichere sie als Textdatei. Aktualisiere sie nach jedem Wettkampf oder wenn sich dein Ziel ändert.",
+  "coach.sheet.text":
+    "ATHLETENPROFIL\nAlter, Geschlecht, Laufjahre:\nAktueller Umfang (km und Läufe pro Woche):\nBestzeiten der letzten 12 Monate (5 km, 10 km, Halbmarathon, Marathon):\nMaximale HF und Ruhe-HF, falls bekannt:\nZiel (Wettkampf, Distanz, Datum, Zielzeit):\nVerfügbarkeit (mögliche Tage, längste Einheit):\nFrühere Verletzungen und Schwachstellen:\nAusrüstung (Uhr, Brustgurt oder Handgelenkssensor):\nWas ich am Training liebe und was ich hasse:",
+
+  "coach.data.title": "Wie gibst du deinem KI-Coach deine Einheiten?",
+  "coach.data.p1":
+    "Diesen Schritt überspringen die meisten Ratgeber, und er ist der schwierigste. Deine KI sieht deine Uhr nicht: Du musst ihr die Einheiten bringen. Es gibt zwei Wege, und sie kosten nicht dasselbe.",
+  "coach.data.strava.title": "Der Strava-Connector: bequem, aber kostenpflichtig und nur für Claude",
+  "coach.data.strava.p":
+    "Seit Juni 2026 bietet Strava einen offiziellen Connector an, einen MCP-Server, über den Claude deinen Verlauf direkt lesen kann. Das ist bequem: kein Export mehr, die KI holt sich, was sie braucht. Aber du brauchst ein kostenpflichtiges Strava-Abo, und der Connector funktioniert nur mit Claude. Strava verspricht weitere Assistenten für später, ohne Datum. Für ChatGPT, Gemini oder Vibe gibt es bisher keinen offiziellen Connector, und inoffizielle erfordern eine technische Einrichtung.",
+  "coach.data.export.title": "Dateiexport: kostenlos und universell, wenn du komprimierst",
+  "coach.data.export.p1":
+    "Garmin Connect, Coros, Polar Flow und Strava lassen dich eine Einheit kostenlos als FIT, TCX oder GPX exportieren. Diese Datei funktioniert mit jeder KI, auch in den kostenlosen Versionen. Der Haken ist ihre Größe: Eine Stunde Laufen als TCX sind etwa 533.000 Tokens, genug, um eine kostenlose Version mit einer einzigen Einheit zu sprengen (<a href=\"{{href:post-ia-analyse.html}}\">warum das so ist</a>).",
+  "coach.data.export.p2":
+    "Die Lösung: die Datei komprimieren und umstrukturieren, bevor die KI sie bekommt. gps-digest macht daraus ein Dossier von etwa 5.800 Tokens pro Einheit, mit Kilometerzeiten, Zonen, Wiederholungen, kardialer Drift und der Zuverlässigkeit des Sensors. Jeder Assistent, kostenlos oder bezahlt, liest es vollständig.",
+  "coach.data.colStrava": "Strava-Connector",
+  "coach.data.colExport": "Export + gps-digest",
+  "coach.data.r1": "Kosten",
+  "coach.data.r1strava": "Kostenpflichtiges Strava-Abo",
+  "coach.data.r1export": "Kostenlos",
+  "coach.data.r2": "Kompatible Assistenten",
+  "coach.data.r2strava": "Bisher nur Claude",
+  "coach.data.r2export": "Alle: ChatGPT, Claude, Gemini, Vibe und die anderen",
+  "coach.data.r3": "Aufwand",
+  "coach.data.r3strava": "Keiner, sobald verbunden",
+  "coach.data.r3export": "Ein Export und einmal Ziehen und Ablegen pro Woche",
+  "coach.data.r4": "Was die KI bekommt",
+  "coach.data.r4strava": "Die Strava-Daten, zusammengefasst oder sekundengenau",
+  "coach.data.r4export": "Ein fertig berechnetes Dossier: Zonen, Wiederholungen, Drift, Zuverlässigkeit des Sensors",
+  "coach.data.r5": "GPS-Koordinaten",
+  "coach.data.r5strava": "Für die KI zugänglich",
+  "coach.data.r5export": "Standardmäßig entfernt",
+  "coach.data.p3":
+    "Strava-Abonnent und Claude-Nutzer? Dann spart dir der Connector ein paar Minuten pro Woche. Für alle anderen funktioniert der kostenlose Export sehr gut. Du musst die Dateien nur komprimieren, bevor die KI sie bekommt.",
+
+  "coach.rules.title": "Die Coach-Anweisungen zum Kopieren",
+  "coach.rules.intro":
+    "Dieser Text legt fest, wie sich deine KI verhält. Er ist absichtlich kurz: Jede Regel korrigiert eine bekannte Schwäche von Sprachmodellen.",
+  "coach.rules.text":
+    "Du bist mein Lauftrainer. Du analysierst meine Einheiten, verfolgst meinen Fortschritt in Richtung meines Ziels und passt mein Training Woche für Woche an.\n\nMein Profil steht im Athletenprofil. Meine Einheiten kommen als gps-digest-Dossiers.\n\nRegeln:\n1. Stütze jede Aussage auf eine Zahl aus dem Dossier und nenne sie.\n2. Wenn ein Wert fehlt oder unzuverlässig ist, sag es, statt zu raten.\n3. Sei ehrlich. Wenn eine Einheit misslungen oder ein Ziel unrealistisch ist, sag es klar.\n4. Geh von meinem tatsächlichen Umfang aus und begründe jede Steigerung der Belastung.\n5. Wenn ich einen Schmerz melde, der anhält, schlimmer wird oder meinen Laufstil verändert, schick mich zu einer medizinischen Fachkraft, statt einen Plan vorzuschlagen.\n6. Wenn dir Informationen für eine Entscheidung fehlen, frag mich.\n7. Beende jede Auswertung mit höchstens drei konkreten Maßnahmen.",
+  "coach.rules.note":
+    "Die Regeln 1 und 2 verhindern, dass die KI Lücken mit plausiblen Zahlen füllt. Regel 3 wirkt ihrer Neigung entgegen, dir recht zu geben. Regel 4 bremst zu ehrgeizige Pläne. Regel 5 erinnert daran, dass ein Chatbot kein Arzt ist.",
+  "coach.copy": "Kopieren",
+  "coach.copied": "Kopiert",
+
+  "coach.setup.title": "Wie richtest du deinen Coach in ChatGPT, Claude, Gemini oder Vibe ein?",
+  "coach.setup.intro":
+    "Alle vier Assistenten haben einen Bereich, in dem Profil und Regeln von einem Gespräch zum nächsten erhalten bleiben. Du musst sie nicht jedes Mal neu einfügen.",
+  "coach.setup.colTool": "Assistent",
+  "coach.setup.colWhere": "Wo der Coach wohnt",
+  "coach.setup.colPlus": "Vorteil für Läufer",
+  "coach.setup.gpt.where": "Ein Projekt, mit Anweisungen und Dateien",
+  "coach.setup.gpt.plus": "Der Sprachmodus, um die Einheit auf dem Heimweg laut zu besprechen",
+  "coach.setup.claude.where": "Ein Projekt, mit Anweisungen und Wissen",
+  "coach.setup.claude.plus": "Kann den Wochenplan als eigenes Dokument liefern, leicht wiederzuverwenden",
+  "coach.setup.gemini.where": "Ein Gem, mit Anweisungen und Wissen",
+  "coach.setup.gemini.plus": "Verbunden mit Google Drive und Google Kalender",
+  "coach.setup.vibe.where": "Ein Projekt, mit Anweisungen und Dateien",
+  "coach.setup.vibe.plus": "Ein europäischer Anbieter: Mistral AI mit Sitz in Paris",
+  "coach.setup.gpt.title": "ChatGPT: ein Projekt anlegen",
+  "coach.setup.gpt.text":
+    "Lege in der Seitenleiste ein neues Projekt an, zum Beispiel „Lauf-Coach“. Füge die Regeln in die <strong>Projektanweisungen</strong> ein und lade das Athletenprofil in die <strong>Dateien</strong> des Projekts. Jedes Gespräch in diesem Projekt startet mit diesem Kontext. Die kostenlose Version begrenzt die Zahl der Dateien pro Projekt: Nutze sie für das Profil und füge die Dossiers deiner Einheiten direkt ins Gespräch ein.",
+  "coach.setup.claude.title": "Claude: ein Projekt anlegen",
+  "coach.setup.claude.text":
+    "Lege ein Projekt an, füge die Regeln in seine <strong>Anweisungen</strong> ein und lade das Athletenprofil in sein <strong>Wissen</strong>. Jedes neue Gespräch im Projekt startet mit beidem. Die kostenlose Version begrenzt die Zahl der Projekte und den verfügbaren Platz, aber ein Profil und ein Dossier pro Woche passen locker hinein.",
+  "coach.setup.gemini.title": "Gemini: ein Gem anlegen",
+  "coach.setup.gemini.text":
+    "Öffne den Gem-Manager und lege ein <strong>neues Gem</strong> an. Füge die Regeln in seine <strong>Anweisungen</strong> ein und lade das Athletenprofil in sein <strong>Wissen</strong>, vom Computer oder aus Google Drive. Gems sind kostenlos und begleiten dich auch in der mobilen App.",
+  "coach.setup.vibe.title": "Vibe: ein Projekt anlegen",
+  "coach.setup.vibe.text":
+    "Vibe ist seit Mai 2026 der neue Name von Le Chat von Mistral AI. Lege ein <strong>neues Projekt</strong> an, öffne seine Anpassungen, um die Regeln einzufügen, und lade das Athletenprofil in seine <strong>Dateien</strong>. Projekte gibt es in allen Tarifen, mit Grenzen.",
+  "coach.setup.fallback":
+    "Kein eigener Bereich in deinem Tarif, oder keine Lust, einen anzulegen? Füge Profil und Regeln am Anfang jedes neuen Gesprächs ein. Das ist weniger bequem und funktioniert genauso gut.",
+
+  "coach.weekly.title": "Die Routine, die dich weiterbringt: eine Auswertung pro Woche",
+  "coach.weekly.intro":
+    "Ein nützlicher Coach begleitet dich über die Zeit. Am wirksamsten ist ein fester Termin, Sonntagabend oder Montagmorgen, der zehn Minuten dauert.",
+  "coach.weekly.step1":
+    "<strong>Exportiere die Einheiten der Woche</strong> von deiner Uhr oder aus Strava, am besten als FIT.",
+  "coach.weekly.step2":
+    "<strong>Lege sie in <a href=\"{{href:index.html}}\">gps-digest</a> ab</strong> und kopiere das Dossier. Alles wird in deinem Browser berechnet.",
+  "coach.weekly.step3":
+    "<strong>Öffne ein neues Gespräch im Projekt</strong>, füge das Dossier ein und ergänze eine Zeile zu deinem Befinden.",
+  "coach.weekly.step4":
+    "<strong>Stelle die Auswertungsfrage</strong> und besprich die vorgeschlagene Woche, bevor du sie übernimmst.",
+  "coach.weekly.promptIntro": "Die Auswertungsfrage, zum unveränderten Kopieren:",
+  "coach.weekly.prompt":
+    "Hier sind meine Einheiten der Woche und mein Befinden. Werte sie aus:\n1. Was lief gut? Mit Zahlen belegt.\n2. Was sollte ich im Auge behalten?\n3. Passt meine Belastung zu meinem Ziel und meinem Wettkampftermin?\n4. Schlag die nächste Woche vor, Einheit für Einheit, jeweils mit ihrem Zweck.\n\nMeine Einschränkungen für nächste Woche: [ergänzen]",
+  "coach.weekly.feel":
+    "Die Zeile zum Befinden zählt genauso viel wie die Daten. Deine Uhr weiß nicht, dass du schlecht geschlafen hast oder dass deine Wade seit Dienstag zieht. Zum Beispiel: „Gefühlte Anstrengung 8/10 am Samstag, zwei schlechte Nächte, rechte Wade seit Dienstag fest.“ Ohne diese Zeile beurteilt die KI deine Woche nur nach der Uhr.",
+  "coach.weekly.fresh":
+    "Warum jede Woche ein neues Gespräch? Weil ein Modell schlecht nutzt, was in der Mitte eines sehr langen Austauschs steht (Liu et al., 2024). Woche für Woche im selben Verlauf verwässern die ersten Anweisungen. Das Projekt behält Profil und Regeln, das Dossier liefert die Fakten. Gib ihr einmal im Monat das Dossier der letzten vier Wochen, damit sie den Trend beurteilen kann.",
+
+  "coach.more.title": "Vier weitere Anfragen, die gut funktionieren",
+  "coach.more.intro":
+    "Neben der Wochenauswertung holen diese Anfragen das Beste aus einem gut eingerichteten KI-Coach heraus:",
+  "coach.more.q1":
+    "„Analysiere meine Intervalle: Gleichmäßigkeit der Wiederholungen, Erholung dazwischen und was ich beim nächsten Mal ändern sollte.“",
+  "coach.more.q2":
+    "„Mein Wettkampf ist in zehn Tagen. Hier sind meine letzten sechs Wochen. Welches Tempo soll ich anpeilen, und wie gestalte ich das Tapering?“",
+  "coach.more.q3":
+    "„Ich habe diese Woche nur drei Tage zum Laufen. Behalte das Wichtigste und sag mir, worauf ich verzichte.“",
+  "coach.more.q4":
+    "„Erstelle einen Zwölf-Wochen-Plan für einen Halbmarathon in 1:45 h, ausgehend von meinem aktuellen Umfang. Plane Entlastungswochen ein und begründe die Steigerung.“",
+
+  "coach.traps.title": "Die fünf Fallen des KI-Coaches, und wie du sie vermeidest",
+  "coach.traps.intro":
+    "Ein falsch genutzter KI-Coach warnt dich nicht, wenn er sich irrt. Das sind die häufigsten Fehler.",
+  "coach.traps.li1":
+    "<strong>Er gibt dir recht.</strong> Sprachmodelle neigen dazu, ihrem Gegenüber zuzustimmen, eine gut belegte Verzerrung (Sharma et al., 2024). Frag „Was stimmt an dieser Einheit nicht?“ statt „War das eine gute Einheit?“.",
+  "coach.traps.li2":
+    "<strong>Er erfindet, wenn Zahlen fehlen.</strong> Ohne Daten ergänzt er plausible Werte, immer im selbstsicheren Ton. Daher die Regeln 1 und 2 und ein vollständiges Dossier.",
+  "coach.traps.li3":
+    "<strong>Er weiß nur, was du ihm sagst.</strong> Dein Schlaf, dein Stress, deine Arbeitswoche: Nichts davon steht in der Uhr. Ohne Zeile zum Befinden hält er dich für topfit.",
+  "coach.traps.li4":
+    "<strong>Seine Pläne sind manchmal zu ehrgeizig.</strong> Auf dem Papier ermüdet ein Plan niemanden. Verlange, dass er von deinem tatsächlichen Umfang ausgeht und jede Steigerung begründet.",
+  "coach.traps.li5":
+    "<strong>Er ist kein Arzt.</strong> Ein Schmerz, der anhält, schlimmer wird oder deinen Laufstil verändert, gehört zu einer medizinischen Fachkraft, nicht zu einem Chatbot.",
+
+  "coach.choose.title": "Welche KI eignet sich als Lauftrainer?",
+  "coach.choose.p1":
+    "Die, die du schon nutzt. ChatGPT, Claude, Gemini und Vibe können alle ein strukturiertes Dossier lesen, Regeln befolgen und eine sinnvolle Woche vorschlagen. Die Unterschiede hängen von deinen Gewohnheiten ab: das Google-Ökosystem bei Gemini, die Auswertung per Sprache bei ChatGPT, lange Dokumente und der Strava-Connector bei Claude, ein europäischer Anbieter bei Vibe.",
+  "coach.choose.p2":
+    "Was die Qualität des Coachings wirklich verändert, ist nicht das Modell. Es ist das, was du ihm zu lesen gibst.",
+
+  "coach.faq.q1": "Kann man ChatGPT kostenlos als Lauftrainer nutzen?",
+  "coach.faq.a1":
+    "Ja. Die Projekte von ChatGPT, Claude und Vibe gibt es ebenso wie die Gems von Gemini in den kostenlosen Versionen, mit Grenzen bei Dateien und Nutzung. Auch der Export deiner Einheiten ist kostenlos. Du musst sie nur vor dem Einfügen komprimieren, sonst kann eine einzige Einheit eine kostenlose Version sprengen.",
+  "coach.faq.q2": "Kann ChatGPT einen Marathon-Trainingsplan erstellen?",
+  "coach.faq.a2":
+    "Ja, und zwar recht gut, wenn er von deinem echten Niveau ausgeht: aktueller Umfang, aktuelle Bestzeiten, Verfügbarkeit und Wettkampftermin. Lass ihn die Steigerung begründen und passe den Plan jede Woche mit deinen echten Einheiten an, statt ihm blind zu folgen.",
+  "coach.faq.q3": "Kann man Strava oder Garmin direkt mit einer KI verbinden?",
+  "coach.faq.a3":
+    "Seit Juni 2026 bietet Strava einen offiziellen Connector an, der zahlenden Abonnenten und bisher nur Claude vorbehalten ist. Für andere Assistenten und kostenlose Versionen bleibt der einfachste Weg der Dateiexport, den Garmin Connect wie Strava anbieten: kostenlos, mit jeder KI kompatibel, solange du die Dateien vor dem Einfügen komprimierst.",
+  "coach.faq.q4": "Was passiert mit den Daten, die ich meinem KI-Coach anvertraue?",
+  "coach.faq.a4":
+    "Was du in einen Assistenten einfügst, verarbeitet dessen Anbieter nach seinen Bedingungen. Prüfe in den Einstellungen, wie lange der Verlauf gespeichert wird und ob deine Gespräche zum Training von Modellen genutzt werden. Das gps-digest-Dossier enthält standardmäßig keine GPS-Koordinaten.",
+  "coach.faq.q5": "Muss man mit dem KI-Coach auf Englisch schreiben?",
+  "coach.faq.a5":
+    "Nein. Alle vier Assistenten antworten sehr gut auf Deutsch, und gps-digest erzeugt das Dossier in der Sprache der Seite. Du kannst alles auf Deutsch machen, vom Athletenprofil bis zur Wochenauswertung.",
+
+  "coach.end.title": "Ein guter Coach beginnt mit guten Daten",
+  "coach.end.text":
+    "gps-digest verwandelt deine Uhrendateien in ein Dossier, das ChatGPT, Claude, Gemini oder Vibe wirklich analysieren können, auch in der kostenlosen Version. Ohne Konto, und deine Dateien verlassen deinen Browser nicht.",
+
+  "coach.sources.sharma":
+    "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.strava":
+    "Strava, <em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>, Pressemitteilung vom 1. Juni 2026. <a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>.",
+  "coach.sources.docs":
+    "Offizielle Dokumentation: <a href=\"https://help.openai.com/en/articles/10169521-projects-in-chatgpt\" rel=\"nofollow\">Projekte in ChatGPT</a>, <a href=\"https://support.claude.com/en/articles/9517075-what-are-projects\" rel=\"nofollow\">Projekte in Claude</a>, <a href=\"https://support.google.com/gemini/answer/15146780\" rel=\"nofollow\">Gems in Gemini</a>, <a href=\"https://docs.mistral.ai/vibe/work/projects\" rel=\"nofollow\">Projekte in Vibe</a>.",
   "privacy.analytics.row": "Besuchsstatistik",
   "privacy.analytics.rowText":
     "<strong>Ja, anonym.</strong> Cloudflare Web Analytics zählt Seitenaufrufe, ohne Cookie und ohne dauerhafte Kennung. Nichts über deine Dateien oder Einheiten.",

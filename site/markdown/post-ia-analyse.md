@@ -109,6 +109,8 @@ publisher: gps-digest (https://exemple.com)
 - {{post.prompts.q4}}
 - {{post.prompts.q5}}
 
+{{post.next}}
+
 ## {{post.faq.title}}
 
 ### {{post.faq.q1}}
