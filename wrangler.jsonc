@@ -19,9 +19,12 @@
 
   // Domaine de production, acheté chez Cloudflare Registrar. « wrangler
   // deploy » crée l'enregistrement DNS et le certificat HTTPS tout seul.
-  // L'adresse *.workers.dev reste active ; les URL canoniques des pages
-  // pointent vers gpsdigest.com, ce qui évite le contenu dupliqué.
   "routes": [{ "pattern": "gpsdigest.com", "custom_domain": true }],
+
+  // Une seule adresse publique : l'ancienne *.workers.dev est coupée, pour
+  // que les moteurs n'indexent pas deux copies du même site.
+  "workers_dev": false,
+  "preview_urls": false,
 
   "assets": {
     // Sortie du build statique (Astro : « dist »).
