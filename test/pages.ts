@@ -143,6 +143,12 @@ for (const file of readdirSync(MARKDOWN).filter((f) => f.endsWith(".md"))) {
       on.includes(pageText(locale, "privacy.analytics.row")) &&
       on.includes("cloudflareinsights.com</code>");
     check(`${locale} : avec jeton, script et déclaration dans la page de confidentialité`, ok);
+
+    // Mode où Cloudflare injecte le script : déclaré, mais pas en double.
+    const cdn = renderPage(privacy, locale, { page: "confidentialite.html", analyticsInjectedByCdn: true });
+    check(`${locale} : injectée par Cloudflare, déclarée sans second script`,
+      !cdn.includes("beacon.min.js") && cdn.includes(pageText(locale, "privacy.analytics.row")) &&
+      cdn.includes(pageText(locale, "privacy.analytics.active")));
   }
 }
 

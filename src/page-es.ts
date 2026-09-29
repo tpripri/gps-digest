@@ -348,7 +348,7 @@ export const es: Partial<PageCatalog> = {
   "privacy.rights.text":
     "Como no se recopila ni se conserva ningún dato personal, no hay ningún registro que consultar, corregir o eliminar: cerrar la pestaña basta para borrarlo todo. Para cualquier pregunta, el repositorio de GitHub mencionado arriba permite abrir una discusión.",
   "privacy.footerTool": "La herramienta",
-  "privacy.updated": "Última actualización: <time datetime=\"2026-09-25\">25 de septiembre de 2026</time>.",
+  "privacy.updated": "Última actualización: <time datetime=\"2026-09-29\">29 de septiembre de 2026</time>.",
   "common.blog": "Blog",
   "home.why.more":
     "Por qué una IA necesita un informe estructurado y no un archivo en bruto: <a href=\"{{href:post-ia-analyse.html}}\">leer el artículo</a>.",

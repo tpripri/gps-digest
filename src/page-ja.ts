@@ -346,7 +346,7 @@ export const ja: Partial<PageCatalog> = {
   "privacy.rights.text":
     "個人データを収集も保存もしないため、閲覧・訂正・削除の対象となる記録は存在しません。タブを閉じればすべて消えます。質問がある場合は、上記の GitHub リポジトリでディスカッションを始めてください。",
   "privacy.footerTool": "ツール",
-  "privacy.updated": "最終更新日：<time datetime=\"2026-09-25\">2026 年 9 月 25 日</time>。",
+  "privacy.updated": "最終更新日：<time datetime=\"2026-09-29\">2026 年 9 月 29 日</time>。",
   "common.blog": "ブログ",
   "home.why.more":
     "AI に生のファイルではなく構造化された記録が必要な理由：<a href=\"{{href:post-ia-analyse.html}}\">記事を読む</a>。",

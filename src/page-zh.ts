@@ -341,7 +341,7 @@ export const zh: Partial<PageCatalog> = {
   "privacy.rights.text":
     "由于不收集也不保存任何个人数据，所以不存在可供查阅、更正或删除的记录：关闭标签页就能清除一切。如有任何问题，可以在上方的 GitHub 仓库中发起讨论。",
   "privacy.footerTool": "工具",
-  "privacy.updated": "最后更新：<time datetime=\"2026-09-25\">2026 年 9 月 25 日</time>。",
+  "privacy.updated": "最后更新：<time datetime=\"2026-09-29\">2026 年 9 月 29 日</time>。",
   "common.blog": "博客",
   "home.why.more":
     "为什么 AI 需要结构化档案，而不是原始文件：<a href=\"{{href:post-ia-analyse.html}}\">阅读文章</a>。",

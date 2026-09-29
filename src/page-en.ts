@@ -348,7 +348,7 @@ export const en: PageCatalog = {
   "privacy.rights.text":
     "Since no personal data is collected or stored, there is no record to access, correct or delete: closing the tab erases everything. For any question, the GitHub repository above lets you open a discussion.",
   "privacy.footerTool": "The tool",
-  "privacy.updated": "Last updated: <time datetime=\"2026-09-25\">September 25, 2026</time>.",
+  "privacy.updated": "Last updated: <time datetime=\"2026-09-29\">September 29, 2026</time>.",
   "common.blog": "Blog",
   "home.why.more":
     "Why an AI needs a structured file rather than a raw one: <a href=\"{{href:post-ia-analyse.html}}\">read the article</a>.",

@@ -400,7 +400,7 @@ const fr = {
   "privacy.rights.text":
     "Aucune donnée personnelle n'étant collectée ni conservée, il n'y a pas de fichier à consulter, corriger ou supprimer : fermer l'onglet suffit à tout effacer. Pour toute question, le dépôt GitHub ci-dessus permet d'ouvrir une discussion.",
   "privacy.footerTool": "L'outil",
-  "privacy.updated": "Dernière mise à jour : <time datetime=\"2026-09-25\">25 septembre 2026</time>.",
+  "privacy.updated": "Dernière mise à jour : <time datetime=\"2026-09-29\">29 septembre 2026</time>.",
 
   // ── blog : liens depuis le reste du site ───────────────────────────────
   "common.blog": "Blog",
@@ -656,6 +656,12 @@ export interface RenderOptions {
    * diverger, c'est tout l'intérêt de les rendre au même endroit.
    */
   analyticsToken?: string;
+  /**
+   * Mesure déclarée sans script ajouté par le site : Cloudflare l'injecte
+   * lui-même à la volée (réglage « automatique » du tableau de bord). La page
+   * de confidentialité doit alors la déclarer quand même.
+   */
+  analyticsInjectedByCdn?: boolean;
 }
 
 /**
@@ -666,6 +672,8 @@ export function renderPage(template: string, locale: Locale, opts: RenderOptions
   const locales = opts.locales ?? LOCALES;
   const meta = LOCALE_META[locale];
   const xDefault = locales.includes(X_DEFAULT) ? X_DEFAULT : locales[0];
+  // Mesure d'audience active, que le script vienne du site ou de Cloudflare.
+  const measured = !!opts.analyticsToken || !!opts.analyticsInjectedByCdn;
 
   const computed: Record<string, () => string> = {
     locale: () => locale,
@@ -704,13 +712,13 @@ export function renderPage(template: string, locale: Locale, opts: RenderOptions
           }'></script>`
         : "",
     privacyAnalyticsRow: () =>
-      opts.analyticsToken
+      measured
         ? `<tr><th scope="row">${pageText(locale, "privacy.analytics.row")}</th><td>${pageText(locale, "privacy.analytics.rowText")}</td></tr>`
         : "",
     privacyAnalyticsNote: () =>
-      pageText(locale, opts.analyticsToken ? "privacy.analytics.active" : "privacy.dont.analytics"),
+      pageText(locale, measured ? "privacy.analytics.active" : "privacy.dont.analytics"),
     privacyVerify: () =>
-      pageText(locale, opts.analyticsToken ? "privacy.verify.p1Analytics" : "privacy.verify.p1"),
+      pageText(locale, measured ? "privacy.verify.p1Analytics" : "privacy.verify.p1"),
     pageJson: () =>
       safeJson({
         locale,
