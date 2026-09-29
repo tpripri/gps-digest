@@ -82,6 +82,7 @@ footer a{margin-right:1rem}
     <tr><th scope="row">{{privacy.table.settings}}</th><td>{{privacy.table.settingsText}}</td></tr>
     <tr><th scope="row">{{privacy.table.dossier}}</th><td>{{privacy.table.dossierText}}</td></tr>
     <tr><th scope="row">{{privacy.table.midpoint}}</th><td>{{privacy.table.midpointText}}</td></tr>
+    {{privacyAnalyticsRow}}
   </tbody>
 </table>
 
@@ -118,10 +119,10 @@ footer a{margin-right:1rem}
   <li>{{privacy.dont.3}}</li>
   <li>{{privacy.dont.4}}</li>
 </ul>
-<p>{{privacy.dont.analytics}}</p>
+<p>{{privacyAnalyticsNote}}</p>
 
 <h2>{{privacy.verify.title}}</h2>
-<p>{{privacy.verify.p1}}</p>
+<p>{{privacyVerify}}</p>
 <p>{{privacy.verify.p2}}</p>
 
 <h2>{{privacy.rights.title}}</h2>
@@ -133,5 +134,6 @@ footer a{margin-right:1rem}
 </footer>
 
 </div>
+{{analyticsScript}}
 </body>
 </html>

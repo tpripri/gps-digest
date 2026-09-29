@@ -501,4 +501,11 @@ export const en: PageCatalog = {
   "post.end.text":
     "Turn your watch files into a file that ChatGPT, Gemini or Claude can actually analyze. Free, no account, and your files never leave your browser.",
   "post.end.cta": "Try gps-digest",
+  "privacy.analytics.row": "Visit statistics",
+  "privacy.analytics.rowText":
+    "<strong>Yes, anonymous.</strong> Cloudflare Web Analytics counts page views, with no cookie and no persistent identifier. Nothing about your files or your workouts.",
+  "privacy.analytics.active":
+    "Audience measurement uses Cloudflare Web Analytics: no cookie, no persistent identifier, and no data from your files. It counts page views, countries, traffic sources and device types, never a person.",
+  "privacy.verify.p1Analytics":
+    "Do not take our word for it. Open your browser's developer tools (<code>F12</code>), <strong>Network</strong> tab, then drop a file. You will see the page loading, the audience measurement request to <code>cloudflareinsights.com</code> and, if weather is enabled, one request to <code>open-meteo.com</code>. Nothing else. No request contains the content of your file.",
 };

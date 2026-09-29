@@ -26,7 +26,7 @@ import { existsSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderPage, pagePath, LOCALE_META } from "../src/page-i18n.ts";
+import { renderPage, renderMarkdown, pagePath, markdownPath, LOCALE_META } from "../src/page-i18n.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
@@ -54,6 +54,15 @@ if (!SITE_URL || SITE_URL.includes("exemple.com")) {
 `);
   process.exit(1);
 }
+
+/**
+ * Jeton Cloudflare Web Analytics (mesure d'audience sans cookie). Vide :
+ * aucun script de mesure, et la page de confidentialité le dit. Renseigné :
+ * le script est ajouté à toutes les pages ET la page de confidentialité le
+ * déclare, dans les sept langues. Le jeton n'est pas un secret : il figure en
+ * clair dans le HTML publié.
+ */
+const CF_BEACON_TOKEN = process.env.CF_BEACON_TOKEN ?? "";
 
 /**
  * Langues effectivement publiées. Chacune doit avoir un catalogue complet
@@ -98,7 +107,7 @@ async function transpileSources() {
  * ignorent le groupe entier quand la réciprocité n'est pas vérifiable.
  */
 function preparePage(template, locale, page) {
-  return renderPage(template, locale, { page, locales: LOCALES })
+  return renderPage(template, locale, { page, locales: LOCALES, analyticsToken: CF_BEACON_TOKEN })
     .replace('from "/src/index.ts"', 'from "/assets/index.js"')
     .replace('import("/src/index.ts")', 'import("/assets/index.js")')
     .replaceAll("https://exemple.com", SITE_URL);
@@ -120,10 +129,22 @@ async function buildPages() {
       );
       await mkdir(dirname(file), { recursive: true });
       await writeFile(file, preparePage(template, locale, page));
+
+      // Version Markdown, pour les assistants qui suivent llms.txt : écrite à
+      // côté de la page quand un gabarit existe dans site/markdown/.
+      const mdTemplate = join(ROOT, "site", "markdown", page.replace(/\.html$/, ".md"));
+      if (existsSync(mdTemplate)) {
+        const md = renderMarkdown(await readFile(mdTemplate, "utf8"), locale, { page, locales: LOCALES })
+          .replaceAll("https://exemple.com", SITE_URL);
+        await writeFile(join(DIST, markdownPath(locale, page)), md);
+        markdownCount++;
+      }
     }
   }
   return pages;
 }
+
+let markdownCount = 0;
 
 /**
  * Fichiers servis à la racine : favicon, image de partage, manifeste.
@@ -191,6 +212,8 @@ console.log(`  ✓ ${src.count} modules transpilés (${(src.bytes / 1024).toFixe
 
 const pages = await buildPages();
 console.log(`  ✓ ${pages.length * LOCALES.length} page(s) : ${pages.join(", ")}`);
+console.log(`  ✓ ${markdownCount} version(s) Markdown pour les assistants IA`);
+console.log(`  ✓ mesure d'audience : ${CF_BEACON_TOKEN ? "Cloudflare Web Analytics" : "aucune"}`);
 
 const statics = await copyStatic();
 if (statics.length) console.log(`  ✓ ${statics.length} fichier(s) statique(s) : ${statics.join(", ")}`);
