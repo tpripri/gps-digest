@@ -59,7 +59,7 @@ export const pt: Partial<PageCatalog> = {
   "home.lede":
     "Os arquivos do seu relógio são grandes demais para o ChatGPT, o Gemini ou o Claude. Esta ferramenta os transforma em um dossiê de treino estruturado (ritmos, voltas, zonas, repetições, deriva cardíaca) que a IA consegue analisar de verdade.",
   "home.promise":
-    "<strong>Seus arquivos não saem do seu navegador.</strong> Todo o cálculo é feito no seu aparelho, e você pode conferir isso na aba Rede. Um percurso GPS revela seu endereço com precisão de metros, por isso a largada e a chegada são recortadas por padrão. <a href=\"/{{locale}}/confidentialite.html\">O que sai, e o que nunca sai</a>.",
+    "<strong>Seus arquivos não saem do seu navegador.</strong> Todo o cálculo é feito no seu aparelho, e você pode conferir isso na aba Rede. Um percurso GPS revela seu endereço com precisão de metros, por isso a largada e a chegada são recortadas por padrão. <a href=\"{{href:confidentialite.html}}\">O que sai, e o que nunca sai</a>.",
   "home.step1.title": "Envie seus arquivos",
   "home.step1.text": "Quantos quiser, em TCX, GPX ou FIT, exportados do seu relógio ou do Strava.",
   "home.step2.title": "Informe suas referências",
@@ -349,4 +349,157 @@ export const pt: Partial<PageCatalog> = {
     "Como nenhum dado pessoal é coletado nem guardado, não há nenhum registro a consultar, corrigir ou apagar: fechar a aba basta para apagar tudo. Para qualquer dúvida, o repositório do GitHub citado acima permite abrir uma discussão.",
   "privacy.footerTool": "A ferramenta",
   "privacy.updated": "Última atualização: <time datetime=\"2026-09-25\">25 de setembro de 2026</time>.",
+  "common.blog": "Blog",
+  "home.why.more":
+    "Por que uma IA precisa de um dossiê estruturado, e não de um arquivo bruto: <a href=\"{{href:post-ia-analyse.html}}\">leia o artigo</a>.",
+
+  "blog.title": "Blog do gps-digest: treino, dados do relógio e IA",
+  "blog.description":
+    "Artigos sobre análise de treino com inteligência artificial: o que o ChatGPT, o Gemini e o Claude conseguem fazer com seus treinos, e como entregar a eles dados realmente úteis.",
+  "blog.lede":
+    "Treino, dados do relógio e inteligência artificial. Artigos curtos, com números, e sem promessas que os dados não sustentam.",
+  "blog.readMore": "Ler o artigo",
+
+  "post.title": "Analisar seus treinos de corrida com o ChatGPT: a armadilha dos tokens",
+  "post.description":
+    "A IA analisa muito bem um treino, mas um TCX de uma hora tem 533 mil tokens. Por que isso trava tudo, e como resolver em três minutos.",
+  "post.kicker": "Treino e IA",
+  "post.h1": "O ChatGPT consegue analisar seus treinos de corrida. Desde que consiga lê-los.",
+  "post.meta": "Publicado em <time datetime=\"2026-09-28\">28 de setembro de 2026</time> · 7 min de leitura",
+  "post.lede":
+    "Pergunte a uma IA por que o intervalado de terça pareceu tão pesado e ela vai responder melhor que a maioria dos apps de treino. Com uma condição: ela precisa enxergar seus dados de verdade. É aí que tudo complica, e não pelo motivo que você imagina.",
+  "post.tldrTitle": "Resumo",
+  "post.tldr1":
+    "O ChatGPT, o Gemini e o Claude sabem interpretar um treino, relacioná-lo ao seu objetivo e responder às suas perguntas seguintes, como um treinador disponível a qualquer hora.",
+  "post.tldr2":
+    "Um arquivo TCX de uma hora gravado a 1 Hz pesa cerca de 1,7 MB, algo como 533 mil tokens, e quase 90% disso são tags XML.",
+  "post.tldr3": "Mesmo quando o arquivo passa, o modelo raciocina mal sobre milhares de linhas de coordenadas brutas.",
+  "post.tldr4":
+    "A solução não é comprimir, é reestruturar: parciais, voltas, zonas, repetições. Um treino passa a caber em cerca de 5.800 tokens, e a análise fica melhor.",
+
+  "post.why.title": "Por que a IA é uma parceira de treino tão boa?",
+  "post.why.p1":
+    "Porque ela parte da sua pergunta, não de um painel. Um app mostra os mesmos gráficos para todo mundo. Uma IA pode explicar por que seu ritmo caiu no quilômetro 8, levando em conta o calor, sua semana puxada e o objetivo que você passou para ela.",
+  "post.why.listIntro": "Com bons dados, uma IA sabe:",
+  "post.why.li1": "explicar um treino em linguagem simples, sem jargão;",
+  "post.why.li2":
+    "relacionar seus números ao seu objetivo: baixar de 45 minutos nos 10 km não pede os mesmos treinos que uma primeira maratona;",
+  "post.why.li3": "comparar várias semanas e perceber uma tendência que você não tinha visto;",
+  "post.why.li4":
+    "responder à próxima pergunta, e à seguinte, com a paciência de um treinador disponível às 11 da noite;",
+  "post.why.li5": "propor a próxima semana com base na sua carga real, e não em uma planilha genérica.",
+  "post.why.p2":
+    "Essa personalização é o que faz a diferença. Mas ela depende de uma premissa que quase ninguém confere: que o modelo tem acesso de verdade aos seus dados, e não a um resumo de três linhas ou a um arquivo ilegível.",
+
+  "post.tokens.title": "O que é um token, e por que seu relógio gera tantos?",
+  "post.tokens.p1":
+    "Um token é a unidade de texto que um modelo de linguagem lê e cobra: um pedaço de palavra, de número ou de pontuação. Cada modelo tem um limite, a janela de contexto, além do qual não consegue ler mais nada. Dependendo do modelo e da assinatura, esse limite vai hoje de algumas dezenas de milhares a alguns milhões de tokens.",
+  "post.tokens.p2":
+    "O problema é que os arquivos do relógio foram feitos para softwares, não para serem lidos. Um arquivo TCX repete as mesmas tags XML a cada segundo do seu treino. Veja o que medimos no nosso teste:",
+  "post.tokens.colCase": "Dados",
+  "post.tokens.colSize": "Tamanho",
+  "post.tokens.colTokens": "Tokens estimados",
+  "post.tokens.r1": "Um treino de uma hora, arquivo TCX bruto",
+  "post.tokens.r1size": "1,7 MB",
+  "post.tokens.r1tokens": "≈ 533 mil",
+  "post.tokens.r2": "O mesmo treino, como dossiê estruturado",
+  "post.tokens.r2size": "≈ 18 KB",
+  "post.tokens.r2tokens": "≈ 5.800",
+  "post.tokens.r3": "15 MB de arquivos reais, brutos",
+  "post.tokens.r3size": "15 MB",
+  "post.tokens.r3tokens": "≈ 4,7 milhões",
+  "post.tokens.r4": "Os mesmos arquivos, como dossiê estruturado",
+  "post.tokens.r4size": "≈ 100 KB",
+  "post.tokens.r4tokens": "≈ 32 mil",
+  "post.tokens.note":
+    "Estimativa de 3,2 caracteres por token, a proporção observada em CSV numérico. Medições reproduzíveis com o teste publicado no código-fonte.",
+  "post.tokens.p3":
+    "Ou seja: um único treino bruto já pode estourar uma assinatura comum, e uma temporada inteira não cabe em lugar nenhum.",
+
+  "post.paste.title": "O que acontece quando você cola um arquivo TCX no ChatGPT?",
+  "post.paste.intro": "Três cenários possíveis. Nenhum é bom.",
+  "post.paste.h1": "1. O arquivo é recusado",
+  "post.paste.p1":
+    "É o caso mais honesto: a interface avisa que o arquivo é grande demais. Você perde tempo, mas pelo menos fica sabendo.",
+  "post.paste.h2": "2. O arquivo é lido só em parte, sem você saber",
+  "post.paste.p2":
+    "Diante de um anexo pesado, os assistentes muitas vezes leem só trechos dele, ou o entregam a um script que o resume. A IA então responde com segurança a partir de apenas uma parte do treino. A resposta parece certa. Pode não estar.",
+  "post.paste.h3": "3. O arquivo passa, mas a análise é fraca",
+  "post.paste.p3":
+    "Mesmo com uma janela de contexto grande, um modelo aproveita mal a informação perdida no meio de um documento longo. Pesquisadores de Stanford documentaram esse efeito com o nome de “lost in the middle” (Liu et al., 2024). Pedir uma análise de treino a partir de 3.600 linhas de latitudes e longitudes é pedir que ele faça de cabeça contas que faz mal, sobre dados que quase não dizem nada.",
+
+  "post.restructure.title": "É preciso comprimir o arquivo? Não, é preciso reestruturá-lo",
+  "post.restructure.p1":
+    "Deixar o arquivo menor não basta: ele precisa ficar legível. Um treinador não lê suas coordenadas GPS segundo a segundo. Ele olha seus tempos por quilômetro, suas repetições e sua frequência cardíaca por zona. É exatamente isso que um modelo de linguagem sabe interpretar.",
+  "post.restructure.colRaw": "No arquivo bruto",
+  "post.restructure.colDossier": "Em um dossiê estruturado",
+  "post.restructure.r1raw": "3.600 linhas de latitude, longitude e altitude",
+  "post.restructure.r1dossier": "Parciais por quilômetro, voltas, tempo em cada zona",
+  "post.restructure.r2raw": "Um valor de frequência cardíaca por segundo",
+  "post.restructure.r2dossier": "A deriva cardíaca já calculada, com o trecho do treino medido",
+  "post.restructure.r3raw": "Nenhuma indicação sobre o sensor cardíaco",
+  "post.restructure.r3dossier": "Cinta peitoral ou pulso, com um nível de confiança",
+  "post.restructure.r4raw": "Tags XML repetidas em cada ponto",
+  "post.restructure.r4dossier": "Tabelas CSV com unidades explícitas",
+  "post.restructure.p2":
+    "Com 15 MB de arquivos reais, o dossiê fica em cerca de 32 mil tokens. E a análise que sai dele é melhor do que com os arquivos completos. Não só mais barata: melhor, porque o modelo trabalha com objetos que entende.",
+
+  "post.blind.title": "O que a IA não consegue adivinhar sozinha?",
+  "post.blind.p1":
+    "Alguns erros não aparecem nos números. Se nada os sinaliza, a IA os trata como fatos e monta a análise em cima deles.",
+  "post.blind.li1":
+    "<strong>O sensor cardíaco.</strong> Um sensor de pulso às vezes confunde sua cadência com seus batimentos e mostra 172 bpm em vez de 140. Comparar um treino com sensor de pulso e outro com cinta peitoral é comparar dois instrumentos, não dois estados de forma.",
+  "post.blind.li2":
+    "<strong>A temperatura.</strong> A do relógio é aquecida pelo seu pulso: ela superestima o ar em 3 a 8 °C. Uma IA que a toma pela temperatura real erra a causa da sua deriva cardíaca.",
+  "post.blind.li3":
+    "<strong>O ritmo.</strong> O Strava o calcula sobre o tempo em movimento; o Garmin Connect, sobre a duração total. Em um treino na cidade, a diferença passa fácil de 15 segundos por quilômetro.",
+  "post.blind.li4":
+    "<strong>As medidas que não fazem sentido.</strong> Uma deriva cardíaca calculada em um treino intervalado não significa nada. Melhor nenhum número do que um número errado com cara de confiável.",
+  "post.blind.p2":
+    "Um bom dossiê não se limita a resumir. Ele diz o que é confiável e o que não é, para que a IA não raciocine sobre areia.",
+
+  "post.howto.title": "Como fazer uma IA analisar seus treinos em três minutos?",
+  "post.howto.step1":
+    "<strong>Exporte seus arquivos</strong> do relógio ou do Strava, de preferência no formato FIT, o mais completo.",
+  "post.howto.step2":
+    "<strong>Envie-os para o gps-digest.</strong> Tudo é calculado no seu navegador: nenhum arquivo é enviado para um servidor.",
+  "post.howto.step3": "<strong>Copie o dossiê</strong> para o ChatGPT, o Gemini ou o Claude e faça sua pergunta.",
+  "post.howto.cta": "Preparar meus treinos para a IA",
+
+  "post.prompts.title": "Que perguntas fazer à sua IA?",
+  "post.prompts.intro":
+    "As melhores perguntas nascem de uma dúvida real. Aqui vão cinco exemplos que funcionam bem com um dossiê estruturado:",
+  "post.prompts.q1": "“Minha deriva cardíaca aumentou em relação ao mês passado, com temperatura parecida?”",
+  "post.prompts.q2": "“Mantive o ritmo nas repetições de terça? O que devo corrigir na próxima vez?”",
+  "post.prompts.q3": "“Com essa carga, estou pronto para baixar de 45 minutos nos 10 km daqui a seis semanas?”",
+  "post.prompts.q4": "“Minha divisão entre rodagens leves e treinos fortes faz sentido para uma maratona?”",
+  "post.prompts.q5": "“Monte minha próxima semana levando em conta meu cansaço atual.”",
+
+  "post.faq.title": "Perguntas frequentes",
+  "post.faq.q1": "O ChatGPT consegue ler um arquivo FIT ou TCX diretamente?",
+  "post.faq.a1":
+    "Consegue abrir, mas não aproveitar direito. O FIT é um formato binário que a IA precisa decodificar com um script, e um TCX de uma hora tem cerca de 533 mil tokens. Nos dois casos, a análise se apoia em trechos ou em dados brutos pouco adequados. Um dossiê estruturado resolve os dois problemas.",
+  "post.faq.q2": "Por que não exportar simplesmente um CSV do Garmin Connect?",
+  "post.faq.a2":
+    "Porque essa exportação se limita basicamente às voltas. Ela não traz a deriva cardíaca, nem a detecção do sensor, nem o detalhe das repetições, nem o contexto que evita interpretações erradas, como a forma de calcular o ritmo.",
+  "post.faq.q3": "Meus dados são enviados para algum lugar?",
+  "post.faq.a3":
+    "Não. Seus arquivos são lidos e analisados no seu navegador. Só o dossiê que você mesmo copia para uma IA sai do seu aparelho, e as coordenadas GPS são removidas dele por padrão.",
+  "post.faq.q4": "Uma IA pode substituir um treinador?",
+  "post.faq.a4":
+    "Não, e esse não é o objetivo. Ela explica, compara e sugere, mas não vê você correr nem sente suas dores. Em caso de lesão ou dúvida séria, a opinião de um profissional vem primeiro.",
+  "post.faq.q5": "Qual IA escolher: ChatGPT, Gemini ou Claude?",
+  "post.faq.a5":
+    "As três sabem analisar um dossiê estruturado. A diferença real está no tamanho da janela de contexto da sua assinatura. Com um dossiê de alguns milhares de tokens por treino, a questão deixa de importar.",
+
+  "post.sources.title": "Fontes",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>.",
+  "post.sources.bench":
+    "Medições de tamanho e de tokens: teste do gps-digest, reproduzível, no <a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">código-fonte aberto</a>.",
+
+  "post.end.title": "Seu próximo treino merece mais que um gráfico genérico",
+  "post.end.text":
+    "Transforme os arquivos do seu relógio em um dossiê que o ChatGPT, o Gemini ou o Claude consigam analisar de verdade. Grátis, sem cadastro, e seus arquivos não saem do navegador.",
+  "post.end.cta": "Experimentar o gps-digest",
 };

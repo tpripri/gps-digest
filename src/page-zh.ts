@@ -60,7 +60,7 @@ export const zh: Partial<PageCatalog> = {
   "home.lede":
     "手表文件对 ChatGPT、Gemini 或 Claude 来说太大了。本工具把它们整理成结构化训练档案（配速、圈、区间、重复、心率漂移），让 AI 真正能够分析。",
   "home.promise":
-    "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此起点和终点默认会被裁剪。<a href=\"/{{locale}}/confidentialite.html\">哪些数据会发出，哪些永远不会</a>。",
+    "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此起点和终点默认会被裁剪。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
   "home.step1.title": "上传文件",
   "home.step1.text": "数量不限，TCX、GPX 或 FIT 均可，从手表或 Strava 导出。",
   "home.step2.title": "填写参考值",
@@ -342,4 +342,145 @@ export const zh: Partial<PageCatalog> = {
     "由于不收集也不保存任何个人数据，所以不存在可供查阅、更正或删除的记录：关闭标签页就能清除一切。如有任何问题，可以在上方的 GitHub 仓库中发起讨论。",
   "privacy.footerTool": "工具",
   "privacy.updated": "最后更新：<time datetime=\"2026-09-25\">2026 年 9 月 25 日</time>。",
+  "common.blog": "博客",
+  "home.why.more":
+    "为什么 AI 需要结构化档案，而不是原始文件：<a href=\"{{href:post-ia-analyse.html}}\">阅读文章</a>。",
+
+  "blog.title": "gps-digest 博客：训练、手表数据与 AI",
+  "blog.description":
+    "关于用人工智能分析训练的文章：ChatGPT、Gemini 和 Claude 能为你的训练做什么，以及如何给它们真正可用的数据。",
+  "blog.lede": "训练、手表数据与人工智能。文章简短、有数据支撑，不做数据无法兑现的承诺。",
+  "blog.readMore": "阅读文章",
+
+  "post.title": "用 ChatGPT 分析跑步训练：token 陷阱",
+  "post.description":
+    "AI 很擅长分析训练，但一个一小时的 TCX 文件就有 533,000 个 token。为什么会卡住，以及如何在三分钟内解决。",
+  "post.kicker": "训练与 AI",
+  "post.h1": "ChatGPT 能分析你的跑步训练，前提是它读得懂你的数据。",
+  "post.meta": "发布于 <time datetime=\"2026-09-28\">2026 年 9 月 28 日</time> · 阅读约 7 分钟",
+  "post.lede":
+    "问 AI 为什么周二的间歇跑感觉那么吃力，它的回答会比大多数训练 App 更好。前提只有一个：它必须真正看到你的数据。而问题恰恰出在这里，原因也和你想的不一样。",
+  "post.tldrTitle": "要点速览",
+  "post.tldr1":
+    "ChatGPT、Gemini 和 Claude 能解读一次训练，把它和你的目标联系起来，并回答你的追问，就像一位随时在线的教练。",
+  "post.tldr2": "一个以 1 Hz 记录的一小时 TCX 文件约 1.7 MB，相当于约 533,000 个 token，其中近 90% 是 XML 标签。",
+  "post.tldr3": "即使文件能传上去，模型面对成千上万行原始坐标时推理效果也很差。",
+  "post.tldr4":
+    "解决办法不是压缩，而是重新组织：分段、圈、区间、重复。这样一次训练只需约 5,800 个 token，分析效果反而更好。",
+
+  "post.why.title": "为什么 AI 是这么好的训练伙伴？",
+  "post.why.p1":
+    "因为它从你的问题出发，而不是从仪表盘出发。App 给你看的图表和给所有人看的一样。AI 却能结合气温、你这周的训练量和你给它设定的目标，解释你的配速为什么在第 8 公里掉了下来。",
+  "post.why.listIntro": "有了好的数据，AI 能够：",
+  "post.why.li1": "用通俗的语言解释一次训练，不讲术语；",
+  "post.why.li2": "把你的数据和目标联系起来：10 公里跑进 45 分钟和第一次跑全马，需要的训练完全不同；",
+  "post.why.li3": "对比几周的训练，发现你没注意到的趋势；",
+  "post.why.li4": "回答你的下一个问题，再下一个，像一位晚上 11 点还在线的教练一样耐心；",
+  "post.why.li5": "根据你的实际训练负荷安排下周训练，而不是套用通用计划。",
+  "post.why.p2":
+    "正是这种个性化带来了差别。但它建立在一个几乎没人验证的前提上：模型真的能拿到你的数据，而不是一段三行的摘要或一个读不懂的文件。",
+
+  "post.tokens.title": "什么是 token，为什么你的手表会产生这么多？",
+  "post.tokens.p1":
+    "token 是语言模型读取和计费的文本单位：一个词、一个数字或一个标点的片段。每个模型都有上限，也就是上下文窗口，超出部分就读不进去了。根据模型和订阅方案不同，目前这个上限从几万到几百万个 token 不等。",
+  "post.tokens.p2":
+    "问题在于，手表文件是为软件设计的，而不是为了让人或模型阅读。TCX 文件在你跑步的每一秒都重复同样的 XML 标签。以下是我们的测试结果：",
+  "post.tokens.colCase": "数据",
+  "post.tokens.colSize": "大小",
+  "post.tokens.colTokens": "估计 token 数",
+  "post.tokens.r1": "一次一小时的训练，原始 TCX 文件",
+  "post.tokens.r1size": "1.7 MB",
+  "post.tokens.r1tokens": "≈ 533,000",
+  "post.tokens.r2": "同一次训练，整理为结构化档案",
+  "post.tokens.r2size": "≈ 18 KB",
+  "post.tokens.r2tokens": "≈ 5,800",
+  "post.tokens.r3": "15 MB 真实文件，原始格式",
+  "post.tokens.r3size": "15 MB",
+  "post.tokens.r3tokens": "≈ 470 万",
+  "post.tokens.r4": "同样的文件，整理为结构化档案",
+  "post.tokens.r4size": "≈ 100 KB",
+  "post.tokens.r4tokens": "≈ 32,000",
+  "post.tokens.note": "按每个 token 3.2 个字符估算，这是在数值型 CSV 上观测到的比例。测试可用源代码中公开的测试程序复现。",
+  "post.tokens.p3": "换句话说，一次原始训练数据就可能占满普通订阅的上限，而一整个赛季的数据放到哪里都装不下。",
+
+  "post.paste.title": "把 TCX 文件粘贴到 ChatGPT 会发生什么？",
+  "post.paste.intro": "有三种可能，没有一种是好的。",
+  "post.paste.h1": "1. 文件被拒绝",
+  "post.paste.p1": "这是最坦诚的情况：界面提示文件太大。你浪费了时间，但至少你知道了。",
+  "post.paste.h2": "2. 文件只被读取了一部分，而你并不知道",
+  "post.paste.p2":
+    "面对较大的附件，AI 助手常常只读取其中的片段，或者交给脚本去概括。于是 AI 只凭一部分训练数据就信心十足地作答。答案看起来没问题，但未必正确。",
+  "post.paste.h3": "3. 文件传上去了，但分析质量很差",
+  "post.paste.p3":
+    "即使上下文窗口很大，模型也很难利用埋在长文档中间的信息。斯坦福大学的研究人员把这种现象称为“lost in the middle”（Liu 等，2024）。让模型从 3,600 行经纬度数据中做训练分析，就等于让它心算自己并不擅长的东西，而这些数据几乎提供不了什么有用信息。",
+
+  "post.restructure.title": "要压缩文件吗？不，要重新组织它",
+  "post.restructure.p1":
+    "只把文件变小还不够，关键是让它变得可读。教练不会逐秒去看你的 GPS 坐标。他看的是每公里用时、各次重复和各心率区间的时间。这些正是语言模型能够理解的内容。",
+  "post.restructure.colRaw": "原始文件里",
+  "post.restructure.colDossier": "结构化档案里",
+  "post.restructure.r1raw": "3,600 行纬度、经度和海拔",
+  "post.restructure.r1dossier": "每公里分段、圈、各区间用时",
+  "post.restructure.r2raw": "每秒一个心率值",
+  "post.restructure.r2dossier": "已经算好的心率漂移，并注明测量的是哪一段",
+  "post.restructure.r3raw": "没有任何心率传感器信息",
+  "post.restructure.r3dossier": "胸带还是手腕，并附带置信度",
+  "post.restructure.r4raw": "每个数据点都重复的 XML 标签",
+  "post.restructure.r4dossier": "单位清晰的 CSV 表格",
+  "post.restructure.p2":
+    "对 15 MB 的真实文件，整理后的档案约为 32,000 个 token。而且分析结果比用完整文件更好。不只是更省，而是更好，因为模型处理的是它能理解的内容。",
+
+  "post.blind.title": "哪些事情 AI 无法自己判断？",
+  "post.blind.p1": "有些错误从数字上看不出来。如果没有人指出，AI 就会把它们当成事实，并在此基础上展开分析。",
+  "post.blind.li1":
+    "<strong>心率传感器。</strong>手腕传感器有时会把步频误当成心跳，显示 172 bpm 而不是 140。把手腕数据和胸带数据放在一起比较，比的是两种仪器，而不是两种身体状态。",
+  "post.blind.li2":
+    "<strong>温度。</strong>手表的温度传感器被手腕加热，比实际气温高 3 到 8°C。把它当作天气数据的 AI，会误判你心率漂移的原因。",
+  "post.blind.li3":
+    "<strong>配速。</strong>Strava 按运动时间计算，Garmin Connect 按总时长计算。在城市里跑步，两者的差距很容易超过每公里 15 秒。",
+  "post.blind.li4":
+    "<strong>没有意义的指标。</strong>在间歇训练上计算心率漂移毫无意义。没有数字，也比一个看似可信的错误数字好。",
+  "post.blind.p2": "好的档案不只是做摘要。它会说明哪些数据可靠、哪些不可靠，让 AI 不至于在沙地上推理。",
+
+  "post.howto.title": "如何在三分钟内让 AI 分析你的训练？",
+  "post.howto.step1": "<strong>导出文件</strong>：从手表或 Strava 导出，最好选择信息最完整的 FIT 格式。",
+  "post.howto.step2": "<strong>拖入 gps-digest。</strong>所有计算都在你的浏览器中完成：不会把任何文件上传到服务器。",
+  "post.howto.step3": "<strong>复制档案</strong>到 ChatGPT、Gemini 或 Claude，然后提出你的问题。",
+  "post.howto.cta": "为 AI 准备我的训练数据",
+
+  "post.prompts.title": "该向 AI 提什么问题？",
+  "post.prompts.intro": "最好的问题来自真实的疑问。下面五个例子在结构化档案上效果很好：",
+  "post.prompts.q1": "“在气温相近的情况下，我的心率漂移比上个月增加了吗？”",
+  "post.prompts.q2": "“周二的重复训练我保持住配速了吗？下次该改进什么？”",
+  "post.prompts.q3": "“按现在的训练负荷，六周后我能把 10 公里跑进 45 分钟吗？”",
+  "post.prompts.q4": "“我的轻松跑和高强度训练的比例适合备战马拉松吗？”",
+  "post.prompts.q5": "“结合我现在的疲劳程度，帮我安排下周的训练。”",
+
+  "post.faq.title": "常见问题",
+  "post.faq.q1": "ChatGPT 能直接读取 FIT 或 TCX 文件吗？",
+  "post.faq.a1":
+    "能打开，但无法充分利用。FIT 是二进制格式，AI 需要写脚本来解码；而一个一小时的 TCX 文件约有 533,000 个 token。无论哪种情况，分析依据的都是片段，或者不适合分析的原始数据。结构化档案能同时解决这两个问题。",
+  "post.faq.q2": "为什么不直接从 Garmin Connect 导出 CSV？",
+  "post.faq.a2":
+    "因为这种导出基本只包含圈数据。它没有心率漂移，没有传感器识别，没有每次重复的明细，也没有避免误读所需的背景信息，比如配速是怎么计算的。",
+  "post.faq.q3": "我的数据会被发送到别处吗？",
+  "post.faq.a3":
+    "不会。你的文件在浏览器中读取和分析。只有你自己复制给 AI 的档案会离开你的设备，而且默认会移除其中的 GPS 坐标。",
+  "post.faq.q4": "AI 能取代教练吗？",
+  "post.faq.a4":
+    "不能，这也不是它的目的。它能解释、比较和提出建议，但它看不到你跑步，也感受不到你的伤痛。如果受伤或有严重疑问，请优先听取专业人士的意见。",
+  "post.faq.q5": "该选哪个 AI：ChatGPT、Gemini 还是 Claude？",
+  "post.faq.a5":
+    "三者都能分析结构化档案。真正的差别在于你所订阅方案的上下文窗口大小。如果每次训练的档案只有几千个 token，这个问题就不再重要。",
+
+  "post.sources.title": "参考资料",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>。",
+  "post.sources.bench":
+    "文件大小与 token 数的测量：gps-digest 测试程序，可复现，见<a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">开源代码</a>。",
+
+  "post.end.title": "你的下一次训练，值得比通用图表更好的分析",
+  "post.end.text":
+    "把手表文件转换成 ChatGPT、Gemini 或 Claude 真正能分析的档案。免费，无需注册，文件不会离开你的浏览器。",
+  "post.end.cta": "试用 gps-digest",
 };

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="{{htmlLang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ═══ Article de blog : textes dans src/page-i18n.ts (clés post.*) ═══ -->
+<title>{{post.title}} — gps-digest</title>
+<meta name="description" content="{{attr:post.description}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b5d3f">
+<link rel="canonical" href="{{url:post-ia-analyse.html}}">
+{{alternates}}
+<meta property="og:type" content="article">
+<meta property="og:locale" content="{{ogLocale}}">
+{{ogAlternates}}
+<meta property="og:url" content="{{url:post-ia-analyse.html}}">
+<meta property="og:site_name" content="gps-digest">
+<meta property="og:title" content="{{attr:post.h1}}">
+<meta property="og:description" content="{{attr:post.description}}">
+<meta property="og:image" content="https://exemple.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta property="article:published_time" content="2026-09-28">
+<meta property="article:modified_time" content="2026-09-28">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "headline": {{json:post.h1}},
+      "description": {{json:post.description}},
+      "inLanguage": "{{htmlLang}}",
+      "datePublished": "2026-09-28",
+      "dateModified": "2026-09-28",
+      "image": "https://exemple.com/og.png",
+      "mainEntityOfPage": "{{url:post-ia-analyse.html}}",
+      "author": { "@type": "Organization", "name": "gps-digest", "url": "https://exemple.com" },
+      "publisher": { "@id": "https://exemple.com/#organization" },
+      "about": ["ChatGPT", "Gemini", "Claude", "TCX", "FIT", "GPX"],
+      "citation": "https://arxiv.org/abs/2307.03172"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "gps-digest", "item": "{{url:index.html}}" },
+        { "@type": "ListItem", "position": 2, "name": {{json:common.blog}}, "item": "{{url:blog.html}}" },
+        { "@type": "ListItem", "position": 3, "name": {{json:post.h1}} }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "inLanguage": "{{htmlLang}}",
+      "mainEntity": [
+        { "@type": "Question", "name": {{json:post.faq.q1}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:post.faq.a1}} } },
+        { "@type": "Question", "name": {{json:post.faq.q2}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:post.faq.a2}} } },
+        { "@type": "Question", "name": {{json:post.faq.q3}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:post.faq.a3}} } },
+        { "@type": "Question", "name": {{json:post.faq.q4}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:post.faq.a4}} } },
+        { "@type": "Question", "name": {{json:post.faq.q5}},
+          "acceptedAnswer": { "@type": "Answer", "text": {{json:post.faq.a5}} } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+:root{--ink:#14181d;--ink-soft:#4a5560;--line:#d4dae0;--bg:#fff;--panel:#f5f7f9;
+  --accent:#0b5d3f;--accent-ink:#fff;--radius:6px}
+@media (prefers-color-scheme:dark){:root{--ink:#eef2f5;--ink-soft:#a8b4bf;--line:#39424c;
+  --bg:#12161a;--panel:#1b2127;--accent:#4ade9f;--accent-ink:#0d1114}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:1.06rem/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:44rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+nav.langs{font-size:.85rem;margin-bottom:1rem}
+nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
+.crumbs{font-size:.85rem;color:var(--ink-soft);margin:0 0 1.6rem}
+.crumbs a{color:var(--ink-soft)}
+.kicker{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:0 0 .4rem}
+h1{font-size:2.05rem;line-height:1.18;margin:0 0 .8rem;letter-spacing:-.02em}
+h2{font-size:1.38rem;line-height:1.3;margin:2.6rem 0 .7rem;letter-spacing:-.01em}
+h3{font-size:1.08rem;margin:1.6rem 0 .3rem}
+.meta{font-size:.87rem;color:var(--ink-soft);margin:0 0 1.4rem}
+.lede{font-size:1.18rem;line-height:1.6;color:var(--ink-soft);margin:0 0 1.8rem}
+a{color:var(--accent)}
+.tldr{background:var(--panel);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+  padding:1rem 1.2rem;margin:0 0 2rem}
+.tldr strong{display:block;margin-bottom:.3rem}
+.tldr ul{margin:0;padding-left:1.1rem}
+.tldr li{margin:.3rem 0;font-size:.98rem}
+table{width:100%;border-collapse:collapse;font-size:.93rem;margin:1rem 0 .4rem}
+th,td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft)}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.caption{font-size:.82rem;color:var(--ink-soft);margin:0 0 1rem}
+blockquote{margin:1rem 0;padding:.2rem 1rem;border-left:3px solid var(--line);color:var(--ink-soft)}
+.prompts li{margin:.45rem 0;font-style:italic}
+.steps li{margin:.5rem 0}
+.btn{display:inline-block;min-height:44px;padding:.7rem 1.2rem;background:var(--accent);color:var(--accent-ink);
+  border-radius:var(--radius);font-weight:700;text-decoration:none;margin:.8rem 0}
+.cta{border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem 1.4rem;margin:2.8rem 0 1rem;background:var(--panel)}
+.cta h2{margin-top:0}
+.cta p{margin:.4rem 0}
+.faq h3{margin-top:1.3rem}
+.sources{font-size:.88rem;color:var(--ink-soft)}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--ink-soft)}
+footer a{margin-right:1rem;display:inline-block;line-height:2}
+:where(a):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+{{langNav}}
+
+<p class="crumbs"><a href="{{href:index.html}}">gps-digest</a> › <a href="{{href:blog.html}}">{{common.blog}}</a></p>
+
+<article>
+<header>
+  <p class="kicker">{{post.kicker}}</p>
+  <h1>{{post.h1}}</h1>
+  <p class="meta">{{post.meta}}</p>
+  <p class="lede">{{post.lede}}</p>
+</header>
+
+<aside class="tldr">
+  <strong>{{post.tldrTitle}}</strong>
+  <ul>
+    <li>{{post.tldr1}}</li>
+    <li>{{post.tldr2}}</li>
+    <li>{{post.tldr3}}</li>
+    <li>{{post.tldr4}}</li>
+  </ul>
+</aside>
+
+<h2>{{post.why.title}}</h2>
+<p>{{post.why.p1}}</p>
+<p>{{post.why.listIntro}}</p>
+<ul>
+  <li>{{post.why.li1}}</li>
+  <li>{{post.why.li2}}</li>
+  <li>{{post.why.li3}}</li>
+  <li>{{post.why.li4}}</li>
+  <li>{{post.why.li5}}</li>
+</ul>
+<p>{{post.why.p2}}</p>
+
+<h2>{{post.tokens.title}}</h2>
+<p>{{post.tokens.p1}}</p>
+<p>{{post.tokens.p2}}</p>
+<div class="scroll">
+<table>
+  <thead><tr><th>{{post.tokens.colCase}}</th><th class="num">{{post.tokens.colSize}}</th><th class="num">{{post.tokens.colTokens}}</th></tr></thead>
+  <tbody>
+    <tr><td>{{post.tokens.r1}}</td><td class="num">{{post.tokens.r1size}}</td><td class="num">{{post.tokens.r1tokens}}</td></tr>
+    <tr><td>{{post.tokens.r2}}</td><td class="num">{{post.tokens.r2size}}</td><td class="num"><strong>{{post.tokens.r2tokens}}</strong></td></tr>
+    <tr><td>{{post.tokens.r3}}</td><td class="num">{{post.tokens.r3size}}</td><td class="num">{{post.tokens.r3tokens}}</td></tr>
+    <tr><td>{{post.tokens.r4}}</td><td class="num">{{post.tokens.r4size}}</td><td class="num"><strong>{{post.tokens.r4tokens}}</strong></td></tr>
+  </tbody>
+</table>
+</div>
+<p class="caption">{{post.tokens.note}}</p>
+<p>{{post.tokens.p3}}</p>
+
+<h2>{{post.paste.title}}</h2>
+<p>{{post.paste.intro}}</p>
+<h3>{{post.paste.h1}}</h3>
+<p>{{post.paste.p1}}</p>
+<h3>{{post.paste.h2}}</h3>
+<p>{{post.paste.p2}}</p>
+<h3>{{post.paste.h3}}</h3>
+<p>{{post.paste.p3}}</p>
+
+<h2>{{post.restructure.title}}</h2>
+<p>{{post.restructure.p1}}</p>
+<div class="scroll">
+<table>
+  <thead><tr><th>{{post.restructure.colRaw}}</th><th>{{post.restructure.colDossier}}</th></tr></thead>
+  <tbody>
+    <tr><td>{{post.restructure.r1raw}}</td><td>{{post.restructure.r1dossier}}</td></tr>
+    <tr><td>{{post.restructure.r2raw}}</td><td>{{post.restructure.r2dossier}}</td></tr>
+    <tr><td>{{post.restructure.r3raw}}</td><td>{{post.restructure.r3dossier}}</td></tr>
+    <tr><td>{{post.restructure.r4raw}}</td><td>{{post.restructure.r4dossier}}</td></tr>
+  </tbody>
+</table>
+</div>
+<p>{{post.restructure.p2}}</p>
+
+<h2>{{post.blind.title}}</h2>
+<p>{{post.blind.p1}}</p>
+<ul>
+  <li>{{post.blind.li1}}</li>
+  <li>{{post.blind.li2}}</li>
+  <li>{{post.blind.li3}}</li>
+  <li>{{post.blind.li4}}</li>
+</ul>
+<p>{{post.blind.p2}}</p>
+
+<h2>{{post.howto.title}}</h2>
+<ol class="steps">
+  <li>{{post.howto.step1}}</li>
+  <li>{{post.howto.step2}}</li>
+  <li>{{post.howto.step3}}</li>
+</ol>
+<p><a class="btn" href="{{href:index.html}}">{{post.howto.cta}}</a></p>
+
+<h2>{{post.prompts.title}}</h2>
+<p>{{post.prompts.intro}}</p>
+<ul class="prompts">
+  <li>{{post.prompts.q1}}</li>
+  <li>{{post.prompts.q2}}</li>
+  <li>{{post.prompts.q3}}</li>
+  <li>{{post.prompts.q4}}</li>
+  <li>{{post.prompts.q5}}</li>
+</ul>
+
+<section class="faq">
+  <h2>{{post.faq.title}}</h2>
+  <h3>{{post.faq.q1}}</h3>
+  <p>{{post.faq.a1}}</p>
+  <h3>{{post.faq.q2}}</h3>
+  <p>{{post.faq.a2}}</p>
+  <h3>{{post.faq.q3}}</h3>
+  <p>{{post.faq.a3}}</p>
+  <h3>{{post.faq.q4}}</h3>
+  <p>{{post.faq.a4}}</p>
+  <h3>{{post.faq.q5}}</h3>
+  <p>{{post.faq.a5}}</p>
+</section>
+
+<aside class="cta">
+  <h2>{{post.end.title}}</h2>
+  <p>{{post.end.text}}</p>
+  <a class="btn" href="{{href:index.html}}">{{post.end.cta}}</a>
+</aside>
+
+<section class="sources">
+  <h2>{{post.sources.title}}</h2>
+  <ol>
+    <li>{{post.sources.liu}}</li>
+    <li>{{post.sources.bench}}</li>
+  </ol>
+</section>
+</article>
+
+<footer>
+  <nav><a href="{{href:index.html}}">{{privacy.footerTool}}</a><a href="{{href:blog.html}}">{{common.blog}}</a><a href="{{href:confidentialite.html}}">{{common.privacy}}</a><a href="https://github.com/tpripri/gps-digest" rel="noopener">{{common.source}}</a></nav>
+</footer>
+
+</div>
+</body>
+</html>

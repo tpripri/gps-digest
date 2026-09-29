@@ -36,8 +36,11 @@ const DIST = join(ROOT, "dist");
  * valeur d'exemple produit un site en apparence correct dont TOUTES les
  * métadonnées pointent ailleurs — les moteurs suivent alors un domaine qui ne
  * vous appartient pas. Échouer bruyamment vaut mieux que livrer ça.
+ *
+ * Par défaut, le domaine de production (gpsdigest.com). La variable SITE_URL
+ * reste prioritaire, pour un environnement de préproduction par exemple.
  */
-const SITE_URL = process.env.SITE_URL;
+const SITE_URL = process.env.SITE_URL ?? "https://gpsdigest.com";
 if (!SITE_URL || SITE_URL.includes("exemple.com")) {
   console.error(`
   ✗ SITE_URL n'est pas défini.
@@ -106,10 +109,17 @@ async function buildPages() {
   const pages = (await readdir(publicDir)).filter((f) => f.endsWith(".html"));
 
   for (const locale of LOCALES) {
-    await mkdir(join(DIST, locale), { recursive: true });
     for (const page of pages) {
       const template = await readFile(join(publicDir, page), "utf8");
-      await writeFile(join(DIST, locale, page), preparePage(template, locale, page));
+      // Le chemin vient de ROUTES (src/page-i18n.ts) : « /fr/blog/<slug>/ »
+      // s'écrit « dist/fr/blog/<slug>/index.html ».
+      const path = pagePath(locale, page);
+      const file = join(
+        DIST,
+        path.endsWith("/") ? path + "index.html" : /\.\w+$/.test(path) ? path : path + ".html",
+      );
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, preparePage(template, locale, page));
     }
   }
   return pages;

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="{{htmlLang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ═══ Index du blog : textes dans src/page-i18n.ts (clés blog.*) ═══ -->
+<title>{{blog.title}}</title>
+<meta name="description" content="{{attr:blog.description}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b5d3f">
+<link rel="canonical" href="{{url:blog.html}}">
+{{alternates}}
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{{ogLocale}}">
+{{ogAlternates}}
+<meta property="og:url" content="{{url:blog.html}}">
+<meta property="og:site_name" content="gps-digest">
+<meta property="og:title" content="{{attr:blog.title}}">
+<meta property="og:description" content="{{attr:blog.description}}">
+<meta property="og:image" content="https://exemple.com/og.png">
+<meta name="robots" content="index,follow">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": {{json:blog.title}},
+  "description": {{json:blog.description}},
+  "url": "{{url:blog.html}}",
+  "inLanguage": "{{htmlLang}}",
+  "publisher": { "@type": "Organization", "name": "gps-digest", "url": "https://exemple.com" },
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": {{json:post.h1}},
+      "description": {{json:post.description}},
+      "url": "{{url:post-ia-analyse.html}}",
+      "datePublished": "2026-09-28"
+    }
+  ]
+}
+</script>
+
+<style>
+:root{--ink:#14181d;--ink-soft:#4a5560;--line:#d4dae0;--bg:#fff;--panel:#f5f7f9;--accent:#0b5d3f;--radius:6px}
+@media (prefers-color-scheme:dark){:root{--ink:#eef2f5;--ink-soft:#a8b4bf;--line:#39424c;
+  --bg:#12161a;--panel:#1b2127;--accent:#4ade9f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:1rem/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:44rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
+nav.langs{font-size:.85rem;margin-bottom:1rem}
+nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
+.crumbs{font-size:.85rem;color:var(--ink-soft);margin:0 0 1.6rem}
+.crumbs a{color:var(--ink-soft)}
+h1{font-size:1.9rem;margin:0 0 .5rem;letter-spacing:-.015em}
+.lede{color:var(--ink-soft);font-size:1.08rem;margin:0 0 2rem}
+a{color:var(--accent)}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem 1.3rem;margin:1rem 0;background:var(--panel)}
+.card .kicker{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:0}
+.card h2{font-size:1.3rem;line-height:1.3;margin:.3rem 0 .5rem}
+.card h2 a{color:var(--ink);text-decoration:none}
+.card h2 a:hover{text-decoration:underline}
+.card .meta{font-size:.85rem;color:var(--ink-soft);margin:0 0 .6rem}
+.card p{margin:.4rem 0}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--ink-soft)}
+footer a{margin-right:1rem;display:inline-block;line-height:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+{{langNav}}
+
+<p class="crumbs"><a href="{{href:index.html}}">gps-digest</a> › {{common.blog}}</p>
+
+<h1>{{common.blog}}</h1>
+<p class="lede">{{blog.lede}}</p>
+
+<article class="card">
+  <p class="kicker">{{post.kicker}}</p>
+  <h2><a href="{{href:post-ia-analyse.html}}">{{post.h1}}</a></h2>
+  <p class="meta">{{post.meta}}</p>
+  <p>{{post.description}}</p>
+  <p><a href="{{href:post-ia-analyse.html}}">{{blog.readMore}} →</a></p>
+</article>
+
+<footer>
+  <nav><a href="{{href:index.html}}">{{privacy.footerTool}}</a><a href="{{href:confidentialite.html}}">{{common.privacy}}</a><a href="https://github.com/tpripri/gps-digest" rel="noopener">{{common.source}}</a></nav>
+</footer>
+
+</div>
+</body>
+</html>

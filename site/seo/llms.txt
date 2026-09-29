@@ -27,6 +27,10 @@
 - [Référence des colonnes CSV](https://exemple.com/fr/reference-colonnes-csv) : définition et unité de chaque colonne produite.
 - [Glossaire des métriques](https://exemple.com/fr/glossaire-metriques) : GAP, découplage aérobie, Normalized Power, TSS.
 
+## Articles
+
+- [Analyser ses séances de course avec ChatGPT : le piège des tokens](https://exemple.com/fr/blog/analyser-ses-seances-de-course-avec-une-ia/) : pourquoi un fichier TCX d'une heure représente ~533 000 tokens, ce qui se passe quand on le colle dans une IA, et pourquoi restructurer vaut mieux que compresser. Version anglaise : https://exemple.com/en/blog/analyze-running-workouts-with-ai/
+
 ## Guides d'export
 
 - [Garmin Connect](https://exemple.com/fr/exporter-fichier-garmin-connect)
@@ -37,8 +41,10 @@
 
 ## Langues
 
-Le site est publié en français (/fr/), anglais (/en/) et espagnol (/es/).
-Chaque page déclare ses alternatives via hreflang.
+Le site est publié en sept langues : français (/fr/), anglais (/en/),
+espagnol (/es/), portugais (/pt/), allemand (/de/), chinois simplifié (/zh/)
+et japonais (/ja/). Chaque page déclare ses alternatives via hreflang, et le
+dossier exporté pour l'IA suit la langue de la page.
 
 ## Confidentialité
 

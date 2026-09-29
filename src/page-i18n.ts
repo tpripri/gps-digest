@@ -109,7 +109,7 @@ const fr = {
   "home.lede":
     "Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude. Cet outil en fait un dossier d'entraînement structuré — allures, tours, zones, répétitions, dérive cardiaque — que l'IA peut vraiment analyser.",
   "home.promise":
-    "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : le départ et l'arrivée sont rognés par défaut. <a href=\"/{{locale}}/confidentialite.html\">Ce qui sort, et ce qui n'en sort jamais</a>.",
+    "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : le départ et l'arrivée sont rognés par défaut. <a href=\"{{href:confidentialite.html}}\">Ce qui sort, et ce qui n'en sort jamais</a>.",
   "home.step1.title": "Déposez vos fichiers",
   "home.step1.text": "Autant que vous voulez, en TCX, GPX ou FIT, exportés de votre montre ou de Strava.",
   "home.step2.title": "Renseignez vos repères",
@@ -401,6 +401,163 @@ const fr = {
     "Aucune donnée personnelle n'étant collectée ni conservée, il n'y a pas de fichier à consulter, corriger ou supprimer : fermer l'onglet suffit à tout effacer. Pour toute question, le dépôt GitHub ci-dessus permet d'ouvrir une discussion.",
   "privacy.footerTool": "L'outil",
   "privacy.updated": "Dernière mise à jour : <time datetime=\"2026-09-25\">25 septembre 2026</time>.",
+
+  // ── blog : liens depuis le reste du site ───────────────────────────────
+  "common.blog": "Blog",
+  "home.why.more":
+    "Pourquoi une IA a besoin d'un dossier plutôt que d'un fichier brut : <a href=\"{{href:post-ia-analyse.html}}\">lire l'article</a>.",
+
+  // ── blog : index ───────────────────────────────────────────────────────
+  "blog.title": "Blog gps-digest : entraînement, données de montre et IA",
+  "blog.description":
+    "Articles sur l'analyse d'entraînement par intelligence artificielle : ce que ChatGPT, Gemini et Claude savent faire de vos séances, et comment leur donner des données exploitables.",
+  "blog.lede":
+    "Entraînement, données de montre et intelligence artificielle. Des articles courts, chiffrés, et sans promesses que les données ne tiennent pas.",
+  "blog.readMore": "Lire l'article",
+
+  // ── article : l'IA, les séances de course et les tokens ────────────────
+  "post.title": "Analyser ses séances de course avec ChatGPT : le piège des tokens",
+  "post.description":
+    "Une IA analyse très bien un entraînement, mais un TCX d'une heure pèse 533 000 tokens. Pourquoi ça bloque, et comment s'en sortir en trois minutes.",
+  "post.kicker": "Entraînement et IA",
+  "post.h1": "ChatGPT peut analyser vos séances de course. Encore faut-il qu'il arrive à les lire.",
+  "post.meta": "Publié le <time datetime=\"2026-09-28\">28 septembre 2026</time> · 7 min de lecture",
+  "post.lede":
+    "Demandez à une IA pourquoi votre fractionné de mardi vous a semblé si dur, et elle vous répondra mieux que la plupart des applications d'entraînement. À une condition : qu'elle voie vraiment vos données. C'est là que tout se complique, et pas pour la raison que vous imaginez.",
+  "post.tldrTitle": "En bref",
+  "post.tldr1":
+    "ChatGPT, Gemini et Claude savent interpréter une séance, la relier à votre objectif et répondre à vos questions de suivi, comme un coach disponible à toute heure.",
+  "post.tldr2":
+    "Un fichier TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, soit à peu près 533 000 tokens, dont près de 90 % de balises XML.",
+  "post.tldr3": "Même quand le fichier passe, le modèle raisonne mal sur des milliers de lignes de coordonnées brutes.",
+  "post.tldr4":
+    "La solution n'est pas de compresser mais de restructurer : splits, tours, zones, répétitions. Une séance tient alors en environ 5 800 tokens, et l'analyse est meilleure.",
+
+  "post.why.title": "Pourquoi une IA est-elle un si bon partenaire d'entraînement ?",
+  "post.why.p1":
+    "Parce qu'elle part de votre question, pas d'un tableau de bord. Une application vous montre les mêmes graphiques qu'à tout le monde. Une IA peut vous expliquer pourquoi votre allure a chuté au 8<sup>e</sup> kilomètre, en tenant compte de la chaleur, de votre semaine chargée et de l'objectif que vous lui avez donné.",
+  "post.why.listIntro": "Avec de bonnes données, une IA sait :",
+  "post.why.li1": "expliquer une séance en langage clair, sans jargon ;",
+  "post.why.li2":
+    "relier vos chiffres à votre objectif : un 10 km en 45 minutes n'appelle pas les mêmes séances qu'un premier marathon ;",
+  "post.why.li3": "comparer plusieurs semaines et repérer une tendance que vous n'aviez pas vue ;",
+  "post.why.li4":
+    "répondre à la question suivante, puis à celle d'après, avec la patience d'un coach disponible à 23 h ;",
+  "post.why.li5": "proposer la semaine à venir à partir de votre charge réelle, pas d'un plan générique.",
+  "post.why.p2":
+    "Cette personnalisation fait toute la différence. Mais elle repose sur une hypothèse que presque personne ne vérifie : que le modèle a réellement accès à vos données, et pas à un résumé de trois lignes ou à un fichier illisible.",
+
+  "post.tokens.title": "Qu'est-ce qu'un token, et pourquoi votre montre en produit autant ?",
+  "post.tokens.p1":
+    "Un token est l'unité de texte qu'un modèle de langage lit et facture : un morceau de mot, de nombre ou de ponctuation. Chaque modèle a une limite, sa fenêtre de contexte, au-delà de laquelle il ne peut plus rien lire. Selon le modèle et l'abonnement, elle va aujourd'hui de quelques dizaines de milliers à quelques millions de tokens.",
+  "post.tokens.p2":
+    "Le problème, c'est que les fichiers de montre sont faits pour des logiciels, pas pour être lus. Un fichier TCX répète les mêmes balises XML à chaque seconde de votre sortie. Voici ce que donnent les mesures de notre banc d'essai :",
+  "post.tokens.colCase": "Données",
+  "post.tokens.colSize": "Taille",
+  "post.tokens.colTokens": "Tokens estimés",
+  "post.tokens.r1": "Une séance d'une heure, fichier TCX brut",
+  "post.tokens.r1size": "1,7 Mo",
+  "post.tokens.r1tokens": "≈ 533 000",
+  "post.tokens.r2": "La même séance, en dossier structuré",
+  "post.tokens.r2size": "≈ 18 Ko",
+  "post.tokens.r2tokens": "≈ 5 800",
+  "post.tokens.r3": "15 Mo de fichiers réels, bruts",
+  "post.tokens.r3size": "15 Mo",
+  "post.tokens.r3tokens": "≈ 4,7 millions",
+  "post.tokens.r4": "Les mêmes fichiers, en dossier structuré",
+  "post.tokens.r4size": "≈ 100 Ko",
+  "post.tokens.r4tokens": "≈ 32 000",
+  "post.tokens.note":
+    "Estimation à 3,2 caractères par token, le ratio observé sur du CSV numérique. Mesures reproductibles avec le banc d'essai publié dans le code source.",
+  "post.tokens.p3":
+    "Autrement dit, une seule séance brute peut saturer une offre grand public, et une saison entière ne passe nulle part.",
+
+  "post.paste.title": "Que se passe-t-il quand on colle un fichier TCX dans ChatGPT ?",
+  "post.paste.intro": "Trois scénarios possibles. Aucun n'est bon.",
+  "post.paste.h1": "1. Le fichier est refusé",
+  "post.paste.p1":
+    "C'est le cas le plus honnête : l'interface indique que le fichier est trop volumineux. Vous perdez du temps, mais au moins vous le savez.",
+  "post.paste.h2": "2. Le fichier est lu en partie, sans que vous le sachiez",
+  "post.paste.p2":
+    "Face à une pièce jointe volumineuse, les assistants en lisent souvent des extraits, ou la confient à un script qui la résume. L'IA répond alors avec assurance à partir d'une partie seulement de la séance. La réponse a l'air juste. Elle ne l'est pas forcément.",
+  "post.paste.h3": "3. Le fichier passe, mais l'analyse est médiocre",
+  "post.paste.p3":
+    "Même avec une grande fenêtre de contexte, un modèle exploite mal l'information noyée au milieu d'un long document. Des chercheurs de Stanford ont documenté cet effet sous le nom de « lost in the middle » (Liu et al., 2024). Demander une analyse d'entraînement à partir de 3 600 lignes de latitudes et de longitudes, c'est lui faire faire de tête des calculs qu'il réussit mal, sur des données qui ne lui apprennent presque rien.",
+
+  "post.restructure.title": "Faut-il compresser le fichier ? Non, il faut le restructurer",
+  "post.restructure.p1":
+    "Rendre le fichier plus petit ne suffit pas : il faut le rendre lisible. Un coach ne lit pas vos coordonnées GPS seconde par seconde. Il regarde vos temps au kilomètre, vos répétitions et votre fréquence cardiaque par zone. C'est exactement ce qu'un modèle de langage sait interpréter.",
+  "post.restructure.colRaw": "Dans le fichier brut",
+  "post.restructure.colDossier": "Dans un dossier structuré",
+  "post.restructure.r1raw": "3 600 lignes de latitude, de longitude et d'altitude",
+  "post.restructure.r1dossier": "Des splits au kilomètre, les tours, le temps passé dans chaque zone",
+  "post.restructure.r2raw": "Une fréquence cardiaque par seconde",
+  "post.restructure.r2dossier": "La dérive cardiaque déjà calculée, avec la portion de séance mesurée",
+  "post.restructure.r3raw": "Aucune indication sur le capteur cardiaque",
+  "post.restructure.r3dossier": "Ceinture ou poignet, avec un niveau de confiance",
+  "post.restructure.r4raw": "Des balises XML répétées à chaque point",
+  "post.restructure.r4dossier": "Des tableaux CSV avec des unités explicites",
+  "post.restructure.p2":
+    "Sur 15 Mo de fichiers réels, le dossier fait environ 32 000 tokens. Et l'analyse qui en sort est meilleure qu'avec les fichiers complets. Pas seulement moins chère : meilleure, parce que le modèle travaille sur des objets qu'il comprend.",
+
+  "post.blind.title": "Qu'est-ce qu'une IA ne peut pas deviner toute seule ?",
+  "post.blind.p1":
+    "Certaines erreurs ne se voient pas dans les chiffres. Si rien ne les signale, l'IA les prend pour des faits et bâtit son analyse dessus.",
+  "post.blind.li1":
+    "<strong>Le capteur cardiaque.</strong> Un capteur au poignet confond parfois votre cadence avec votre pouls et affiche 172 bpm au lieu de 140. Comparer une séance au poignet et une séance à la ceinture, c'est comparer deux instruments, pas deux états de forme.",
+  "post.blind.li2":
+    "<strong>La température.</strong> Celle de la montre est chauffée par votre poignet : elle surestime l'air de 3 à 8 °C. Une IA qui la prend pour la météo se trompe sur l'origine de votre dérive cardiaque.",
+  "post.blind.li3":
+    "<strong>L'allure.</strong> Strava la calcule sur le temps en mouvement, Garmin Connect sur la durée totale. Sur une sortie en ville, l'écart dépasse facilement 15 secondes au kilomètre.",
+  "post.blind.li4":
+    "<strong>Les mesures qui n'ont pas de sens.</strong> Une dérive cardiaque calculée sur un fractionné ne veut rien dire. Mieux vaut pas de chiffre qu'un chiffre faux qui a l'air crédible.",
+  "post.blind.p2":
+    "Un bon dossier ne se contente pas de résumer. Il dit ce qui est fiable et ce qui ne l'est pas, pour que l'IA ne raisonne pas sur du sable.",
+
+  "post.howto.title": "Comment faire analyser ses séances par une IA en trois minutes ?",
+  "post.howto.step1":
+    "<strong>Exportez vos fichiers</strong> depuis votre montre ou Strava, de préférence au format FIT, le plus complet.",
+  "post.howto.step2":
+    "<strong>Déposez-les dans gps-digest.</strong> Tout est calculé dans votre navigateur : aucun fichier n'est envoyé sur un serveur.",
+  "post.howto.step3": "<strong>Copiez le dossier</strong> dans ChatGPT, Gemini ou Claude, puis posez votre question.",
+  "post.howto.cta": "Préparer mes séances pour l'IA",
+
+  "post.prompts.title": "Quelles questions poser à votre IA ?",
+  "post.prompts.intro":
+    "Les meilleures questions partent d'un doute réel. Voici cinq exemples qui fonctionnent bien avec un dossier structuré :",
+  "post.prompts.q1": "« Ma dérive cardiaque a-t-elle augmenté par rapport au mois dernier, à température comparable ? »",
+  "post.prompts.q2": "« Ai-je tenu mes allures sur les répétitions de mardi ? Que dois-je corriger la prochaine fois ? »",
+  "post.prompts.q3": "« Avec cette charge, suis-je prêt pour un 10 km en moins de 45 minutes dans six semaines ? »",
+  "post.prompts.q4": "« Ma répartition entre footings faciles et séances dures est-elle cohérente avec un marathon ? »",
+  "post.prompts.q5": "« Propose-moi la semaine prochaine en tenant compte de ma fatigue actuelle. »",
+
+  "post.faq.title": "Questions fréquentes",
+  "post.faq.q1": "ChatGPT peut-il lire directement un fichier FIT ou TCX ?",
+  "post.faq.a1":
+    "Il peut l'ouvrir, mais pas l'exploiter correctement. Le FIT est un format binaire que l'IA doit décoder avec un script, et un TCX d'une heure pèse environ 533 000 tokens. Dans les deux cas, l'analyse porte sur des extraits ou sur des données brutes mal adaptées. Un dossier structuré règle les deux problèmes.",
+  "post.faq.q2": "Pourquoi ne pas simplement exporter un CSV depuis Garmin Connect ?",
+  "post.faq.a2":
+    "Parce que cet export se limite pour l'essentiel aux tours. Il ne contient ni la dérive cardiaque, ni la détection du capteur, ni le détail des répétitions, ni le contexte qui évite les contresens, comme la convention de calcul de l'allure.",
+  "post.faq.q3": "Mes données sont-elles envoyées quelque part ?",
+  "post.faq.a3":
+    "Non. Vos fichiers sont lus et analysés dans votre navigateur. Seul le dossier que vous copiez vous-même dans une IA quitte votre appareil, et les coordonnées GPS en sont retirées par défaut.",
+  "post.faq.q4": "Une IA peut-elle remplacer un entraîneur ?",
+  "post.faq.a4":
+    "Non, et ce n'est pas le but. Elle explique, compare et propose, mais elle ne vous voit pas courir et ne sent pas vos douleurs. En cas de blessure ou de doute sérieux, l'avis d'un professionnel prime.",
+  "post.faq.q5": "Quelle IA choisir : ChatGPT, Gemini ou Claude ?",
+  "post.faq.a5":
+    "Les trois savent analyser un dossier structuré. La vraie différence tient à la taille de la fenêtre de contexte de votre abonnement. Avec un dossier de quelques milliers de tokens par séance, la question ne se pose plus.",
+
+  "post.sources.title": "Sources",
+  "post.sources.liu":
+    "Liu NF, et al. <em>Lost in the Middle: How Language Models Use Long Contexts.</em> Transactions of the Association for Computational Linguistics, 2024. <a href=\"https://arxiv.org/abs/2307.03172\" rel=\"nofollow\">arXiv:2307.03172</a>.",
+  "post.sources.bench":
+    "Mesures de taille et de tokens : banc d'essai de gps-digest, reproductible, dans le <a href=\"https://github.com/tpripri/gps-digest\" rel=\"noopener\">code source ouvert</a>.",
+
+  "post.end.title": "Votre prochaine séance mérite mieux qu'un graphique générique",
+  "post.end.text":
+    "Transformez vos fichiers de montre en un dossier que ChatGPT, Gemini ou Claude peuvent vraiment analyser. Gratuit, sans compte, et vos fichiers ne quittent pas votre navigateur.",
+  "post.end.cta": "Essayer gps-digest",
 } as const;
 
 export type PageKey = keyof typeof fr;
@@ -417,7 +574,8 @@ export function pageText(locale: Locale, key: PageKey): string {
 /** Clés manquantes et paramètres divergents, par langue. */
 export function pageCoverage(): Record<Locale, { missing: PageKey[]; badParams: PageKey[] }> {
   const params = (s: string) =>
-    [...s.matchAll(/\{\{?(\w+)\}?\}/g)].map((m) => m[1]).sort().join(",");
+    // {nom}, {{locale}} et {{href:page}} : un lien perdu à la traduction compte.
+    [...s.matchAll(/\{\{?([\w:.-]+)\}?\}/g)].map((m) => m[1]).sort().join(",");
   const out = {} as Record<Locale, { missing: PageKey[]; badParams: PageKey[] }>;
   for (const loc of LOCALES) {
     const cat = CATALOGS[loc];
@@ -439,9 +597,42 @@ const escAttr = (s: string) =>
 /** JSON inséré dans un <script> : « </script> » ne doit jamais apparaître. */
 const safeJson = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c");
 
-/** Chemin public d'une page : « index.html » se sert comme « /fr/ ». */
+/**
+ * URL de chaque gabarit, sous le préfixe de langue. Une chaîne vaut pour
+ * toutes les langues ; un objet donne un chemin traduit par langue, parce que
+ * la requête réelle d'un lecteur espagnol doit figurer dans son URL. Un chemin
+ * qui finit par « / » est servi comme dossier (index.html au build) ; un
+ * chemin sans extension s'écrit « <chemin>.html » au build.
+ *
+ * Changer un chemin publié casse les liens entrants : ajouter, jamais renommer.
+ */
+export const ROUTES: Record<string, string | Record<Locale, string>> = {
+  "index.html": "",
+  // Sans extension : Cloudflare redirige « /x.html » vers « /x ». Publier
+  // l'URL qui répond directement évite des canoniques qui redirigent.
+  "confidentialite.html": "confidentialite",
+  "blog.html": "blog/",
+  "post-ia-analyse.html": {
+    fr: "blog/analyser-ses-seances-de-course-avec-une-ia/",
+    en: "blog/analyze-running-workouts-with-ai/",
+    es: "blog/analizar-entrenamientos-de-running-con-ia/",
+    pt: "blog/analisar-treinos-de-corrida-com-ia/",
+    de: "blog/lauftraining-mit-ki-analysieren/",
+    zh: "blog/ai-running-training-analysis/",
+    ja: "blog/ai-running-training-analysis/",
+  },
+};
+
+/** Chemin public d'une page dans une langue : « /fr/ », « /en/blog/… ». */
 export function pagePath(locale: string, page: string): string {
-  return page === "index.html" ? `/${locale}/` : `/${locale}/${page}`;
+  const route = ROUTES[page];
+  if (route == null) throw new Error(`Page sans route déclarée : ${page}`);
+  return `/${locale}/${typeof route === "string" ? route : route[locale as Locale]}`;
+}
+
+/** Gabarit servi à un chemin donné, ou undefined. Sert au serveur de développement. */
+export function pageFromPath(locale: Locale, path: string): string | undefined {
+  return Object.keys(ROUTES).find((page) => pagePath(locale, page) === path);
 }
 
 export interface RenderOptions {
@@ -510,9 +701,12 @@ export function renderPage(template: string, locale: Locale, opts: RenderOptions
     if (mode === "json:") return safeJson(value);
     return value;
   });
-  html = html.replace(/\{\{(\w+)\}\}/g, (whole, name: string) =>
-    computed[name] ? computed[name]() : whole,
-  );
+  // {{href:page}} : lien vers une autre page, dans la langue courante.
+  // {{url:page}} : même chose en URL absolue (canonical, JSON-LD).
+  html = html.replace(/\{\{(?:(href|url):([\w.-]+)|(\w+))\}\}/g, (whole, kind, page, name) => {
+    if (kind) return (kind === "url" ? BASE : "") + pagePath(locale, page);
+    return computed[name] ? computed[name]() : whole;
+  });
 
   const left = html.match(/\{\{[^}]*\}\}/);
   if (left) throw new Error(`Gabarit ${opts.page} (${locale}) : emplacement inconnu ${left[0]}`);
