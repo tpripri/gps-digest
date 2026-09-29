@@ -56,13 +56,21 @@ if (!SITE_URL || SITE_URL.includes("exemple.com")) {
 }
 
 /**
- * Jeton Cloudflare Web Analytics (mesure d'audience sans cookie). Vide :
- * aucun script de mesure, et la page de confidentialité le dit. Renseigné :
- * le script est ajouté à toutes les pages ET la page de confidentialité le
- * déclare, dans les sept langues. Le jeton n'est pas un secret : il figure en
- * clair dans le HTML publié.
+ * Mesure d'audience Cloudflare Web Analytics, sans cookie. Trois modes :
+ *
+ *   "cloudflare"       Cloudflare injecte lui-même le script dans les pages
+ *                      servies (réglage « automatique » du tableau de bord,
+ *                      activé le 29 septembre 2026). Le build n'ajoute rien,
+ *                      mais la page de confidentialité déclare la mesure.
+ *   "snippet:<jeton>"  le build ajoute le script lui-même (réglage manuel).
+ *   "off"              aucune mesure, et la page de confidentialité le dit.
+ *
+ * Si le réglage change dans Cloudflare, changer ce mode dans la foulée :
+ * la page de confidentialité doit toujours dire vrai.
  */
-const CF_BEACON_TOKEN = process.env.CF_BEACON_TOKEN ?? "";
+const ANALYTICS = process.env.ANALYTICS ?? "cloudflare";
+const CF_BEACON_TOKEN = ANALYTICS.startsWith("snippet:") ? ANALYTICS.slice("snippet:".length) : "";
+const ANALYTICS_BY_CDN = ANALYTICS === "cloudflare";
 
 /**
  * Langues effectivement publiées. Chacune doit avoir un catalogue complet
@@ -107,7 +115,12 @@ async function transpileSources() {
  * ignorent le groupe entier quand la réciprocité n'est pas vérifiable.
  */
 function preparePage(template, locale, page) {
-  return renderPage(template, locale, { page, locales: LOCALES, analyticsToken: CF_BEACON_TOKEN })
+  return renderPage(template, locale, {
+    page,
+    locales: LOCALES,
+    analyticsToken: CF_BEACON_TOKEN,
+    analyticsInjectedByCdn: ANALYTICS_BY_CDN,
+  })
     .replace('from "/src/index.ts"', 'from "/assets/index.js"')
     .replace('import("/src/index.ts")', 'import("/assets/index.js")')
     .replaceAll("https://exemple.com", SITE_URL);
@@ -213,7 +226,9 @@ console.log(`  ✓ ${src.count} modules transpilés (${(src.bytes / 1024).toFixe
 const pages = await buildPages();
 console.log(`  ✓ ${pages.length * LOCALES.length} page(s) : ${pages.join(", ")}`);
 console.log(`  ✓ ${markdownCount} version(s) Markdown pour les assistants IA`);
-console.log(`  ✓ mesure d'audience : ${CF_BEACON_TOKEN ? "Cloudflare Web Analytics" : "aucune"}`);
+console.log(`  ✓ mesure d'audience : ${
+  ANALYTICS_BY_CDN ? "Cloudflare Web Analytics (injectée par Cloudflare), déclarée"
+    : CF_BEACON_TOKEN ? "Cloudflare Web Analytics (script du site), déclarée" : "aucune"}`);
 
 const statics = await copyStatic();
 if (statics.length) console.log(`  ✓ ${statics.length} fichier(s) statique(s) : ${statics.join(", ")}`);

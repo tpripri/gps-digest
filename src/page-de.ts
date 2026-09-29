@@ -348,7 +348,7 @@ export const de: Partial<PageCatalog> = {
   "privacy.rights.text":
     "Da keine personenbezogenen Daten erhoben oder gespeichert werden, gibt es keine Daten, die du einsehen, berichtigen oder löschen lassen könntest: Den Tab zu schließen, löscht alles. Für Fragen kannst du im oben genannten GitHub-Repository eine Diskussion eröffnen.",
   "privacy.footerTool": "Das Tool",
-  "privacy.updated": "Zuletzt aktualisiert: <time datetime=\"2026-09-25\">25. September 2026</time>.",
+  "privacy.updated": "Zuletzt aktualisiert: <time datetime=\"2026-09-29\">29. September 2026</time>.",
   "common.blog": "Blog",
   "home.why.more":
     "Warum eine KI ein strukturiertes Dossier statt einer Rohdatei braucht: <a href=\"{{href:post-ia-analyse.html}}\">zum Artikel</a>.",

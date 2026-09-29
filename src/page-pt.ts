@@ -348,7 +348,7 @@ export const pt: Partial<PageCatalog> = {
   "privacy.rights.text":
     "Como nenhum dado pessoal é coletado nem guardado, não há nenhum registro a consultar, corrigir ou apagar: fechar a aba basta para apagar tudo. Para qualquer dúvida, o repositório do GitHub citado acima permite abrir uma discussão.",
   "privacy.footerTool": "A ferramenta",
-  "privacy.updated": "Última atualização: <time datetime=\"2026-09-25\">25 de setembro de 2026</time>.",
+  "privacy.updated": "Última atualização: <time datetime=\"2026-09-29\">29 de setembro de 2026</time>.",
   "common.blog": "Blog",
   "home.why.more":
     "Por que uma IA precisa de um dossiê estruturado, e não de um arquivo bruto: <a href=\"{{href:post-ia-analyse.html}}\">leia o artigo</a>.",
