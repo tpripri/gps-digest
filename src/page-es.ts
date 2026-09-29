@@ -502,4 +502,11 @@ export const es: Partial<PageCatalog> = {
   "post.end.text":
     "Convierte los archivos de tu reloj en un informe que ChatGPT, Gemini o Claude puedan analizar de verdad. Gratis, sin cuenta, y tus archivos no salen de tu navegador.",
   "post.end.cta": "Probar gps-digest",
+  "privacy.analytics.row": "Estadísticas de visitas",
+  "privacy.analytics.rowText":
+    "<strong>Sí, anónimas.</strong> Cloudflare Web Analytics cuenta las páginas vistas, sin cookies ni identificadores persistentes. Nada sobre tus archivos ni tus sesiones.",
+  "privacy.analytics.active":
+    "La medición de audiencia usa Cloudflare Web Analytics: sin cookies, sin identificadores persistentes y sin ningún dato de tus archivos. Cuenta páginas vistas, países, fuentes de tráfico y tipos de dispositivo, nunca a una persona.",
+  "privacy.verify.p1Analytics":
+    "No te fíes de nuestra palabra. Abre las herramientas de desarrollo de tu navegador (<code>F12</code>), pestaña <strong>Red</strong>, y sube un archivo. Verás la carga de la página, la medición de audiencia hacia <code>cloudflareinsights.com</code> y, si la meteorología está activada, una petición a <code>open-meteo.com</code>. Nada más. Ninguna petición contiene el contenido de tu archivo.",
 };

@@ -15,7 +15,8 @@ import { fileURLToPath } from "node:url";
 
 import { LOCALES } from "../src/i18n.ts";
 import {
-  renderPage, pageCoverage, pageText, pagePath, PAGE_KEYS, LOCALE_META, ROUTES, X_DEFAULT,
+  renderPage, renderMarkdown, markdownPath, pageCoverage, pageText, pagePath,
+  PAGE_KEYS, LOCALE_META, ROUTES, X_DEFAULT,
 } from "../src/page-i18n.ts";
 
 let failures = 0;
@@ -97,6 +98,51 @@ for (const page of pages) {
       if (leak) problems.push(`français : « ${leak.slice(0, 50)} »`);
     }
     check(`${tag}`, problems.length === 0, problems.join(", "));
+  }
+}
+
+// ─────────────────────────────────────────── versions Markdown
+
+const MARKDOWN = join(dirname(fileURLToPath(import.meta.url)), "..", "site", "markdown");
+for (const file of readdirSync(MARKDOWN).filter((f) => f.endsWith(".md"))) {
+  const page = file.replace(/\.md$/, ".html");
+  const template = readFileSync(join(MARKDOWN, file), "utf8");
+  for (const locale of LOCALES) {
+    const problems: string[] = [];
+    let md = "";
+    try {
+      md = renderMarkdown(template, locale, { page });
+    } catch (e) {
+      problems.push((e as Error).message);
+    }
+    if (/<\/?[a-z][^>]*>/i.test(md)) problems.push("balise HTML restée");
+    try {
+      JSON.parse(md.match(/^title: (.*)$/m)?.[1] ?? "");
+    } catch {
+      problems.push("front matter invalide");
+    }
+    check(`${markdownPath(locale, page)}`, problems.length === 0, problems.join(", "));
+  }
+}
+
+// ─────────────────────────────── mesure d'audience et confidentialité
+
+// La promesse de la page de confidentialité doit suivre le script de mesure :
+// sans jeton, aucune trace de mesure ; avec jeton, script ET déclaration.
+{
+  const privacy = readFileSync(join(PUBLIC, "confidentialite.html"), "utf8");
+  const home = readFileSync(join(PUBLIC, "index.html"), "utf8");
+  const off = renderPage(privacy, "fr", { page: "confidentialite.html" }) +
+    renderPage(home, "fr", { page: "index.html" });
+  check("sans jeton : aucun script ni mention de mesure d'audience",
+    !off.includes("cloudflareinsights"));
+  for (const locale of LOCALES) {
+    const on = renderPage(privacy, locale, { page: "confidentialite.html", analyticsToken: "abc123" });
+    const ok = on.includes("static.cloudflareinsights.com/beacon.min.js") &&
+      on.includes('"token":"abc123"'.replace(/"/g, "&quot;")) &&
+      on.includes(pageText(locale, "privacy.analytics.row")) &&
+      on.includes("cloudflareinsights.com</code>");
+    check(`${locale} : avec jeton, script et déclaration dans la page de confidentialité`, ok);
   }
 }
 

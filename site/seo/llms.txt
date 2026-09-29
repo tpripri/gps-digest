@@ -1,53 +1,59 @@
 # gps-digest
 
-> Outil web gratuit qui convertit les fichiers de montres GPS (TCX, GPX, FIT) en
-> résumés CSV compacts, conçus pour être analysés par un modèle de langage.
-> Un fichier TCX d'une heure pèse environ 1,7 Mo et représente ~533 000 tokens ;
-> le résumé produit fait ~18 Ko et ~5 800 tokens, soit une réduction de 98,9 %.
-> Tout le traitement s'effectue dans le navigateur : aucun fichier n'est envoyé
-> sur un serveur.
+> Free web tool that turns GPS watch files (TCX, GPX, FIT) into a structured
+> training file that ChatGPT, Gemini or Claude can actually analyze. A one-hour
+> TCX file recorded at 1 Hz weighs about 1.7 MB, roughly 533,000 tokens, nearly
+> 90% of it XML tags; the structured file for the same session is about 18 KB
+> and 5,800 tokens. All processing runs in the browser: no file is uploaded to
+> a server.
 
-## Ce que fait l'outil
+The site is published in seven languages with identical content: English,
+French, Spanish, Portuguese, German, Simplified Chinese and Japanese. Each page
+declares its translations with hreflang. The file exported for the AI follows
+the language of the page.
 
-- Lit les formats TCX (Garmin Training Center), GPX 1.1 et FIT (format natif des
-  montres Garmin, Coros, Wahoo, Suunto, Polar).
-- Produit un « bundle » multi-blocs : résumé de séance, tours, splits au km,
-  zones de fréquence cardiaque, d'allure et de puissance, intervalles détectés
-  automatiquement, et une trace rééchantillonnée à un budget de tokens choisi.
-- Calcule des métriques dérivées : allure ajustée à la pente (GAP, d'après
-  Minetti et al. 2002), Normalized Power, Intensity Factor, TSS, dérive aérobie,
-  Efficiency Factor.
-- Rogne par défaut le départ et l'arrivée de la trace pour ne pas exposer le
-  domicile de l'utilisateur.
+## The tool
 
-## Pages de référence
+- [gps-digest, English](https://exemple.com/en/): drop TCX, GPX or FIT files, get a structured training file to paste into an AI.
+- Other languages: [français](https://exemple.com/fr/), [español](https://exemple.com/es/), [português](https://exemple.com/pt/), [Deutsch](https://exemple.com/de/), [中文](https://exemple.com/zh/), [日本語](https://exemple.com/ja/)
 
-- [Pourquoi un fichier GPS est trop gros pour une IA](https://exemple.com/fr/fichier-gps-trop-gros-ia) : mesures de taille et de tokens par format, méthode de compaction.
-- [TCX vs GPX vs FIT](https://exemple.com/fr/tcx-gpx-fit-comparaison) : tableau comparatif des trois formats.
-- [Référence des colonnes CSV](https://exemple.com/fr/reference-colonnes-csv) : définition et unité de chaque colonne produite.
-- [Glossaire des métriques](https://exemple.com/fr/glossaire-metriques) : GAP, découplage aérobie, Normalized Power, TSS.
+## What the tool computes on its own
+
+- Heart rate sensor detection (chest strap or wrist optical sensor), inferred
+  from the signal: cadence lock, plateaus, response lag. Read directly from
+  the paired hardware when the FIT file provides it.
+- Cardiac drift (aerobic decoupling, Pa:Hr or Pw:Hr) on the longest steady
+  window of the session. Refused on interval sessions, where it would be
+  meaningless, with the reason stated.
+- Interval detection and execution analysis: rep consistency, pace or power
+  fade, recovery times, heart rate recovery at 60 seconds.
+- Best efforts, critical speed model (refused when D' is below 80 m, a sign of
+  collinear efforts), race projections for 5K, 10K, half marathon and
+  marathon, each with a range and a reliability level.
+- Grade-adjusted pace (Minetti et al. 2002), Normalized Power, TSS.
+- Session classification from the shape of the data, not from the sport
+  label in the file.
+- Pace is computed on moving time (Strava convention); Garmin Connect uses
+  total duration. The exported file states which convention is used.
+
+## Measured facts
+
+- One-hour run, TCX at 1 Hz: 1.7 MB, about 533,000 tokens, nearly 90% XML tags.
+- Same run as a structured file: about 18 KB, about 5,800 tokens.
+- 15 MB of real training files: about 32,000 tokens as a structured file.
+- Token estimates use 3.2 characters per token, the ratio observed on numeric
+  CSV. Benchmark reproducible from the open source code:
+  https://github.com/tpripri/gps-digest
 
 ## Articles
 
-- [Analyser ses séances de course avec ChatGPT : le piège des tokens](https://exemple.com/fr/blog/analyser-ses-seances-de-course-avec-une-ia/) : pourquoi un fichier TCX d'une heure représente ~533 000 tokens, ce qui se passe quand on le colle dans une IA, et pourquoi restructurer vaut mieux que compresser. Version anglaise : https://exemple.com/en/blog/analyze-running-workouts-with-ai/
+- [ChatGPT can analyze your running workouts. It just has to be able to read them first.](https://exemple.com/en/blog/analyze-running-workouts-with-ai/): why AI is a strong training partner, why a raw watch file breaks it (token limits, partial reading, "lost in the middle"), and why restructuring beats compressing. Markdown: https://exemple.com/en/blog/analyze-running-workouts-with-ai/index.html.md
+- Same article in [French](https://exemple.com/fr/blog/analyser-ses-seances-de-course-avec-une-ia/), [Spanish](https://exemple.com/es/blog/analizar-entrenamientos-de-running-con-ia/), [Portuguese](https://exemple.com/pt/blog/analisar-treinos-de-corrida-com-ia/), [German](https://exemple.com/de/blog/lauftraining-mit-ki-analysieren/), [Chinese](https://exemple.com/zh/blog/ai-running-training-analysis/), [Japanese](https://exemple.com/ja/blog/ai-running-training-analysis/). Each has a Markdown version at the same URL followed by index.html.md.
 
-## Guides d'export
+## Privacy
 
-- [Garmin Connect](https://exemple.com/fr/exporter-fichier-garmin-connect)
-- [Strava](https://exemple.com/fr/exporter-fichier-strava)
-- [Coros](https://exemple.com/fr/exporter-fichier-coros)
-- [Polar Flow](https://exemple.com/fr/exporter-fichier-polar-flow)
-- [Suunto](https://exemple.com/fr/exporter-fichier-suunto)
+- [Privacy](https://exemple.com/en/confidentialite): files are read and analyzed in the browser and never sent to a server. The only outgoing request is the optional weather lookup, which sends the route midpoint rounded to two decimals (about 1.1 km) and the date to Open-Meteo, never the start point. Start and finish of the track are trimmed by 250 m by default before any export.
 
-## Langues
+## Optional
 
-Le site est publié en sept langues : français (/fr/), anglais (/en/),
-espagnol (/es/), portugais (/pt/), allemand (/de/), chinois simplifié (/zh/)
-et japonais (/ja/). Chaque page déclare ses alternatives via hreflang, et le
-dossier exporté pour l'IA suit la langue de la page.
-
-## Confidentialité
-
-Aucun fichier n'est transmis à un serveur. Le parsing et la compaction
-s'exécutent dans un Web Worker, dans le navigateur de l'utilisateur.
-Détail technique : https://exemple.com/fr/confidentialite
+- [Source code (MIT license)](https://github.com/tpripri/gps-digest)

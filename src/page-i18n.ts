@@ -558,6 +558,15 @@ const fr = {
   "post.end.text":
     "Transformez vos fichiers de montre en un dossier que ChatGPT, Gemini ou Claude peuvent vraiment analyser. Gratuit, sans compte, et vos fichiers ne quittent pas votre navigateur.",
   "post.end.cta": "Essayer gps-digest",
+
+  // ── confidentialité : mesure d'audience, affichée seulement si activée ──
+  "privacy.analytics.row": "Statistiques de visite",
+  "privacy.analytics.rowText":
+    "<strong>Oui, anonymes.</strong> Cloudflare Web Analytics compte les pages vues, sans cookie ni identifiant persistant. Rien sur vos fichiers ni sur vos séances.",
+  "privacy.analytics.active":
+    "La mesure d'audience utilise Cloudflare Web Analytics : sans cookie, sans identifiant persistant, et sans aucune donnée issue de vos fichiers. Elle compte les pages vues, les pays, les sources de visite et les types d'appareil, jamais une personne.",
+  "privacy.verify.p1Analytics":
+    "Ne nous croyez pas sur parole. Ouvrez les outils de développement de votre navigateur (<code>F12</code>), onglet <strong>Réseau</strong>, puis déposez un fichier. Vous verrez le chargement de la page, la mesure d'audience vers <code>cloudflareinsights.com</code> et, si la météo est activée, une requête vers <code>open-meteo.com</code>. Rien d'autre. Aucune requête ne contient le contenu de votre fichier.",
 } as const;
 
 export type PageKey = keyof typeof fr;
@@ -640,6 +649,13 @@ export interface RenderOptions {
   page: string;
   /** Langues publiées : seules elles apparaissent dans hreflang et le sélecteur. */
   locales?: readonly Locale[];
+  /**
+   * Jeton Cloudflare Web Analytics. Absent : aucun script de mesure, et la
+   * page de confidentialité dit qu'il n'y en a pas. Présent : le script est
+   * ajouté ET la page de confidentialité le déclare. Les deux ne peuvent pas
+   * diverger, c'est tout l'intérêt de les rendre au même endroit.
+   */
+  analyticsToken?: string;
 }
 
 /**
@@ -680,6 +696,21 @@ export function renderPage(template: string, locale: Locale, opts: RenderOptions
         )
         .join("\n") +
       `\n</nav>`,
+    // Mesure d'audience sans cookie (Cloudflare Web Analytics), si activée.
+    analyticsScript: () =>
+      opts.analyticsToken
+        ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='${
+            escAttr(JSON.stringify({ token: opts.analyticsToken })).replace(/'/g, "&#39;")
+          }'></script>`
+        : "",
+    privacyAnalyticsRow: () =>
+      opts.analyticsToken
+        ? `<tr><th scope="row">${pageText(locale, "privacy.analytics.row")}</th><td>${pageText(locale, "privacy.analytics.rowText")}</td></tr>`
+        : "",
+    privacyAnalyticsNote: () =>
+      pageText(locale, opts.analyticsToken ? "privacy.analytics.active" : "privacy.dont.analytics"),
+    privacyVerify: () =>
+      pageText(locale, opts.analyticsToken ? "privacy.verify.p1Analytics" : "privacy.verify.p1"),
     pageJson: () =>
       safeJson({
         locale,
@@ -711,4 +742,36 @@ export function renderPage(template: string, locale: Locale, opts: RenderOptions
   const left = html.match(/\{\{[^}]*\}\}/);
   if (left) throw new Error(`Gabarit ${opts.page} (${locale}) : emplacement inconnu ${left[0]}`);
   return html;
+}
+
+// ───────────────────────────────────────────────── version Markdown
+
+/** Le peu de HTML des textes du catalogue, converti en Markdown. */
+function inlineToMarkdown(html: string): string {
+  return html
+    .replace(/<strong>([\s\S]*?)<\/strong>/g, "**$1**")
+    .replace(/<em>([\s\S]*?)<\/em>/g, "*$1*")
+    .replace(/<code>([\s\S]*?)<\/code>/g, "`$1`")
+    .replace(/<sup>([\s\S]*?)<\/sup>/g, "$1")
+    .replace(/<time[^>]*>([\s\S]*?)<\/time>/g, "$1")
+    .replace(/<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g, (_, href: string, text: string) =>
+      `[${text}](${href.startsWith("/") ? BASE + href : href})`,
+    )
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&");
+}
+
+/**
+ * Version Markdown d'une page, pour les assistants qui suivent la convention
+ * llms.txt : même gabarit de clés, mêmes textes, sans balisage. Publiée à
+ * côté de la page (« …/index.html.md »).
+ */
+export function renderMarkdown(template: string, locale: Locale, opts: RenderOptions): string {
+  return inlineToMarkdown(renderPage(template, locale, opts));
+}
+
+/** Chemin de la version Markdown d'une page : « /fr/blog/x/index.html.md ». */
+export function markdownPath(locale: string, page: string): string {
+  const path = pagePath(locale, page);
+  return (path.endsWith("/") ? path + "index.html" : /\.\w+$/.test(path) ? path : path + ".html") + ".md";
 }

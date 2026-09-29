@@ -483,4 +483,11 @@ export const zh: Partial<PageCatalog> = {
   "post.end.text":
     "把手表文件转换成 ChatGPT、Gemini 或 Claude 真正能分析的档案。免费，无需注册，文件不会离开你的浏览器。",
   "post.end.cta": "试用 gps-digest",
+  "privacy.analytics.row": "访问统计",
+  "privacy.analytics.rowText":
+    "<strong>是，匿名。</strong>Cloudflare Web Analytics 只统计页面浏览量，不使用 cookie，也不使用持久标识符。不涉及你的文件或训练数据。",
+  "privacy.analytics.active":
+    "访问统计使用 Cloudflare Web Analytics：不使用 cookie，不使用持久标识符，也不包含任何来自你文件的数据。它统计页面浏览量、国家、访问来源和设备类型，从不追踪个人。",
+  "privacy.verify.p1Analytics":
+    "不要只听我们说。打开浏览器的开发者工具（<code>F12</code>），切换到<strong>“网络”</strong>标签页，然后上传一个文件。你会看到页面加载的请求、发往 <code>cloudflareinsights.com</code> 的访问统计请求，以及（如果启用了天气查询）一个发往 <code>open-meteo.com</code> 的请求。除此之外别无其他。没有任何请求包含你的文件内容。",
 };

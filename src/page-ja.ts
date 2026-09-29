@@ -490,4 +490,11 @@ export const ja: Partial<PageCatalog> = {
   "post.end.text":
     "ウォッチのファイルを、ChatGPT、Gemini、Claude が本当に分析できる記録に変換しましょう。無料、アカウント不要、ファイルはブラウザの外に出ません。",
   "post.end.cta": "gps-digest を試す",
+  "privacy.analytics.row": "アクセス統計",
+  "privacy.analytics.rowText":
+    "<strong>送信します（匿名）。</strong>Cloudflare Web Analytics がページビューを数えます。cookie も永続的な識別子も使いません。ファイルやセッションの情報は含まれません。",
+  "privacy.analytics.active":
+    "アクセス解析には Cloudflare Web Analytics を使っています。cookie も永続的な識別子も使わず、ファイルのデータも一切含みません。数えるのはページビュー、国、流入元、端末の種類で、個人を追跡することはありません。",
+  "privacy.verify.p1Analytics":
+    "私たちの言葉をうのみにしないでください。ブラウザの開発者ツール（<code>F12</code>）を開き、<strong>ネットワーク</strong>タブを表示してからファイルをドロップしてください。表示されるのは、ページの読み込み、<code>cloudflareinsights.com</code> へのアクセス解析のリクエスト、そして天気を有効にしている場合の <code>open-meteo.com</code> へのリクエストだけです。ほかには何もありません。ファイルの内容を含むリクエストはありません。",
 };
