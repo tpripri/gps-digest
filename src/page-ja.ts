@@ -490,6 +490,196 @@ export const ja: Partial<PageCatalog> = {
   "post.end.text":
     "ウォッチのファイルを、ChatGPT、Gemini、Claude が本当に分析できる記録に変換しましょう。無料、アカウント不要、ファイルはブラウザの外に出ません。",
   "post.end.cta": "gps-digest を試す",
+  "post.next":
+    "こうした質問を、毎週の継続的なサポートにつなげるには：<a href=\"{{href:post-ia-coach.html}}\">ChatGPT・Claude・Gemini・Vibe で AI コーチを設定する</a>。",
+
+  "coach.title": "ChatGPT・Claude・Gemini・Vibe をランニングコーチとして使う方法",
+  "coach.description":
+    "アスリートシート、コピペで使えるコーチ用ルール、ChatGPT・Claude・Gemini・Vibe での設定手順、そしてトレーニングデータを無料で渡す方法。",
+  "coach.kicker": "実践ガイド",
+  "coach.h1": "ChatGPT・Claude・Gemini・Vibe をあなたのランニングコーチにする",
+  "coach.meta": "公開日：<time datetime=\"2026-09-29\">2026 年 9 月 29 日</time> · 約 11 分で読めます",
+  "coach.lede":
+    "あなたのセッション、目標、そして痛めやすいふくらはぎまで知っていて、夜 11 時でも相談でき、追加料金もかからないコーチ。AI アシスタントが約束するのは、そんな存在です。この約束は守られますが、条件が 2 つあります。一度きちんと状況を伝えておかないと、毎回初対面の相手のように扱われます。そして、セッションのデータを渡す必要があります。これが見た目よりずっと難しいのです。",
+  "coach.tldr1":
+    "AI が良いコーチになるには 3 つのものが必要です。あなたのプロフィール、実際のセッションデータ、そして守るべきルール。これがないと、汎用的なプランを繰り返すだけです。",
+  "coach.tldr2":
+    "いちばん難しいのは、セッションデータを渡すことです。Strava の公式コネクタは有料で、Claude でしか使えません。ファイルのエクスポートは無料でどこでも使えますが、生のファイルは重すぎるので圧縮が必要です。",
+  "coach.tldr3":
+    "ChatGPT・Claude・Vibe には「プロジェクト」、Gemini には「Gem」があり、アスリートシートとルールを会話をまたいで保持できます。どれも無料版で使えます。",
+  "coach.tldr4":
+    "効果的な習慣は、週に 1 回、新しい会話でセッションデータと体調の一言を添えて振り返ること。そして主導権は手放さないこと。AI はあなたに同調しがちです。",
+
+  "coach.can.title": "AI は本当にコーチになれるのか？",
+  "coach.can.p1":
+    "なれます。セッションを読み解き、目標と結びつけ、次のメニューを調整するという、コーチの仕事の大部分については。なれません。あなたを直接見たり触れたりする必要があることについては。境界ははっきりしているので、始める前に知っておく価値があります。",
+  "coach.can.goodIntro": "AI が得意なこと：",
+  "coach.can.good1": "セッションを分析し、狙いどおりだったかを数字で示す",
+  "coach.can.good2": "出張、風邪、長引く会議など、予定が崩れたときに 1 週間を組み直す",
+  "coach.can.good3": "各セッションの意図を説明する（既製のプランの多くはこれをしません）",
+  "coach.can.good4": "夜 11 時でも、10 個目の質問に嫌な顔ひとつせず答える",
+  "coach.can.badIntro": "AI にはできないこと：",
+  "coach.can.bad1": "あなたの走りを見ること。だからフォームや姿勢は直せない",
+  "coach.can.bad2": "あなたが口で言う以上に疲れていると気づくこと",
+  "coach.can.bad3": "痛みを診断すること",
+  "coach.can.p2":
+    "いつでも相談に乗ってくれるけれど、あなたの走りを一度も見たことがないコーチだと考えてください。AI があなたについて知っているのは、あなたが読ませた内容だけです。そこで、次の話になります。",
+
+  "coach.need.title": "始める前に、AI コーチが知っておくべきことは？",
+  "coach.need.p1": "3 つあります。1 つでも欠けると、アドバイスの質が一気に落ちます。",
+  "coach.need.li1":
+    "<strong>あなたのプロフィール。</strong>レベル、目標、制約、弱点。これがないと、AI はあなたを「平均的なランナー」として扱います。そんな人は存在しません。",
+  "coach.need.li2":
+    "<strong>実際のセッション。</strong>記憶ではなく、データです。いちばん用意しにくい材料なので、このあと詳しく説明します。",
+  "coach.need.li3":
+    "<strong>守るべきルール。</strong>どう考えるか、何を断るか、どんな形で答えるか。これがコーチと「アドバイスの自動販売機」の違いです。",
+  "coach.sheet.title": "アスリートシート（一度書けば OK）",
+  "coach.sheet.intro":
+    "このテンプレートをコピーし、5 分で記入してテキストファイルに保存しましょう。レースのあとや目標が変わったときに更新します。",
+  "coach.sheet.text":
+    "アスリートシート\n年齢、性別、ランニング歴：\n現在の走行量（週あたりの km と回数）：\n直近 12 か月のベスト（5 km、10 km、ハーフ、フル）：\n最大心拍数と安静時心拍数（わかれば）：\n目標（大会、距離、日付、目標タイム）：\n練習できる日時（曜日、1 回の最長時間）：\n過去のけがと弱い部位：\n機材（ウォッチ、胸ストラップまたは手首の心拍センサー）：\n練習で好きなこと、嫌いなこと：",
+
+  "coach.data.title": "AI コーチにセッションデータをどう渡すか？",
+  "coach.data.p1":
+    "ほとんどのガイドが触れないステップで、しかもいちばん難しいところです。AI にはあなたのウォッチが見えません。セッションを届けるのはあなたです。方法は 2 つあり、コストは同じではありません。",
+  "coach.data.strava.title": "Strava コネクタ：便利だが有料、しかも Claude 専用",
+  "coach.data.strava.p":
+    "2026 年 6 月から、Strava は公式コネクタ（MCP サーバー）を提供しており、Claude があなたの履歴を直接読めるようになりました。エクスポート不要で、AI が必要なデータを自分で取りに行くので快適です。ただし Strava の有料サブスクリプションが必要で、コネクタが使えるのは Claude だけです。Strava はほかのアシスタントへの対応を「今後」と約束していますが、時期は未定です。ChatGPT・Gemini・Vibe 向けの公式コネクタは現時点でなく、非公式のものは技術的な設定が必要です。",
+  "coach.data.export.title": "ファイルのエクスポート：無料で万能、ただし圧縮が条件",
+  "coach.data.export.p1":
+    "Garmin Connect、COROS、Polar Flow、Strava はいずれも、セッションを FIT・TCX・GPX 形式で無料エクスポートできます。このファイルは無料版を含むあらゆる AI で使えます。落とし穴はサイズです。1 時間のランニングの TCX は約 533,000 トークンあり、1 セッションだけで無料版の上限に達しかねません（<a href=\"{{href:post-ia-analyse.html}}\">理由はこちら</a>）。",
+  "coach.data.export.p2":
+    "解決策は、AI に渡す前にファイルを圧縮し、構造を組み替えることです。gps-digest は 1 セッションを約 5,800 トークンの記録にまとめます。スプリット、ゾーン、レップ、心拍ドリフト、センサーの信頼性まで入っています。無料でも有料でも、どのアシスタントも最後まで読めます。",
+  "coach.data.colStrava": "Strava コネクタ",
+  "coach.data.colExport": "エクスポート + gps-digest",
+  "coach.data.r1": "費用",
+  "coach.data.r1strava": "Strava の有料サブスクリプション",
+  "coach.data.r1export": "無料",
+  "coach.data.r2": "対応アシスタント",
+  "coach.data.r2strava": "現時点では Claude のみ",
+  "coach.data.r2export": "すべて：ChatGPT・Claude・Gemini・Vibe など",
+  "coach.data.r3": "手間",
+  "coach.data.r3strava": "接続後は不要",
+  "coach.data.r3export": "週 1 回のエクスポートとドラッグ＆ドロップ",
+  "coach.data.r4": "AI が受け取るもの",
+  "coach.data.r4strava": "Strava のデータ（要約または 1 秒ごと）",
+  "coach.data.r4export": "計算済みの記録：ゾーン、レップ、ドリフト、センサーの信頼性",
+  "coach.data.r5": "GPS 座標",
+  "coach.data.r5strava": "AI が読める",
+  "coach.data.r5export": "初期設定で削除",
+  "coach.data.p3":
+    "Strava の有料会員で Claude を使っているなら、コネクタで週に数分を節約できます。それ以外の人は、無料のエクスポートで十分うまくいきます。AI に渡す前にファイルを圧縮するだけです。",
+
+  "coach.rules.title": "コピペで使えるコーチ用の指示",
+  "coach.rules.intro":
+    "このテキストが AI のふるまいを決めます。あえて短くしてあります。どのルールも、言語モデルの既知のクセを 1 つずつ正すためのものです。",
+  "coach.rules.text":
+    "あなたは私のランニングコーチです。私のセッションを分析し、目標への進み具合を追い、毎週トレーニングを調整してください。\n\n私のプロフィールはアスリートシートにあります。セッションは gps-digest の記録として渡します。\n\nルール：\n1. すべての指摘は記録の数字に基づき、その数字を引用すること。\n2. データが欠けている、または信頼できない場合は、推測せずにそう伝えること。\n3. 率直であること。セッションが失敗だった、または目標が非現実的なら、はっきり言うこと。\n4. 私の実際の走行量から出発し、負荷を増やすときは必ず理由を示すこと。\n5. 続く痛み、悪化する痛み、走り方が変わる痛みを私が訴えたら、プランを出す代わりに医療の専門家に相談するよう伝えること。\n6. 判断に必要な情報が足りなければ、私に質問すること。\n7. 振り返りの最後は、具体的な行動を最大 3 つにまとめること。",
+  "coach.rules.note":
+    "ルール 1 と 2 は、AI がもっともらしい数字で穴埋めするのを防ぎます。ルール 3 は、あなたに同調しがちな傾向への対策です。ルール 4 は野心的すぎるプランに歯止めをかけます。ルール 5 は、チャットボットは医師ではないという念押しです。",
+  "coach.copy": "コピー",
+  "coach.copied": "コピーしました",
+
+  "coach.setup.title": "ChatGPT・Claude・Gemini・Vibe でコーチを設定するには？",
+  "coach.setup.intro":
+    "4 つのアシスタントにはどれも、シートとルールを会話をまたいで保持できる専用スペースがあります。毎回貼り直す必要はありません。",
+  "coach.setup.colTool": "アシスタント",
+  "coach.setup.colWhere": "コーチの置き場所",
+  "coach.setup.colPlus": "ランナーにとっての強み",
+  "coach.setup.gpt.where": "プロジェクト（指示とファイル）",
+  "coach.setup.gpt.plus": "音声モードで、帰り道に声で振り返りができる",
+  "coach.setup.claude.where": "プロジェクト（指示とナレッジ）",
+  "coach.setup.claude.plus": "週のプランを独立したドキュメントとして出せるので、使い回しやすい",
+  "coach.setup.gemini.where": "Gem（指示と知識）",
+  "coach.setup.gemini.plus": "Google ドライブや Google カレンダーと連携",
+  "coach.setup.vibe.where": "プロジェクト（指示とファイル）",
+  "coach.setup.vibe.plus": "欧州の事業者：パリに本社を置く Mistral AI",
+  "coach.setup.gpt.title": "ChatGPT：プロジェクトを作る",
+  "coach.setup.gpt.text":
+    "サイドバーで新しいプロジェクトを作ります（名前は「ランニングコーチ」など）。ルールを<strong>プロジェクトの指示</strong>に貼り付け、アスリートシートをプロジェクトの<strong>ファイル</strong>に追加します。このプロジェクトで開く会話はすべて、この前提から始まります。無料版はプロジェクトあたりのファイル数に上限があるので、枠はシートに使い、セッションの記録は会話に直接貼り付けましょう。",
+  "coach.setup.claude.title": "Claude：プロジェクトを作る",
+  "coach.setup.claude.text":
+    "プロジェクトを作り、ルールを<strong>指示</strong>に貼り付け、アスリートシートを<strong>ナレッジ</strong>にアップロードします。プロジェクト内の新しい会話は、どれも両方を読んだ状態で始まります。無料版はプロジェクト数と容量に上限がありますが、シート 1 つと週 1 回分の記録なら余裕で収まります。",
+  "coach.setup.gemini.title": "Gemini：Gem を作る",
+  "coach.setup.gemini.text":
+    "Gem マネージャーを開き、<strong>新しい Gem</strong> を作成します。ルールを<strong>カスタム指示</strong>に貼り付け、パソコンか Google ドライブからアスリートシートを<strong>知識</strong>に追加します。Gem は無料で、モバイルアプリにも同期されます。",
+  "coach.setup.vibe.title": "Vibe：プロジェクトを作る",
+  "coach.setup.vibe.text":
+    "Vibe は、2026 年 5 月から Mistral AI の Le Chat の新しい名前になりました。<strong>新しいプロジェクト</strong>を作り、カスタマイズ設定を開いてルールを貼り付け、アスリートシートをプロジェクトの<strong>ファイル</strong>に追加します。プロジェクトはすべてのプランで使えますが、上限があります。",
+  "coach.setup.fallback":
+    "プランに専用スペースがない、または作りたくない場合は、新しい会話を始めるたびにシートとルールを冒頭に貼り付けてください。少し手間ですが、効果は同じです。",
+
+  "coach.weekly.title": "伸びる習慣：週に 1 回の振り返り",
+  "coach.weekly.intro":
+    "役に立つコーチは、長期的に寄り添います。いちばん効果的なのは、日曜の夜か月曜の朝に決まった時間を取ること。10 分で済みます。",
+  "coach.weekly.step1":
+    "<strong>その週のセッションをエクスポートする</strong>：ウォッチか Strava から、できれば FIT 形式で。",
+  "coach.weekly.step2":
+    "<strong><a href=\"{{href:index.html}}\">gps-digest</a> にドロップする</strong>：記録をコピーします。計算はすべてブラウザ内で行われます。",
+  "coach.weekly.step3": "<strong>プロジェクトで新しい会話を開く</strong>：記録を貼り付け、体調を一言添えます。",
+  "coach.weekly.step4":
+    "<strong>振り返りの質問をする</strong>：提案された翌週のメニューは、採用する前に話し合いましょう。",
+  "coach.weekly.promptIntro": "振り返りの質問（そのままコピーしてください）：",
+  "coach.weekly.prompt":
+    "今週のセッションと体調です。振り返ってください。\n1. うまくいったことは？ 数字で示してください。\n2. 注意して見ておくべきことは？\n3. 私の負荷は、目標とレースの日程に見合っていますか？\n4. 来週のメニューを 1 回ずつ、それぞれの狙いとあわせて提案してください。\n\n来週の制約：［記入する］",
+  "coach.weekly.feel":
+    "体調の一言は、データと同じくらい重要です。あなたが寝不足だったことも、火曜からふくらはぎが張っていることも、ウォッチは知りません。たとえば「土曜の主観的強度 8/10、2 晩よく眠れず、右ふくらはぎが火曜から張っている」。これがないと、AI はウォッチだけを頼りに 1 週間を評価します。",
+  "coach.weekly.fresh":
+    "なぜ毎週新しい会話にするのか。とても長いやりとりの中ほどにある情報を、モデルはうまく活かせないからです（Liu et al., 2024）。同じスレッドで何週間も続けると、最初の指示が薄れていきます。シートとルールはプロジェクトが保持し、事実は記録が運びます。月に 1 回は直近 4 週間分の記録を渡し、傾向を判断してもらいましょう。",
+
+  "coach.more.title": "ほかにも使える 4 つの頼み方",
+  "coach.more.intro": "週の振り返り以外にも、きちんと設定した AI コーチの力を引き出せる頼み方があります。",
+  "coach.more.q1": "「インターバルを分析して。各レップのばらつき、レップ間の回復、次回変えるべき点を教えて」",
+  "coach.more.q2":
+    "「10 日後にレースがある。これが直近 6 週間の記録。目標ペースはどれくらいで、テーパリングはどう組めばいい？」",
+  "coach.more.q3": "「今週は 3 日しか走れない。大事なものだけ残して、何を削るのか教えて」",
+  "coach.more.q4":
+    "「今の走行量から始めて、ハーフマラソン 1 時間 45 分を目指す 12 週間のプランを作って。回復週を入れて、負荷の上げ方の根拠も示して」",
+
+  "coach.traps.title": "AI コーチの 5 つの落とし穴と、その避け方",
+  "coach.traps.intro": "使い方を誤った AI コーチは、間違っていても教えてくれません。よくある失敗はこちらです。",
+  "coach.traps.li1":
+    "<strong>あなたに同調する。</strong>言語モデルには、話し相手に合わせる傾向があることが知られています（Sharma et al., 2024）。「いいセッションだった？」ではなく、「このセッションの問題点は？」と聞きましょう。",
+  "coach.traps.li2":
+    "<strong>数字がないと作り話をする。</strong>データがなければ、もっともらしい値で埋めてしまいます。しかも口調は自信たっぷりです。だからこそルール 1 と 2、そして完全な記録が必要です。",
+  "coach.traps.li3":
+    "<strong>伝えたことしか知らない。</strong>睡眠、ストレス、仕事の忙しさは、どれもウォッチには記録されません。体調の一言がなければ、AI はあなたが絶好調だと思い込みます。",
+  "coach.traps.li4":
+    "<strong>プランが野心的すぎることがある。</strong>紙の上のプランは誰も疲れさせません。実際の走行量から出発し、負荷を上げるたびに理由を示すよう求めましょう。",
+  "coach.traps.li5":
+    "<strong>医師ではない。</strong>続く痛み、悪化する痛み、走り方が変わる痛みは、チャットボットではなく医療の専門家に相談すべきものです。",
+
+  "coach.choose.title": "ランニングコーチにはどの AI を選ぶべき？",
+  "coach.choose.p1":
+    "すでに使っているものを選びましょう。ChatGPT・Claude・Gemini・Vibe はどれも、構造化された記録を読み、ルールに従い、筋の通った 1 週間を提案できます。違いは使い方の好みです。Google のサービスを使うなら Gemini、声で振り返るなら ChatGPT、長いドキュメントや Strava コネクタなら Claude、欧州の事業者を選びたいなら Vibe。",
+  "coach.choose.p2": "コーチングの質を本当に左右するのは、モデルではありません。AI に何を読ませるかです。",
+
+  "coach.faq.q1": "ChatGPT を無料でランニングコーチとして使えますか？",
+  "coach.faq.a1":
+    "使えます。ChatGPT・Claude・Vibe のプロジェクトも Gemini の Gem も、ファイル数や利用量の上限つきで無料版に用意されています。セッションのエクスポートも無料です。ただし貼り付ける前に圧縮してください。そうしないと、1 セッションで無料版の上限に達することがあります。",
+  "coach.faq.q2": "ChatGPT はフルマラソンの練習プランを作れますか？",
+  "coach.faq.a2":
+    "作れます。現在の走行量、最近のベスト、練習できる日時、レースの日程など、あなたの実際のレベルから出発すれば、かなり良いものができます。負荷の上げ方の根拠を示してもらい、盲目的に従うのではなく、実際のセッションをもとに毎週プランを調整しましょう。",
+  "coach.faq.q3": "Strava や Garmin を AI に直接つなげられますか？",
+  "coach.faq.a3":
+    "2026 年 6 月から Strava は公式コネクタを提供していますが、有料会員限定で、現時点では Claude 専用です。ほかのアシスタントや無料版では、Garmin Connect でも Strava でも使えるファイルのエクスポートがいちばん簡単な方法です。無料で、どの AI でも使えます。ただし貼り付ける前に圧縮が必要です。",
+  "coach.faq.q4": "AI コーチに渡したデータはどうなりますか？",
+  "coach.faq.a4":
+    "アシスタントに貼り付けた内容は、その提供元が自社の規約に従って処理します。履歴の保存期間や、会話がモデルの学習に使われるかどうかを設定で確認しましょう。なお、gps-digest の記録には初期設定で GPS 座標が含まれません。",
+  "coach.faq.q5": "AI コーチとは英語でやりとりする必要がありますか？",
+  "coach.faq.a5":
+    "いいえ。4 つのアシスタントはどれも日本語でしっかり答えてくれますし、gps-digest もページの言語で記録を作成します。アスリートシートから週の振り返りまで、すべて日本語で進められます。",
+
+  "coach.end.title": "良いコーチは、良いデータから始まる",
+  "coach.end.text":
+    "gps-digest は、ウォッチのファイルを ChatGPT・Claude・Gemini・Vibe が本当に分析できる記録に変換します。無料版でも使えます。アカウント不要で、ファイルはブラウザの外に出ません。",
+
+  "coach.sources.sharma":
+    "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.strava":
+    "Strava『<em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>』プレスリリース、2026 年 6 月 1 日。<a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>。",
+  "coach.sources.docs":
+    "公式ドキュメント：<a href=\"https://help.openai.com/en/articles/10169521-projects-in-chatgpt\" rel=\"nofollow\">ChatGPT のプロジェクト</a>、<a href=\"https://support.claude.com/en/articles/9517075-what-are-projects\" rel=\"nofollow\">Claude のプロジェクト</a>、<a href=\"https://support.google.com/gemini/answer/15146780\" rel=\"nofollow\">Gemini の Gem</a>、<a href=\"https://docs.mistral.ai/vibe/work/projects\" rel=\"nofollow\">Vibe のプロジェクト</a>。",
   "privacy.analytics.row": "アクセス統計",
   "privacy.analytics.rowText":
     "<strong>送信します（匿名）。</strong>Cloudflare Web Analytics がページビューを数えます。cookie も永続的な識別子も使いません。ファイルやセッションの情報は含まれません。",

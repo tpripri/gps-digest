@@ -483,6 +483,194 @@ export const zh: Partial<PageCatalog> = {
   "post.end.text":
     "把手表文件转换成 ChatGPT、Gemini 或 Claude 真正能分析的档案。免费，无需注册，文件不会离开你的浏览器。",
   "post.end.cta": "试用 gps-digest",
+  "post.next":
+    "想把这些问题变成每周持续的跟进？请看：<a href=\"{{href:post-ia-coach.html}}\">在 ChatGPT、Claude、Gemini 或 Vibe 中设置 AI 教练</a>。",
+
+  "coach.title": "用 ChatGPT、Claude、Gemini 或 Vibe 当你的跑步教练",
+  "coach.description":
+    "运动员档案、可直接复制的教练规则、在 ChatGPT、Claude、Gemini 和 Vibe 中的设置方法，以及如何免费把训练数据交给它们。",
+  "coach.kicker": "实用指南",
+  "coach.h1": "把 ChatGPT、Claude、Gemini 或 Vibe 变成你的跑步教练",
+  "coach.meta": "发布于 <time datetime=\"2026-09-29\">2026 年 9 月 29 日</time> · 阅读约 11 分钟",
+  "coach.lede":
+    "一位了解你的训练、你的目标和你那条容易出问题的小腿的教练，晚上 11 点也在线，而且不用多花一分钱：这就是 AI 助手的承诺。这个承诺能兑现，但有两个前提。你得一次性把情况交代清楚，否则每次训练它都把你当陌生人。你还得把训练数据交给它，而这远比听起来难。",
+  "coach.tldr1":
+    "AI 要当好教练，需要三样东西：你的个人档案、你真实的训练数据和明确的行为规则。缺了它们，它只会背一套通用计划。",
+  "coach.tldr2":
+    "最难的是把训练数据交给它。Strava 的官方连接器需要付费，而且只支持 Claude。导出文件免费、处处可用，但原始文件太大，必须先压缩。",
+  "coach.tldr3":
+    "ChatGPT、Claude 和 Vibe 有“项目”，Gemini 有 Gem：运动员档案和规则会在不同对话之间保留。它们都有免费版本。",
+  "coach.tldr4":
+    "行之有效的节奏：每周复盘一次，每次新开一个对话，附上训练数据和一句主观感受。同时要把握主导权：AI 往往会顺着你说。",
+
+  "coach.can.title": "AI 真的能当你的教练吗？",
+  "coach.can.p1":
+    "能，教练的大部分工作它都能做：读懂你的训练，把它们和你的目标联系起来，并调整接下来的安排。不能，凡是需要亲眼看到你或亲手接触你的事它都做不了。界线很清楚，开始之前最好先了解。",
+  "coach.can.goodIntro": "AI 擅长的事：",
+  "coach.can.good1": "分析一次训练，并用数据说明它是否达到了目的；",
+  "coach.can.good2": "在生活打乱计划时重新安排一周：出差、感冒、会议拖延；",
+  "coach.can.good3": "解释每次训练背后的原因，很多现成计划从来不做这一点；",
+  "coach.can.good4": "晚上 11 点也能回答，问到第十个问题也不会嫌烦。",
+  "coach.can.badIntro": "它永远做不到的事：",
+  "coach.can.bad1": "看你跑步，因此无法纠正你的步态或姿势；",
+  "coach.can.bad2": "察觉你比自己说的更累；",
+  "coach.can.bad3": "诊断疼痛。",
+  "coach.can.p2":
+    "把它看作一位随叫随到、却从没见过你跑步的教练。它对你的全部了解，就是你给它看的内容。这就引出了下面的部分。",
+
+  "coach.need.title": "开始之前，AI 教练需要了解你什么？",
+  "coach.need.p1": "三样东西。缺了任何一样，建议的质量都会大打折扣。",
+  "coach.need.li1":
+    "<strong>你的个人档案。</strong>你的水平、目标、限制条件和薄弱环节。没有它，AI 会把你当成一个“平均跑者”，而这样的人并不存在。",
+  "coach.need.li2":
+    "<strong>你真实的训练。</strong>不是你的记忆，而是你的数据。这是最难提供的一项，下面马上细说。",
+  "coach.need.li3":
+    "<strong>行为规则。</strong>怎么推理、拒绝什么、用什么形式回答。这正是教练和“建议自动售货机”的区别。",
+  "coach.sheet.title": "运动员档案：填一次就够",
+  "coach.sheet.intro":
+    "复制这个模板，花五分钟填好，保存为文本文件。每次比赛后或目标改变时更新一下。",
+  "coach.sheet.text":
+    "运动员档案\n年龄、性别、跑龄：\n目前跑量（每周公里数和次数）：\n近 12 个月最好成绩（5 公里、10 公里、半马、全马）：\n最大心率和静息心率（如果知道）：\n目标（比赛、距离、日期、目标时间）：\n可训练时间（哪几天、单次最长时长）：\n既往伤病和薄弱部位：\n装备（手表、胸带或腕式心率）：\n训练中我喜欢和讨厌的内容：",
+
+  "coach.data.title": "怎样把训练数据交给 AI 教练？",
+  "coach.data.p1":
+    "这是大多数指南略过不谈的一步，也是最难的一步。AI 看不到你的手表：你得把训练数据带给它。有两条路，代价并不一样。",
+  "coach.data.strava.title": "Strava 连接器：方便，但要付费，且只支持 Claude",
+  "coach.data.strava.p":
+    "自 2026 年 6 月起，Strava 提供官方连接器（一个 MCP 服务器），让 Claude 直接读取你的训练历史。这很方便：不用再导出，AI 自己去取需要的数据。但你需要付费订阅 Strava，而且该连接器只支持 Claude。Strava 承诺以后支持其他助手，但没有给出时间。对 ChatGPT、Gemini 或 Vibe 来说，目前没有任何官方连接器，非官方连接器则需要一定的技术配置。",
+  "coach.data.export.title": "导出文件：免费又通用，前提是先压缩",
+  "coach.data.export.p1":
+    "Garmin Connect、高驰 COROS、Polar Flow 和 Strava 都可以免费把一次训练导出为 FIT、TCX 或 GPX 文件。这个文件适用于任何 AI，包括免费版。问题在于体积：一小时跑步的 TCX 文件约有 533,000 个 token，一次训练就足以耗尽免费版的额度（<a href=\"{{href:post-ia-analyse.html}}\">原因见此</a>）。",
+  "coach.data.export.p2":
+    "解决办法：在交给 AI 之前，先压缩并重新组织文件。gps-digest 会把每次训练整理成约 5,800 个 token 的档案，包含分段、心率区间、重复组、心率漂移和传感器可靠性。无论免费还是付费，任何助手都能完整读取。",
+  "coach.data.colStrava": "Strava 连接器",
+  "coach.data.colExport": "导出 + gps-digest",
+  "coach.data.r1": "费用",
+  "coach.data.r1strava": "需付费订阅 Strava",
+  "coach.data.r1export": "免费",
+  "coach.data.r2": "支持的助手",
+  "coach.data.r2strava": "目前仅支持 Claude",
+  "coach.data.r2export": "全部：ChatGPT、Claude、Gemini、Vibe 等",
+  "coach.data.r3": "操作成本",
+  "coach.data.r3strava": "连接后无需操作",
+  "coach.data.r3export": "每周导出一次、拖放一次",
+  "coach.data.r4": "AI 收到的内容",
+  "coach.data.r4strava": "Strava 数据，摘要或逐秒数据",
+  "coach.data.r4export": "已计算好的档案：心率区间、重复组、漂移、传感器可靠性",
+  "coach.data.r5": "GPS 坐标",
+  "coach.data.r5strava": "AI 可以读取",
+  "coach.data.r5export": "默认移除",
+  "coach.data.p3":
+    "既订阅了 Strava 又在用 Claude？连接器每周能帮你省几分钟。其他人用免费导出就很好，只要在交给 AI 之前先压缩文件。",
+
+  "coach.rules.title": "可直接复制的教练指令",
+  "coach.rules.intro":
+    "这段文字决定 AI 的行为方式。它刻意写得很短：每条规则都针对语言模型的一个已知毛病。",
+  "coach.rules.text":
+    "你是我的跑步教练。你负责分析我的训练，跟踪我朝目标的进展，并逐周调整我的训练。\n\n我的个人情况在运动员档案里。我的训练以 gps-digest 档案的形式提供。\n\n规则：\n1. 每个结论都要以档案中的具体数字为依据，并引用出来。\n2. 如果某项数据缺失或不可靠，直接说明，不要猜。\n3. 坦率直言。训练没练好或目标不现实，就明确告诉我。\n4. 从我的实际跑量出发，每次加量都要说明理由。\n5. 如果我提到持续、加重或改变步态的疼痛，请让我去看医疗专业人员，而不是给出训练计划。\n6. 如果缺少做决定所需的信息，就问我。\n7. 每次复盘最后给出最多三条具体行动。",
+  "coach.rules.note":
+    "第 1、2 条防止 AI 用看似合理的数字填补空白。第 3 条对抗它顺着你说的倾向。第 4 条遏制过于激进的计划。第 5 条提醒你：聊天机器人不是医生。",
+  "coach.copy": "复制",
+  "coach.copied": "已复制",
+
+  "coach.setup.title": "如何在 ChatGPT、Claude、Gemini 或 Vibe 中设置你的教练？",
+  "coach.setup.intro":
+    "四个助手都有一个专用空间，让档案和规则在不同对话之间保留。不必每次都重新粘贴。",
+  "coach.setup.colTool": "助手",
+  "coach.setup.colWhere": "教练放在哪里",
+  "coach.setup.colPlus": "对跑者的优势",
+  "coach.setup.gpt.where": "项目：包含指令和文件",
+  "coach.setup.gpt.plus": "语音模式，跑完回家路上就能口头复盘",
+  "coach.setup.claude.where": "项目：包含指令和知识库",
+  "coach.setup.claude.plus": "可以把一周计划单独生成一份文档，方便反复使用",
+  "coach.setup.gemini.where": "Gem：包含指令和知识",
+  "coach.setup.gemini.plus": "与 Google 云端硬盘和 Google 日历相连",
+  "coach.setup.vibe.where": "项目：包含指令和文件",
+  "coach.setup.vibe.plus": "欧洲厂商：总部位于巴黎的 Mistral AI",
+  "coach.setup.gpt.title": "ChatGPT：创建一个项目",
+  "coach.setup.gpt.text":
+    "在侧边栏新建一个项目，比如“跑步教练”。把规则粘贴到<strong>项目指令</strong>中，把运动员档案添加到项目<strong>文件</strong>里。在这个项目中打开的每个对话都会带上这些背景。免费版限制每个项目的文件数量：把名额留给档案，训练档案直接粘贴到对话中。",
+  "coach.setup.claude.title": "Claude：创建一个项目",
+  "coach.setup.claude.text":
+    "创建一个项目，把规则粘贴到项目<strong>指令</strong>中，把运动员档案上传到项目<strong>知识库</strong>。项目里的每个新对话都会同时带上两者。免费版限制项目数量和可用空间，但一份档案加每周一份训练档案绰绰有余。",
+  "coach.setup.gemini.title": "Gemini：创建一个 Gem",
+  "coach.setup.gemini.text":
+    "打开 Gem 管理器，创建一个<strong>新 Gem</strong>。把规则粘贴到<strong>指令</strong>中，再从电脑或 Google 云端硬盘把运动员档案添加到<strong>知识</strong>里。Gem 免费使用，并会同步到手机应用。",
+  "coach.setup.vibe.title": "Vibe：创建一个项目",
+  "coach.setup.vibe.text":
+    "自 2026 年 5 月起，Vibe 成为 Mistral AI 旗下 Le Chat 的新名字。创建一个<strong>新项目</strong>，打开项目的自定义设置粘贴规则，再把运动员档案添加到项目<strong>文件</strong>中。所有套餐都有项目功能，但有数量限制。",
+  "coach.setup.fallback":
+    "你的套餐没有专用空间，或者不想专门建一个？那就在每个新对话开头粘贴档案和规则。没那么方便，但效果一样好。",
+
+  "coach.weekly.title": "让你进步的节奏：每周复盘一次",
+  "coach.weekly.intro":
+    "有用的教练会长期跟进你。最有效的做法是固定一个时间，比如周日晚上或周一早上，只需十分钟。",
+  "coach.weekly.step1": "<strong>导出本周的训练</strong>，来自手表或 Strava，最好是 FIT 格式。",
+  "coach.weekly.step2":
+    "<strong>拖入 <a href=\"{{href:index.html}}\">gps-digest</a></strong>，然后复制档案。所有计算都在浏览器中完成。",
+  "coach.weekly.step3": "<strong>在项目中新开一个对话</strong>，粘贴档案，再加一句你的主观感受。",
+  "coach.weekly.step4": "<strong>提出复盘问题</strong>，在采纳建议的下周安排之前先和它讨论。",
+  "coach.weekly.promptIntro": "复盘问题，原样复制即可：",
+  "coach.weekly.prompt":
+    "这是我本周的训练和主观感受。请复盘：\n1. 哪些方面做得好？请用数据说明。\n2. 哪些方面需要留意？\n3. 我的训练负荷和目标、比赛日期是否匹配？\n4. 请逐次安排下周训练，并说明每次训练的目的。\n\n我下周的限制条件：[请填写]",
+  "coach.weekly.feel":
+    "主观感受和数据同样重要。手表不知道你没睡好，也不知道你的小腿从周二开始就发紧。例如：“周六主观用力 8/10，两晚没睡好，右小腿从周二起发紧。”没有这句话，AI 只能凭手表评判你的一周。",
+  "coach.weekly.fresh":
+    "为什么每周都要新开对话？因为模型很难利用超长对话中间部分的信息（Liu et al., 2024）。在同一个对话里聊上几周，最初的指令就会被冲淡。项目负责保存档案和规则，训练档案负责提供事实。每个月给它一次最近四周的档案，让它判断趋势。",
+
+  "coach.more.title": "另外四个好用的请求",
+  "coach.more.intro": "除了每周复盘，下面这些请求能让设置得当的 AI 教练发挥最大作用：",
+  "coach.more.q1": "“分析我的间歇跑：各组是否均匀、组间恢复如何，以及下次应该改进什么。”",
+  "coach.more.q2":
+    "“我的比赛在十天后。这是我最近六周的训练。我该以什么配速为目标？赛前减量怎么安排？”",
+  "coach.more.q3": "“这周我只有三天能跑。保留最重要的训练，并告诉我放弃了什么。”",
+  "coach.more.q4":
+    "“以我目前的跑量为起点，制定一个十二周的半马计划，目标 1 小时 45 分。安排减量周，并说明加量的理由。”",
+
+  "coach.traps.title": "AI 教练的五个陷阱，以及如何避开",
+  "coach.traps.intro": "用错了的 AI 教练，出错时不会提醒你。下面是最常见的问题。",
+  "coach.traps.li1":
+    "<strong>它顺着你说。</strong>语言模型倾向于迎合对话者，这是一个有充分记录的偏差（Sharma et al., 2024）。与其问“这次训练好吗？”，不如问“这次训练哪里有问题？”。",
+  "coach.traps.li2":
+    "<strong>缺少数字时它会编造。</strong>没有数据，它就用看似合理的数值来填补，语气却始终笃定。所以才有第 1、2 条规则，以及一份完整的档案。",
+  "coach.traps.li3":
+    "<strong>你不说，它就不知道。</strong>你的睡眠、压力、工作忙不忙，手表里都没有。没有那句主观感受，它会以为你状态满分。",
+  "coach.traps.li4":
+    "<strong>它的计划有时过于激进。</strong>纸面上的计划不会让人累。要求它从你的实际跑量出发，并说明每次加量的理由。",
+  "coach.traps.li5":
+    "<strong>它不是医生。</strong>持续、加重或改变步态的疼痛，应该找医疗专业人员，而不是聊天机器人。",
+
+  "coach.choose.title": "选哪个 AI 当跑步教练？",
+  "coach.choose.p1":
+    "选你已经在用的那个。ChatGPT、Claude、Gemini 和 Vibe 都能读懂结构化档案、遵守规则并给出合理的一周安排。区别在于你的使用习惯：Gemini 适合 Google 生态，ChatGPT 适合语音复盘，Claude 适合长文档并支持 Strava 连接器，Vibe 则是欧洲厂商。",
+  "coach.choose.p2": "真正决定教练质量的不是模型，而是你给它读的内容。",
+
+  "coach.faq.q1": "可以免费用 ChatGPT 当跑步教练吗？",
+  "coach.faq.a1":
+    "可以。ChatGPT、Claude 和 Vibe 的项目，以及 Gemini 的 Gem，在免费版中都能使用，只是文件和用量有限制。导出训练数据也是免费的。只需在粘贴前压缩，否则一次训练就可能耗尽免费版的额度。",
+  "coach.faq.q2": "ChatGPT 能制定马拉松训练计划吗？",
+  "coach.faq.a2":
+    "能，而且只要它从你的真实水平出发，效果相当不错：目前跑量、近期成绩、可训练时间和比赛日期。让它说明加量的理由，然后每周根据真实训练调整计划，而不是盲目照做。",
+  "coach.faq.q3": "能把 Strava 或 Garmin 直接连接到 AI 吗？",
+  "coach.faq.a3":
+    "自 2026 年 6 月起，Strava 提供官方连接器，但仅限付费订阅用户，且目前只支持 Claude。对于其他助手和免费版，最简单的方式仍是导出文件，Garmin Connect 和 Strava 都支持：免费，适用于所有 AI，只要在粘贴前先压缩。",
+  "coach.faq.q4": "我交给 AI 教练的数据会怎样？",
+  "coach.faq.a4":
+    "你粘贴到助手里的内容由其服务商按照自身条款处理。请在设置中查看聊天记录的保存方式，以及对话是否会被用于训练模型。gps-digest 生成的档案默认不包含 GPS 坐标。",
+  "coach.faq.q5": "必须用英文和 AI 教练交流吗？",
+  "coach.faq.a5":
+    "不必。四个助手都能很好地用中文回答，gps-digest 也会按页面语言生成档案。从运动员档案到每周复盘，全程都可以用中文。",
+
+  "coach.end.title": "好教练从好数据开始",
+  "coach.end.text":
+    "gps-digest 把你的手表文件转换成 ChatGPT、Claude、Gemini 或 Vibe 真正能分析的档案，免费版也能用。无需注册，文件不会离开你的浏览器。",
+
+  "coach.sources.sharma":
+    "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.strava":
+    "Strava，<em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>，2026 年 6 月 1 日新闻稿。<a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>。",
+  "coach.sources.docs":
+    "官方文档：<a href=\"https://help.openai.com/en/articles/10169521-projects-in-chatgpt\" rel=\"nofollow\">ChatGPT 项目</a>、<a href=\"https://support.claude.com/en/articles/9517075-what-are-projects\" rel=\"nofollow\">Claude 项目</a>、<a href=\"https://support.google.com/gemini/answer/15146780\" rel=\"nofollow\">Gemini Gem</a>、<a href=\"https://docs.mistral.ai/vibe/work/projects\" rel=\"nofollow\">Vibe 项目</a>。",
   "privacy.analytics.row": "访问统计",
   "privacy.analytics.rowText":
     "<strong>是，匿名。</strong>Cloudflare Web Analytics 只统计页面浏览量，不使用 cookie，也不使用持久标识符。不涉及你的文件或训练数据。",

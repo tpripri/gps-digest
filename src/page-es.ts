@@ -502,6 +502,201 @@ export const es: Partial<PageCatalog> = {
   "post.end.text":
     "Convierte los archivos de tu reloj en un informe que ChatGPT, Gemini o Claude puedan analizar de verdad. Gratis, sin cuenta, y tus archivos no salen de tu navegador.",
   "post.end.cta": "Probar gps-digest",
+  "post.next":
+    "Para pasar de estas preguntas a un seguimiento real, semana a semana: <a href=\"{{href:post-ia-coach.html}}\">configurar un entrenador IA en ChatGPT, Claude, Gemini o Vibe</a>.",
+
+  "coach.title": "Usar ChatGPT, Claude, Gemini o Vibe como entrenador de running",
+  "coach.description":
+    "Ficha de atleta, reglas de entrenador para copiar y pegar, configuración en ChatGPT, Claude, Gemini y Vibe, y cómo darles tus sesiones gratis.",
+  "coach.kicker": "Guía práctica",
+  "coach.h1": "Convierte ChatGPT, Claude, Gemini o Vibe en tu entrenador de running",
+  "coach.meta": "Publicado el <time datetime=\"2026-09-29\">29 de septiembre de 2026</time> · 11 min de lectura",
+  "coach.lede":
+    "Un entrenador que conoce tus sesiones, tu objetivo y tu gemelo delicado, disponible a las 11 de la noche, sin pagar nada extra: eso prometen los asistentes de IA. La promesa se cumple, con dos condiciones. Hay que ponerlos al día de una vez por todas, o te tratarán como a un desconocido en cada sesión. Y hay que darles tus sesiones, algo mucho menos sencillo de lo que parece.",
+  "coach.tldr1":
+    "Una IA es un buen entrenador si tiene tres cosas: tu perfil, tus sesiones reales y unas reglas de conducta. Sin ellas, recita un plan genérico.",
+  "coach.tldr2":
+    "Lo difícil es hacerle llegar tus sesiones. El conector oficial de Strava es de pago y solo funciona con Claude. Exportar archivos es gratis y funciona en todas partes, pero un archivo en bruto pesa demasiado: hay que comprimirlo.",
+  "coach.tldr3":
+    "ChatGPT, Claude y Vibe tienen proyectos, Gemini tiene sus Gems: la ficha de atleta y las reglas se quedan ahí de una conversación a otra. Todos existen en versión gratuita.",
+  "coach.tldr4":
+    "La rutina que funciona: un balance por semana, en una conversación nueva, con tus sesiones y una línea sobre cómo te sentiste. Y no sueltes el mando: una IA tiende a darte la razón.",
+
+  "coach.can.title": "¿Puede una IA entrenarte de verdad?",
+  "coach.can.p1":
+    "Sí, en buena parte del trabajo de un entrenador: leer tus sesiones, relacionarlas con tu objetivo y ajustar lo que viene. No, en todo lo que exige verte o tocarte. La frontera es clara, así que conviene conocerla antes de empezar.",
+  "coach.can.goodIntro": "Lo que una IA hace bien:",
+  "coach.can.good1": "analizar una sesión y decir, con cifras, si cumplió su objetivo;",
+  "coach.can.good2":
+    "reorganizar tu semana cuando la vida se cruza: un viaje, un resfriado, una reunión que se alarga;",
+  "coach.can.good3": "explicar el porqué de cada sesión, algo que muchos planes prefabricados nunca hacen;",
+  "coach.can.good4": "responder a las 11 de la noche sin cansarse de tu décima pregunta.",
+  "coach.can.badIntro": "Lo que nunca hará:",
+  "coach.can.bad1": "verte correr, así que no puede corregir tu zancada ni tu postura;",
+  "coach.can.bad2": "notar que estás más cansado de lo que dices;",
+  "coach.can.bad3": "diagnosticar un dolor.",
+  "coach.can.p2":
+    "Piensa en ella como un preparador muy disponible que nunca te ha visto correr. Todo lo que sabe de ti es lo que le das a leer. De ahí lo que sigue.",
+
+  "coach.need.title": "¿Qué debe saber tu entrenador IA antes de empezar?",
+  "coach.need.p1": "Tres cosas. Si falta una, la calidad de los consejos se hunde.",
+  "coach.need.li1":
+    "<strong>Tu perfil.</strong> Tu nivel, tu objetivo, tus limitaciones y tus puntos débiles. Sin él, la IA te trata como a un corredor medio, que no existe.",
+  "coach.need.li2":
+    "<strong>Tus sesiones reales.</strong> No tus recuerdos: tus datos. Es el ingrediente más difícil de aportar, lo vemos justo después.",
+  "coach.need.li3":
+    "<strong>Unas reglas de conducta.</strong> Cómo razonar, qué rechazar, cómo responder. Es lo que separa a un entrenador de una máquina expendedora de consejos.",
+  "coach.sheet.title": "La ficha de atleta, para rellenar una sola vez",
+  "coach.sheet.intro":
+    "Copia esta plantilla, rellénala en cinco minutos y guárdala en un archivo de texto. Actualízala después de cada carrera o cuando cambie tu objetivo.",
+  "coach.sheet.text":
+    "FICHA DE ATLETA\nEdad, sexo, años corriendo:\nVolumen actual (km y salidas por semana):\nMarcas de los últimos 12 meses (5 km, 10 km, media, maratón):\nFC máxima y FC en reposo, si las conoces:\nObjetivo (carrera, distancia, fecha, tiempo buscado):\nDisponibilidad (días posibles, duración máxima por sesión):\nLesiones pasadas y puntos débiles:\nMaterial (reloj, banda de pecho o sensor de muñeca):\nLo que me gusta y lo que odio del entrenamiento:",
+
+  "coach.data.title": "¿Cómo le das tus sesiones a tu entrenador IA?",
+  "coach.data.p1":
+    "Es el paso que casi todas las guías se saltan, y es el más difícil. Tu IA no ve tu reloj: tienes que llevarle tus sesiones. Hay dos caminos, y no cuestan lo mismo.",
+  "coach.data.strava.title": "El conector de Strava: cómodo, pero de pago y solo para Claude",
+  "coach.data.strava.p":
+    "Desde junio de 2026, Strava ofrece un conector oficial, un servidor MCP, que permite a Claude leer tu historial directamente. Es cómodo: se acabaron las exportaciones, la IA busca lo que necesita. Pero hace falta una suscripción de pago a Strava, y el conector solo funciona con Claude. Strava promete otros asistentes más adelante, sin fecha. Para ChatGPT, Gemini o Vibe no existe ningún conector oficial por ahora, y los no oficiales exigen una instalación técnica.",
+  "coach.data.export.title": "Exportar archivos: gratis y universal, siempre que comprimas",
+  "coach.data.export.p1":
+    "Garmin Connect, Coros, Polar Flow y Strava permiten exportar gratis una sesión en FIT, TCX o GPX. Ese archivo funciona con cualquier IA, incluso en los planes gratuitos. La trampa es su tamaño: una hora de carrera en TCX pesa unos 533 000 tokens, suficiente para saturar un plan gratuito con una sola sesión (<a href=\"{{href:post-ia-analyse.html}}\">ver por qué</a>).",
+  "coach.data.export.p2":
+    "La solución: comprimir y reestructurar el archivo antes de dárselo a la IA. gps-digest lo convierte en un informe de unos 5800 tokens por sesión, con parciales, zonas, repeticiones, deriva cardíaca y fiabilidad del sensor. Cualquier asistente, gratuito o de pago, lo lee entero.",
+  "coach.data.colStrava": "Conector de Strava",
+  "coach.data.colExport": "Exportación + gps-digest",
+  "coach.data.r1": "Coste",
+  "coach.data.r1strava": "Suscripción de pago a Strava",
+  "coach.data.r1export": "Gratis",
+  "coach.data.r2": "Asistentes compatibles",
+  "coach.data.r2strava": "Solo Claude, por ahora",
+  "coach.data.r2export": "Todos: ChatGPT, Claude, Gemini, Vibe y los demás",
+  "coach.data.r3": "Esfuerzo",
+  "coach.data.r3strava": "Ninguno, una vez conectado",
+  "coach.data.r3export": "Una exportación y un arrastrar y soltar por semana",
+  "coach.data.r4": "Lo que recibe la IA",
+  "coach.data.r4strava": "Los datos de Strava, resumidos o segundo a segundo",
+  "coach.data.r4export": "Un informe ya calculado: zonas, repeticiones, deriva, fiabilidad del sensor",
+  "coach.data.r5": "Coordenadas GPS",
+  "coach.data.r5strava": "Accesibles para la IA",
+  "coach.data.r5export": "Eliminadas por defecto",
+  "coach.data.p3":
+    "¿Suscriptor de Strava y usuario de Claude? El conector te ahorrará unos minutos por semana. Para todos los demás, la exportación gratuita funciona muy bien. Basta con comprimir los archivos antes de dárselos a la IA.",
+
+  "coach.rules.title": "Las instrucciones de entrenador, para copiar y pegar",
+  "coach.rules.intro":
+    "Este texto fija el comportamiento de tu IA. Es corto a propósito: cada regla corrige un defecto conocido de los modelos de lenguaje.",
+  "coach.rules.text":
+    "Eres mi entrenador de running. Analizas mis sesiones, sigues mi progreso hacia mi objetivo y ajustas mi entrenamiento semana a semana.\n\nMi perfil está en la ficha de atleta. Mis sesiones llegan como informes de gps-digest.\n\nReglas:\n1. Apoya cada observación en una cifra del informe, y cítala.\n2. Si falta un dato o no es fiable, dilo en lugar de adivinar.\n3. Sé franco. Si una sesión salió mal o un objetivo es irreal, dilo claramente.\n4. Parte de mi volumen real y justifica cada aumento de carga.\n5. Si te cuento un dolor que dura, empeora o cambia mi zancada, dime que consulte a un profesional de la salud en lugar de proponer un plan.\n6. Si te falta información para decidir, pregúntame.\n7. Termina cada balance con tres acciones concretas como máximo.",
+  "coach.rules.note":
+    "Las reglas 1 y 2 impiden que la IA rellene huecos con cifras verosímiles. La 3 contrarresta su tendencia a darte la razón. La 4 frena los planes demasiado ambiciosos. La 5 recuerda que un chatbot no es médico.",
+  "coach.copy": "Copiar",
+  "coach.copied": "Copiado",
+
+  "coach.setup.title": "¿Cómo configurar tu entrenador en ChatGPT, Claude, Gemini o Vibe?",
+  "coach.setup.intro":
+    "Los cuatro asistentes tienen un espacio donde la ficha y las reglas se quedan de una conversación a otra. Ya no hace falta pegarlas cada vez.",
+  "coach.setup.colTool": "Asistente",
+  "coach.setup.colWhere": "Dónde vive el entrenador",
+  "coach.setup.colPlus": "Ventaja para un corredor",
+  "coach.setup.gpt.where": "Un proyecto, con sus instrucciones y sus archivos",
+  "coach.setup.gpt.plus": "El modo de voz, para comentar la sesión en voz alta al volver",
+  "coach.setup.claude.where": "Un proyecto, con sus instrucciones y su conocimiento",
+  "coach.setup.claude.plus": "Puede entregar el plan de la semana en un documento aparte, fácil de reutilizar",
+  "coach.setup.gemini.where": "Un Gem, con sus instrucciones y su conocimiento",
+  "coach.setup.gemini.plus": "Conectado a Google Drive y Google Calendar",
+  "coach.setup.vibe.where": "Un proyecto, con sus instrucciones y sus archivos",
+  "coach.setup.vibe.plus": "Una empresa europea: Mistral AI, con sede en París",
+  "coach.setup.gpt.title": "ChatGPT: crear un proyecto",
+  "coach.setup.gpt.text":
+    "En la barra lateral, crea un proyecto nuevo, por ejemplo «Entrenador running». Pega las reglas en las <strong>instrucciones del proyecto</strong> y añade la ficha de atleta a sus <strong>archivos</strong>. Todas las conversaciones abiertas en ese proyecto parten de ese contexto. El plan gratuito limita el número de archivos por proyecto: resérvalos para la ficha y pega los informes de sesiones directamente en la conversación.",
+  "coach.setup.claude.title": "Claude: crear un proyecto",
+  "coach.setup.claude.text":
+    "Crea un proyecto, pega las reglas en sus <strong>instrucciones</strong> y sube la ficha de atleta a su <strong>conocimiento</strong>. Cada conversación nueva del proyecto empieza con ambas. El plan gratuito limita el número de proyectos y el espacio disponible, pero una ficha y un informe por semana caben sin problema.",
+  "coach.setup.gemini.title": "Gemini: crear un Gem",
+  "coach.setup.gemini.text":
+    "Abre el gestor de Gems y crea un <strong>Gem nuevo</strong>. Pega las reglas en sus <strong>instrucciones</strong> y añade la ficha de atleta a su <strong>conocimiento</strong>, desde tu ordenador o Google Drive. Los Gems son gratuitos y te siguen en la app móvil.",
+  "coach.setup.vibe.title": "Vibe: crear un proyecto",
+  "coach.setup.vibe.text":
+    "Vibe es el nuevo nombre de Le Chat de Mistral AI desde mayo de 2026. Crea un <strong>proyecto nuevo</strong>, abre su personalización para pegar las reglas y añade la ficha de atleta a sus <strong>archivos</strong>. Los proyectos existen en todos los planes, con límites.",
+  "coach.setup.fallback":
+    "¿Tu plan no tiene espacio dedicado, o no te apetece crear uno? Pega la ficha y las reglas al principio de cada conversación nueva. Es menos cómodo, y funciona igual de bien.",
+
+  "coach.weekly.title": "La rutina que te hace progresar: un balance por semana",
+  "coach.weekly.intro":
+    "Un entrenador útil te acompaña en el tiempo. Lo más eficaz es una cita fija, el domingo por la noche o el lunes por la mañana, que lleva diez minutos.",
+  "coach.weekly.step1":
+    "<strong>Exporta las sesiones de la semana</strong> desde tu reloj o Strava, mejor en formato FIT.",
+  "coach.weekly.step2":
+    "<strong>Súbelas a <a href=\"{{href:index.html}}\">gps-digest</a></strong> y copia el informe. Todo se calcula en tu navegador.",
+  "coach.weekly.step3":
+    "<strong>Abre una conversación nueva en el proyecto</strong>, pega el informe y añade una línea sobre cómo te sentiste.",
+  "coach.weekly.step4": "<strong>Haz la pregunta del balance</strong> y discute la semana propuesta antes de adoptarla.",
+  "coach.weekly.promptIntro": "La pregunta del balance, para copiar tal cual:",
+  "coach.weekly.prompt":
+    "Aquí tienes mis sesiones de la semana y cómo me sentí. Haz el balance:\n1. ¿Qué salió bien? Con cifras.\n2. ¿Qué conviene vigilar?\n3. ¿Mi carga es coherente con mi objetivo y la fecha de mi carrera?\n4. Propón la semana que viene, sesión por sesión, con el propósito de cada una.\n\nMis limitaciones para la semana que viene: [completar]",
+  "coach.weekly.feel":
+    "La línea sobre cómo te sentiste cuenta tanto como los datos. Tu reloj no sabe que dormiste mal ni que el gemelo te tira desde el martes. Por ejemplo: «Esfuerzo percibido 8/10 el sábado, dos malas noches, gemelo derecho cargado desde el martes». Sin ella, la IA juzga tu semana solo por el reloj.",
+  "coach.weekly.fresh":
+    "¿Por qué una conversación nueva cada semana? Porque un modelo aprovecha mal lo que queda en medio de un intercambio muy largo (Liu et al., 2024). Semana tras semana en el mismo hilo, las primeras instrucciones se diluyen. El proyecto guarda la ficha y las reglas; el informe aporta los hechos. Una vez al mes, dale el informe de las últimas cuatro semanas para que juzgue la tendencia.",
+
+  "coach.more.title": "Cuatro peticiones más que funcionan bien",
+  "coach.more.intro": "Más allá del balance, estas peticiones sacan lo mejor de un entrenador IA bien configurado:",
+  "coach.more.q1":
+    "«Analiza mis series: regularidad de las repeticiones, recuperación entre ellas y qué debo cambiar la próxima vez.»",
+  "coach.more.q2":
+    "«Mi carrera es dentro de diez días. Aquí tienes mis últimas seis semanas. ¿A qué ritmo debo ir y cómo organizo la puesta a punto?»",
+  "coach.more.q3":
+    "«Esta semana solo tengo tres días para correr. Quédate con lo esencial y dime qué sacrifico.»",
+  "coach.more.q4":
+    "«Prepárame un plan de doce semanas para una media maratón en 1 h 45, partiendo de mi volumen actual. Incluye semanas de descarga y justifica la progresión.»",
+
+  "coach.traps.title": "Las cinco trampas del entrenador IA, y cómo evitarlas",
+  "coach.traps.intro":
+    "Un entrenador IA mal usado no te avisa cuando se equivoca. Estos son los errores más frecuentes.",
+  "coach.traps.li1":
+    "<strong>Te da la razón.</strong> Los modelos de lenguaje tienden a ir en la dirección de su interlocutor, un sesgo bien documentado (Sharma et al., 2024). Pregunta «¿Qué falla en esta sesión?» en lugar de «¿Fue una buena sesión?».",
+  "coach.traps.li2":
+    "<strong>Inventa cuando le faltan cifras.</strong> Sin datos, rellena con valores verosímiles, siempre con tono seguro. De ahí las reglas 1 y 2, y un informe completo.",
+  "coach.traps.li3":
+    "<strong>Solo sabe lo que le cuentas.</strong> Tu sueño, tu estrés, tu semana de trabajo: nada de eso está en el reloj. Sin la línea sobre cómo te sentiste, te cree en plena forma.",
+  "coach.traps.li4":
+    "<strong>Sus planes a veces son demasiado ambiciosos.</strong> Sobre el papel, un plan no cansa a nadie. Exige que parta de tu volumen real y que justifique cada aumento.",
+  "coach.traps.li5":
+    "<strong>No es médico.</strong> Un dolor que dura, empeora o cambia tu zancada es cosa de un profesional de la salud, no de un chatbot.",
+
+  "coach.choose.title": "¿Qué IA elegir como entrenador de running?",
+  "coach.choose.p1":
+    "La que ya usas. ChatGPT, Claude, Gemini y Vibe saben leer un informe estructurado, seguir reglas y proponer una semana coherente. Sus diferencias dependen de tus costumbres: el ecosistema de Google para Gemini, el resumen por voz para ChatGPT, los documentos largos y el conector de Strava para Claude, una empresa europea para Vibe.",
+  "coach.choose.p2":
+    "Lo que de verdad cambia la calidad del entrenamiento no es el modelo. Es lo que le das a leer.",
+
+  "coach.faq.q1": "¿Se puede usar ChatGPT como entrenador de running gratis?",
+  "coach.faq.a1":
+    "Sí. Los proyectos de ChatGPT, Claude y Vibe, igual que los Gems de Gemini, existen en los planes gratuitos, con límites de archivos y de uso. Exportar tus sesiones también es gratis. Solo hay que comprimirlas antes de pegarlas, o una sola sesión puede saturar un plan gratuito.",
+  "coach.faq.q2": "¿Puede ChatGPT crear un plan de entrenamiento para un maratón?",
+  "coach.faq.a2":
+    "Sí, y bastante bien si parte de tu nivel real: volumen actual, marcas recientes, disponibilidad y fecha de la carrera. Pídele que justifique la progresión y ajusta el plan cada semana con tus sesiones reales en lugar de seguirlo a ciegas.",
+  "coach.faq.q3": "¿Se puede conectar Strava o Garmin directamente a una IA?",
+  "coach.faq.a3":
+    "Desde junio de 2026, Strava ofrece un conector oficial, reservado a sus suscriptores de pago y, por ahora, a Claude. Para los demás asistentes y los planes gratuitos, la vía más sencilla sigue siendo exportar archivos, algo que ofrecen tanto Garmin Connect como Strava: gratis, compatible con todas las IA, siempre que comprimas los archivos antes de pegarlos.",
+  "coach.faq.q4": "¿Qué pasa con los datos que le confío a mi entrenador IA?",
+  "coach.faq.a4":
+    "Lo que pegas en un asistente lo procesa su proveedor, según sus condiciones. Revisa en los ajustes la conservación del historial y el uso de tus conversaciones para entrenar modelos. El informe de gps-digest, por su parte, no contiene tus coordenadas GPS por defecto.",
+  "coach.faq.q5": "¿Hay que escribirle al entrenador IA en inglés?",
+  "coach.faq.a5":
+    "No. Los cuatro asistentes responden muy bien en español, y gps-digest genera el informe en el idioma de la página. Puedes hacerlo todo en español, de la ficha de atleta al balance semanal.",
+
+  "coach.end.title": "Un buen entrenador empieza con buenos datos",
+  "coach.end.text":
+    "gps-digest convierte los archivos de tu reloj en un informe que ChatGPT, Claude, Gemini o Vibe pueden analizar de verdad, incluso en su versión gratuita. Sin cuenta, y tus archivos no salen de tu navegador.",
+
+  "coach.sources.sharma":
+    "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.strava":
+    "Strava, <em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>, comunicado del 1 de junio de 2026. <a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>.",
+  "coach.sources.docs":
+    "Documentación oficial: <a href=\"https://help.openai.com/en/articles/10169521-projects-in-chatgpt\" rel=\"nofollow\">proyectos de ChatGPT</a>, <a href=\"https://support.claude.com/en/articles/9517075-what-are-projects\" rel=\"nofollow\">proyectos de Claude</a>, <a href=\"https://support.google.com/gemini/answer/15146780\" rel=\"nofollow\">Gems de Gemini</a>, <a href=\"https://docs.mistral.ai/vibe/work/projects\" rel=\"nofollow\">proyectos de Vibe</a>.",
   "privacy.analytics.row": "Estadísticas de visitas",
   "privacy.analytics.rowText":
     "<strong>Sí, anónimas.</strong> Cloudflare Web Analytics cuenta las páginas vistas, sin cookies ni identificadores persistentes. Nada sobre tus archivos ni tus sesiones.",
