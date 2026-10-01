@@ -372,6 +372,16 @@ const fr = {
   "strava.errNoTime": "Activité Strava {id} : flux temporel absent.",
   "strava.sensorCaveat":
     "Flux Strava : lissage serveur. La détection du capteur de FC est moins fiable qu'à partir d'un fichier FIT d'origine.",
+
+  // ── archive.ts ─────────────────────────────────────────────────────────
+  "archive.empty":
+    "Aucun fichier FIT, TCX ou GPX dans cette archive.",
+  "archive.tooBig":
+    "Archive trop volumineuse pour le navigateur : décompressez-la et déposez seulement les séances voulues.",
+  "archive.unsupported":
+    "Archive illisible ici (ZIP64, chiffrement ou compression inhabituelle) : décompressez-la et déposez les fichiers FIT, TCX ou GPX.",
+  "archive.corrupt":
+    "Archive endommagée ou incomplète : téléchargez-la de nouveau.",
 } as const;
 
 export type MessageKey = keyof typeof fr;
@@ -704,6 +714,16 @@ const en: Catalog = {
   "strava.errNoTime": "Strava activity {id}: time stream missing.",
   "strava.sensorCaveat":
     "Strava stream: server-side smoothing. HR sensor detection is less reliable than from an original FIT file.",
+
+  // ── archive.ts ─────────────────────────────────────────────────────────
+  "archive.empty":
+    "No FIT, TCX or GPX file in this archive.",
+  "archive.tooBig":
+    "Archive too large for the browser: unzip it and drop only the workouts you want.",
+  "archive.unsupported":
+    "This archive cannot be read here (ZIP64, encryption or unusual compression): unzip it and drop the FIT, TCX or GPX files.",
+  "archive.corrupt":
+    "Damaged or incomplete archive: download it again.",
 };
 
 // ─────────────────────────────────────────────────────── autres langues

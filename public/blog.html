@@ -32,6 +32,27 @@
   "blogPost": [
     {
       "@type": "BlogPosting",
+      "headline": {{json:guide.garmin.h1}},
+      "description": {{json:guide.garmin.description}},
+      "url": "{{url:guide-garmin.html}}",
+      "datePublished": "2026-10-01"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": {{json:guide.strava.h1}},
+      "description": {{json:guide.strava.description}},
+      "url": "{{url:guide-strava.html}}",
+      "datePublished": "2026-10-01"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": {{json:guide.apple.h1}},
+      "description": {{json:guide.apple.description}},
+      "url": "{{url:guide-apple.html}}",
+      "datePublished": "2026-10-01"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": {{json:coach.h1}},
       "description": {{json:coach.description}},
       "url": "{{url:post-ia-coach.html}}",
@@ -70,6 +91,11 @@ a{color:var(--accent)}
 .card h2 a:hover{text-decoration:underline}
 .card .meta{font-size:.85rem;color:var(--ink-soft);margin:0 0 .6rem}
 .card p{margin:.4rem 0}
+h2.section{font-size:1.25rem;margin:2.4rem 0 .6rem}
+.guides{list-style:none;padding:0;margin:0}
+.guides li{border-bottom:1px solid var(--line);padding:.8rem 0}
+.guides a{font-weight:700}
+.guides span{display:block;color:var(--ink-soft);font-size:.92rem;margin-top:.2rem}
 footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--ink-soft)}
 footer a{margin-right:1rem;display:inline-block;line-height:2}
 </style>
@@ -99,6 +125,13 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <p>{{post.description}}</p>
   <p><a href="{{href:post-ia-analyse.html}}">{{blog.readMore}} →</a></p>
 </article>
+
+<h2 class="section">{{blog.guides}}</h2>
+<ul class="guides">
+  <li><a href="{{href:guide-garmin.html}}">{{guide.garmin.h1}}</a><span>{{guide.garmin.description}}</span></li>
+  <li><a href="{{href:guide-strava.html}}">{{guide.strava.h1}}</a><span>{{guide.strava.description}}</span></li>
+  <li><a href="{{href:guide-apple.html}}">{{guide.apple.h1}}</a><span>{{guide.apple.description}}</span></li>
+</ul>
 
 <footer>
   <nav><a href="{{href:index.html}}">{{privacy.footerTool}}</a><a href="{{href:confidentialite.html}}">{{common.privacy}}</a><a href="https://github.com/tpripri/gps-digest" rel="noopener">{{common.source}}</a></nav>

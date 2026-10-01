@@ -22,7 +22,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
 <meta property="article:published_time" content="2026-09-29">
-<meta property="article:modified_time" content="2026-09-29">
+<meta property="article:modified_time" content="2026-10-01">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 
@@ -36,7 +36,7 @@
       "description": {{json:coach.description}},
       "inLanguage": "{{htmlLang}}",
       "datePublished": "2026-09-29",
-      "dateModified": "2026-09-29",
+      "dateModified": "2026-10-01",
       "image": "https://exemple.com/og.png",
       "mainEntityOfPage": "{{url:post-ia-coach.html}}",
       "author": { "@type": "Organization", "name": "gps-digest", "url": "https://exemple.com" },
@@ -44,6 +44,7 @@
       "about": ["ChatGPT", "Claude", "Gemini", "Mistral Vibe", "Strava", "Model Context Protocol"],
       "citation": [
         "https://arxiv.org/abs/2310.13548",
+        "https://www.jssm.org/jssm-23-56.xml%3EFulltext",
         "https://arxiv.org/abs/2307.03172",
         "https://press.strava.com/articles/strava-launches-mcp-connector"
       ]
@@ -188,6 +189,8 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 <p>{{coach.data.p1}}</p>
 <h3>{{coach.data.strava.title}}</h3>
 <p>{{coach.data.strava.p}}</p>
+<h3>{{coach.data.garmin.title}}</h3>
+<p>{{coach.data.garmin.p}}</p>
 <h3>{{coach.data.export.title}}</h3>
 <p>{{coach.data.export.p1}}</p>
 <p>{{coach.data.export.p2}}</p>
@@ -299,6 +302,7 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <h2>{{post.sources.title}}</h2>
   <ol>
     <li>{{coach.sources.sharma}}</li>
+    <li>{{coach.sources.duking}}</li>
     <li>{{post.sources.liu}}</li>
     <li>{{coach.sources.strava}}</li>
     <li>{{coach.sources.docs}}</li>

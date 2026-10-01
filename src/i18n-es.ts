@@ -333,4 +333,14 @@ export const es: Partial<Catalog> = {
   "strava.errNoTime": "Actividad de Strava {id}: falta el flujo temporal.",
   "strava.sensorCaveat":
     "Flujo de Strava: suavizado en el servidor. La detección del sensor de FC es menos fiable que a partir de un archivo FIT original.",
+
+  // ── archive.ts ─────────────────────────────────────────────────────────
+  "archive.empty":
+    "No hay ningún archivo FIT, TCX o GPX en este archivo comprimido.",
+  "archive.tooBig":
+    "Archivo comprimido demasiado grande para el navegador: descomprímelo y suelta solo las sesiones que quieras.",
+  "archive.unsupported":
+    "Este archivo comprimido no se puede leer aquí (ZIP64, cifrado o compresión poco habitual): descomprímelo y suelta los archivos FIT, TCX o GPX.",
+  "archive.corrupt":
+    "Archivo comprimido dañado o incompleto: vuelve a descargarlo.",
 };

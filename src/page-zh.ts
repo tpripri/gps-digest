@@ -12,9 +12,9 @@ export const zh: Partial<PageCatalog> = {
   "common.privacy": "隐私",
   "common.source": "源代码",
 
-  "home.title": "将 TCX、GPX 或 FIT 文件转换为 CSV，供 ChatGPT 或 Gemini 分析 — gps-digest",
+  "home.title": "用 ChatGPT 或 DeepSeek 分析佳明和 Strava 跑步数据 — gps-digest",
   "home.description":
-    "免费工具，把 GPS 手表文件转换成 AI 能读懂的训练档案。识别胸带心率、计算心率漂移、检查间歇训练是否按计划完成，并预测比赛成绩。所有计算都在浏览器中完成：不会上传任何文件。",
+    "导出佳明、Strava 或 Apple Watch 的训练数据，交给 ChatGPT、DeepSeek 或 Claude 分析。免费，无需注册，所有计算都在浏览器中完成。",
   "home.h1": "让 AI 分析你的跑步训练",
   "home.og.description":
     "手表文件太大，AI 无法处理。本工具把它们整理成结构化档案，让 AI 真正能够分析。",
@@ -122,7 +122,7 @@ export const zh: Partial<PageCatalog> = {
 
   "home.files.title": "2. 你的文件",
   "home.files.drop": "把文件拖到这里",
-  "home.files.formats": "TCX、GPX 或 FIT，数量不限，需要的话可以是整个赛季",
+  "home.files.formats": "TCX、GPX 或 FIT，数量不限，需要的话可以是整个赛季。佳明的 ZIP 和 Strava 的 .gz 文件可直接拖入。",
   "home.files.fit": "FIT 是手表的原生格式：只有它包含泳池趟数和实际配对的心率传感器信息。",
   "home.files.pick": "选择文件",
 
@@ -222,7 +222,7 @@ export const zh: Partial<PageCatalog> = {
   "home.footer": "MIT 许可证。无需账号，没有广告，没有追踪器。",
 
   "js.libError":
-    "<strong>无法加载程序库。</strong>请通过 <code>npm run dev</code> 打开页面：直接从文件管理器打开是无法运行的。",
+    "<strong>工具未能加载。</strong>请检查网络连接并刷新页面。在公司网络中，安全过滤器可能会拦截本站：请换一个网络再试。",
   "js.vigilance": "档案中包含 {n} 条注意事项",
   "js.indicShort": "参考",
   "js.sensorSummary": "{file} — {label}（置信度 {confidence}）",
@@ -537,7 +537,11 @@ export const zh: Partial<PageCatalog> = {
     "这是大多数指南略过不谈的一步，也是最难的一步。AI 看不到你的手表：你得把训练数据带给它。有两条路，代价并不一样。",
   "coach.data.strava.title": "Strava 连接器：方便，但要付费，且只支持 Claude",
   "coach.data.strava.p":
-    "自 2026 年 6 月起，Strava 提供官方连接器（一个 MCP 服务器），让 Claude 直接读取你的训练历史。这很方便：不用再导出，AI 自己去取需要的数据。但你需要付费订阅 Strava，而且该连接器只支持 Claude。Strava 承诺以后支持其他助手，但没有给出时间。对 ChatGPT、Gemini 或 Vibe 来说，目前没有任何官方连接器，非官方连接器则需要一定的技术配置。",
+    "自 2026 年 6 月起，Strava 提供官方连接器（一个 MCP 服务器），让 Claude 直接读取你的训练历史。这很方便：不用再导出，AI 自己去取需要的数据。但你需要付费订阅 Strava，而且该连接器只支持 Claude。Strava 承诺以后支持其他助手，但没有给出时间。Strava 目前没有面向 ChatGPT、Gemini 或 Vibe 的官方连接器，非官方连接器则需要一定的技术配置。",
+  "coach.data.garmin.title":
+    "佳明的第三方服务：另一条路，但多了一个中间方",
+  "coach.data.garmin.p":
+    "在佳明这边，有第三方服务充当桥梁。佳明官方合作伙伴 Tredict 在 ChatGPT 中提供了一个应用，即使是免费 ChatGPT 账号也能用，另外还为 Claude 提供 MCP 服务器。Shape 也能做到，每月 5 美元，但需要付费版 ChatGPT。无论哪种方式，你都要在第三方开设账号，并把佳明数据交给它。如果你还想把训练课表发送到手表上，这很实用。若只是想分析跑步，导出文件仍然免费，而且不经过任何中间方。",
   "coach.data.export.title": "导出文件：免费又通用，前提是先压缩",
   "coach.data.export.p1":
     "Garmin Connect、高驰 COROS、Polar Flow 和 Strava 都可以免费把一次训练导出为 FIT、TCX 或 GPX 文件。这个文件适用于任何 AI，包括免费版。问题在于体积：一小时跑步的 TCX 文件约有 533,000 个 token，一次训练就足以耗尽免费版的额度（<a href=\"{{href:post-ia-analyse.html}}\">原因见此</a>）。",
@@ -642,7 +646,7 @@ export const zh: Partial<PageCatalog> = {
 
   "coach.choose.title": "选哪个 AI 当跑步教练？",
   "coach.choose.p1":
-    "选你已经在用的那个。ChatGPT、Claude、Gemini 和 Vibe 都能读懂结构化档案、遵守规则并给出合理的一周安排。区别在于你的使用习惯：Gemini 适合 Google 生态，ChatGPT 适合语音复盘，Claude 适合长文档并支持 Strava 连接器，Vibe 则是欧洲厂商。",
+    "选你已经在用的那个。ChatGPT、Claude、Gemini 和 Vibe 都能读懂结构化档案、遵守规则并给出合理的一周安排。区别在于你的使用习惯：Gemini 适合 Google 生态，ChatGPT 适合语音复盘，Claude 适合长文档并支持 Strava 连接器，Vibe 则是欧洲厂商。如果你在中国大陆，无法直接使用 ChatGPT、Claude 和 Gemini：DeepSeek、Kimi、豆包或通义千问同样能读懂 gps-digest 档案，把运动员档案和规则粘贴在对话开头即可。",
   "coach.choose.p2": "真正决定教练质量的不是模型，而是你给它读的内容。",
 
   "coach.faq.q1": "可以免费用 ChatGPT 当跑步教练吗？",
@@ -650,10 +654,10 @@ export const zh: Partial<PageCatalog> = {
     "可以。ChatGPT、Claude 和 Vibe 的项目，以及 Gemini 的 Gem，在免费版中都能使用，只是文件和用量有限制。导出训练数据也是免费的。只需在粘贴前压缩，否则一次训练就可能耗尽免费版的额度。",
   "coach.faq.q2": "ChatGPT 能制定马拉松训练计划吗？",
   "coach.faq.a2":
-    "能，而且只要它从你的真实水平出发，效果相当不错：目前跑量、近期成绩、可训练时间和比赛日期。让它说明加量的理由，然后每周根据真实训练调整计划，而不是盲目照做。",
+    "能，而且只要它从你的真实水平出发，效果相当不错：目前跑量、近期成绩、可训练时间和比赛日期。一项研究对此做过测量：教练专家认为 ChatGPT 制定的计划并不理想，但在获得更多跑者信息后，计划质量明显提高（Düking et al., 2024）。让它说明加量的理由，然后每周根据真实训练调整计划，而不是盲目照做。",
   "coach.faq.q3": "能把 Strava 或 Garmin 直接连接到 AI 吗？",
   "coach.faq.a3":
-    "自 2026 年 6 月起，Strava 提供官方连接器，但仅限付费订阅用户，且目前只支持 Claude。对于其他助手和免费版，最简单的方式仍是导出文件，Garmin Connect 和 Strava 都支持：免费，适用于所有 AI，只要在粘贴前先压缩。",
+    "自 2026 年 6 月起，Strava 提供官方连接器，但仅限付费订阅用户，且目前只支持 Claude。佳明方面，Tredict 或 Shape 等第三方服务可以充当桥梁，但需要在它们那里注册账号。除此之外，最简单的方式仍是导出文件，Garmin Connect 和 Strava 都支持：免费，适用于所有 AI，只要在粘贴前先压缩。",
   "coach.faq.q4": "我交给 AI 教练的数据会怎样？",
   "coach.faq.a4":
     "你粘贴到助手里的内容由其服务商按照自身条款处理。请在设置中查看聊天记录的保存方式，以及对话是否会被用于训练模型。gps-digest 生成的档案默认不包含 GPS 坐标。",
@@ -667,6 +671,209 @@ export const zh: Partial<PageCatalog> = {
 
   "coach.sources.sharma":
     "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.duking":
+    "Düking P, et al. <em>ChatGPT Generated Training Plans for Runners are not Rated Optimal by Coaching Experts, but Increase in Quality with Additional Input Information.</em> Journal of Sports Science and Medicine, 2024, 23(1), 56-72. <a href=\"https://www.jssm.org/jssm-23-56.xml%3EFulltext\" rel=\"nofollow\">jssm.org</a>.",
+
+  "guide.kicker":
+    "导出指南",
+  "guide.formats.title":
+    "FIT、TCX 还是 GPX：该导出哪种格式？",
+  "guide.formats.colFormat":
+    "格式",
+  "guide.formats.colContent":
+    "包含的内容",
+  "guide.formats.colUse":
+    "适用场景",
+  "guide.formats.fit":
+    "全部：心率、分圈、实际配对的心率传感器、气压计测得的爬升、泳池趟数",
+  "guide.formats.fitUse":
+    "首选",
+  "guide.formats.tcx":
+    "心率、分圈、步频；不含配对的传感器信息和气压计爬升",
+  "guide.formats.tcxUse":
+    "不错的替代",
+  "guide.formats.gpx":
+    "轨迹和时间，通常还有心率和步频；没有分圈",
+  "guide.formats.gpxUse":
+    "应急使用",
+  "guide.why.title":
+    "为什么不直接把文件粘贴到 ChatGPT？",
+  "guide.why.p":
+    "因为手表文件是给软件用的，不是给人读的。FIT 是二进制格式，而一小时跑步的 TCX 文件约有 533,000 个 token，一次训练就足以耗尽免费版的额度。即使文件能传进去，AI 面对成千上万行原始数据也很难推理好。<a href=\"{{href:post-ia-analyse.html}}\">完整解释见此</a>。",
+  "guide.next.title":
+    "下一步：让 AI 分析你的训练",
+  "guide.next.s1":
+    "<strong>把文件原样拖入 <a href=\"{{href:index.html}}\">gps-digest</a></strong>：FIT、TCX、GPX、ZIP 或 .gz 都可以。所有计算都在浏览器中完成。",
+  "guide.next.s2":
+    "<strong>复制生成的档案</strong>：每次训练只需几千个 token，而不是几十万个。",
+  "guide.next.s3":
+    "<strong>粘贴到 ChatGPT、DeepSeek、Claude 或 Gemini</strong>，再提出你的问题。想要每周持续跟进，请看我们的 <a href=\"{{href:post-ia-coach.html}}\">AI 教练指南</a>。",
+  "guide.next.cta":
+    "分析我的训练",
+  "guide.more.title":
+    "其他导出指南",
+  "blog.guides":
+    "导出指南",
+  "home.guides":
+    "如何获取文件：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "guide.garmin.title":
+    "导出佳明数据（FIT）给 ChatGPT 或 DeepSeek 分析：完整指南",
+  "guide.garmin.description":
+    "从 Garmin Connect 导出 FIT 格式的训练、获取全部历史记录，或通过 USB 从手表复制文件，再交给 ChatGPT 或 DeepSeek 分析。",
+  "guide.garmin.h1":
+    "导出佳明训练数据，交给 ChatGPT 或 DeepSeek 分析",
+  "guide.garmin.meta":
+    "发布于 <time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 阅读约 4 分钟",
+  "guide.garmin.lede":
+    "Garmin Connect 能展示你的训练，却不会把数据交给 AI。你得先把文件导出来。下面是三种方法，从最快到最完整，以及导出之后该怎么做。",
+  "guide.garmin.tldr1":
+    "单次训练：在 connect.garmin.com 网站上点击活动的齿轮图标，导出原始文件。你会得到一个包含 FIT 文件的 ZIP。",
+  "guide.garmin.tldr2":
+    "Garmin Connect 手机应用不能导出文件：请用电脑，或通过 USB 连接手表。",
+  "guide.garmin.tldr3":
+    "原始 FIT 文件 AI 读不懂。把 ZIP 原样拖入 gps-digest，再把生成的档案粘贴给 AI。",
+  "guide.garmin.m1.title":
+    "从 Garmin Connect 导出单次训练",
+  "guide.garmin.m1.intro":
+    "这是日常最常用的方法，需要在电脑上通过网站完成。",
+  "guide.garmin.m1.s1":
+    "登录 <strong>connect.garmin.com</strong>（中国大陆账号请使用 connect.garmin.cn）。",
+  "guide.garmin.m1.s2":
+    "打开左侧菜单中的<strong>活动</strong>，再打开要导出的训练。",
+  "guide.garmin.m1.s3":
+    "点击活动右上角的<strong>齿轮图标</strong>。",
+  "guide.garmin.m1.s4":
+    "选择导出<strong>原始文件</strong>的选项，名称因网站版本而异。也可以导出 TCX 或 GPX，但原始 FIT 文件信息最完整。",
+  "guide.garmin.m1.s5":
+    "下载得到的是一个包含 FIT 文件的 <strong>ZIP</strong>。无需解压：gps-digest 可以直接打开。",
+  "guide.garmin.m1.note":
+    "有多次训练？逐一导出，然后把所有 ZIP 一次性拖入。",
+  "guide.garmin.m2.title":
+    "无需联网：通过 USB 从手表复制文件",
+  "guide.garmin.m2.p":
+    "用数据线把手表连接到电脑，它会显示为名为 GARMIN 的磁盘或设备。训练记录在 <code>GARMIN/Activity</code> 文件夹中，每次活动一个 FIT 文件。复制最近的文件，拖入 gps-digest 即可。在 Mac 上，较新的手表不会显示为磁盘，需要使用 MTP 文件传输工具。",
+  "guide.garmin.m3.title":
+    "全部历史记录：导出整个账户",
+  "guide.garmin.m3.p":
+    "想获取多年的训练记录，请登录佳明账户，在数据管理部分申请导出你的数据。佳明会通过电子邮件发送一个链接，指向整个账户的 ZIP 压缩包，通常需要几天时间。FIT 文件放在嵌套的 ZIP 里。gps-digest 能找到它们，但压缩包往往有几百 MB：请先解压，只拖入最近几周的训练。",
+  "guide.garmin.faq.q1":
+    "可以用 Garmin Connect 手机应用导出训练吗？",
+  "guide.garmin.faq.a1":
+    "不可以，手机应用不提供文件导出。请在电脑上使用 connect.garmin.com 网站，或通过 USB 从手表复制文件。",
+  "guide.garmin.faq.q2":
+    "为什么 ChatGPT 读不了我的佳明 FIT 文件？",
+  "guide.garmin.faq.a2":
+    "FIT 是二进制格式：ChatGPT 需要写脚本来解码，而且常常只用到其中一部分。即使转换成文本，一小时跑步也有几十万个 token。gps-digest 在浏览器中解码文件，并生成每次训练约 5,800 个 token 的档案。",
+  "guide.garmin.faq.q3":
+    "导出数据需要订阅 Garmin Connect+ 吗？",
+  "guide.garmin.faq.a3":
+    "不需要。导出单次训练和导出整个账户都是免费的。",
+  "guide.strava.title":
+    "导出 Strava 活动（GPX、FIT）给 ChatGPT 或 DeepSeek 分析：完整指南",
+  "guide.strava.description":
+    "把 Strava 活动导出为 GPX 或原始格式，下载全部存档，再交给 ChatGPT、DeepSeek 或 Claude 分析。完全免费。",
+  "guide.strava.h1":
+    "导出 Strava 活动，交给 ChatGPT 或 DeepSeek 分析",
+  "guide.strava.meta":
+    "发布于 <time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 阅读约 4 分钟",
+  "guide.strava.lede":
+    "Strava 保存了你的跑步记录，却不会把它们交给 AI，除非使用只支持 Claude 的付费连接器。好消息是：只要通过网站，导出就是免费的。下面介绍具体方法，以及导出后该怎么做。",
+  "guide.strava.tldr1":
+    "单个活动：在 strava.com 上打开活动的“…”菜单，导出原始文件或导出 GPX。",
+  "guide.strava.tldr2":
+    "Strava 手机应用不能导出：需要在电脑上使用网站。",
+  "guide.strava.tldr3":
+    "原始文件对 AI 来说太大。把它拖入 gps-digest，即使是 .gz 压缩文件也可以，再把档案粘贴给 AI。",
+  "guide.strava.m1.title":
+    "在 strava.com 导出单个活动",
+  "guide.strava.m1.intro":
+    "只能在 Strava 网站上导出。导出你自己的活动是免费的。",
+  "guide.strava.m1.s1":
+    "在电脑上登录 <strong>strava.com</strong>，打开该活动。",
+  "guide.strava.m1.s2":
+    "点击活动左侧的<strong>“…”</strong>（更多操作）按钮。",
+  "guide.strava.m1.s3":
+    "如果活动来自手表，选择<strong>导出原始文件</strong>：你会得到手表的 FIT 文件，信息最完整。",
+  "guide.strava.m1.s4":
+    "否则选择<strong>导出 GPX</strong>。它包含轨迹、时间，以及记录过的心率、步频和温度。",
+  "guide.strava.m1.s5":
+    "把下载的文件拖入 gps-digest。",
+  "guide.strava.m1.note":
+    "如果活动是用手机上的 Strava 应用记录的，导出 GPX 就完全够用。",
+  "guide.strava.m2.title":
+    "全部历史记录：账户存档",
+  "guide.strava.m2.p":
+    "在 Strava 账户设置的“我的账户”标签页中，申请下载你的账户。Strava 会通过电子邮件发送存档链接，通常几小时内就到。训练记录在 <code>activities</code> 文件夹中，常常压缩为 <code>.gz</code>：直接拖入 gps-digest 即可。<code>activities.csv</code> 文件列出了每个活动编号的日期，方便只挑选最近几周。",
+  "guide.strava.m3.title":
+    "注意：Strava 的配速和佳明不一样",
+  "guide.strava.m3.p":
+    "Strava 按移动时间计算配速，Garmin Connect 按总时长计算。在城市里跑步、遇到红绿灯停下时，两者的差距很容易超过每公里 15 秒。gps-digest 会在档案中注明所用的计算方式，避免 AI 拿不可比的数字做比较。",
+  "guide.strava.faq.q1":
+    "可以用 Strava 应用导出活动吗？",
+  "guide.strava.faq.a1":
+    "不可以。只能在电脑上通过 strava.com 网站导出。",
+  "guide.strava.faq.q2":
+    "导出活动需要订阅 Strava 吗？",
+  "guide.strava.faq.a2":
+    "不需要，导出你自己的活动是免费的。只有连接 Strava 和 Claude 的官方连接器才需要订阅。",
+  "guide.strava.faq.q3":
+    "导出 GPX 还是原始文件：该选哪个？",
+  "guide.strava.faq.a3":
+    "如果活动来自手表，选原始文件：通常是信息更完整的 FIT（分圈、配对的传感器、气压计爬升）。否则选 GPX：它保留轨迹，大多数情况下也包含心率。",
+  "guide.strava.source":
+    "Strava 帮助中心，<em>Exporting your Data and Bulk Export</em>。<a href=\"https://support.strava.com/en-us/articles/15401919-exporting-your-data-and-bulk-export\" rel=\"nofollow\">support.strava.com</a>。",
+  "guide.apple.title":
+    "导出 Apple Watch 训练（GPX、FIT）给 ChatGPT 或 DeepSeek 分析",
+  "guide.apple.description":
+    "Apple 不提供训练的直接导出。三种方法把 Apple Watch 训练导出为 FIT 或 GPX，再交给 ChatGPT 或 DeepSeek 分析。",
+  "guide.apple.h1":
+    "导出 Apple Watch 训练，交给 ChatGPT 或 DeepSeek 分析",
+  "guide.apple.meta":
+    "发布于 <time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 阅读约 4 分钟",
+  "guide.apple.lede":
+    "你用 Apple Watch 跑步的记录保存在 iPhone 的“健康”应用里，而 Apple 没有提供任何按钮来导出 GPX 或 FIT 文件。不过，仍然有三种方法可以把它们取出来。",
+  "guide.apple.tldr1":
+    "最简单：使用能读取“健康”数据并导出 FIT 或 GPX 的应用，例如 HealthFit 或 WorkoutGPX。",
+  "guide.apple.tldr2":
+    "不花钱：把训练同步到 Strava，再从 strava.com 导出。",
+  "guide.apple.tldr3":
+    "你可以直接在 iPhone 的 Safari 中打开 gps-digest，把导出的文件放进去。",
+  "guide.apple.m1.title":
+    "使用导出应用：最完整",
+  "guide.apple.m1.intro":
+    "有些应用可以读取“健康”中的训练，并导出为标准格式，包含心率。HealthFit 支持 FIT、GPX 或 TCX；WorkoutGPX 支持 GPX。免费版能做什么，请在 App Store 中确认。",
+  "guide.apple.m1.s1":
+    "安装应用，允许它读取“健康”中的<strong>体能训练</strong>、<strong>路线</strong>和<strong>心率</strong>。",
+  "guide.apple.m1.s2":
+    "选择要导出的训练。",
+  "guide.apple.m1.s3":
+    "如果应用支持，导出为 <strong>FIT</strong>，否则导出为 GPX。",
+  "guide.apple.m1.s4":
+    "把文件存到<strong>文件</strong>应用中，或通过隔空投送发到电脑。",
+  "guide.apple.m1.s5":
+    "在 iPhone 或电脑的 Safari 中打开 gps-digest，拖入文件。",
+  "guide.apple.m1.note":
+    "FIT 比 GPX 更好：它保留分圈和传感器数据。",
+  "guide.apple.m2.title":
+    "不花钱：通过 Strava",
+  "guide.apple.m2.p":
+    "如果你使用 Strava，可以在 Strava 应用的设置中允许它读取“健康”中的训练。之后你的 Apple Watch 训练会自动同步过去。剩下的就是从 strava.com 导出，具体方法见我们的 <a href=\"{{href:guide-strava.html}}\">Strava 指南</a>。",
+  "guide.apple.m3.title":
+    "使用“健康”的原生导出：仅供好奇者",
+  "guide.apple.m3.p":
+    "在“健康”应用中轻点你的头像，再选择“导出所有健康数据”。你会得到一个 ZIP 压缩包，其中 <code>workout-routes</code> 文件夹里是 GPX 格式的路线。这些路线只有位置、海拔和时间：心率存放在另一个巨大的 XML 文件中。压缩包往往有几百 MB。要分析训练，前两种方法要好得多。",
+  "guide.apple.faq.q1":
+    "不用应用，能把 Apple Watch 跑步导出为 GPX 吗？",
+  "guide.apple.faq.a1":
+    "只能通过“健康”的完整导出，但得到的路线不含心率。想要完整文件，需要导出应用，或者经由 Strava。",
+  "guide.apple.faq.q2":
+    "gps-digest 能在 iPhone 上使用吗？",
+  "guide.apple.faq.a2":
+    "可以。在 Safari 中打开页面，轻点选择文件的按钮，然后在“文件”应用中选取文件。分析在手机上完成，不会向任何服务器发送数据。",
+  "guide.apple.faq.q3":
+    "Apple Watch 训练应该选择哪种格式？",
+  "guide.apple.faq.a3":
+    "如果导出应用支持，选 FIT：它保留分圈和传感器数据。GPX 也可以，只要包含心率，导出应用会包含，而“健康”的原生导出不会。",
   "coach.sources.strava":
     "Strava，<em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>，2026 年 6 月 1 日新闻稿。<a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>。",
   "coach.sources.docs":

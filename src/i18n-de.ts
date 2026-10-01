@@ -338,4 +338,14 @@ export const de: Partial<Catalog> = {
   "strava.errNoTime": "Strava-Aktivität {id}: Zeitstrom fehlt.",
   "strava.sensorCaveat":
     "Strava-Datenstrom: serverseitig geglättet. Die Erkennung des HF-Sensors ist weniger zuverlässig als bei einer originalen FIT-Datei.",
+
+  // ── archive.ts ─────────────────────────────────────────────────────────
+  "archive.empty":
+    "Keine FIT-, TCX- oder GPX-Datei in diesem Archiv.",
+  "archive.tooBig":
+    "Archiv zu groß für den Browser: Entpacke es und lege nur die gewünschten Einheiten ab.",
+  "archive.unsupported":
+    "Dieses Archiv kann hier nicht gelesen werden (ZIP64, Verschlüsselung oder ungewöhnliche Komprimierung): Entpacke es und lege die FIT-, TCX- oder GPX-Dateien ab.",
+  "archive.corrupt":
+    "Archiv beschädigt oder unvollständig: Lade es erneut herunter.",
 };

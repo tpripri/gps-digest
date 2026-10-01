@@ -313,4 +313,14 @@ export const zh: Partial<Catalog> = {
   "strava.errNoTime": "Strava 活动 {id}：缺少时间数据流。",
   "strava.sensorCaveat":
     "Strava 数据流：服务器端已平滑处理。心率传感器检测不如原始 FIT 文件可靠。",
+
+  // ── archive.ts ─────────────────────────────────────────────────────────
+  "archive.empty":
+    "此压缩包中没有 FIT、TCX 或 GPX 文件。",
+  "archive.tooBig":
+    "压缩包太大，浏览器无法处理：请先解压，只拖入需要的训练文件。",
+  "archive.unsupported":
+    "无法在此读取该压缩包（ZIP64、加密或不常见的压缩方式）：请先解压，再拖入 FIT、TCX 或 GPX 文件。",
+  "archive.corrupt":
+    "压缩包已损坏或不完整：请重新下载。",
 };

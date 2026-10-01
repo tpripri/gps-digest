@@ -12,9 +12,9 @@ export const ja: Partial<PageCatalog> = {
   "common.privacy": "プライバシー",
   "common.source": "ソースコード",
 
-  "home.title": "TCX・GPX・FIT ファイルを ChatGPT や Gemini 向けの CSV に変換 — gps-digest",
+  "home.title": "ガーミン（Garmin）や Strava のデータを ChatGPT で分析 — gps-digest",
   "home.description":
-    "GPS ウォッチのファイルを、AI が読めるトレーニング記録に変換する無料ツール。胸ストラップの判定、心拍ドリフトの算出、インターバルが予定どおりにこなせたかの確認、レースタイムの予測を行います。計算はすべてブラウザ内で完結し、ファイルは一切送信されません。",
+    "Garmin・Strava・Apple Watch のトレーニングを書き出して、ChatGPT・Claude・Gemini に分析させましょう。無料・登録不要で、すべてブラウザ内で完結します。",
   "home.h1": "ランニングのセッションを AI に分析させよう",
   "home.og.description":
     "ウォッチのファイルは AI にとって大きすぎます。このツールは、AI が本当に分析できる構造化された記録に変換します。",
@@ -123,7 +123,7 @@ export const ja: Partial<PageCatalog> = {
 
   "home.files.title": "2. ファイル",
   "home.files.drop": "ここにファイルをドロップ",
-  "home.files.formats": "TCX、GPX、FIT をいくつでも。必要ならシーズン丸ごとでも",
+  "home.files.formats": "TCX、GPX、FIT をいくつでも。必要ならシーズン丸ごとでも。Garmin の ZIP や Strava の .gz もそのままドロップできます。",
   "home.files.fit":
     "FIT はウォッチのネイティブ形式です。プールの往復ごとの記録と、実際にペアリングされた心拍センサーの情報を含むのは FIT だけです。",
   "home.files.pick": "ファイルを選択",
@@ -224,7 +224,7 @@ export const ja: Partial<PageCatalog> = {
   "home.footer": "MIT ライセンス。アカウント不要、広告なし、トラッカーなし。",
 
   "js.libError":
-    "<strong>ライブラリを読み込めませんでした。</strong><code>npm run dev</code> でページを開いてください。ファイルエクスプローラーから直接開いても動作しません。",
+    "<strong>ツールを読み込めませんでした。</strong>接続を確認して、ページを再読み込みしてください。社内ネットワークでは、セキュリティフィルターがサイトをブロックしている場合があります。別の回線でお試しください。",
   "js.vigilance": "記録に含まれる注意点：{n} 件",
   "js.indicShort": "参考",
   "js.sensorSummary": "{file} — {label}（信頼度 {confidence}）",
@@ -544,7 +544,11 @@ export const ja: Partial<PageCatalog> = {
     "ほとんどのガイドが触れないステップで、しかもいちばん難しいところです。AI にはあなたのウォッチが見えません。セッションを届けるのはあなたです。方法は 2 つあり、コストは同じではありません。",
   "coach.data.strava.title": "Strava コネクタ：便利だが有料、しかも Claude 専用",
   "coach.data.strava.p":
-    "2026 年 6 月から、Strava は公式コネクタ（MCP サーバー）を提供しており、Claude があなたの履歴を直接読めるようになりました。エクスポート不要で、AI が必要なデータを自分で取りに行くので快適です。ただし Strava の有料サブスクリプションが必要で、コネクタが使えるのは Claude だけです。Strava はほかのアシスタントへの対応を「今後」と約束していますが、時期は未定です。ChatGPT・Gemini・Vibe 向けの公式コネクタは現時点でなく、非公式のものは技術的な設定が必要です。",
+    "2026 年 6 月から、Strava は公式コネクタ（MCP サーバー）を提供しており、Claude があなたの履歴を直接読めるようになりました。エクスポート不要で、AI が必要なデータを自分で取りに行くので快適です。ただし Strava の有料サブスクリプションが必要で、コネクタが使えるのは Claude だけです。Strava はほかのアシスタントへの対応を「今後」と約束していますが、時期は未定です。ChatGPT・Gemini・Vibe 向けの Strava 公式コネクタは現時点でなく、非公式のものは技術的な設定が必要です。",
+  "coach.data.garmin.title":
+    "Garmin 向けのサードパーティサービス：仲介役を挟むもう一つの方法",
+  "coach.data.garmin.p":
+    "Garmin 側では、サードパーティのサービスが橋渡しをしています。Garmin の公式パートナーである Tredict は、無料の ChatGPT アカウントでも使える ChatGPT 内のアプリと、Claude 向けの MCP サーバーを提供しています。Shape も同様のことを月 5 ドルで提供していますが、ChatGPT の有料プランが必要です。どちらの場合も、第三者のアカウントを作り、Garmin のデータを預けることになります。ワークアウトをウォッチに送りたい場合には便利です。走りを分析してもらうだけなら、エクスポートは無料で、誰も経由しません。",
   "coach.data.export.title": "ファイルのエクスポート：無料で万能、ただし圧縮が条件",
   "coach.data.export.p1":
     "Garmin Connect、COROS、Polar Flow、Strava はいずれも、セッションを FIT・TCX・GPX 形式で無料エクスポートできます。このファイルは無料版を含むあらゆる AI で使えます。落とし穴はサイズです。1 時間のランニングの TCX は約 533,000 トークンあり、1 セッションだけで無料版の上限に達しかねません（<a href=\"{{href:post-ia-analyse.html}}\">理由はこちら</a>）。",
@@ -659,10 +663,10 @@ export const ja: Partial<PageCatalog> = {
     "使えます。ChatGPT・Claude・Vibe のプロジェクトも Gemini の Gem も、ファイル数や利用量の上限つきで無料版に用意されています。セッションのエクスポートも無料です。ただし貼り付ける前に圧縮してください。そうしないと、1 セッションで無料版の上限に達することがあります。",
   "coach.faq.q2": "ChatGPT はフルマラソンの練習プランを作れますか？",
   "coach.faq.a2":
-    "作れます。現在の走行量、最近のベスト、練習できる日時、レースの日程など、あなたの実際のレベルから出発すれば、かなり良いものができます。負荷の上げ方の根拠を示してもらい、盲目的に従うのではなく、実際のセッションをもとに毎週プランを調整しましょう。",
+    "作れます。現在の走行量、最近のベスト、練習できる日時、レースの日程など、あなたの実際のレベルから出発すれば、かなり良いものができます。これを測定した研究もあります。コーチの専門家は ChatGPT のプランを最適ではないと評価しましたが、ランナーの情報を多く与えるほど質がはっきり上がりました（Düking et al., 2024）。負荷の上げ方の根拠を示してもらい、盲目的に従うのではなく、実際のセッションをもとに毎週プランを調整しましょう。",
   "coach.faq.q3": "Strava や Garmin を AI に直接つなげられますか？",
   "coach.faq.a3":
-    "2026 年 6 月から Strava は公式コネクタを提供していますが、有料会員限定で、現時点では Claude 専用です。ほかのアシスタントや無料版では、Garmin Connect でも Strava でも使えるファイルのエクスポートがいちばん簡単な方法です。無料で、どの AI でも使えます。ただし貼り付ける前に圧縮が必要です。",
+    "2026 年 6 月から Strava は公式コネクタを提供していますが、有料会員限定で、現時点では Claude 専用です。Garmin では、Tredict や Shape などのサードパーティサービスが橋渡し役になりますが、そちらでアカウントを作る必要があります。それ以外では、Garmin Connect でも Strava でも使えるファイルのエクスポートがいちばん簡単な方法です。無料で、どの AI でも使えます。ただし貼り付ける前に圧縮が必要です。",
   "coach.faq.q4": "AI コーチに渡したデータはどうなりますか？",
   "coach.faq.a4":
     "アシスタントに貼り付けた内容は、その提供元が自社の規約に従って処理します。履歴の保存期間や、会話がモデルの学習に使われるかどうかを設定で確認しましょう。なお、gps-digest の記録には初期設定で GPS 座標が含まれません。",
@@ -676,6 +680,209 @@ export const ja: Partial<PageCatalog> = {
 
   "coach.sources.sharma":
     "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.duking":
+    "Düking P, et al. <em>ChatGPT Generated Training Plans for Runners are not Rated Optimal by Coaching Experts, but Increase in Quality with Additional Input Information.</em> Journal of Sports Science and Medicine, 2024, 23(1), 56-72. <a href=\"https://www.jssm.org/jssm-23-56.xml%3EFulltext\" rel=\"nofollow\">jssm.org</a>.",
+
+  "guide.kicker":
+    "エクスポートガイド",
+  "guide.formats.title":
+    "FIT・TCX・GPX：どの形式で書き出すべき？",
+  "guide.formats.colFormat":
+    "形式",
+  "guide.formats.colContent":
+    "含まれる内容",
+  "guide.formats.colUse":
+    "使いどころ",
+  "guide.formats.fit":
+    "すべて：心拍数、ラップ、ペアリングした心拍センサー、気圧高度計による獲得標高、プールの往復数",
+  "guide.formats.fitUse":
+    "第一候補",
+  "guide.formats.tcx":
+    "心拍数、ラップ、ケイデンス。ペアリングしたセンサーや気圧高度計の標高は含まれない",
+  "guide.formats.tcxUse":
+    "十分な代替",
+  "guide.formats.gpx":
+    "ルートと時刻。心拍数とケイデンスも含まれることが多い。ラップはない",
+  "guide.formats.gpxUse":
+    "最後の手段",
+  "guide.why.title":
+    "なぜファイルを ChatGPT に直接貼り付けないのか？",
+  "guide.why.p":
+    "ウォッチのファイルは、人が読むためではなくソフトウェアのために作られているからです。FIT はバイナリ形式で、1 時間のランニングの TCX は約 533,000 トークンあり、1 セッションだけで無料版の上限に達しかねません。ファイルが入ったとしても、何千行もの生データでは AI はうまく推論できません。<a href=\"{{href:post-ia-analyse.html}}\">詳しい説明はこちら</a>。",
+  "guide.next.title":
+    "次のステップ：AI にセッションを分析させる",
+  "guide.next.s1":
+    "<strong><a href=\"{{href:index.html}}\">gps-digest</a> にファイルをそのままドロップする</strong>：FIT・TCX・GPX・ZIP・.gz のどれでも OK。計算はすべてブラウザ内で行われます。",
+  "guide.next.s2":
+    "<strong>生成された記録をコピーする</strong>：1 セッションあたり数十万ではなく、数千トークンで済みます。",
+  "guide.next.s3":
+    "<strong>ChatGPT・Claude・Gemini・Vibe に貼り付ける</strong>：質問を添えましょう。毎週の継続的なサポートには、<a href=\"{{href:post-ia-coach.html}}\">AI コーチのガイド</a>をどうぞ。",
+  "guide.next.cta":
+    "セッションを分析する",
+  "guide.more.title":
+    "ほかのエクスポートガイド",
+  "blog.guides":
+    "エクスポートガイド",
+  "home.guides":
+    "ファイルの取り出し方：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "guide.garmin.title":
+    "ガーミン（Garmin）のデータを FIT で書き出して ChatGPT で分析する方法",
+  "guide.garmin.description":
+    "Garmin Connect のアクティビティを FIT で書き出す方法、全履歴の取得、USB でウォッチからファイルをコピーする方法、そして ChatGPT での分析まで。",
+  "guide.garmin.h1":
+    "ガーミンのセッションを書き出して ChatGPT に分析させる",
+  "guide.garmin.meta":
+    "公開日：<time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 約 4 分で読めます",
+  "guide.garmin.lede":
+    "Garmin Connect はセッションを表示してくれますが、ChatGPT には渡してくれません。まずはファイルを取り出す必要があります。いちばん手軽な方法から最も完全な方法まで 3 つの手順と、その後の使い方を紹介します。",
+  "guide.garmin.tldr1":
+    "1 セッションなら：connect.garmin.com でアクティビティの歯車アイコンから元のファイルを書き出します。FIT ファイル入りの ZIP が手に入ります。",
+  "guide.garmin.tldr2":
+    "Garmin Connect のスマホアプリではファイルを書き出せません。パソコンを使うか、ウォッチを USB で接続しましょう。",
+  "guide.garmin.tldr3":
+    "生の FIT は ChatGPT には読めません。ZIP のまま gps-digest にドロップし、生成された記録を AI に貼り付けます。",
+  "guide.garmin.m1.title":
+    "Garmin Connect から 1 セッションを書き出す",
+  "guide.garmin.m1.intro":
+    "普段使いの方法です。パソコンからウェブサイトで行います。",
+  "guide.garmin.m1.s1":
+    "<strong>connect.garmin.com</strong> にログインします。",
+  "guide.garmin.m1.s2":
+    "左のメニューから<strong>アクティビティ</strong>を開き、目的のセッションを選びます。",
+  "guide.garmin.m1.s3":
+    "アクティビティ右上の<strong>歯車アイコン</strong>をクリックします。",
+  "guide.garmin.m1.s4":
+    "<strong>元のファイル</strong>を書き出すオプションを選びます。名称はサイトのバージョンによって異なります。TCX や GPX での書き出しもありますが、元の FIT のほうが情報量は多くなります。",
+  "guide.garmin.m1.s5":
+    "ダウンロードされるのは FIT ファイル入りの <strong>ZIP</strong> です。展開は不要で、gps-digest がそのまま開きます。",
+  "guide.garmin.m1.note":
+    "複数のセッションがある場合は、1 つずつ書き出して、ZIP をまとめてドロップしましょう。",
+  "guide.garmin.m2.title":
+    "ネット不要：USB でウォッチからファイルをコピーする",
+  "guide.garmin.m2.p":
+    "付属のケーブルでウォッチをパソコンに接続すると、GARMIN という名前のドライブまたはデバイスとして表示されます。セッションは <code>GARMIN/Activity</code> フォルダにあり、アクティビティごとに FIT ファイルが 1 つあります。最新のものをコピーして gps-digest にドロップしましょう。Mac では最近のウォッチはドライブとして表示されないため、MTP 対応のファイル転送ツールが必要です。",
+  "guide.garmin.m3.title":
+    "全履歴：アカウント全体のエクスポート",
+  "guide.garmin.m3.p":
+    "何年分ものセッションを取り出すには、Garmin アカウントにログインし、データ管理の項目からデータのエクスポートを申請します。アカウント全体の ZIP アーカイブへのリンクがメールで届きます。通常は数日以内です。FIT ファイルは入れ子になった ZIP の中にあります。gps-digest はそこからも見つけられますが、アーカイブは数百 MB になることが多いので、展開して直近数週間のセッションだけをドロップしましょう。",
+  "guide.garmin.faq.q1":
+    "Garmin Connect のスマホアプリからセッションを書き出せますか？",
+  "guide.garmin.faq.a1":
+    "いいえ、スマホアプリにはファイルの書き出し機能がありません。パソコンで connect.garmin.com を使うか、USB でウォッチからファイルをコピーしてください。",
+  "guide.garmin.faq.q2":
+    "ChatGPT がガーミンの FIT ファイルを読めないのはなぜですか？",
+  "guide.garmin.faq.a2":
+    "FIT はバイナリ形式です。ChatGPT はスクリプトを書いてデコードする必要があり、一部しか使えないことがよくあります。テキストに変換しても、1 時間のランニングは数十万トークンになります。gps-digest はブラウザ内でデコードし、1 セッションあたり約 5,800 トークンの記録にまとめます。",
+  "guide.garmin.faq.q3":
+    "データを書き出すのに Garmin Connect+ の契約は必要ですか？",
+  "guide.garmin.faq.a3":
+    "いいえ。1 セッションの書き出しも、アカウント全体のエクスポートも無料です。",
+  "guide.strava.title":
+    "Strava のアクティビティを GPX・FIT で書き出して ChatGPT で分析する方法",
+  "guide.strava.description":
+    "Strava のアクティビティを GPX や元の形式で書き出し、アーカイブ全体を取得して、ChatGPT・Claude・Gemini で分析する方法。無料です。",
+  "guide.strava.h1":
+    "Strava のアクティビティを書き出して ChatGPT に分析させる",
+  "guide.strava.meta":
+    "公開日：<time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 約 4 分で読めます",
+  "guide.strava.lede":
+    "Strava はランの記録を保存してくれますが、AI には渡してくれません。例外は Claude 専用の有料コネクタだけです。朗報は、ウェブサイトを使えば書き出しは無料だということ。その方法と、書き出した後の使い方を紹介します。",
+  "guide.strava.tldr1":
+    "1 つのアクティビティなら：strava.com でアクティビティの「…」メニューを開き、元のファイルまたは GPX を書き出します。",
+  "guide.strava.tldr2":
+    "Strava のスマホアプリでは書き出せません。パソコンからウェブサイトを使います。",
+  "guide.strava.tldr3":
+    "生のファイルは ChatGPT には重すぎます。.gz のままでも gps-digest にドロップし、記録を AI に貼り付けましょう。",
+  "guide.strava.m1.title":
+    "strava.com からアクティビティを書き出す",
+  "guide.strava.m1.intro":
+    "書き出しは Strava のウェブサイトでしかできません。自分のアクティビティなら無料です。",
+  "guide.strava.m1.s1":
+    "パソコンで <strong>strava.com</strong> にログインし、アクティビティを開きます。",
+  "guide.strava.m1.s2":
+    "アクティビティの左側にある<strong>「…」</strong>（その他の操作）ボタンをクリックします。",
+  "guide.strava.m1.s3":
+    "ウォッチで記録したアクティビティなら、<strong>元のファイルの書き出し</strong>を選びます。ウォッチの FIT ファイルが手に入り、情報量が最も多くなります。",
+  "guide.strava.m1.s4":
+    "それ以外は <strong>GPX の書き出し</strong>を選びます。ルート、時刻、そして記録されていれば心拍数、ケイデンス、気温が含まれます。",
+  "guide.strava.m1.s5":
+    "ダウンロードしたファイルを gps-digest にドロップします。",
+  "guide.strava.m1.note":
+    "スマホの Strava アプリで記録したアクティビティなら、GPX の書き出しで十分です。",
+  "guide.strava.m2.title":
+    "全履歴：アカウントのアーカイブ",
+  "guide.strava.m2.p":
+    "Strava のアカウント設定の「マイアカウント」タブで、アカウントのダウンロードを申請します。アーカイブへのリンクがメールで届きます。通常は数時間以内です。セッションは <code>activities</code> フォルダにあり、<code>.gz</code> で圧縮されていることがよくありますが、そのまま gps-digest にドロップできます。<code>activities.csv</code> には各アクティビティ番号の日付が載っているので、直近数週間分だけを選ぶのに便利です。",
+  "guide.strava.m3.title":
+    "注意点：Strava のペースは Garmin とは違う",
+  "guide.strava.m3.p":
+    "Strava は移動時間をもとにペースを計算し、Garmin Connect は総時間をもとに計算します。信号待ちのある街中のランでは、その差は 1 km あたり 15 秒を簡単に超えます。gps-digest はどちらの計算方法かを記録に明記するので、AI が比較できない数字を比べることはありません。",
+  "guide.strava.faq.q1":
+    "Strava のアプリからアクティビティを書き出せますか？",
+  "guide.strava.faq.a1":
+    "いいえ。書き出しはパソコンから strava.com のウェブサイトでしかできません。",
+  "guide.strava.faq.q2":
+    "アクティビティを書き出すのに Strava の有料プランは必要ですか？",
+  "guide.strava.faq.a2":
+    "いいえ、自分のアクティビティの書き出しは無料です。有料プランが必要なのは、Strava と Claude をつなぐ公式コネクタだけです。",
+  "guide.strava.faq.q3":
+    "GPX と元のファイル、どちらを書き出すべき？",
+  "guide.strava.faq.a3":
+    "ウォッチで記録したアクティビティなら元のファイルです。たいていは FIT で、ラップ、ペアリングしたセンサー、気圧高度計の標高まで含まれます。それ以外は GPX で、ルートとほとんどの場合は心拍数が残ります。",
+  "guide.strava.source":
+    "Strava ヘルプ『<em>Exporting your Data and Bulk Export</em>』。<a href=\"https://support.strava.com/en-us/articles/15401919-exporting-your-data-and-bulk-export\" rel=\"nofollow\">support.strava.com</a>。",
+  "guide.apple.title":
+    "Apple Watch のワークアウトを GPX・FIT で書き出して ChatGPT で分析する方法",
+  "guide.apple.description":
+    "Apple にはワークアウトを直接書き出す機能がありません。Apple Watch のセッションを FIT や GPX で取り出し、ChatGPT で分析する 3 つの方法。",
+  "guide.apple.h1":
+    "Apple Watch のワークアウトを書き出して ChatGPT に分析させる",
+  "guide.apple.meta":
+    "公開日：<time datetime=\"2026-10-01\">2026 年 10 月 1 日</time> · 約 4 分で読めます",
+  "guide.apple.lede":
+    "Apple Watch で走った記録は iPhone のヘルスケアアプリに保存されていますが、Apple には GPX や FIT ファイルとして取り出すボタンがありません。それでも、取り出す方法は 3 つあります。",
+  "guide.apple.tldr1":
+    "いちばん簡単なのは、ヘルスケアのデータを読み取って FIT や GPX で書き出すアプリを使うこと。HealthFit や WorkoutGPX などがあります。",
+  "guide.apple.tldr2":
+    "お金をかけずに：ワークアウトを Strava に同期し、strava.com から書き出します。",
+  "guide.apple.tldr3":
+    "iPhone の Safari で gps-digest を直接開き、書き出したファイルをそこにドロップすることもできます。",
+  "guide.apple.m1.title":
+    "書き出しアプリを使う：最も情報量が多い方法",
+  "guide.apple.m1.intro":
+    "ヘルスケアのワークアウトを読み取り、心拍数を含めて標準形式で書き出せるアプリがあります。HealthFit は FIT・GPX・TCX、WorkoutGPX は GPX に対応しています。無料版でできることは App Store で確認してください。",
+  "guide.apple.m1.s1":
+    "アプリをインストールし、ヘルスケアの<strong>ワークアウト</strong>、<strong>ワークアウトルート</strong>、<strong>心拍数</strong>の読み取りを許可します。",
+  "guide.apple.m1.s2":
+    "書き出すワークアウトを選びます。",
+  "guide.apple.m1.s3":
+    "アプリが対応していれば <strong>FIT</strong> で、なければ GPX で書き出します。",
+  "guide.apple.m1.s4":
+    "ファイルを<strong>ファイル</strong>アプリに保存するか、AirDrop でパソコンに送ります。",
+  "guide.apple.m1.s5":
+    "iPhone かパソコンの Safari で gps-digest を開き、ファイルをドロップします。",
+  "guide.apple.m1.note":
+    "GPX より FIT のほうがおすすめです。ラップとセンサーのデータが残ります。",
+  "guide.apple.m2.title":
+    "お金をかけずに：Strava を経由する",
+  "guide.apple.m2.p":
+    "Strava を使っているなら、Strava アプリの設定でヘルスケアのワークアウトの読み取りを許可しましょう。Apple Watch のワークアウトが自動で送られるようになります。あとは strava.com から書き出すだけです。手順は <a href=\"{{href:guide-strava.html}}\">Strava のガイド</a>で説明しています。",
+  "guide.apple.m3.title":
+    "ヘルスケアの標準エクスポート：興味のある人向け",
+  "guide.apple.m3.p":
+    "ヘルスケアアプリでプロフィール写真をタップし、「すべてのヘルスケアデータを書き出す」を選びます。ZIP アーカイブが作られ、<code>workout-routes</code> フォルダに GPX 形式のルートが入っています。ただし、このルートに含まれるのは位置、高度、時刻だけで、心拍数は別の巨大な XML ファイルにあります。アーカイブは数百 MB になることも珍しくありません。ワークアウトを分析するなら、最初の 2 つの方法のほうがずっと優れています。",
+  "guide.apple.faq.q1":
+    "アプリなしで Apple Watch のランを GPX で書き出せますか？",
+  "guide.apple.faq.a1":
+    "ヘルスケアの全データ書き出しを使えば可能ですが、ルートに心拍数は含まれません。完全なファイルが欲しいなら、書き出しアプリを使うか Strava を経由してください。",
+  "guide.apple.faq.q2":
+    "gps-digest は iPhone で使えますか？",
+  "guide.apple.faq.a2":
+    "使えます。Safari でページを開き、ファイルを選ぶボタンをタップして、ファイルアプリから選択してください。分析はスマホの中で行われ、サーバーには何も送信されません。",
+  "guide.apple.faq.q3":
+    "Apple Watch のワークアウトにはどの形式を選ぶべき？",
+  "guide.apple.faq.a3":
+    "書き出しアプリが対応していれば FIT です。ラップとセンサーのデータが残ります。GPX でもかまいませんが、心拍数が含まれている必要があります。書き出しアプリなら含まれますが、ヘルスケアの標準エクスポートには含まれません。",
   "coach.sources.strava":
     "Strava『<em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>』プレスリリース、2026 年 6 月 1 日。<a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>。",
   "coach.sources.docs":
