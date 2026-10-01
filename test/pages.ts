@@ -102,10 +102,10 @@ for (const page of pages) {
 }
 
 // Un article absent de l'index du blog n'a qu'un seul lien entrant : le
-// sitemap. Chaque gabarit « post-* » doit y figurer, dans chaque langue.
+// sitemap. Chaque gabarit « post-* » et « guide-* » doit y figurer, dans chaque langue.
 {
   const blog = readFileSync(join(PUBLIC, "blog.html"), "utf8");
-  const posts = pages.filter((p) => p.startsWith("post-"));
+  const posts = pages.filter((p) => p.startsWith("post-") || p.startsWith("guide-"));
   for (const locale of LOCALES) {
     const html = renderPage(blog, locale, { page: "blog.html" });
     const missing = posts.filter((p) => !html.includes(`href="${pagePath(locale, p)}"`));

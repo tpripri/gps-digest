@@ -63,6 +63,10 @@ publisher: gps-digest (https://exemple.com)
 
 {{coach.data.strava.p}}
 
+### {{coach.data.garmin.title}}
+
+{{coach.data.garmin.p}}
+
 ### {{coach.data.export.title}}
 
 {{coach.data.export.p1}}
@@ -193,7 +197,8 @@ publisher: gps-digest (https://exemple.com)
 ## {{post.sources.title}}
 
 1. {{coach.sources.sharma}}
-2. {{post.sources.liu}}
-3. {{coach.sources.strava}}
-4. {{coach.sources.docs}}
-5. {{post.sources.bench}}
+2. {{coach.sources.duking}}
+3. {{post.sources.liu}}
+4. {{coach.sources.strava}}
+5. {{coach.sources.docs}}
+6. {{post.sources.bench}}

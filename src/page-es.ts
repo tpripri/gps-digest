@@ -8,9 +8,9 @@ export const es: Partial<PageCatalog> = {
   "common.privacy": "Privacidad",
   "common.source": "Código fuente",
 
-  "home.title": "Convertir un archivo TCX, GPX o FIT a CSV para ChatGPT o Gemini — gps-digest",
+  "home.title": "Analizar entrenamientos de Garmin y Strava con ChatGPT — gps-digest",
   "home.description":
-    "Herramienta gratuita que convierte los archivos de tu reloj GPS en un informe de entrenamiento legible por una IA. Detecta la banda pectoral, calcula la deriva cardíaca, comprueba si respetaste las series y proyecta tus marcas. Todo se calcula en tu navegador: no se envía ningún archivo.",
+    "Exporta tus entrenamientos de Garmin, Strava o Apple Watch y haz que ChatGPT, Claude o Gemini los analicen. Gratis, sin cuenta, todo se queda en tu navegador.",
   "home.h1": "Haz que una IA analice tus sesiones de carrera",
   "home.og.description":
     "Los archivos de tu reloj son demasiado grandes para una IA. Esta herramienta los convierte en un informe estructurado que sí puede analizar.",
@@ -122,7 +122,7 @@ export const es: Partial<PageCatalog> = {
 
   "home.files.title": "2. Tus archivos",
   "home.files.drop": "Suelta aquí tus archivos",
-  "home.files.formats": "TCX, GPX o FIT, tantos como quieras, una temporada entera si hace falta",
+  "home.files.formats": "TCX, GPX o FIT, tantos como quieras, una temporada entera si hace falta. Los ZIP de Garmin y los .gz de Strava funcionan tal cual.",
   "home.files.fit":
     "FIT es el formato nativo de tu reloj: es el único que incluye los largos de piscina y el sensor cardíaco realmente emparejado.",
   "home.files.pick": "Elegir archivos",
@@ -225,7 +225,7 @@ export const es: Partial<PageCatalog> = {
   "home.footer": "Licencia MIT. Sin cuenta, sin publicidad, sin rastreadores.",
 
   "js.libError":
-    "<strong>No se ha podido cargar la biblioteca.</strong>Abre la página con <code>npm run dev</code>: abrirla directamente desde el explorador de archivos no funciona.",
+    "<strong>La herramienta no se pudo cargar.</strong> Comprueba tu conexión y recarga la página. En una red de empresa, un filtro de seguridad puede bloquear el sitio: prueba desde otra conexión.",
   "js.vigilance": "{n} punto(s) de atención incluidos en el informe",
   "js.indicShort": "orient.",
   "js.sensorSummary": "{file} — {label} (confianza {confidence})",
@@ -557,7 +557,11 @@ export const es: Partial<PageCatalog> = {
     "Es el paso que casi todas las guías se saltan, y es el más difícil. Tu IA no ve tu reloj: tienes que llevarle tus sesiones. Hay dos caminos, y no cuestan lo mismo.",
   "coach.data.strava.title": "El conector de Strava: cómodo, pero de pago y solo para Claude",
   "coach.data.strava.p":
-    "Desde junio de 2026, Strava ofrece un conector oficial, un servidor MCP, que permite a Claude leer tu historial directamente. Es cómodo: se acabaron las exportaciones, la IA busca lo que necesita. Pero hace falta una suscripción de pago a Strava, y el conector solo funciona con Claude. Strava promete otros asistentes más adelante, sin fecha. Para ChatGPT, Gemini o Vibe no existe ningún conector oficial por ahora, y los no oficiales exigen una instalación técnica.",
+    "Desde junio de 2026, Strava ofrece un conector oficial, un servidor MCP, que permite a Claude leer tu historial directamente. Es cómodo: se acabaron las exportaciones, la IA busca lo que necesita. Pero hace falta una suscripción de pago a Strava, y el conector solo funciona con Claude. Strava promete otros asistentes más adelante, sin fecha. Strava no tiene conector oficial para ChatGPT, Gemini o Vibe por ahora, y los no oficiales exigen una instalación técnica.",
+  "coach.data.garmin.title":
+    "Servicios de terceros para Garmin: otra puerta, con intermediario",
+  "coach.data.garmin.p":
+    "Del lado de Garmin, algunos servicios de terceros hacen de puente. Tredict, socio oficial de Garmin, ofrece una app dentro de ChatGPT que funciona incluso con una cuenta gratuita de ChatGPT, además de un servidor MCP para Claude. Shape hace lo mismo por 5 dólares al mes, pero exige un plan de pago de ChatGPT. En ambos casos abres una cuenta con un tercero y le confías tus datos de Garmin. Tiene sentido si además quieres enviar sesiones a tu reloj. Para que analicen tus salidas, la exportación sigue siendo gratis y no pasa por nadie.",
   "coach.data.export.title": "Exportar archivos: gratis y universal, siempre que comprimas",
   "coach.data.export.p1":
     "Garmin Connect, Coros, Polar Flow y Strava permiten exportar gratis una sesión en FIT, TCX o GPX. Ese archivo funciona con cualquier IA, incluso en los planes gratuitos. La trampa es su tamaño: una hora de carrera en TCX pesa unos 533 000 tokens, suficiente para saturar un plan gratuito con una sola sesión (<a href=\"{{href:post-ia-analyse.html}}\">ver por qué</a>).",
@@ -676,10 +680,10 @@ export const es: Partial<PageCatalog> = {
     "Sí. Los proyectos de ChatGPT, Claude y Vibe, igual que los Gems de Gemini, existen en los planes gratuitos, con límites de archivos y de uso. Exportar tus sesiones también es gratis. Solo hay que comprimirlas antes de pegarlas, o una sola sesión puede saturar un plan gratuito.",
   "coach.faq.q2": "¿Puede ChatGPT crear un plan de entrenamiento para un maratón?",
   "coach.faq.a2":
-    "Sí, y bastante bien si parte de tu nivel real: volumen actual, marcas recientes, disponibilidad y fecha de la carrera. Pídele que justifique la progresión y ajusta el plan cada semana con tus sesiones reales en lugar de seguirlo a ciegas.",
+    "Sí, y bastante bien si parte de tu nivel real: volumen actual, marcas recientes, disponibilidad y fecha de la carrera. Un estudio lo midió: entrenadores expertos consideran mejorables los planes de ChatGPT, pero su calidad sube claramente cuando recibe más información sobre el corredor (Düking et al., 2024). Pídele que justifique la progresión y ajusta el plan cada semana con tus sesiones reales en lugar de seguirlo a ciegas.",
   "coach.faq.q3": "¿Se puede conectar Strava o Garmin directamente a una IA?",
   "coach.faq.a3":
-    "Desde junio de 2026, Strava ofrece un conector oficial, reservado a sus suscriptores de pago y, por ahora, a Claude. Para los demás asistentes y los planes gratuitos, la vía más sencilla sigue siendo exportar archivos, algo que ofrecen tanto Garmin Connect como Strava: gratis, compatible con todas las IA, siempre que comprimas los archivos antes de pegarlos.",
+    "Desde junio de 2026, Strava ofrece un conector oficial, reservado a sus suscriptores de pago y, por ahora, a Claude. Para Garmin, servicios de terceros como Tredict o Shape hacen de puente, con una cuenta en su plataforma. Si no, la vía más sencilla sigue siendo exportar archivos, algo que ofrecen tanto Garmin Connect como Strava: gratis, compatible con todas las IA, siempre que comprimas los archivos antes de pegarlos.",
   "coach.faq.q4": "¿Qué pasa con los datos que le confío a mi entrenador IA?",
   "coach.faq.a4":
     "Lo que pegas en un asistente lo procesa su proveedor, según sus condiciones. Revisa en los ajustes la conservación del historial y el uso de tus conversaciones para entrenar modelos. El informe de gps-digest, por su parte, no contiene tus coordenadas GPS por defecto.",
@@ -693,6 +697,209 @@ export const es: Partial<PageCatalog> = {
 
   "coach.sources.sharma":
     "Sharma M, et al. <em>Towards Understanding Sycophancy in Language Models.</em> ICLR 2024. <a href=\"https://arxiv.org/abs/2310.13548\" rel=\"nofollow\">arXiv:2310.13548</a>.",
+  "coach.sources.duking":
+    "Düking P, et al. <em>ChatGPT Generated Training Plans for Runners are not Rated Optimal by Coaching Experts, but Increase in Quality with Additional Input Information.</em> Journal of Sports Science and Medicine, 2024, 23(1), 56-72. <a href=\"https://www.jssm.org/jssm-23-56.xml%3EFulltext\" rel=\"nofollow\">jssm.org</a>.",
+
+  "guide.kicker":
+    "Guía de exportación",
+  "guide.formats.title":
+    "FIT, TCX o GPX: ¿qué formato exportar?",
+  "guide.formats.colFormat":
+    "Formato",
+  "guide.formats.colContent":
+    "Qué contiene",
+  "guide.formats.colUse":
+    "Cuándo usarlo",
+  "guide.formats.fit":
+    "Todo: frecuencia cardíaca, vueltas, sensor cardíaco emparejado, desnivel barométrico, largos de piscina",
+  "guide.formats.fitUse":
+    "Primera opción",
+  "guide.formats.tcx":
+    "Frecuencia cardíaca, vueltas, cadencia; ni el sensor emparejado ni el desnivel barométrico",
+  "guide.formats.tcxUse":
+    "Buena alternativa",
+  "guide.formats.gpx":
+    "El trazado y los tiempos, a menudo la frecuencia cardíaca y la cadencia; sin vueltas",
+  "guide.formats.gpxUse":
+    "Último recurso",
+  "guide.why.title":
+    "¿Por qué no pegar el archivo directamente en ChatGPT?",
+  "guide.why.p":
+    "Porque un archivo de reloj está hecho para programas, no para leerse. El FIT es binario, y una hora de carrera en TCX pesa unos 533 000 tokens: suficiente para saturar un plan gratuito con una sola sesión. Incluso cuando el archivo entra, la IA razona mal sobre miles de líneas en bruto. <a href=\"{{href:post-ia-analyse.html}}\">Toda la explicación aquí</a>.",
+  "guide.next.title":
+    "Y después: que una IA analice tus sesiones",
+  "guide.next.s1":
+    "<strong>Suelta el archivo en <a href=\"{{href:index.html}}\">gps-digest</a></strong> tal cual: FIT, TCX, GPX, ZIP o .gz. Todo se calcula en tu navegador.",
+  "guide.next.s2":
+    "<strong>Copia el informe generado</strong>: unos miles de tokens por sesión, en lugar de varios cientos de miles.",
+  "guide.next.s3":
+    "<strong>Pégalo en ChatGPT, Claude, Gemini o Vibe</strong> con tu pregunta. Para un seguimiento semana a semana, sigue nuestra <a href=\"{{href:post-ia-coach.html}}\">guía del entrenador IA</a>.",
+  "guide.next.cta":
+    "Analizar mis sesiones",
+  "guide.more.title":
+    "Las otras guías de exportación",
+  "blog.guides":
+    "Guías de exportación",
+  "home.guides":
+    "Cómo obtener tus archivos: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "guide.garmin.title":
+    "Exportar datos de Garmin (FIT) para ChatGPT: la guía",
+  "guide.garmin.description":
+    "Exporta una actividad de Garmin Connect en FIT, recupera todo tu historial o copia los archivos del reloj por USB, y haz que ChatGPT la analice.",
+  "guide.garmin.h1":
+    "Exporta tus sesiones de Garmin para que ChatGPT las analice",
+  "guide.garmin.meta":
+    "Publicado el <time datetime=\"2026-10-01\">1 de octubre de 2026</time> · 4 min de lectura",
+  "guide.garmin.lede":
+    "Garmin Connect muestra tus sesiones, pero no se las da a ChatGPT. Primero hay que sacar el archivo. Aquí tienes tres formas de hacerlo, de la más rápida a la más completa, y qué hacer después con el archivo.",
+  "guide.garmin.tldr1":
+    "Una sesión: en la web connect.garmin.com, rueda dentada de la actividad, exportar el archivo original. Obtienes un ZIP que contiene el FIT.",
+  "guide.garmin.tldr2":
+    "La app móvil Garmin Connect no exporta archivos: usa un ordenador o conecta el reloj por USB.",
+  "guide.garmin.tldr3":
+    "El FIT en bruto es ilegible para ChatGPT. Suelta el ZIP tal cual en gps-digest y pega el informe generado en tu IA.",
+  "guide.garmin.m1.title":
+    "Exportar una sesión desde Garmin Connect",
+  "guide.garmin.m1.intro":
+    "Es el método para el día a día. Se hace en la web, desde un ordenador.",
+  "guide.garmin.m1.s1":
+    "Inicia sesión en <strong>connect.garmin.com</strong>.",
+  "guide.garmin.m1.s2":
+    "Abre <strong>Actividades</strong> en el menú de la izquierda y luego la sesión que quieras.",
+  "guide.garmin.m1.s3":
+    "Haz clic en la <strong>rueda dentada</strong>, arriba a la derecha de la actividad.",
+  "guide.garmin.m1.s4":
+    "Elige la opción que exporta el <strong>archivo original</strong>: su nombre cambia según la versión de la web. También existen las exportaciones TCX y GPX, pero el FIT original es más completo.",
+  "guide.garmin.m1.s5":
+    "La descarga es un <strong>ZIP</strong> que contiene el archivo FIT. No hace falta descomprimirlo: gps-digest lo abre tal cual.",
+  "guide.garmin.m1.note":
+    "¿Varias sesiones? Expórtalas una a una y suelta todos los ZIP a la vez.",
+  "guide.garmin.m2.title":
+    "Sin internet: copiar los archivos del reloj por USB",
+  "guide.garmin.m2.p":
+    "Conecta el reloj a un ordenador con su cable. Aparece como un disco o un dispositivo llamado GARMIN. Las sesiones están en la carpeta <code>GARMIN/Activity</code>, un archivo FIT por actividad. Copia las más recientes y suéltalas en gps-digest. En Mac, los relojes recientes no aparecen como un disco: hace falta una utilidad de transferencia de archivos MTP.",
+  "guide.garmin.m3.title":
+    "Todo el historial: la exportación completa de la cuenta",
+  "guide.garmin.m3.p":
+    "Para recuperar años de sesiones, inicia sesión en tu cuenta Garmin y, en el apartado de gestión de datos, solicita la exportación de tus datos. Garmin te envía por correo un enlace a un archivo ZIP de toda la cuenta, normalmente en pocos días. Los FIT están dentro de ZIP anidados. gps-digest sabe encontrarlos, pero el archivo suele pesar varios cientos de MB: descomprímelo y suelta solo las sesiones de las últimas semanas.",
+  "guide.garmin.faq.q1":
+    "¿Se puede exportar una sesión desde la app Garmin Connect del móvil?",
+  "guide.garmin.faq.a1":
+    "No, la app móvil no ofrece exportación de archivos. Usa la web connect.garmin.com en un ordenador o copia los archivos del reloj por USB.",
+  "guide.garmin.faq.q2":
+    "¿Por qué ChatGPT no lee mi archivo FIT de Garmin?",
+  "guide.garmin.faq.a2":
+    "El FIT es un formato binario: ChatGPT tiene que escribir un script para decodificarlo y a menudo solo aprovecha una parte. Incluso convertido a texto, una hora de carrera son cientos de miles de tokens. gps-digest lo decodifica en tu navegador y lo convierte en un informe de unos 5800 tokens por sesión.",
+  "guide.garmin.faq.q3":
+    "¿Hace falta una suscripción a Garmin Connect+ para exportar tus datos?",
+  "guide.garmin.faq.a3":
+    "No. Tanto la exportación de una sesión como la exportación completa de la cuenta son gratuitas.",
+  "guide.strava.title":
+    "Exportar actividades de Strava (GPX, FIT) para ChatGPT: la guía",
+  "guide.strava.description":
+    "Exporta una actividad de Strava en GPX o en su formato original, descarga todo tu archivo y haz que ChatGPT, Claude o Gemini la analicen. Gratis.",
+  "guide.strava.h1":
+    "Exporta tus actividades de Strava para que ChatGPT las analice",
+  "guide.strava.meta":
+    "Publicado el <time datetime=\"2026-10-01\">1 de octubre de 2026</time> · 4 min de lectura",
+  "guide.strava.lede":
+    "Strava guarda tus salidas, pero no se las da a tu IA, salvo con un conector de pago que solo funciona con Claude. La buena noticia: exportar es gratis, siempre que uses la web. Así se hace, y esto es lo que hay que hacer después con el archivo.",
+  "guide.strava.tldr1":
+    "Una actividad: en strava.com, menú «…» de la actividad, y luego exportar el archivo original o exportar GPX.",
+  "guide.strava.tldr2":
+    "La app móvil de Strava no exporta nada: hace falta la web, desde un ordenador.",
+  "guide.strava.tldr3":
+    "El archivo en bruto pesa demasiado para ChatGPT. Suéltalo en gps-digest, aunque esté comprimido en .gz, y pega el informe en tu IA.",
+  "guide.strava.m1.title":
+    "Exportar una actividad desde strava.com",
+  "guide.strava.m1.intro":
+    "La exportación solo funciona en la web de Strava. Es gratuita para tus propias actividades.",
+  "guide.strava.m1.s1":
+    "Inicia sesión en <strong>strava.com</strong> desde un ordenador y abre la actividad.",
+  "guide.strava.m1.s2":
+    "Haz clic en el botón <strong>«…»</strong> (más acciones), a la izquierda de la actividad.",
+  "guide.strava.m1.s3":
+    "Elige <strong>exportar el archivo original</strong> si la actividad viene de un reloj: obtienes el FIT del reloj, la versión más completa.",
+  "guide.strava.m1.s4":
+    "Si no, elige <strong>exportar GPX</strong>. Contiene el trazado, los tiempos y, si se registraron, la frecuencia cardíaca, la cadencia y la temperatura.",
+  "guide.strava.m1.s5":
+    "Suelta el archivo descargado en gps-digest.",
+  "guide.strava.m1.note":
+    "Si la actividad se registró con la app de Strava en el móvil, la exportación GPX es más que suficiente.",
+  "guide.strava.m2.title":
+    "Todo el historial: el archivo de tu cuenta",
+  "guide.strava.m2.p":
+    "En los ajustes de tu cuenta de Strava, pestaña Mi cuenta, solicita la descarga de tu cuenta. Strava te envía por correo un enlace a un archivo, normalmente en pocas horas. Las sesiones están en la carpeta <code>activities</code>, a menudo comprimidas en <code>.gz</code>: suéltalas tal cual en gps-digest. El archivo <code>activities.csv</code> indica la fecha de cada número de actividad, útil para quedarte solo con las últimas semanas.",
+  "guide.strava.m3.title":
+    "Una precaución: el ritmo de Strava no es el de Garmin",
+  "guide.strava.m3.p":
+    "Strava calcula el ritmo sobre el tiempo en movimiento; Garmin Connect, sobre la duración total. En una salida por ciudad, con paradas en los semáforos, la diferencia supera fácilmente los 15 segundos por kilómetro. gps-digest indica en el informe qué convención usa, para que la IA no compare cifras que no se pueden comparar.",
+  "guide.strava.faq.q1":
+    "¿Se puede exportar una actividad desde la app de Strava?",
+  "guide.strava.faq.a1":
+    "No. La exportación solo se hace en la web strava.com, desde un ordenador.",
+  "guide.strava.faq.q2":
+    "¿Hace falta una suscripción a Strava para exportar tus actividades?",
+  "guide.strava.faq.a2":
+    "No, exportar tus propias actividades es gratis. La suscripción solo es necesaria para el conector oficial que une Strava con Claude.",
+  "guide.strava.faq.q3":
+    "¿Exportar GPX o el archivo original: cuál elegir?",
+  "guide.strava.faq.a3":
+    "El archivo original si la actividad viene de un reloj: suele ser un FIT, más completo (vueltas, sensor emparejado, desnivel barométrico). Si no, el GPX: conserva el trazado y, casi siempre, la frecuencia cardíaca.",
+  "guide.strava.source":
+    "Ayuda de Strava, <em>Exporting your Data and Bulk Export</em>. <a href=\"https://support.strava.com/en-us/articles/15401919-exporting-your-data-and-bulk-export\" rel=\"nofollow\">support.strava.com</a>.",
+  "guide.apple.title":
+    "Exportar entrenamientos de Apple Watch (GPX, FIT) para ChatGPT",
+  "guide.apple.description":
+    "Apple no ofrece una exportación directa de tus entrenamientos. Tres formas de obtener una sesión de Apple Watch en FIT o GPX y hacer que ChatGPT la analice.",
+  "guide.apple.h1":
+    "Exporta tus entrenamientos de Apple Watch para que ChatGPT los analice",
+  "guide.apple.meta":
+    "Publicado el <time datetime=\"2026-10-01\">1 de octubre de 2026</time> · 4 min de lectura",
+  "guide.apple.lede":
+    "Tus carreras con el Apple Watch se quedan en la app Salud del iPhone, y Apple no ofrece ningún botón para sacar un archivo GPX o FIT. Aun así, hay tres formas de recuperarlas.",
+  "guide.apple.tldr1":
+    "Lo más sencillo: una app que lee Salud y exporta en FIT o GPX, como HealthFit o WorkoutGPX.",
+  "guide.apple.tldr2":
+    "Sin pagar: sincroniza tus sesiones con Strava y expórtalas desde strava.com.",
+  "guide.apple.tldr3":
+    "Puedes abrir gps-digest directamente en Safari en el iPhone y soltar ahí el archivo exportado.",
+  "guide.apple.m1.title":
+    "Con una app de exportación: lo más completo",
+  "guide.apple.m1.intro":
+    "Algunas apps leen tus entrenamientos en Salud y los exportan en un formato estándar, con la frecuencia cardíaca incluida. HealthFit exporta en FIT, GPX o TCX; WorkoutGPX, en GPX. Comprueba en la App Store lo que permite la versión gratuita.",
+  "guide.apple.m1.s1":
+    "Instala la app y permítele leer tus <strong>entrenamientos</strong>, tus <strong>rutas</strong> y tu <strong>frecuencia cardíaca</strong> en Salud.",
+  "guide.apple.m1.s2":
+    "Elige la sesión que quieres exportar.",
+  "guide.apple.m1.s3":
+    "Expórtala en <strong>FIT</strong> si la app lo ofrece; si no, en GPX.",
+  "guide.apple.m1.s4":
+    "Guarda el archivo en la app <strong>Archivos</strong> o envíalo a tu ordenador por AirDrop.",
+  "guide.apple.m1.s5":
+    "Abre gps-digest en Safari, en el iPhone o en el ordenador, y suelta el archivo.",
+  "guide.apple.m1.note":
+    "El FIT es mejor que el GPX: conserva las vueltas y los datos de los sensores.",
+  "guide.apple.m2.title":
+    "Sin pagar: pasar por Strava",
+  "guide.apple.m2.p":
+    "Si usas Strava, permítele leer tus entrenamientos en Salud desde los ajustes de la app de Strava. Tus sesiones del Apple Watch se envían ahí automáticamente. Solo queda exportarlas desde strava.com, como explica nuestra <a href=\"{{href:guide-strava.html}}\">guía de Strava</a>.",
+  "guide.apple.m3.title":
+    "Con la exportación nativa de Salud: solo para curiosos",
+  "guide.apple.m3.p":
+    "En la app Salud, toca tu foto de perfil y luego «Exportar todos los datos de salud». Obtienes un archivo ZIP que contiene tus rutas en GPX, en la carpeta <code>workout-routes</code>. Estas rutas solo contienen la posición, la altitud y la hora: la frecuencia cardíaca está en otro sitio, en un enorme archivo XML. El archivo suele pesar cientos de MB. Para analizar un entrenamiento, los dos primeros métodos son mucho mejores.",
+  "guide.apple.faq.q1":
+    "¿Se puede exportar una carrera del Apple Watch en GPX sin app?",
+  "guide.apple.faq.a1":
+    "Solo con la exportación completa de Salud, que entrega las rutas sin la frecuencia cardíaca. Para un archivo completo, hace falta una app de exportación o pasar por Strava.",
+  "guide.apple.faq.q2":
+    "¿gps-digest funciona en el iPhone?",
+  "guide.apple.faq.a2":
+    "Sí. Abre la página en Safari, toca el botón para elegir archivos y selecciona el archivo en la app Archivos. El análisis se hace en el teléfono; no se envía nada a ningún servidor.",
+  "guide.apple.faq.q3":
+    "¿Qué formato elegir para una sesión del Apple Watch?",
+  "guide.apple.faq.a3":
+    "El FIT si tu app de exportación lo ofrece: conserva las vueltas y los datos de los sensores. El GPX también sirve, siempre que incluya la frecuencia cardíaca, cosa que hacen las apps de exportación pero no la exportación nativa de Salud.",
   "coach.sources.strava":
     "Strava, <em>Strava Launches MCP Connector, Allowing Athletes to Sync Training History to Claude</em>, comunicado del 1 de junio de 2026. <a href=\"https://press.strava.com/articles/strava-launches-mcp-connector\" rel=\"nofollow\">press.strava.com</a>.",
   "coach.sources.docs":

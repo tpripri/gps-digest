@@ -290,8 +290,9 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
     <p style="margin-top:1rem">
       <button class="btn" type="button" id="pick">{{home.files.pick}}</button>
     </p>
-    <input type="file" id="files" multiple accept=".tcx,.gpx,.fit" class="hidden">
+    <input type="file" id="files" multiple accept=".tcx,.gpx,.fit,.zip,.gz" class="hidden">
   </div>
+  <p style="font-size:.9rem;margin:.7rem 0 0">{{home.guides}}</p>
   <div id="progress" class="hidden" style="margin-top:1rem">
     <progress id="bar" max="100" value="0"></progress>
     <p class="sig" id="progress-label"></p>
@@ -468,6 +469,7 @@ const {
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
   formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
   gradeLabel, driftQualityLabel, confidenceLabel, t,
+  extractActivities, isArchiveName, MAX_ARCHIVE_BYTES,
 } = lib;
 
 /** « 3.7 % » en français, « 3.7% » en anglais : l'unité suit la langue. */
@@ -527,8 +529,8 @@ let lastDossier = "";
 let rawBytesTotal = 0;
 
 async function run(fileList) {
-  const files = [...fileList];
-  if (!files.length) return;
+  const picked = [...fileList];
+  if (!picked.length) return;
 
   const settings = readSettings();
   const analyses = [];
@@ -538,6 +540,24 @@ async function run(fileList) {
   $("errors").innerHTML = "";
   $("progress").classList.remove("hidden");
   $("bar").value = 0;
+
+  // Archives (ZIP de Garmin, .gz de Strava) : décompressées ici, dans le
+  // navigateur, avant l'analyse. Rien ne part sur un serveur.
+  const files = [];
+  for (const file of picked) {
+    if (!isArchiveName(file.name)) {
+      files.push(file);
+      continue;
+    }
+    $("progress-label").textContent = file.name;
+    try {
+      if (file.size > MAX_ARCHIVE_BYTES) throw new Error(t(LOCALE, "archive.tooBig"));
+      const inner = await extractActivities(file.name, new Uint8Array(await file.arrayBuffer()), LOCALE);
+      for (const x of inner) files.push(new File([x.data], x.name));
+    } catch (e) {
+      failures.push({ name: file.name, message: e?.message ?? String(e) });
+    }
+  }
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
