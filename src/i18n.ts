@@ -36,6 +36,8 @@ const fr = {
 
   // ── digest.ts ──────────────────────────────────────────────────────────
   "digest.errFormat": "Format non reconnu pour « {filename} ». Formats acceptés : TCX, GPX, FIT.",
+  "digest.errNoTime":
+    "« {filename} » n'a aucun horodatage : c'est un itinéraire planifié, pas une séance enregistrée.",
   "digest.errNoPoints": "Aucun point exploitable dans le fichier.",
   "digest.warnZonesObserved":
     "Zones FC calculées sur la FC max observée dans le fichier, pas sur un profil athlète : à interpréter avec prudence.",
@@ -323,6 +325,8 @@ const fr = {
   "dossier.title": "gps-digest — dossier d'entraînement",
   "dossier.range": "{n} séance(s) du {from} au {to}",
   "dossier.volume": "volume : {km} km, {dur} en mouvement",
+  "dossier.contextNote":
+    "Historique : {total} séances. Détail complet pour les {days} derniers jours ({n} séance(s)) ; les plus anciennes ne figurent que dans le tableau « sessions », une ligne chacune.",
   "dossier.warningsHeader": "⚠ AVERTISSEMENTS — à lire avant toute conclusion",
   "dossier.unknownDate": "date inconnue",
   "dossier.sessionHeader": "═══ SÉANCE {n} — {date} — {sport} — {label} ═══",
@@ -341,6 +345,8 @@ const fr = {
   "dossier.streamNote": "flux ci-dessous : un point tous les {step}, valeurs moyennées sur l'intervalle",
   "dossier.progNote":
     "FC à allure de référence, dans le temps. Comparer uniquement\ndes lignes de même hr_source : deux capteurs ne sont pas comparables.",
+  "dossier.progMonthlyNote":
+    "Progression aérobie par mois : FC moyenne à chaque allure de référence,\npondérée par le temps passé à cette allure. Comparer uniquement des lignes de même hr_source.",
   "dossier.progVerdict": "{pace} ({source}) : {verdict}",
 
   // ── charts.ts ──────────────────────────────────────────────────────────
@@ -396,6 +402,8 @@ const en: Catalog = {
   "unit.percent": "%",
 
   "digest.errFormat": "Unrecognized format for \"{filename}\". Accepted formats: TCX, GPX, FIT.",
+  "digest.errNoTime":
+    "\"{filename}\" has no timestamps: it is a planned route, not a recorded workout.",
   "digest.errNoPoints": "No usable data points in the file.",
   "digest.warnZonesObserved":
     "HR zones computed from the max HR observed in the file, not from an athlete profile: interpret with caution.",
@@ -668,6 +676,8 @@ const en: Catalog = {
   "dossier.title": "gps-digest — training file",
   "dossier.range": "{n} session(s) from {from} to {to}",
   "dossier.volume": "volume: {km} km, {dur} moving",
+  "dossier.contextNote":
+    "History: {total} sessions. Full detail for the last {days} days ({n} session(s)); older ones appear only in the \"sessions\" table, one line each.",
   "dossier.warningsHeader": "⚠ WARNINGS — read before drawing any conclusion",
   "dossier.unknownDate": "unknown date",
   "dossier.sessionHeader": "═══ SESSION {n} — {date} — {sport} — {label} ═══",
@@ -686,6 +696,8 @@ const en: Catalog = {
   "dossier.streamNote": "stream below: one point every {step}, values averaged over the interval",
   "dossier.progNote":
     "HR at reference pace, over time. Only compare rows with the\nsame hr_source: two sensors are not comparable.",
+  "dossier.progMonthlyNote":
+    "Aerobic progression by month: average HR at each reference pace,\nweighted by time spent at that pace. Only compare rows with the same hr_source.",
   "dossier.progVerdict": "{pace} ({source}): {verdict}",
 
   "chart.sessionPower": "Power and heart rate",

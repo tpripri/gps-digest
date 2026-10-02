@@ -17,6 +17,12 @@ the language of the page.
 - [gps-digest, English](https://exemple.com/en/): drop TCX, GPX or FIT files, get a structured training file to paste into an AI.
 - Other languages: [français](https://exemple.com/fr/), [español](https://exemple.com/es/), [português](https://exemple.com/pt/), [Deutsch](https://exemple.com/de/), [中文](https://exemple.com/zh/), [日本語](https://exemple.com/ja/)
 
+## A year of context from one Strava archive
+
+- Drop the full Strava account archive (strava.com/account, "Download your account" ZIP) as is. The archive is read in the browser in chunks, never loaded whole and never uploaded; photos and planned routes are skipped.
+- The last 12 months are kept by default (choice from 3 months to the full history). Strava activity IDs grow over time, so reading stops once the period is passed.
+- History file: the last 14 days are detailed session by session, older sessions take one line each, aerobic progression is aggregated by month. Measured on a real archive of 1,161 activities: 338 sessions over 12 months, about 30,000 tokens (about 12,500 tokens in summary-only mode), analyzed in about 20 seconds.
+
 ## What the tool computes on its own
 
 - Heart rate sensor detection (chest strap or wrist optical sensor), inferred

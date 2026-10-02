@@ -264,4 +264,36 @@ export function progressionRows(analysis: ProgressionAnalysis) {
   );
 }
 
+/**
+ * Même progression, agrégée par mois : sur une année, une ligne par course et
+ * par allure de référence coûte plusieurs milliers de tokens pour une tendance
+ * qu'un point par mois montre aussi bien. Moyennes pondérées par le temps
+ * réellement passé à chaque allure.
+ */
+export function progressionMonthlyRows(analysis: ProgressionAnalysis) {
+  return analysis.series.flatMap((s) => {
+    const months = new Map<string, ProgressionPoint[]>();
+    for (const p of s.points) {
+      const key = p.date.slice(0, 7);
+      months.set(key, [...(months.get(key) ?? []), p]);
+    }
+    return [...months.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, pts]) => {
+        const time = pts.reduce((sum, p) => sum + p.timeS, 0);
+        const weighted = (f: (p: ProgressionPoint) => number) =>
+          pts.reduce((sum, p) => sum + f(p) * p.timeS, 0) / (time || 1);
+        return {
+          month,
+          pace_ref: s.paceLabel,
+          hr_source: s.hrSource,
+          sessions: pts.length,
+          time_at_pace_min: Math.round(time / 60),
+          hr_bpm: Math.round(weighted((p) => p.hrBpm)),
+          efficiency: Math.round(weighted((p) => p.efficiency) * 1000) / 1000,
+        };
+      });
+  });
+}
+
 export { mean };

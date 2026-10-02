@@ -60,10 +60,12 @@ export const en: PageCatalog = {
     "Your watch files are too big for ChatGPT, Gemini or Claude. This tool turns them into a structured training file (paces, laps, zones, reps, cardiac drift) that the AI can actually analyze.",
   "home.promise":
     "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so the start and finish are trimmed by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
-  "home.step1.title": "Export your workouts",
-  "home.step1.text": "From your watch or Strava, as FIT, TCX or GPX. Step by step: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step2.title": "Drop them here",
-  "home.step2.text": "As many as you like, even as a ZIP. Everything is computed in your browser: your files are never uploaded.",
+  "home.step1.title": "Download your Strava archive",
+  "home.step1.text": "On <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, under \"Download your account\". Strava emails you a ZIP, usually within a few hours. In a hurry, or not on Strava? Export a few workouts: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step1.badge":
+    "Recommended",
+  "home.step2.title": "Drop the ZIP here, as is",
+  "home.step2.text": "The tool keeps your last 12 months and skips photos and routes. Everything is computed in your browser: your files are never uploaded.",
   "home.step3.title": "Paste the file into your AI",
   "home.step3.text": "ChatGPT, Claude, Gemini or Vibe, with your question. <a href=\"{{href:post-ia-coach.html}}\">What to ask?</a>",
 
@@ -122,10 +124,22 @@ export const en: PageCatalog = {
   "home.reads.title":
     "Guides and articles",
   "home.files.drop": "Drop your files here",
-  "home.files.formats": "TCX, GPX or FIT, as many as you like, a whole season if needed. Garmin ZIP files and Strava .gz files work as is.",
+  "home.files.formats": "Your full Strava archive, a Garmin ZIP, or FIT, TCX and GPX files: everything works as is.",
   "home.files.fit":
     "FIT is your watch's native format: it is the only one that carries pool lengths and the heart rate sensor that was actually paired.",
   "home.files.pick": "Choose files",
+  "home.archive.period":
+    "Period analyzed:",
+  "home.archive.p3m":
+    "Last 3 months",
+  "home.archive.p6m":
+    "Last 6 months",
+  "home.archive.p1y":
+    "Last 12 months",
+  "home.archive.p2y":
+    "Last 2 years",
+  "home.archive.pAll":
+    "Full history",
 
   "home.export.title": "3. Your file, ready to analyze",
   "home.export.intro":
@@ -226,6 +240,12 @@ export const en: PageCatalog = {
 
   "js.libError":
     "<strong>The tool could not load.</strong> Check your connection and reload the page. On a corporate network, a security filter may block the site: try another connection.",
+  "js.archiveNote":
+    "<strong>Archive:</strong> {kept} sessions kept out of {total}. The last {days} days are detailed session by session; the rest of the period takes one line per session in the file.",
+  "js.archiveProgress":
+    "Reading the archive: {n} sessions kept ({read} files read)…",
+  "js.olderInTable":
+    "Detail shown for sessions from the last {days} days. The {n} older ones appear in the sessions table and in the file.",
   "js.vigilance": "{n} point(s) of caution included in the file",
   "js.indicShort": "indic.",
   "js.sensorSummary": "{file} — {label} (confidence {confidence})",
@@ -800,7 +820,7 @@ export const en: PageCatalog = {
   "guide.strava.lede":
     "Strava keeps your runs, but does not hand them to your AI, except through a paid connector that only works with Claude. Good news: export is free, as long as you use the website. Here is how, and what to do with the file next.",
   "guide.strava.tldr1":
-    "One activity: on strava.com, open the activity's \"…\" menu, then export the original file or export GPX.",
+    "The richest option: your account archive (strava.com/account, \"Download your account\"). Drop the ZIP as is: gps-digest keeps your last 12 months.",
   "guide.strava.tldr2":
     "The Strava mobile app exports nothing: you need the website, from a computer.",
   "guide.strava.tldr3":
@@ -822,9 +842,9 @@ export const en: PageCatalog = {
   "guide.strava.m1.note":
     "If the activity was recorded with the Strava app on a phone, the GPX export does the job just fine.",
   "guide.strava.m2.title":
-    "Your whole history: your account archive",
+    "Recommended: your account archive, for a year of context",
   "guide.strava.m2.p":
-    "In your Strava settings, under My Account, request a download of your account. Strava emails you a link to an archive, usually within a few hours. Workouts are in the <code>activities</code> folder, often compressed as <code>.gz</code>: drop them as is into gps-digest. The <code>activities.csv</code> file gives the date of each activity number, handy to pick only the last few weeks.",
+    "On <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, under \"Download your account\", request your account archive. Strava emails you a link, usually within a few hours. Drop the ZIP as is into gps-digest: the tool finds your workouts, skips photos and routes, and keeps the last 12 months by default, anywhere from 3 months to your full history. The last 14 days are detailed workout by workout, the rest takes one line per workout: a year with more than 300 workouts comes to about 30,000 tokens.",
   "guide.strava.m3.title":
     "One caveat: Strava pace is not Garmin pace",
   "guide.strava.m3.p":

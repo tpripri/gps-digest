@@ -129,6 +129,8 @@ nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
   font-weight:700;margin-bottom:.4rem}
 .step h3{margin:.2rem 0 .3rem;font-size:.95rem}
 .step p{margin:0;font-size:.87rem;color:var(--ink-soft)}
+.step.featured{border:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--bg))}
+.step .reco{margin-left:.5rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
 .drop{border:2px dashed var(--line);border-radius:var(--radius);padding:2.2rem 1rem;
   text-align:center;background:var(--panel);transition:border-color .15s}
 .drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--panel))}
@@ -200,7 +202,7 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 <main>
 
 <div class="steps">
-  <div class="step"><span class="n">1</span><h3>{{home.step1.title}}</h3>
+  <div class="step featured"><span class="n">1</span><span class="reco">{{home.step1.badge}}</span><h3>{{home.step1.title}}</h3>
     <p>{{home.step1.text}}</p></div>
   <div class="step"><span class="n">2</span><h3>{{home.step2.title}}</h3>
     <p>{{home.step2.text}}</p></div>
@@ -268,6 +270,17 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
     <p class="sig" id="progress-label"></p>
   </div>
   <div id="errors"></div>
+  <div id="archive-note" class="note hidden">
+    <p id="archive-summary" style="margin:0 0 .5rem"></p>
+    <label for="archive-period">{{home.archive.period}}</label>
+    <select id="archive-period">
+      <option value="90">{{home.archive.p3m}}</option>
+      <option value="180">{{home.archive.p6m}}</option>
+      <option value="365" selected>{{home.archive.p1y}}</option>
+      <option value="730">{{home.archive.p2y}}</option>
+      <option value="0">{{home.archive.pAll}}</option>
+    </select>
+  </div>
 </section>
 
 <section id="export-section" class="hidden">
@@ -481,7 +494,7 @@ const {
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
   formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
   gradeLabel, driftQualityLabel, confidenceLabel, t,
-  extractActivities, isArchiveName, MAX_ARCHIVE_BYTES,
+  openArchive, isArchiveName, RecentWindow,
 } = lib;
 
 /** « 3.7 % » en français, « 3.7% » en anglais : l'unité suit la langue. */
@@ -529,6 +542,7 @@ function readDossierOptions() {
   const base = {
     maxHr: Number($("fcmax").value) || undefined,
     dropCoordinates: $("coords").value === "drop",
+    recentDetailDays: historyMode ? DETAIL_DAYS : undefined,
   };
   if (mode === "summary") return { ...base, perSessionDetail: false, streamMode: "none" };
   if (mode === "none") return { ...base, streamMode: "none" };
@@ -540,89 +554,139 @@ let currentBatch = null;
 let lastDossier = "";
 let rawBytesTotal = 0;
 
+/**
+ * Mode historique : au-delà de ce nombre de séances (ou dès qu'une archive de
+ * compte est déposée), le dossier ne détaille que les DETAIL_DAYS derniers
+ * jours. Un an de séances détaillées dépasserait le million de tokens.
+ */
+const HISTORY_MIN_SESSIONS = 40;
+const DETAIL_DAYS = 14;
+let historyMode = false;
+let lastPicked = null;
+
+/** Une séance hors de la fenêtre de détail n'a besoin que d'un point sur cinq. */
+function thinSamples(a) {
+  a.samples = a.samples.filter((_, i) => i % 5 === 0);
+}
+
+const isRecent = (a, newestMs) =>
+  Date.parse(a.digest.session.startTimeUtc ?? "") >= newestMs - DETAIL_DAYS * 86400000;
+
+async function analyzeBytes(name, data, settings) {
+  if (name.toLowerCase().endsWith(".fit")) {
+    // Le FIT est décodé sur place : c'est le seul format qui porte les
+    // longueurs de bassin et le matériel réellement appairé.
+    const { activity, extras } = parseFitBuffer(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+    return digestActivity(activity, {
+      ...settings.digest,
+      hrSensorHint: extras.hrSensor ? { hrSensor: extras.hrSensor } : undefined,
+      fitExtras: {
+        poolLengthM: extras.poolLengthM,
+        lengths: extras.lengths,
+        totalAscentM: extras.totalAscentM,
+        totalDescentM: extras.totalDescentM,
+      },
+    });
+  }
+  return digestFile(name, new TextDecoder().decode(data), settings.digest);
+}
+
 async function run(fileList) {
   const picked = [...fileList];
   if (!picked.length) return;
+  lastPicked = picked;
 
   const settings = readSettings();
   const analyses = [];
   const failures = [];
-  rawBytesTotal = 0;
 
   $("errors").innerHTML = "";
+  $("archive-note").classList.add("hidden");
   $("progress").classList.remove("hidden");
   $("bar").value = 0;
 
-  // Archives (ZIP de Garmin, .gz de Strava) : décompressées ici, dans le
-  // navigateur, avant l'analyse. Rien ne part sur un serveur.
-  const files = [];
+  // Liste de travail : fichiers déposés et séances repérées dans les archives
+  // (export Garmin, archive de compte Strava, .gz). Les archives sont lues par
+  // morceaux, ici, dans le navigateur : rien ne part sur un serveur.
+  const work = [];
+  let stravaTotal = 0;
   for (const file of picked) {
     if (!isArchiveName(file.name)) {
-      files.push(file);
+      work.push({ name: file.name, read: async () => new Uint8Array(await file.arrayBuffer()) });
       continue;
     }
     $("progress-label").textContent = file.name;
     try {
-      if (file.size > MAX_ARCHIVE_BYTES) throw new Error(t(LOCALE, "archive.tooBig"));
-      const inner = await extractActivities(file.name, new Uint8Array(await file.arrayBuffer()), LOCALE);
-      for (const x of inner) files.push(new File([x.data], x.name));
+      const plan = await openArchive(file.name, file, LOCALE);
+      if (plan.kind === "strava") stravaTotal += plan.entries.length;
+      for (const e of plan.entries) {
+        work.push({ name: e.name, read: e.read, archived: true, ordered: plan.kind === "strava" });
+      }
     } catch (e) {
       failures.push({ name: file.name, message: e?.message ?? String(e) });
     }
   }
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    $("progress-label").textContent = `${i + 1} / ${files.length} — ${file.name}`;
+  // Une archive de compte donne des années de séances : on ne garde que la
+  // période choisie, un an par défaut. L'archive Strava, lue de la plus
+  // récente à la plus ancienne, permet de s'arrêter dès la période dépassée ;
+  // les autres archives sont filtrées après lecture.
+  const archivedCount = work.filter((w) => w.archived).length;
+  const windowed = stravaTotal > 0 || archivedCount > HISTORY_MIN_SESSIONS;
+  const win = new RecentWindow(windowed ? Number($("archive-period").value) : 0);
+  let newestMs = -Infinity;
+  let stopOrdered = false;
+
+  for (let i = 0; i < work.length; i++) {
+    const item = work[i];
+    if (item.ordered && stopOrdered) continue;
+    $("progress-label").textContent = windowed
+      ? tx("js.archiveProgress", { n: analyses.length, read: i + 1 })
+      : `${i + 1} / ${work.length} — ${item.name}`;
     // Laisse le navigateur redessiner : sans cette pause, la barre ne bouge pas.
     await new Promise((r) => setTimeout(r, 0));
     try {
-      let res;
-      if (file.name.toLowerCase().endsWith(".fit")) {
-        // Le FIT est décodé sur place : c'est le seul format qui porte les
-        // longueurs de bassin et le matériel réellement appairé.
-        const buf = await file.arrayBuffer();
-        rawBytesTotal += buf.byteLength;
-        const { activity, extras } = parseFitBuffer(buf);
-        res = digestActivity(activity, {
-          ...settings.digest,
-          hrSensorHint: extras.hrSensor ? { hrSensor: extras.hrSensor } : undefined,
-          fitExtras: {
-            poolLengthM: extras.poolLengthM,
-            lengths: extras.lengths,
-            totalAscentM: extras.totalAscentM,
-            totalDescentM: extras.totalDescentM,
-          },
-        });
-      } else {
-        const text = await file.text();
-        rawBytesTotal += text.length;
-        res = await digestFile(file.name, text, settings.digest);
+      const data = await item.read();
+      const res = await analyzeBytes(item.name, data, settings);
+      const startIso = res.digest.session.startTimeUtc;
+      if (item.archived && windowed) {
+        const verdict = win.judge(startIso);
+        if (verdict === "stop" && item.ordered) stopOrdered = true;
+        if (verdict !== "keep") continue;
       }
-
-      // Météo : enrichissement, jamais un prérequis. Un échec réseau ne doit
-      // pas empêcher l'analyse du fichier.
-      let weather = null;
-      if ($("weather").value === "on") {
-        try {
-          weather = await fetchWeather(
-            res.samples,
-            res.digest.session.startTimeUtc,
-            res.digest.session.durElapsedS,
-          );
-        } catch { weather = null; }
-      }
-
-      analyses.push({
-        filename: file.name, digest: res.digest, hrSource: res.insights.hrSource,
+      const startMs = Date.parse(startIso ?? "");
+      if (startMs > newestMs) newestMs = startMs;
+      const a = {
+        filename: item.name, digest: res.digest, hrSource: res.insights.hrSource,
         drift: res.insights.drift, adherence: res.insights.adherence,
         efforts: res.insights.efforts, samples: res.samples,
-        hrSpeed: res.insights.hrSpeed, weather,
-      });
+        hrSpeed: res.insights.hrSpeed, weather: null,
+        rawBytes: data.byteLength, archived: !!item.archived,
+      };
+      // Hors de la fenêtre de détail, un point sur cinq suffit au bilan : la
+      // mémoire tient ainsi une année entière, même sur téléphone.
+      if (windowed && !isRecent(a, newestMs)) thinSamples(a);
+      analyses.push(a);
     } catch (e) {
-      failures.push({ name: file.name, message: e?.message ?? String(e) });
+      failures.push({ name: item.name, message: e?.message ?? String(e) });
     }
-    $("bar").value = ((i + 1) / files.length) * 100;
+    $("bar").value = ((i + 1) / work.length) * 100;
+  }
+
+  const kept = analyses.filter((a) => !(windowed && a.archived) || win.keep(a.digest.session.startTimeUtc));
+  rawBytesTotal = kept.reduce((sum, a) => sum + a.rawBytes, 0);
+  historyMode = windowed || kept.length > HISTORY_MIN_SESSIONS;
+  const newestKept = Math.max(...kept.map((a) => Date.parse(a.digest.session.startTimeUtc ?? "") || -Infinity));
+
+  // Météo : enrichissement, jamais un prérequis. En mode historique, seules
+  // les séances détaillées la reçoivent : des centaines de requêtes pour des
+  // séances résumées en une ligne n'apprendraient rien.
+  if ($("weather").value === "on") {
+    for (const a of historyMode ? kept.filter((x) => isRecent(x, newestKept)) : kept) {
+      try {
+        a.weather = await fetchWeather(a.samples, a.digest.session.startTimeUtc, a.digest.session.durElapsedS);
+      } catch { a.weather = null; }
+    }
   }
 
   $("progress").classList.add("hidden");
@@ -630,9 +694,21 @@ async function run(fileList) {
     $("errors").insertAdjacentHTML("beforeend",
       `<div class="err"><strong>${esc(f.name)}</strong>${esc(f.message)}</div>`);
   }
-  if (!analyses.length) return;
+  currentBatch = kept.length ? analyzeBatch(kept, settings.batch) : null;
+  if (windowed) {
+    // Après dédoublonnage : la note doit annoncer le même nombre que le dossier.
+    $("archive-summary").innerHTML = tx("js.archiveNote", {
+      kept: currentBatch ? currentBatch.files.length : 0,
+      total: stravaTotal || archivedCount,
+      days: DETAIL_DAYS,
+    });
+    $("archive-note").classList.remove("hidden");
+  }
+  if (!currentBatch) return;
 
-  currentBatch = analyzeBatch(analyses, settings.batch);
+  // En mode historique, un flux seconde par seconde ferait exploser le
+  // dossier : on part sans flux, l'utilisateur peut toujours en ajouter.
+  if (historyMode && $("resolution").value.startsWith("time")) $("resolution").value = "none";
   renderAnalysis(currentBatch);
   renderDossier();
   $("results").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -703,7 +779,12 @@ function renderAnalysis(batch) {
     </tr>`;
   }).join("");
 
-  $("sensors").innerHTML = batch.files.map((f) => {
+  const newest = Math.max(...batch.files.map((f) => Date.parse(f.digest.session.startTimeUtc ?? "") || -Infinity));
+  const detailed = historyMode ? batch.files.filter((f) => isRecent(f, newest)) : batch.files;
+  const older = batch.files.length - detailed.length;
+  $("sensors").innerHTML = (older
+    ? `<p class="sig">${esc(tx("js.olderInTable", { days: DETAIL_DAYS, n: older }))}</p>`
+    : "") + detailed.map((f) => {
     const h = f.hrSource;
     const sigs = h.signals.map((s) =>
       `<p class="sig">${tx("js.signal", { name: esc(s.name), value: esc(s.value + s.unit), note: esc(s.note) })}</p>`).join("");
@@ -846,6 +927,7 @@ $("pick").addEventListener("click", () => $("files").click());
 $("files").addEventListener("change", (e) => run(e.target.files));
 $("resolution").addEventListener("change", renderDossier);
 $("coords").addEventListener("change", renderDossier);
+$("archive-period").addEventListener("change", () => lastPicked && run(lastPicked));
 
 for (const ev of ["dragenter", "dragover"]) {
   drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); });

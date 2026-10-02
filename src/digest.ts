@@ -49,7 +49,14 @@ export async function parseAny(
   }
   const fmt = detectFormat(filename, data.slice(0, 2048));
   if (fmt === "tcx") return parseTcx(data);
-  if (fmt === "gpx") return parseGpx(data);
+  if (fmt === "gpx") {
+    // Un GPX sans horodatage est un itinéraire planifié (dossier « routes » de
+    // l'archive Strava, trace préparée pour la montre) : l'analyser comme une
+    // séance fabriquerait une fausse sortie de quelques secondes.
+    const activity = parseGpx(data);
+    if (!activity.startTime) throw new Error(translator(locale)("digest.errNoTime", { filename }));
+    return activity;
+  }
   throw new Error(translator(locale)("digest.errFormat", { filename }));
 }
 

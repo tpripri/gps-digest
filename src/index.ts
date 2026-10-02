@@ -57,8 +57,8 @@ export { analyzeBatch, buildBatchBundle } from "./batch.ts";
 export type { BatchAnalysis, FileAnalysis, SensorChange, WeekBucket } from "./batch.ts";
 
 // Archives : ZIP de Garmin, .gz de Strava
-export { extractActivities, isArchiveName, MAX_ARCHIVE_BYTES } from "./archive.ts";
-export type { ExtractedFile } from "./archive.ts";
+export { extractActivities, openArchive, isArchiveName, RecentWindow, MAX_ARCHIVE_BYTES } from "./archive.ts";
+export type { ExtractedFile, ArchiveEntry, ArchivePlan } from "./archive.ts";
 
 // Strava
 export { fromStravaStreams, STRAVA_STREAM_REQUEST, STRAVA_SENSOR_CAVEAT, stravaSensorCaveat } from "./strava.ts";

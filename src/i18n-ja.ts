@@ -18,6 +18,8 @@ export const ja: Partial<Catalog> = {
   "unit.percent": "%",
 
   "digest.errFormat": "「{filename}」の形式を認識できません。対応形式：TCX、GPX、FIT。",
+  "digest.errNoTime":
+    "「{filename}」にはタイムスタンプがありません。記録されたセッションではなく、計画ルートです。",
   "digest.errNoPoints": "ファイルに利用できるデータポイントがありません。",
   "digest.warnZonesObserved":
     "心拍ゾーンはアスリートプロフィールではなく、ファイル内で観測された最大心拍数から算出しています。慎重に解釈してください。",
@@ -287,6 +289,8 @@ export const ja: Partial<Catalog> = {
   "dossier.title": "gps-digest — トレーニング記録",
   "dossier.range": "{n} セッション、{from} 〜 {to}",
   "dossier.volume": "ボリューム：{km} km、移動時間 {dur}",
+  "dossier.contextNote":
+    "履歴：全 {total} セッション。直近 {days} 日分（{n} セッション）は詳細あり。それより前は「sessions」表に 1 行ずつ記載。",
   "dossier.warningsHeader": "⚠ 警告 — 結論を出す前に読むこと",
   "dossier.unknownDate": "日付不明",
   "dossier.sessionHeader": "═══ セッション {n} — {date} — {sport} — {label} ═══",
@@ -305,6 +309,8 @@ export const ja: Partial<Catalog> = {
   "dossier.streamNote": "以下のデータ列：{step} ごとに 1 点、値は区間の平均",
   "dossier.progNote":
     "基準ペースでの心拍数の推移。hr_source が同じ行だけを\n比較すること。異なるセンサー同士は比較できない。",
+  "dossier.progMonthlyNote":
+    "月ごとの有酸素能力の推移：各基準ペースでの平均心拍数、\nそのペースで過ごした時間で加重。hr_source が同じ行どうしだけを比較すること。",
   "dossier.progVerdict": "{pace}（{source}）：{verdict}",
 
   "chart.sessionPower": "パワーと心拍数",
