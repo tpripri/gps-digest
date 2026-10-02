@@ -18,6 +18,8 @@ export const zh: Partial<Catalog> = {
   "unit.percent": "%",
 
   "digest.errFormat": "无法识别“{filename}”的格式。支持的格式：TCX、GPX、FIT。",
+  "digest.errNoTime":
+    "“{filename}”没有时间戳：这是规划的路线，不是记录下来的训练。",
   "digest.errNoPoints": "文件中没有可用的数据点。",
   "digest.warnZonesObserved":
     "心率区间基于文件中观测到的最大心率计算，而非运动员档案：请谨慎解读。",
@@ -270,6 +272,8 @@ export const zh: Partial<Catalog> = {
   "dossier.title": "gps-digest — 训练档案",
   "dossier.range": "{n} 次训练，{from} 至 {to}",
   "dossier.volume": "训练量：{km} km，运动时间 {dur}",
+  "dossier.contextNote":
+    "历史记录：共 {total} 次训练。最近 {days} 天（{n} 次）提供完整明细；更早的训练只在 sessions 表中各占一行。",
   "dossier.warningsHeader": "⚠ 警告 — 得出任何结论前请先阅读",
   "dossier.unknownDate": "日期未知",
   "dossier.sessionHeader": "═══ 训练 {n} — {date} — {sport} — {label} ═══",
@@ -288,6 +292,8 @@ export const zh: Partial<Catalog> = {
   "dossier.streamNote": "以下数据流：每 {step} 一个点，数值为该区间的平均值",
   "dossier.progNote":
     "参考配速下的心率随时间变化。只比较 hr_source\n相同的行：两种传感器之间不可比较。",
+  "dossier.progMonthlyNote":
+    "按月汇总的有氧进展：各参考配速下的平均心率，\n按在该配速下的时间加权。只比较 hr_source 相同的行。",
   "dossier.progVerdict": "{pace}（{source}）：{verdict}",
 
   "chart.sessionPower": "功率与心率",

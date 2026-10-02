@@ -61,10 +61,12 @@ export const ja: Partial<PageCatalog> = {
     "ウォッチのファイルは ChatGPT、Gemini、Claude にとって大きすぎます。このツールは、AI が本当に分析できる構造化されたトレーニング記録（ペース、ラップ、ゾーン、レップ、心拍ドリフト）に変換します。",
   "home.promise":
     "<strong>ファイルはブラウザの外に出ません。</strong>計算はすべてお使いの端末で行われ、ネットワークタブで確認できます。GPS の軌跡は住所をメートル単位で明かしてしまうため、スタートとゴールは初期設定でトリミングされます。<a href=\"{{href:confidentialite.html}}\">外に出るもの、決して出ないもの</a>。",
-  "home.step1.title": "セッションを書き出す",
-  "home.step1.text": "ウォッチや Strava から FIT・TCX・GPX で。手順はこちら：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
-  "home.step2.title": "ここにドロップ",
-  "home.step2.text": "いくつでも、ZIP のままでも OK。計算はすべてブラウザ内で行われ、ファイルがどこかに送信されることはありません。",
+  "home.step1.title": "Strava のアーカイブをダウンロード",
+  "home.step1.text": "<a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> の「Download your account」から申請します。通常は数時間以内に ZIP がメールで届きます。急いでいる、または Strava を使っていない場合は、個別に書き出しましょう：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step1.badge":
+    "おすすめ",
+  "home.step2.title": "ZIP をそのままここにドロップ",
+  "home.step2.text": "直近 12 か月分を使い、写真やルートは無視します。計算はすべてブラウザ内で行われ、ファイルがどこかに送信されることはありません。",
   "home.step3.title": "記録を AI に貼り付ける",
   "home.step3.text": "ChatGPT・Claude・Gemini・Vibe に、質問と一緒に貼り付けます。<a href=\"{{href:post-ia-coach.html}}\">何を聞けばいい？</a>",
 
@@ -123,10 +125,22 @@ export const ja: Partial<PageCatalog> = {
   "home.reads.title":
     "ガイドと記事",
   "home.files.drop": "ここにファイルをドロップ",
-  "home.files.formats": "TCX、GPX、FIT をいくつでも。必要ならシーズン丸ごとでも。Garmin の ZIP や Strava の .gz もそのままドロップできます。",
+  "home.files.formats": "Strava のアーカイブ全体、Garmin の ZIP、FIT・TCX・GPX ファイル：どれもそのままドロップできます。",
   "home.files.fit":
     "FIT はウォッチのネイティブ形式です。プールの往復ごとの記録と、実際にペアリングされた心拍センサーの情報を含むのは FIT だけです。",
   "home.files.pick": "ファイルを選択",
+  "home.archive.period":
+    "分析する期間：",
+  "home.archive.p3m":
+    "直近 3 か月",
+  "home.archive.p6m":
+    "直近 6 か月",
+  "home.archive.p1y":
+    "直近 12 か月",
+  "home.archive.p2y":
+    "直近 2 年",
+  "home.archive.pAll":
+    "全期間",
 
   "home.export.title": "3. 分析できる記録",
   "home.export.intro":
@@ -225,6 +239,12 @@ export const ja: Partial<PageCatalog> = {
 
   "js.libError":
     "<strong>ツールを読み込めませんでした。</strong>接続を確認して、ページを再読み込みしてください。社内ネットワークでは、セキュリティフィルターがサイトをブロックしている場合があります。別の回線でお試しください。",
+  "js.archiveNote":
+    "<strong>アーカイブ：</strong>{total} 件中 {kept} セッションを使用。直近 {days} 日分はセッションごとに詳細を記載し、それ以外の期間は記録に 1 セッション 1 行でまとめています。",
+  "js.archiveProgress":
+    "アーカイブを読み込み中：{n} セッションを使用（{read} ファイル読み込み済み）…",
+  "js.olderInTable":
+    "直近 {days} 日のセッションのみ詳細を表示しています。それより前の {n} セッションはセッション一覧と記録に含まれています。",
   "js.vigilance": "記録に含まれる注意点：{n} 件",
   "js.indicShort": "参考",
   "js.sensorSummary": "{file} — {label}（信頼度 {confidence}）",
@@ -786,7 +806,7 @@ export const ja: Partial<PageCatalog> = {
   "guide.strava.lede":
     "Strava はランの記録を保存してくれますが、AI には渡してくれません。例外は Claude 専用の有料コネクタだけです。朗報は、ウェブサイトを使えば書き出しは無料だということ。その方法と、書き出した後の使い方を紹介します。",
   "guide.strava.tldr1":
-    "1 つのアクティビティなら：strava.com でアクティビティの「…」メニューを開き、元のファイルまたは GPX を書き出します。",
+    "最も情報量が多いのはアカウントのアーカイブ（strava.com/account の「Download your account」）。ZIP をそのままドロップすれば、gps-digest が直近 12 か月分を使います。",
   "guide.strava.tldr2":
     "Strava のスマホアプリでは書き出せません。パソコンからウェブサイトを使います。",
   "guide.strava.tldr3":
@@ -808,9 +828,9 @@ export const ja: Partial<PageCatalog> = {
   "guide.strava.m1.note":
     "スマホの Strava アプリで記録したアクティビティなら、GPX の書き出しで十分です。",
   "guide.strava.m2.title":
-    "全履歴：アカウントのアーカイブ",
+    "おすすめ：アカウントのアーカイブで 1 年分の文脈を",
   "guide.strava.m2.p":
-    "Strava のアカウント設定の「マイアカウント」タブで、アカウントのダウンロードを申請します。アーカイブへのリンクがメールで届きます。通常は数時間以内です。セッションは <code>activities</code> フォルダにあり、<code>.gz</code> で圧縮されていることがよくありますが、そのまま gps-digest にドロップできます。<code>activities.csv</code> には各アクティビティ番号の日付が載っているので、直近数週間分だけを選ぶのに便利です。",
+    "<a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> の「Download your account」から、アカウントのアーカイブを申請します。通常は数時間以内にリンクがメールで届きます。ZIP をそのまま gps-digest にドロップすれば、セッションを見つけ出し、写真やルートは無視して、初期設定では直近 12 か月分を使います（3 か月から全期間まで選択可能）。直近 14 日分はセッションごとに詳細を、それ以外は 1 セッション 1 行でまとめます。300 件を超える 1 年分のトレーニングで約 30,000 トークンです。",
   "guide.strava.m3.title":
     "注意点：Strava のペースは Garmin とは違う",
   "guide.strava.m3.p":

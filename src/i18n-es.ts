@@ -13,6 +13,8 @@ export const es: Partial<Catalog> = {
   "unit.percent": " %",
 
   "digest.errFormat": "Formato no reconocido para «{filename}». Formatos aceptados: TCX, GPX, FIT.",
+  "digest.errNoTime":
+    "«{filename}» no tiene marcas de tiempo: es una ruta planificada, no una sesión registrada.",
   "digest.errNoPoints": "El archivo no contiene ningún punto utilizable.",
   "digest.warnZonesObserved":
     "Zonas de FC calculadas con la FC máxima observada en el archivo, no con un perfil de atleta: interpretar con prudencia.",
@@ -287,6 +289,8 @@ export const es: Partial<Catalog> = {
   "dossier.title": "gps-digest — informe de entrenamiento",
   "dossier.range": "{n} sesión(es) del {from} al {to}",
   "dossier.volume": "volumen: {km} km, {dur} en movimiento",
+  "dossier.contextNote":
+    "Historial: {total} sesiones. Detalle completo de los últimos {days} días ({n} sesión(es)); las más antiguas solo aparecen en la tabla «sessions», una línea cada una.",
   "dossier.warningsHeader": "⚠ ADVERTENCIAS — leer antes de sacar conclusiones",
   "dossier.unknownDate": "fecha desconocida",
   "dossier.sessionHeader": "═══ SESIÓN {n} — {date} — {sport} — {label} ═══",
@@ -305,6 +309,8 @@ export const es: Partial<Catalog> = {
   "dossier.streamNote": "flujo a continuación: un punto cada {step}, valores promediados en el intervalo",
   "dossier.progNote":
     "FC a ritmo de referencia, a lo largo del tiempo. Comparar solo\nfilas con el mismo hr_source: dos sensores no son comparables.",
+  "dossier.progMonthlyNote":
+    "Progresión aeróbica por mes: FC media a cada ritmo de referencia,\nponderada por el tiempo pasado a ese ritmo. Compara solo filas con el mismo hr_source.",
   "dossier.progVerdict": "{pace} ({source}): {verdict}",
 
   "chart.sessionPower": "Potencia y frecuencia cardíaca",

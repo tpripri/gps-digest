@@ -11,8 +11,11 @@
 
 import { deflateRawSync, gzipSync } from "node:zlib";
 
-import { extractActivities, isArchiveName } from "../src/archive.ts";
+import { extractActivities, isArchiveName, openArchive, RecentWindow } from "../src/archive.ts";
 import { t } from "../src/i18n.ts";
+import { digestFile } from "../src/digest.ts";
+import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
+import { buildDossier } from "../src/dossier.ts";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -138,8 +141,125 @@ check("noms d'archive reconnus", isArchiveName("a.zip") && isArchiveName("1234.F
   check("archive chiffrée : message « décompressez-la »", msg === t("fr", "archive.unsupported"), msg);
 }
 {
-  const msg = await rejects(extractActivities("x.gz", bytes("pas du gzip"), "en"));
+  const msg = await rejects(extractActivities("x.fit.gz", bytes("pas du gzip"), "en"));
   check("faux .gz : message dans la langue de la page", msg === t("en", "archive.corrupt") && !/archive endommag/i.test(msg), msg);
+}
+
+// ── Archive de compte Strava (« Download your account ») ────────────────
+{
+  const archive = zip([
+    { name: "activities.csv", data: bytes("ID de l'activité,Date de l'activité\n") },
+    { name: "profile.csv", data: bytes("x") },
+    { name: "activities/48418534.gpx", data: gpx },
+    { name: "activities/12345678901.fit.gz", data: new Uint8Array(gzipSync(fit)), method: 0 },
+    { name: "activities/9123456789.tcx.gz", data: new Uint8Array(gzipSync(tcx)), method: 0 },
+    { name: "routes/1.gpx", data: gpx },
+    { name: "media/photo.jpg", data: bytes("jpg") },
+  ]);
+  const plan = await openArchive("export_1234567.zip", new Blob([archive]));
+  check("archive Strava reconnue", plan.kind === "strava");
+  check("archive Strava : itinéraires et photos écartés", plan.entries.length === 3 && !plan.entries.some((e) => e.path.startsWith("routes/")),
+    plan.entries.map((e) => e.path).join(", "));
+  check("archive Strava : séances récentes d'abord (identifiants décroissants)",
+    plan.entries.map((e) => e.name).join(",") === "12345678901.fit,9123456789.tcx,48418534.gpx");
+  check("archive Strava : décompression à la demande", same(await plan.entries[0].read(), fit));
+}
+
+// ── ZIP64 (archives de plus de 4 Go ou de 65 535 entrées) ────────────────
+{
+  // Même contenu qu'un ZIP classique, mais tailles et position saturées, avec
+  // les vraies valeurs dans le champ ZIP64 et l'enregistrement de fin 64 bits.
+  const packed = deflateRawSync(fit);
+  const name = Buffer.from("big.fit");
+  const local = Buffer.alloc(30);
+  local.writeUInt32LE(0x04034b50, 0);
+  local.writeUInt16LE(8, 8);
+  local.writeUInt32LE(0xffffffff, 18);
+  local.writeUInt32LE(0xffffffff, 22);
+  local.writeUInt16LE(name.length, 26);
+  const extra = Buffer.alloc(4 + 24);
+  extra.writeUInt16LE(1, 0);
+  extra.writeUInt16LE(24, 2);
+  extra.writeBigUInt64LE(BigInt(fit.length), 4);
+  extra.writeBigUInt64LE(BigInt(packed.length), 12);
+  extra.writeBigUInt64LE(0n, 20);
+  const dir = Buffer.alloc(46);
+  dir.writeUInt32LE(0x02014b50, 0);
+  dir.writeUInt16LE(8, 10);
+  dir.writeUInt32LE(0xffffffff, 20);
+  dir.writeUInt32LE(0xffffffff, 24);
+  dir.writeUInt16LE(name.length, 28);
+  dir.writeUInt16LE(extra.length, 30);
+  dir.writeUInt32LE(0xffffffff, 42);
+  const body = Buffer.concat([local, name, packed]);
+  const central = Buffer.concat([dir, name, extra]);
+  const end64 = Buffer.alloc(56);
+  end64.writeUInt32LE(0x06064b50, 0);
+  end64.writeBigUInt64LE(44n, 4);
+  end64.writeBigUInt64LE(1n, 24);
+  end64.writeBigUInt64LE(1n, 32);
+  end64.writeBigUInt64LE(BigInt(central.length), 40);
+  end64.writeBigUInt64LE(BigInt(body.length), 48);
+  const locator = Buffer.alloc(20);
+  locator.writeUInt32LE(0x07064b50, 0);
+  locator.writeBigUInt64LE(BigInt(body.length + central.length), 8);
+  locator.writeUInt32LE(1, 16);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0xffff, 8);
+  end.writeUInt16LE(0xffff, 10);
+  end.writeUInt32LE(0xffffffff, 12);
+  end.writeUInt32LE(0xffffffff, 16);
+  const out = await extractActivities("big.zip", new Uint8Array(Buffer.concat([body, central, end64, locator, end])));
+  check("ZIP64 : séance extraite à l'identique", out.length === 1 && out[0].name === "big.fit" && same(out[0].data, fit));
+}
+
+// ── Fenêtre des séances récentes ─────────────────────────────────────────
+{
+  const w = new RecentWindow(365, 3);
+  const verdicts = ["2026-10-02T06:00:00Z", "2026-03-01T06:00:00Z", "2025-09-01T06:00:00Z", "2025-08-01T06:00:00Z",
+    "2025-10-05T06:00:00Z", "2025-07-01T06:00:00Z", "2025-06-01T06:00:00Z", "2025-05-01T06:00:00Z"].map((d) => w.judge(d));
+  check("fenêtre d'un an : garde, ignore, puis s'arrête après 3 séances hors période d'affilée",
+    verdicts.join(",") === "keep,keep,skip,skip,keep,skip,skip,stop", verdicts.join(","));
+  // Une vieille sortie importée récemment arrive en tête : la référence se
+  // corrige dès qu'une séance plus récente apparaît, et le filtre final suit.
+  const late = new RecentWindow(30, 50);
+  late.judge("2019-05-01T06:00:00Z");
+  late.judge("2026-10-01T06:00:00Z");
+  check("fenêtre : référence corrigée par la séance la plus récente", !late.keep("2019-05-01T06:00:00Z") && late.keep("2026-09-20T06:00:00Z"));
+  check("fenêtre « tout l'historique »", new RecentWindow(0).judge("2001-01-01T00:00:00Z") === "keep");
+}
+
+// ── Mode historique : une année, détail seulement pour les séances récentes ─
+{
+  /** Sortie GPX horodatée : 20 min à allure régulière, FC stable. */
+  const run = (iso: string) => {
+    const t0 = Date.parse(iso);
+    const pts = Array.from({ length: 1200 }, (_, i) =>
+      `<trkpt lat="${(48.85 + i * 0.000025).toFixed(6)}" lon="2.35"><ele>35</ele><time>${new Date(t0 + i * 1000).toISOString()}</time>` +
+      `<extensions><gpxtpx:TrackPointExtension><gpxtpx:hr>${140 + (i % 3)}</gpxtpx:hr></gpxtpx:TrackPointExtension></extensions></trkpt>`).join("");
+    return `<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"><trk><type>running</type><trkseg>${pts}</trkseg></trk></gpx>`;
+  };
+  const opts = { athlete: {}, streamTokenBudget: 3000, privacyRadiusM: 0, driftWarmupS: 300, locale: "fr" };
+  const files: FileAnalysis[] = [];
+  for (const [i, d] of ["2026-10-01T06:00:00Z", "2026-09-25T06:00:00Z", "2026-08-01T06:00:00Z"].entries()) {
+    const res = await digestFile(`${i}.gpx`, run(d), opts);
+    files.push({ filename: `${i}.gpx`, digest: res.digest, hrSource: res.insights.hrSource, drift: res.insights.drift,
+      adherence: res.insights.adherence, efforts: res.insights.efforts, samples: res.samples, hrSpeed: res.insights.hrSpeed });
+  }
+  const batch = analyzeBatch(files, { locale: "fr" });
+  const detailed = (d: string) => (d.match(/^## s\d+_summary$/gm) ?? []).length;
+  const history = buildDossier(batch, { recentDetailDays: 14, streamMode: "none" });
+  check("mode historique : seules les séances des 14 derniers jours sont détaillées",
+    detailed(history) === 2 && detailed(buildDossier(batch, { streamMode: "none" })) === 3);
+  check("mode historique : le dossier l'annonce", history.includes(t("fr", "dossier.contextNote", { total: 3, days: 14, n: 2 })));
+
+  const route = `<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><trkseg>` +
+    Array.from({ length: 50 }, (_, i) => `<trkpt lat="${(48.85 + i * 0.001).toFixed(4)}" lon="2.35"><ele>35</ele></trkpt>`).join("") +
+    `</trkseg></trk></gpx>`;
+  const msg = await rejects(digestFile("itineraire.gpx", route, opts));
+  check("itinéraire sans horodatage : refusé, pas compté comme une séance",
+    msg === t("fr", "digest.errNoTime", { filename: "itineraire.gpx" }), msg);
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les archives passent\u001b[0m\n");

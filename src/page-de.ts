@@ -60,10 +60,12 @@ export const de: Partial<PageCatalog> = {
     "Die Dateien deiner Uhr sind zu groß für ChatGPT, Gemini oder Claude. Dieses Tool macht daraus ein strukturiertes Trainingsdossier (Pace, Runden, Zonen, Wiederholungen, kardiale Drift), das die KI wirklich analysieren kann.",
   "home.promise":
     "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden Start und Ziel standardmäßig gekürzt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
-  "home.step1.title": "Exportiere deine Einheiten",
-  "home.step1.text": "Von deiner Uhr oder aus Strava, als FIT, TCX oder GPX. Schritt für Schritt: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step2.title": "Lege sie hier ab",
-  "home.step2.text": "So viele du willst, auch als ZIP. Alles wird in deinem Browser berechnet: Deine Dateien werden nirgendwohin hochgeladen.",
+  "home.step1.title": "Lade dein Strava-Archiv herunter",
+  "home.step1.text": "Auf <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> unter „Download your account“. Strava schickt dir ein ZIP per E-Mail, meist innerhalb weniger Stunden. Eilig oder nicht bei Strava? Exportiere einzelne Einheiten: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step1.badge":
+    "Empfohlen",
+  "home.step2.title": "Lege das ZIP hier ab, so wie es ist",
+  "home.step2.text": "Das Tool behält deine letzten 12 Monate und ignoriert Fotos und Routen. Alles wird in deinem Browser berechnet: Deine Dateien werden nirgendwohin hochgeladen.",
   "home.step3.title": "Füge das Dossier in deine KI ein",
   "home.step3.text": "ChatGPT, Claude, Gemini oder Vibe, mit deiner Frage. <a href=\"{{href:post-ia-coach.html}}\">Was fragen?</a>",
 
@@ -122,10 +124,22 @@ export const de: Partial<PageCatalog> = {
   "home.reads.title":
     "Anleitungen und Artikel",
   "home.files.drop": "Dateien hier ablegen",
-  "home.files.formats": "TCX, GPX oder FIT, so viele du willst, notfalls eine ganze Saison. ZIP-Dateien von Garmin und .gz-Dateien von Strava funktionieren direkt.",
+  "home.files.formats": "Dein komplettes Strava-Archiv, ein Garmin-ZIP oder FIT-, TCX- und GPX-Dateien: Alles funktioniert direkt.",
   "home.files.fit":
     "FIT ist das native Format deiner Uhr: Nur es enthält die Beckenbahnen und den tatsächlich gekoppelten Herzfrequenzsensor.",
   "home.files.pick": "Dateien auswählen",
+  "home.archive.period":
+    "Analysierter Zeitraum:",
+  "home.archive.p3m":
+    "Letzte 3 Monate",
+  "home.archive.p6m":
+    "Letzte 6 Monate",
+  "home.archive.p1y":
+    "Letzte 12 Monate",
+  "home.archive.p2y":
+    "Letzte 2 Jahre",
+  "home.archive.pAll":
+    "Gesamter Verlauf",
 
   "home.export.title": "3. Dein Dossier, bereit zur Analyse",
   "home.export.intro":
@@ -226,6 +240,12 @@ export const de: Partial<PageCatalog> = {
 
   "js.libError":
     "<strong>Das Tool konnte nicht geladen werden.</strong> Prüfe deine Verbindung und lade die Seite neu. In einem Firmennetz kann ein Sicherheitsfilter die Seite blockieren: Versuch es über eine andere Verbindung.",
+  "js.archiveNote":
+    "<strong>Archiv:</strong> {kept} von {total} Einheiten übernommen. Die letzten {days} Tage sind Einheit für Einheit detailliert; der Rest des Zeitraums steht mit einer Zeile pro Einheit im Dossier.",
+  "js.archiveProgress":
+    "Archiv wird gelesen: {n} Einheiten übernommen ({read} Dateien gelesen)…",
+  "js.olderInTable":
+    "Details für die Einheiten der letzten {days} Tage. Die {n} älteren stehen in der Tabelle der Einheiten und im Dossier.",
   "js.vigilance": "{n} Warnhinweis(e) im Dossier enthalten",
   "js.indicShort": "Richtw.",
   "js.sensorSummary": "{file} — {label} (Konfidenz {confidence})",
@@ -805,7 +825,7 @@ export const de: Partial<PageCatalog> = {
   "guide.strava.lede":
     "Strava speichert deine Läufe, gibt sie aber nicht an deine KI weiter, außer über einen kostenpflichtigen Connector, der nur mit Claude funktioniert. Die gute Nachricht: Der Export ist kostenlos, solange du die Website nutzt. So geht es, und das machst du danach mit der Datei.",
   "guide.strava.tldr1":
-    "Eine Aktivität: auf strava.com das Menü „…“ der Aktivität, dann die Originaldatei exportieren oder als GPX exportieren.",
+    "Am ergiebigsten: das Archiv deines Kontos (strava.com/account, „Download your account“). Lege das ZIP unverändert ab: gps-digest behält deine letzten 12 Monate.",
   "guide.strava.tldr2":
     "Die Strava-App exportiert nichts: Du brauchst die Website, an einem Computer.",
   "guide.strava.tldr3":
@@ -827,9 +847,9 @@ export const de: Partial<PageCatalog> = {
   "guide.strava.m1.note":
     "Wurde die Aktivität mit der Strava-App auf dem Handy aufgezeichnet, reicht der GPX-Export völlig.",
   "guide.strava.m2.title":
-    "Der ganze Verlauf: das Archiv deines Kontos",
+    "Empfohlen: das Archiv deines Kontos, für ein Jahr Kontext",
   "guide.strava.m2.p":
-    "Fordere in den Einstellungen deines Strava-Kontos, Reiter Mein Konto, den Download deines Kontos an. Strava schickt dir per E-Mail einen Link zu einem Archiv, meist innerhalb weniger Stunden. Die Einheiten liegen im Ordner <code>activities</code>, oft als <code>.gz</code> komprimiert: Lege sie unverändert in gps-digest ab. Die Datei <code>activities.csv</code> zeigt das Datum jeder Aktivitätsnummer, praktisch, um nur die letzten Wochen zu nehmen.",
+    "Fordere auf <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> unter „Download your account“ das Archiv deines Kontos an. Strava schickt dir einen Link per E-Mail, meist innerhalb weniger Stunden. Lege das ZIP unverändert in gps-digest ab: Das Tool findet deine Einheiten, ignoriert Fotos und Routen und behält standardmäßig die letzten 12 Monate, wahlweise von 3 Monaten bis zum ganzen Verlauf. Die letzten 14 Tage sind Einheit für Einheit detailliert, der Rest steht mit einer Zeile pro Einheit darin: Ein Jahr mit über 300 Einheiten ergibt etwa 30.000 Tokens.",
   "guide.strava.m3.title":
     "Eine Vorsicht: Das Strava-Tempo ist nicht das von Garmin",
   "guide.strava.m3.p":

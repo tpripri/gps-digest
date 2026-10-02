@@ -61,10 +61,12 @@ export const zh: Partial<PageCatalog> = {
     "手表文件对 ChatGPT、Gemini 或 Claude 来说太大了。本工具把它们整理成结构化训练档案（配速、圈、区间、重复、心率漂移），让 AI 真正能够分析。",
   "home.promise":
     "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此起点和终点默认会被裁剪。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
-  "home.step1.title": "导出训练数据",
-  "home.step1.text": "从手表或 Strava 导出 FIT、TCX 或 GPX 文件。分步指南：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
-  "home.step2.title": "拖到这里",
-  "home.step2.text": "数量不限，ZIP 也可以。所有计算都在浏览器中完成：你的文件不会上传到任何地方。",
+  "home.step1.title": "下载你的 Strava 存档",
+  "home.step1.text": "在 <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> 的“Download your account”中申请。Strava 会通过电子邮件发送 ZIP 文件，通常几小时内送达。着急或不用 Strava？可以导出几次训练：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step1.badge":
+    "推荐",
+  "home.step2.title": "把 ZIP 原样拖到这里",
+  "home.step2.text": "工具会保留最近 12 个月的数据，并忽略照片和路线。所有计算都在浏览器中完成：你的文件不会上传到任何地方。",
   "home.step3.title": "把档案粘贴给 AI",
   "home.step3.text": "ChatGPT、DeepSeek、Claude 或 Gemini 都可以，再提出你的问题。<a href=\"{{href:post-ia-coach.html}}\">该问什么？</a>",
 
@@ -122,9 +124,21 @@ export const zh: Partial<PageCatalog> = {
   "home.reads.title":
     "指南与文章",
   "home.files.drop": "把文件拖到这里",
-  "home.files.formats": "TCX、GPX 或 FIT，数量不限，需要的话可以是整个赛季。佳明的 ZIP 和 Strava 的 .gz 文件可直接拖入。",
+  "home.files.formats": "完整的 Strava 存档、佳明 ZIP，或 FIT、TCX、GPX 文件：都可以直接拖入。",
   "home.files.fit": "FIT 是手表的原生格式：只有它包含泳池趟数和实际配对的心率传感器信息。",
   "home.files.pick": "选择文件",
+  "home.archive.period":
+    "分析时间范围：",
+  "home.archive.p3m":
+    "最近 3 个月",
+  "home.archive.p6m":
+    "最近 6 个月",
+  "home.archive.p1y":
+    "最近 12 个月",
+  "home.archive.p2y":
+    "最近 2 年",
+  "home.archive.pAll":
+    "全部历史",
 
   "home.export.title": "3. 你的档案，可以分析了",
   "home.export.intro":
@@ -223,6 +237,12 @@ export const zh: Partial<PageCatalog> = {
 
   "js.libError":
     "<strong>工具未能加载。</strong>请检查网络连接并刷新页面。在公司网络中，安全过滤器可能会拦截本站：请换一个网络再试。",
+  "js.archiveNote":
+    "<strong>压缩包：</strong>共 {total} 次活动，保留 {kept} 次。最近 {days} 天逐次详细列出；其余时间段在档案中每次训练占一行。",
+  "js.archiveProgress":
+    "正在读取压缩包：已保留 {n} 次训练（已读取 {read} 个文件）…",
+  "js.olderInTable":
+    "仅显示最近 {days} 天训练的明细。其余 {n} 次较早的训练见训练列表和档案。",
   "js.vigilance": "档案中包含 {n} 条注意事项",
   "js.indicShort": "参考",
   "js.sensorSummary": "{file} — {label}（置信度 {confidence}）",
@@ -777,7 +797,7 @@ export const zh: Partial<PageCatalog> = {
   "guide.strava.lede":
     "Strava 保存了你的跑步记录，却不会把它们交给 AI，除非使用只支持 Claude 的付费连接器。好消息是：只要通过网站，导出就是免费的。下面介绍具体方法，以及导出后该怎么做。",
   "guide.strava.tldr1":
-    "单个活动：在 strava.com 上打开活动的“…”菜单，导出原始文件或导出 GPX。",
+    "信息最全的方式：账户存档（strava.com/account 中的“Download your account”）。把 ZIP 原样拖入，gps-digest 会保留最近 12 个月。",
   "guide.strava.tldr2":
     "Strava 手机应用不能导出：需要在电脑上使用网站。",
   "guide.strava.tldr3":
@@ -799,9 +819,9 @@ export const zh: Partial<PageCatalog> = {
   "guide.strava.m1.note":
     "如果活动是用手机上的 Strava 应用记录的，导出 GPX 就完全够用。",
   "guide.strava.m2.title":
-    "全部历史记录：账户存档",
+    "推荐：账户存档，获得一整年的背景",
   "guide.strava.m2.p":
-    "在 Strava 账户设置的“我的账户”标签页中，申请下载你的账户。Strava 会通过电子邮件发送存档链接，通常几小时内就到。训练记录在 <code>activities</code> 文件夹中，常常压缩为 <code>.gz</code>：直接拖入 gps-digest 即可。<code>activities.csv</code> 文件列出了每个活动编号的日期，方便只挑选最近几周。",
+    "在 <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> 的“Download your account”中申请账户存档。Strava 会通过电子邮件发送链接，通常几小时内送达。把 ZIP 原样拖入 gps-digest：工具会找到你的训练，忽略照片和路线，默认保留最近 12 个月，也可以选择 3 个月到全部历史。最近 14 天逐次详细列出，其余每次训练占一行：一年 300 多次训练约为 30,000 个 token。",
   "guide.strava.m3.title":
     "注意：Strava 的配速和佳明不一样",
   "guide.strava.m3.p":

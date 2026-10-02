@@ -110,10 +110,12 @@ const fr = {
     "Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude. Cet outil en fait un dossier d'entraînement structuré — allures, tours, zones, répétitions, dérive cardiaque — que l'IA peut vraiment analyser.",
   "home.promise":
     "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : le départ et l'arrivée sont rognés par défaut. <a href=\"{{href:confidentialite.html}}\">Ce qui sort, et ce qui n'en sort jamais</a>.",
-  "home.step1.title": "Exportez vos séances",
-  "home.step1.text": "Depuis votre montre ou Strava, en FIT, TCX ou GPX. Pas à pas : <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step2.title": "Déposez-les ici",
-  "home.step2.text": "Autant que vous voulez, même en ZIP. Tout est calculé dans votre navigateur : vos fichiers ne sont envoyés nulle part.",
+  "home.step1.title": "Téléchargez votre archive Strava",
+  "home.step1.text": "Sur <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, rubrique « Download your account ». Strava vous envoie un ZIP par e-mail, en général en quelques heures. Pressé, ou pas sur Strava ? Exportez quelques séances : <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step1.badge":
+    "Recommandé",
+  "home.step2.title": "Déposez le ZIP ici, tel quel",
+  "home.step2.text": "L'outil garde vos 12 derniers mois et ignore photos et itinéraires. Tout est calculé dans votre navigateur : vos fichiers ne sont envoyés nulle part.",
   "home.step3.title": "Collez le dossier dans votre IA",
   "home.step3.text": "ChatGPT, Claude, Gemini ou Vibe, avec votre question. <a href=\"{{href:post-ia-coach.html}}\">Quoi lui demander ?</a>",
 
@@ -172,10 +174,22 @@ const fr = {
   "home.reads.title":
     "Guides et articles",
   "home.files.drop": "Déposez vos fichiers ici",
-  "home.files.formats": "TCX, GPX ou FIT, autant que vous voulez, une saison entière si besoin. Les ZIP de Garmin et les .gz de Strava passent tels quels.",
+  "home.files.formats": "Votre archive Strava complète, un ZIP Garmin, ou des fichiers FIT, TCX et GPX : tout passe tel quel.",
   "home.files.fit":
     "Le FIT est le format natif de votre montre : c'est le seul à porter les longueurs de bassin et le capteur cardiaque réellement appairé.",
   "home.files.pick": "Choisir des fichiers",
+  "home.archive.period":
+    "Période analysée :",
+  "home.archive.p3m":
+    "3 derniers mois",
+  "home.archive.p6m":
+    "6 derniers mois",
+  "home.archive.p1y":
+    "12 derniers mois",
+  "home.archive.p2y":
+    "2 dernières années",
+  "home.archive.pAll":
+    "Tout l'historique",
 
   "home.export.title": "3. Votre dossier, prêt à analyser",
   "home.export.intro":
@@ -277,6 +291,12 @@ const fr = {
   // ── accueil : textes du script (injectés dans la page) ─────────────────
   "js.libError":
     "<strong>L'outil n'a pas pu se charger.</strong> Vérifiez votre connexion et rechargez la page. Sur un réseau d'entreprise, un filtre de sécurité peut bloquer le site : essayez depuis une autre connexion.",
+  "js.archiveNote":
+    "<strong>Archive :</strong> {kept} séances retenues sur {total}. Les {days} derniers jours sont détaillés séance par séance ; le reste de la période tient en une ligne par séance dans le dossier.",
+  "js.archiveProgress":
+    "Lecture de l'archive : {n} séances retenues ({read} fichiers lus)…",
+  "js.olderInTable":
+    "Détail affiché pour les séances des {days} derniers jours. Les {n} plus anciennes figurent dans le tableau des séances et dans le dossier.",
   "js.vigilance": "{n} point(s) de vigilance inclus dans le dossier",
   "js.indicShort": "indic.",
   "js.sensorSummary": "{file} — {label} (confiance {confidence})",
@@ -865,7 +885,7 @@ const fr = {
   "guide.strava.lede":
     "Strava garde vos sorties, mais ne les donne pas à votre IA, sauf via un connecteur payant réservé à Claude. Bonne nouvelle : l'export est gratuit, à condition de passer par le site. Voici comment, et quoi faire du fichier ensuite.",
   "guide.strava.tldr1":
-    "Une activité : sur strava.com, menu « … » de l'activité, puis export du fichier d'origine ou export GPX.",
+    "Le plus riche : l'archive de votre compte (strava.com/account, « Download your account »). Déposez le ZIP tel quel : gps-digest garde vos 12 derniers mois.",
   "guide.strava.tldr2":
     "L'application mobile Strava n'exporte rien : il faut le site, depuis un ordinateur.",
   "guide.strava.tldr3":
@@ -887,9 +907,9 @@ const fr = {
   "guide.strava.m1.note":
     "Si l'activité a été enregistrée avec l'application Strava sur téléphone, l'export GPX fait très bien l'affaire.",
   "guide.strava.m2.title":
-    "Tout l'historique : l'archive de votre compte",
+    "Recommandé : l'archive de votre compte, pour un an de contexte",
   "guide.strava.m2.p":
-    "Dans les paramètres de votre compte Strava, onglet Mon compte, demandez le téléchargement de votre compte. Strava envoie par e-mail un lien vers une archive, en quelques heures en général. Les séances sont dans le dossier <code>activities</code>, souvent compressées en <code>.gz</code> : déposez-les telles quelles dans gps-digest. Le fichier <code>activities.csv</code> donne la date de chaque numéro d'activité, pratique pour ne prendre que les dernières semaines.",
+    "Sur <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, rubrique « Download your account », demandez l'archive de votre compte. Strava envoie un lien par e-mail, en général en quelques heures. Déposez le ZIP tel quel dans gps-digest : l'outil retrouve vos séances, ignore photos et itinéraires, et garde les 12 derniers mois par défaut, de 3 mois à tout l'historique au choix. Les 14 derniers jours sont détaillés séance par séance, le reste tient en une ligne par séance : une année de plus de 300 séances fait environ 30 000 tokens.",
   "guide.strava.m3.title":
     "Une précaution : l'allure Strava n'est pas celle de Garmin",
   "guide.strava.m3.p":

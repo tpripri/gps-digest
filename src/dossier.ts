@@ -27,7 +27,7 @@ import {
   LLM_DIALECT,
 } from "./serialize.ts";
 import { hrSourceLabel } from "./sensor.ts";
-import { progressionRows } from "./progression.ts";
+import { progressionRows, progressionMonthlyRows } from "./progression.ts";
 import { swimRows, paceLabel100 } from "./swim.ts";
 import { formatSpeed } from "./classify.ts";
 import { heatStressNote } from "./weather.ts";
@@ -53,6 +53,20 @@ export interface DossierOptions {
   splitUnitM?: number;
   /** Langue du dossier. Par défaut, celle de l'analyse multi-fichiers. */
   locale?: string;
+  /**
+   * Mode historique (une saison, une année) : seules les séances des N
+   * derniers jours gardent leur détail complet ; les autres ne vivent que
+   * dans le tableau « sessions », une ligne chacune. Sans cela, un an de
+   * séances dépasserait le million de tokens.
+   */
+  recentDetailDays?: number;
+}
+
+/** Début de la fenêtre de détail : N jours avant la séance la plus récente. */
+function recentFromMs(batch: BatchAnalysis, days?: number): number | undefined {
+  if (!days) return undefined;
+  const last = batch.files[batch.files.length - 1]?.digest.session.startTimeUtc;
+  return last ? Date.parse(last) - days * 86_400_000 : undefined;
 }
 
 type Tr = (key: MessageKey, params?: MessageParams) => string;
@@ -307,6 +321,9 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
   const locale = resolveLocale(opts.locale ?? batch.locale);
   const tr = translator(locale);
   const detail = opts.perSessionDetail !== false;
+  const recentFrom = recentFromMs(batch, opts.recentDetailDays);
+  const isRecent = (f: FileAnalysis) =>
+    recentFrom == null || Date.parse(f.digest.session.startTimeUtc ?? "") >= recentFrom;
   const out: string[] = [];
   const block = (name: string, csv: string) => {
     if (csv.trim()) out.push(`## ${name}\n${csv.trim()}\n`);
@@ -323,6 +340,13 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     })}`,
   );
   if (opts.maxHr) out.push(`# ${tr("common.refMaxHr", { hr: opts.maxHr })}`);
+  if (recentFrom != null && detail) {
+    out.push(`# ${tr("dossier.contextNote", {
+      total: batch.files.length,
+      days: opts.recentDetailDays!,
+      n: batch.files.filter(isRecent).length,
+    })}`);
+  }
   out.push("");
   out.push(tr("dossier.guide"));
   out.push("");
@@ -343,7 +367,7 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           n: i + 1,
           date: s.startTimeUtc?.slice(0, 10),
           sport: s.sport,
-          dist_km: (s.distM / 1000).toFixed(2),
+          dist_km: (s.distM / 1000).toFixed(recentFrom == null ? 2 : 1),
           dur_moving: formatDuration(s.durMovingS),
           // Unité propre au sport : des minutes par kilomètre à vélo ou en
           // natation ne veulent rien dire, et un modèle les lirait comme des
@@ -355,10 +379,14 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           hr_max: s.hrMax,
           hr_source: hrSourceLabel(f.hrSource.verdict, locale),
           drift_pct: f.drift.applicable ? f.drift.decouplingPct!.toFixed(1) : "n/a",
-          temp_c: s.tempAvgC != null ? Math.round(s.tempAvgC) : undefined,
+          // Température de la montre, chauffée par le poignet : en mode
+          // historique, la colonne coûte plus qu'elle n'apprend.
+          temp_c: recentFrom == null && s.tempAvgC != null ? Math.round(s.tempAvgC) : undefined,
           intervals: f.digest.intervalSets.map((x) => x.description).join(" + ") || undefined,
           adherence: f.adherence.map((a) => gradeLabel(a.grade, locale)).join("/") || undefined,
-          file: f.filename,
+          // En mode historique, le nom de fichier (un identifiant Strava) ne
+          // dit rien à l'IA et coûte une colonne sur des centaines de lignes.
+          file: recentFrom == null ? f.filename : undefined,
         };
       }),
       LLM_DIALECT,
@@ -434,9 +462,12 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
   );
 
   // Progression aérobie : le bloc transversal le plus informatif du dossier.
-  const progRows = progressionRows(batch.progression);
+  // Sur une année, une ligne par course et par allure noierait la tendance :
+  // le mode historique la résume par mois.
+  const monthly = recentFrom != null;
+  const progRows = monthly ? progressionMonthlyRows(batch.progression) : progressionRows(batch.progression);
   if (progRows.length) {
-    for (const line of tr("dossier.progNote").split("\n")) out.push(`# ${line}`);
+    for (const line of tr(monthly ? "dossier.progMonthlyNote" : "dossier.progNote").split("\n")) out.push(`# ${line}`);
     block("aerobic_progression", toCsv(progRows, LLM_DIALECT));
     for (const s of batch.progression.series) {
       if (s.verdict) {
@@ -451,8 +482,10 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
   }
 
   if (detail) {
+    // La numérotation reste celle du tableau « sessions », même quand seules
+    // les séances récentes sont détaillées.
     for (let i = 0; i < batch.files.length; i++) {
-      out.push(...sessionBlocks(batch.files[i], i + 1, opts, locale, tr));
+      if (isRecent(batch.files[i])) out.push(...sessionBlocks(batch.files[i], i + 1, opts, locale, tr));
     }
   }
 

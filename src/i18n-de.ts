@@ -15,6 +15,8 @@ export const de: Partial<Catalog> = {
   "unit.percent": " %",
 
   "digest.errFormat": "Format von „{filename}“ nicht erkannt. Unterstützte Formate: TCX, GPX, FIT.",
+  "digest.errNoTime":
+    "„{filename}“ hat keine Zeitstempel: Das ist eine geplante Route, keine aufgezeichnete Einheit.",
   "digest.errNoPoints": "Keine verwertbaren Datenpunkte in der Datei.",
   "digest.warnZonesObserved":
     "HF-Zonen aus der in der Datei beobachteten maximalen HF berechnet, nicht aus einem Athletenprofil: mit Vorsicht interpretieren.",
@@ -292,6 +294,8 @@ export const de: Partial<Catalog> = {
   "dossier.title": "gps-digest — Trainingsdossier",
   "dossier.range": "{n} Einheit(en) vom {from} bis {to}",
   "dossier.volume": "Umfang: {km} km, {dur} in Bewegung",
+  "dossier.contextNote":
+    "Verlauf: {total} Einheiten. Vollständiges Detail für die letzten {days} Tage ({n} Einheit(en)); ältere stehen nur in der Tabelle „sessions“, eine Zeile pro Einheit.",
   "dossier.warningsHeader": "⚠ WARNUNGEN — vor jeder Schlussfolgerung lesen",
   "dossier.unknownDate": "Datum unbekannt",
   "dossier.sessionHeader": "═══ EINHEIT {n} — {date} — {sport} — {label} ═══",
@@ -310,6 +314,8 @@ export const de: Partial<Catalog> = {
   "dossier.streamNote": "Datenstrom unten: ein Punkt alle {step}, Werte über das Intervall gemittelt",
   "dossier.progNote":
     "HF bei Referenzpace im Zeitverlauf. Nur Zeilen mit gleichem\nhr_source vergleichen: zwei Sensoren sind nicht vergleichbar.",
+  "dossier.progMonthlyNote":
+    "Aerobe Entwicklung pro Monat: durchschnittliche HF bei jedem Referenztempo,\ngewichtet nach der Zeit in diesem Tempo. Nur Zeilen mit gleicher hr_source vergleichen.",
   "dossier.progVerdict": "{pace} ({source}): {verdict}",
 
   "chart.sessionPower": "Leistung und Herzfrequenz",

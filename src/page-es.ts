@@ -60,10 +60,12 @@ export const es: Partial<PageCatalog> = {
     "Los archivos de tu reloj son demasiado grandes para ChatGPT, Gemini o Claude. Esta herramienta los convierte en un informe de entrenamiento estructurado (ritmos, vueltas, zonas, repeticiones, deriva cardíaca) que la IA sí puede analizar.",
   "home.promise":
     "<strong>Tus archivos no salen de tu navegador.</strong> Todo el cálculo se hace en tu dispositivo, y puedes comprobarlo en la pestaña Red. Un recorrido GPS revela tu dirección al metro, así que la salida y la llegada se recortan por defecto. <a href=\"{{href:confidentialite.html}}\">Lo que sale y lo que nunca sale</a>.",
-  "home.step1.title": "Exporta tus sesiones",
-  "home.step1.text": "Desde tu reloj o Strava, en FIT, TCX o GPX. Paso a paso: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step2.title": "Suéltalas aquí",
-  "home.step2.text": "Tantas como quieras, incluso en ZIP. Todo se calcula en tu navegador: tus archivos no se envían a ningún sitio.",
+  "home.step1.title": "Descarga tu archivo de Strava",
+  "home.step1.text": "En <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, en «Download your account». Strava te envía un ZIP por correo, normalmente en pocas horas. ¿Con prisa o sin Strava? Exporta algunas sesiones: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step1.badge":
+    "Recomendado",
+  "home.step2.title": "Suelta el ZIP aquí, tal cual",
+  "home.step2.text": "La herramienta se queda con tus últimos 12 meses e ignora fotos y rutas. Todo se calcula en tu navegador: tus archivos no se envían a ningún sitio.",
   "home.step3.title": "Pega el informe en tu IA",
   "home.step3.text": "ChatGPT, Claude, Gemini o Vibe, con tu pregunta. <a href=\"{{href:post-ia-coach.html}}\">¿Qué preguntarle?</a>",
 
@@ -122,10 +124,22 @@ export const es: Partial<PageCatalog> = {
   "home.reads.title":
     "Guías y artículos",
   "home.files.drop": "Suelta aquí tus archivos",
-  "home.files.formats": "TCX, GPX o FIT, tantos como quieras, una temporada entera si hace falta. Los ZIP de Garmin y los .gz de Strava funcionan tal cual.",
+  "home.files.formats": "Tu archivo completo de Strava, un ZIP de Garmin o archivos FIT, TCX y GPX: todo funciona tal cual.",
   "home.files.fit":
     "FIT es el formato nativo de tu reloj: es el único que incluye los largos de piscina y el sensor cardíaco realmente emparejado.",
   "home.files.pick": "Elegir archivos",
+  "home.archive.period":
+    "Periodo analizado:",
+  "home.archive.p3m":
+    "Últimos 3 meses",
+  "home.archive.p6m":
+    "Últimos 6 meses",
+  "home.archive.p1y":
+    "Últimos 12 meses",
+  "home.archive.p2y":
+    "Últimos 2 años",
+  "home.archive.pAll":
+    "Todo el historial",
 
   "home.export.title": "3. Tu informe, listo para analizar",
   "home.export.intro":
@@ -226,6 +240,12 @@ export const es: Partial<PageCatalog> = {
 
   "js.libError":
     "<strong>La herramienta no se pudo cargar.</strong> Comprueba tu conexión y recarga la página. En una red de empresa, un filtro de seguridad puede bloquear el sitio: prueba desde otra conexión.",
+  "js.archiveNote":
+    "<strong>Archivo:</strong> {kept} sesiones conservadas de {total}. Los últimos {days} días se detallan sesión a sesión; el resto del periodo ocupa una línea por sesión en el informe.",
+  "js.archiveProgress":
+    "Leyendo el archivo: {n} sesiones conservadas ({read} archivos leídos)…",
+  "js.olderInTable":
+    "Detalle mostrado para las sesiones de los últimos {days} días. Las {n} más antiguas aparecen en la tabla de sesiones y en el informe.",
   "js.vigilance": "{n} punto(s) de atención incluidos en el informe",
   "js.indicShort": "orient.",
   "js.sensorSummary": "{file} — {label} (confianza {confidence})",
@@ -803,7 +823,7 @@ export const es: Partial<PageCatalog> = {
   "guide.strava.lede":
     "Strava guarda tus salidas, pero no se las da a tu IA, salvo con un conector de pago que solo funciona con Claude. La buena noticia: exportar es gratis, siempre que uses la web. Así se hace, y esto es lo que hay que hacer después con el archivo.",
   "guide.strava.tldr1":
-    "Una actividad: en strava.com, menú «…» de la actividad, y luego exportar el archivo original o exportar GPX.",
+    "Lo más completo: el archivo de tu cuenta (strava.com/account, «Download your account»). Suelta el ZIP tal cual: gps-digest se queda con tus últimos 12 meses.",
   "guide.strava.tldr2":
     "La app móvil de Strava no exporta nada: hace falta la web, desde un ordenador.",
   "guide.strava.tldr3":
@@ -825,9 +845,9 @@ export const es: Partial<PageCatalog> = {
   "guide.strava.m1.note":
     "Si la actividad se registró con la app de Strava en el móvil, la exportación GPX es más que suficiente.",
   "guide.strava.m2.title":
-    "Todo el historial: el archivo de tu cuenta",
+    "Recomendado: el archivo de tu cuenta, para un año de contexto",
   "guide.strava.m2.p":
-    "En los ajustes de tu cuenta de Strava, pestaña Mi cuenta, solicita la descarga de tu cuenta. Strava te envía por correo un enlace a un archivo, normalmente en pocas horas. Las sesiones están en la carpeta <code>activities</code>, a menudo comprimidas en <code>.gz</code>: suéltalas tal cual en gps-digest. El archivo <code>activities.csv</code> indica la fecha de cada número de actividad, útil para quedarte solo con las últimas semanas.",
+    "En <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, en «Download your account», solicita el archivo de tu cuenta. Strava te envía un enlace por correo, normalmente en pocas horas. Suelta el ZIP tal cual en gps-digest: la herramienta encuentra tus sesiones, ignora fotos y rutas, y se queda con los últimos 12 meses por defecto, desde 3 meses hasta todo el historial. Los últimos 14 días se detallan sesión a sesión y el resto ocupa una línea por sesión: un año con más de 300 sesiones son unos 30 000 tokens.",
   "guide.strava.m3.title":
     "Una precaución: el ritmo de Strava no es el de Garmin",
   "guide.strava.m3.p":
