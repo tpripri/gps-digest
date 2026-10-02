@@ -61,14 +61,12 @@ export const ja: Partial<PageCatalog> = {
     "ウォッチのファイルは ChatGPT、Gemini、Claude にとって大きすぎます。このツールは、AI が本当に分析できる構造化されたトレーニング記録（ペース、ラップ、ゾーン、レップ、心拍ドリフト）に変換します。",
   "home.promise":
     "<strong>ファイルはブラウザの外に出ません。</strong>計算はすべてお使いの端末で行われ、ネットワークタブで確認できます。GPS の軌跡は住所をメートル単位で明かしてしまうため、スタートとゴールは初期設定でトリミングされます。<a href=\"{{href:confidentialite.html}}\">外に出るもの、決して出ないもの</a>。",
-  "home.step1.title": "ファイルをアップロード",
-  "home.step1.text": "TCX、GPX、FIT をいくつでも。ウォッチや Strava から書き出したものが使えます。",
-  "home.step2.title": "基準値を入力",
-  "home.step2.text": "最大心拍数と最新のレースタイム。これがないと、ゾーンと予測はおおよその値になります。",
-  "home.step3.title": "警告を読む",
-  "home.step3.text": "センサーの変更や信頼できない心拍数は、ほかの結果の有効性を左右します。",
-  "home.step4.title": "記録を受け取る",
-  "home.step4.text": "注釈付きの完全なテキストファイル。ChatGPT、Gemini、Claude にそのまま渡せます。",
+  "home.step1.title": "セッションを書き出す",
+  "home.step1.text": "ウォッチや Strava から FIT・TCX・GPX で。手順はこちら：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step2.title": "ここにドロップ",
+  "home.step2.text": "いくつでも、ZIP のままでも OK。計算はすべてブラウザ内で行われ、ファイルがどこかに送信されることはありません。",
+  "home.step3.title": "記録を AI に貼り付ける",
+  "home.step3.text": "ChatGPT・Claude・Gemini・Vibe に、質問と一緒に貼り付けます。<a href=\"{{href:post-ia-coach.html}}\">何を聞けばいい？</a>",
 
   "home.why.title": "なぜこのツールを使うのか",
   "home.why.p1":
@@ -94,7 +92,7 @@ export const ja: Partial<PageCatalog> = {
   "home.why.hardwareText":
     "複数のセッションにわたって、心拍センサーの変更を検出し、日付を示します。見逃すと、心拍数の比較がすべて気づかないうちに無効になります。",
 
-  "home.set.title": "1. 基準値",
+  "home.set.title": "分析を細かく調整（任意）：最大心拍数、最近のレース結果、天気",
   "home.set.intro":
     "任意ですが、これらの値がないと、ゾーンはファイル内で観測された最大心拍数から推定されるため、おおよその値になります。",
   "home.set.fcmax": "最大心拍数",
@@ -121,7 +119,9 @@ export const ja: Partial<PageCatalog> = {
   "home.set.weatherHint":
     "コースの<strong>中間地点</strong>（約 1 km 単位に丸めたもの）と日付を Open-Meteo に送信します。スタート地点もあなたのデータも、決して送りません。",
 
-  "home.files.title": "2. ファイル",
+  "home.files.title": "ファイル",
+  "home.reads.title":
+    "ガイドと記事",
   "home.files.drop": "ここにファイルをドロップ",
   "home.files.formats": "TCX、GPX、FIT をいくつでも。必要ならシーズン丸ごとでも。Garmin の ZIP や Strava の .gz もそのままドロップできます。",
   "home.files.fit":
@@ -723,8 +723,6 @@ export const ja: Partial<PageCatalog> = {
     "ほかのエクスポートガイド",
   "blog.guides":
     "エクスポートガイド",
-  "home.guides":
-    "ファイルの取り出し方：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
   "guide.garmin.title":
     "ガーミン（Garmin）のデータを FIT で書き出して ChatGPT で分析する方法",
   "guide.garmin.description":

@@ -61,14 +61,12 @@ export const zh: Partial<PageCatalog> = {
     "手表文件对 ChatGPT、Gemini 或 Claude 来说太大了。本工具把它们整理成结构化训练档案（配速、圈、区间、重复、心率漂移），让 AI 真正能够分析。",
   "home.promise":
     "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此起点和终点默认会被裁剪。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
-  "home.step1.title": "上传文件",
-  "home.step1.text": "数量不限，TCX、GPX 或 FIT 均可，从手表或 Strava 导出。",
-  "home.step2.title": "填写参考值",
-  "home.step2.text": "最大心率和最近的比赛成绩。没有它们，心率区间和成绩预测只能是近似值。",
-  "home.step3.title": "阅读警告",
-  "home.step3.text": "传感器更换、心率不可靠：其余结果是否成立取决于它们。",
-  "home.step4.title": "获取档案",
-  "home.step4.text": "一份完整、带注释的文本文件，可直接放进 ChatGPT、Gemini 或 Claude。",
+  "home.step1.title": "导出训练数据",
+  "home.step1.text": "从手表或 Strava 导出 FIT、TCX 或 GPX 文件。分步指南：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step2.title": "拖到这里",
+  "home.step2.text": "数量不限，ZIP 也可以。所有计算都在浏览器中完成：你的文件不会上传到任何地方。",
+  "home.step3.title": "把档案粘贴给 AI",
+  "home.step3.text": "ChatGPT、DeepSeek、Claude 或 Gemini 都可以，再提出你的问题。<a href=\"{{href:post-ia-coach.html}}\">该问什么？</a>",
 
   "home.why.title": "为什么要用这个工具？",
   "home.why.p1":
@@ -94,7 +92,7 @@ export const zh: Partial<PageCatalog> = {
   "home.why.hardwareText":
     "跨多次训练，工具会检测并标出心率传感器的更换，否则所有心率比较都会在不知不觉中失效。",
 
-  "home.set.title": "1. 你的参考值",
+  "home.set.title": "细化分析（可选）：最大心率、最近比赛成绩、天气",
   "home.set.intro": "可选，但没有这些值时，心率区间只能根据文件中观测到的最大心率估算，结果不够准确。",
   "home.set.fcmax": "最大心率",
   "home.set.fcmaxHint": "实测值，不是 220 减年龄",
@@ -120,7 +118,9 @@ export const zh: Partial<PageCatalog> = {
   "home.set.weatherHint":
     "向 Open-Meteo 发送路线的<strong>中点</strong>（取整到约 1 公里）和日期。绝不发送起点，也绝不发送你的数据。",
 
-  "home.files.title": "2. 你的文件",
+  "home.files.title": "你的文件",
+  "home.reads.title":
+    "指南与文章",
   "home.files.drop": "把文件拖到这里",
   "home.files.formats": "TCX、GPX 或 FIT，数量不限，需要的话可以是整个赛季。佳明的 ZIP 和 Strava 的 .gz 文件可直接拖入。",
   "home.files.fit": "FIT 是手表的原生格式：只有它包含泳池趟数和实际配对的心率传感器信息。",
@@ -714,8 +714,6 @@ export const zh: Partial<PageCatalog> = {
     "其他导出指南",
   "blog.guides":
     "导出指南",
-  "home.guides":
-    "如何获取文件：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
   "guide.garmin.title":
     "导出佳明数据（FIT）给 ChatGPT 或 DeepSeek 分析：完整指南",
   "guide.garmin.description":

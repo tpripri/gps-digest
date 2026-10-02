@@ -60,14 +60,12 @@ export const en: PageCatalog = {
     "Your watch files are too big for ChatGPT, Gemini or Claude. This tool turns them into a structured training file (paces, laps, zones, reps, cardiac drift) that the AI can actually analyze.",
   "home.promise":
     "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so the start and finish are trimmed by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
-  "home.step1.title": "Drop your files",
-  "home.step1.text": "As many as you like, in TCX, GPX or FIT, exported from your watch or from Strava.",
-  "home.step2.title": "Enter your benchmarks",
-  "home.step2.text": "Max heart rate and latest race time. Without them, zones and projections stay approximate.",
-  "home.step3.title": "Read the warnings",
-  "home.step3.text": "Sensor changes and unreliable heart rate determine whether the rest holds up.",
-  "home.step4.title": "Get your file",
-  "home.step4.text": "A complete, annotated text file to drop into ChatGPT, Gemini or Claude.",
+  "home.step1.title": "Export your workouts",
+  "home.step1.text": "From your watch or Strava, as FIT, TCX or GPX. Step by step: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Drop them here",
+  "home.step2.text": "As many as you like, even as a ZIP. Everything is computed in your browser: your files are never uploaded.",
+  "home.step3.title": "Paste the file into your AI",
+  "home.step3.text": "ChatGPT, Claude, Gemini or Vibe, with your question. <a href=\"{{href:post-ia-coach.html}}\">What to ask?</a>",
 
   "home.why.title": "Why use this tool?",
   "home.why.p1":
@@ -93,7 +91,7 @@ export const en: PageCatalog = {
   "home.why.hardwareText":
     "Across several sessions, the tool detects and dates a heart rate sensor change, which would otherwise silently invalidate every heart rate comparison.",
 
-  "home.set.title": "1. Your benchmarks",
+  "home.set.title": "Fine-tune the analysis (optional): max HR, recent race, weather",
   "home.set.intro":
     "Optional, but without these values zones are estimated from the maximum heart rate observed in the files, which is approximate.",
   "home.set.fcmax": "Max heart rate",
@@ -120,7 +118,9 @@ export const en: PageCatalog = {
   "home.set.weatherHint":
     "Sends the <strong>midpoint</strong> of the route, rounded to ~1 km, and the date to Open-Meteo. Never your start point, never your data.",
 
-  "home.files.title": "2. Your files",
+  "home.files.title": "Your files",
+  "home.reads.title":
+    "Guides and articles",
   "home.files.drop": "Drop your files here",
   "home.files.formats": "TCX, GPX or FIT, as many as you like, a whole season if needed. Garmin ZIP files and Strava .gz files work as is.",
   "home.files.fit":
@@ -737,8 +737,6 @@ export const en: PageCatalog = {
     "Other export guides",
   "blog.guides":
     "Export guides",
-  "home.guides":
-    "How to get your files: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "guide.garmin.title":
     "Export Garmin data (FIT) for ChatGPT: the guide",
   "guide.garmin.description":
