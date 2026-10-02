@@ -162,6 +162,11 @@ pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad
 .actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:.9rem 0}
 details{border:1px solid var(--line);border-radius:var(--radius);padding:.55rem .85rem;margin:.5rem 0}
 summary{cursor:pointer;font-weight:600;min-height:30px}
+details.tune{margin:0 0 1rem}
+details.tune summary{font-weight:500;color:var(--ink-soft)}
+details.tune[open] summary{margin-bottom:.6rem}
+.reads{padding-left:1.1rem}
+.reads li{margin:.45rem 0}
 .sig{font-size:.84rem;color:var(--ink-soft);margin:.25rem 0}
 .sig b{color:var(--ink);font-variant-numeric:tabular-nums}
 .hidden{display:none}
@@ -192,11 +197,6 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <p class="lede">{{home.lede}}</p>
 </header>
 
-<p class="promise">
-  <span aria-hidden="true">🔒</span>
-  <span>{{home.promise}}</span>
-</p>
-
 <main>
 
 <div class="steps">
@@ -206,83 +206,54 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
     <p>{{home.step2.text}}</p></div>
   <div class="step"><span class="n">3</span><h3>{{home.step3.title}}</h3>
     <p>{{home.step3.text}}</p></div>
-  <div class="step"><span class="n">4</span><h3>{{home.step4.title}}</h3>
-    <p>{{home.step4.text}}</p></div>
 </div>
-
-<section aria-labelledby="pourquoi">
-  <h2 id="pourquoi">{{home.why.title}}</h2>
-  <p>{{home.why.p1}}</p>
-  <p>{{home.why.p2}}</p>
-
-  <h3>{{home.why.tableTitle}}</h3>
-  <div class="scroll">
-  <table>
-    <thead><tr><th>{{home.why.colAnalysis}}</th><th>{{home.why.colAnswer}}</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">{{home.why.sensor}}</th>
-        <td>{{home.why.sensorText}}</td></tr>
-      <tr><th scope="row">{{home.why.drift}}</th>
-        <td>{{home.why.driftText}}</td></tr>
-      <tr><th scope="row">{{home.why.blocks}}</th>
-        <td>{{home.why.blocksText}}</td></tr>
-      <tr><th scope="row">{{home.why.projections}}</th>
-        <td>{{home.why.projectionsText}}</td></tr>
-      <tr><th scope="row">{{home.why.hardware}}</th>
-        <td>{{home.why.hardwareText}}</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p>{{home.why.more}}</p>
-</section>
-
-<section aria-labelledby="reperes">
-  <h2 id="reperes">{{home.set.title}}</h2>
-  <p class="sig">{{home.set.intro}}</p>
-  <div class="settings">
-    <div class="field">
-      <label for="fcmax">{{home.set.fcmax}} <span class="hint">{{home.set.fcmaxHint}}</span></label>
-      <input type="number" id="fcmax" min="120" max="230" placeholder="{{attr:home.set.fcmaxPlaceholder}}">
-    </div>
-    <div class="field">
-      <label for="seuil">{{home.set.threshold}} <span class="hint">{{home.set.thresholdHint}}</span></label>
-      <input type="text" id="seuil" inputmode="numeric" placeholder="4:35">
-    </div>
-    <div class="field">
-      <label for="refdist">{{home.set.refDist}} <span class="hint">{{home.set.refDistHint}}</span></label>
-      <select id="refdist">
-        <option value="">{{home.set.refNone}}</option>
-        <option value="5000">{{home.set.ref5k}}</option>
-        <option value="10000">{{home.set.ref10k}}</option>
-        <option value="21097.5">{{home.set.refHalf}}</option>
-        <option value="42195">{{home.set.refMarathon}}</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="reftime">{{home.set.refTime}} <span class="hint">{{home.set.refTimeHint}}</span></label>
-      <input type="text" id="reftime" inputmode="numeric" placeholder="3:29:00">
-    </div>
-    <div class="field">
-      <label for="refdate">{{home.set.refDate}} <span class="hint">{{home.set.refDateHint}}</span></label>
-      <input type="date" id="refdate">
-    </div>
-    <div class="field">
-      <label for="privacy">{{home.set.privacy}} <span class="hint">{{home.set.privacyHint}}</span></label>
-      <input type="number" id="privacy" value="250" min="0" max="2000" step="50">
-    </div>
-    <div class="field">
-      <label for="weather">{{home.set.weather}}</label>
-      <select id="weather">
-        <option value="on" selected>{{home.set.weatherOn}}</option>
-        <option value="off">{{home.set.weatherOff}}</option>
-      </select>
-      <span class="hint">{{home.set.weatherHint}}</span>
-    </div>
-  </div>
-</section>
 
 <section aria-labelledby="depot">
   <h2 id="depot">{{home.files.title}}</h2>
+  <details class="tune">
+    <summary id="reperes">{{home.set.title}}</summary>
+    <p class="sig">{{home.set.intro}}</p>
+    <div class="settings">
+      <div class="field">
+        <label for="fcmax">{{home.set.fcmax}} <span class="hint">{{home.set.fcmaxHint}}</span></label>
+        <input type="number" id="fcmax" min="120" max="230" placeholder="{{attr:home.set.fcmaxPlaceholder}}">
+      </div>
+      <div class="field">
+        <label for="seuil">{{home.set.threshold}} <span class="hint">{{home.set.thresholdHint}}</span></label>
+        <input type="text" id="seuil" inputmode="numeric" placeholder="4:35">
+      </div>
+      <div class="field">
+        <label for="refdist">{{home.set.refDist}} <span class="hint">{{home.set.refDistHint}}</span></label>
+        <select id="refdist">
+          <option value="">{{home.set.refNone}}</option>
+          <option value="5000">{{home.set.ref5k}}</option>
+          <option value="10000">{{home.set.ref10k}}</option>
+          <option value="21097.5">{{home.set.refHalf}}</option>
+          <option value="42195">{{home.set.refMarathon}}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="reftime">{{home.set.refTime}} <span class="hint">{{home.set.refTimeHint}}</span></label>
+        <input type="text" id="reftime" inputmode="numeric" placeholder="3:29:00">
+      </div>
+      <div class="field">
+        <label for="refdate">{{home.set.refDate}} <span class="hint">{{home.set.refDateHint}}</span></label>
+        <input type="date" id="refdate">
+      </div>
+      <div class="field">
+        <label for="privacy">{{home.set.privacy}} <span class="hint">{{home.set.privacyHint}}</span></label>
+        <input type="number" id="privacy" value="250" min="0" max="2000" step="50">
+      </div>
+      <div class="field">
+        <label for="weather">{{home.set.weather}}</label>
+        <select id="weather">
+          <option value="on" selected>{{home.set.weatherOn}}</option>
+          <option value="off">{{home.set.weatherOff}}</option>
+        </select>
+        <span class="hint">{{home.set.weatherHint}}</span>
+      </div>
+    </div>
+  </details>
   <div class="drop" id="drop">
     <p><strong>{{home.files.drop}}</strong></p>
     <p>{{home.files.formats}}</p>
@@ -292,7 +263,6 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
     </p>
     <input type="file" id="files" multiple accept=".tcx,.gpx,.fit,.zip,.gz" class="hidden">
   </div>
-  <p style="font-size:.9rem;margin:.7rem 0 0">{{home.guides}}</p>
   <div id="progress" class="hidden" style="margin-top:1rem">
     <progress id="bar" max="100" value="0"></progress>
     <p class="sig" id="progress-label"></p>
@@ -385,6 +355,43 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <div id="projections"></div>
 </section>
 
+<section aria-labelledby="pourquoi">
+  <h2 id="pourquoi">{{home.why.title}}</h2>
+  <p>{{home.why.p1}}</p>
+  <p>{{home.why.p2}}</p>
+
+  <h3>{{home.why.tableTitle}}</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>{{home.why.colAnalysis}}</th><th>{{home.why.colAnswer}}</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">{{home.why.sensor}}</th>
+        <td>{{home.why.sensorText}}</td></tr>
+      <tr><th scope="row">{{home.why.drift}}</th>
+        <td>{{home.why.driftText}}</td></tr>
+      <tr><th scope="row">{{home.why.blocks}}</th>
+        <td>{{home.why.blocksText}}</td></tr>
+      <tr><th scope="row">{{home.why.projections}}</th>
+        <td>{{home.why.projectionsText}}</td></tr>
+      <tr><th scope="row">{{home.why.hardware}}</th>
+        <td>{{home.why.hardwareText}}</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>{{home.why.more}}</p>
+</section>
+
+<section aria-labelledby="lectures">
+  <h2 id="lectures">{{home.reads.title}}</h2>
+  <ul class="reads">
+    <li><a href="{{href:guide-garmin.html}}">{{guide.garmin.h1}}</a></li>
+    <li><a href="{{href:guide-strava.html}}">{{guide.strava.h1}}</a></li>
+    <li><a href="{{href:guide-apple.html}}">{{guide.apple.h1}}</a></li>
+    <li><a href="{{href:post-ia-coach.html}}">{{coach.h1}}</a></li>
+    <li><a href="{{href:post-ia-analyse.html}}">{{post.h1}}</a></li>
+  </ul>
+</section>
+
 <section aria-labelledby="faq">
   <h2 id="faq">{{home.faq.title}}</h2>
 
@@ -433,6 +440,11 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <p class="note"><strong>{{home.refs.noteTitle}}</strong>
     {{home.refs.note}}</p>
 </section>
+
+<p class="promise">
+  <span aria-hidden="true">🔒</span>
+  <span>{{home.promise}}</span>
+</p>
 
 </main>
 

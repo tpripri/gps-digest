@@ -60,14 +60,12 @@ export const de: Partial<PageCatalog> = {
     "Die Dateien deiner Uhr sind zu groß für ChatGPT, Gemini oder Claude. Dieses Tool macht daraus ein strukturiertes Trainingsdossier (Pace, Runden, Zonen, Wiederholungen, kardiale Drift), das die KI wirklich analysieren kann.",
   "home.promise":
     "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden Start und Ziel standardmäßig gekürzt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
-  "home.step1.title": "Dateien hochladen",
-  "home.step1.text": "So viele du willst, als TCX, GPX oder FIT, exportiert aus deiner Uhr oder aus Strava.",
-  "home.step2.title": "Eckdaten angeben",
-  "home.step2.text": "Maximale HF und letzte Wettkampfzeit. Ohne sie bleiben Zonen und Prognosen ungefähr.",
-  "home.step3.title": "Warnungen lesen",
-  "home.step3.text": "Sensorwechsel, unzuverlässige HF: Davon hängt ab, ob der Rest belastbar ist.",
-  "home.step4.title": "Dossier abholen",
-  "home.step4.text": "Eine vollständige, kommentierte Textdatei für ChatGPT, Gemini oder Claude.",
+  "home.step1.title": "Exportiere deine Einheiten",
+  "home.step1.text": "Von deiner Uhr oder aus Strava, als FIT, TCX oder GPX. Schritt für Schritt: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Lege sie hier ab",
+  "home.step2.text": "So viele du willst, auch als ZIP. Alles wird in deinem Browser berechnet: Deine Dateien werden nirgendwohin hochgeladen.",
+  "home.step3.title": "Füge das Dossier in deine KI ein",
+  "home.step3.text": "ChatGPT, Claude, Gemini oder Vibe, mit deiner Frage. <a href=\"{{href:post-ia-coach.html}}\">Was fragen?</a>",
 
   "home.why.title": "Warum dieses Tool?",
   "home.why.p1":
@@ -93,7 +91,7 @@ export const de: Partial<PageCatalog> = {
   "home.why.hardwareText":
     "Über mehrere Einheiten erkennt und datiert das Tool einen Wechsel des Herzfrequenzsensors, der sonst unbemerkt jeden HF-Vergleich entwerten würde.",
 
-  "home.set.title": "1. Deine Eckdaten",
+  "home.set.title": "Analyse verfeinern (optional): maximale HF, letzter Wettkampf, Wetter",
   "home.set.intro":
     "Optional, aber ohne diese Werte werden die Zonen aus der in den Dateien beobachteten maximalen HF geschätzt, was ungenau ist.",
   "home.set.fcmax": "Maximale HF",
@@ -120,7 +118,9 @@ export const de: Partial<PageCatalog> = {
   "home.set.weatherHint":
     "Sendet den <strong>Mittelpunkt</strong> der Strecke, auf ~1 km gerundet, und das Datum an Open-Meteo. Nie deinen Start, nie deine Daten.",
 
-  "home.files.title": "2. Deine Dateien",
+  "home.files.title": "Deine Dateien",
+  "home.reads.title":
+    "Anleitungen und Artikel",
   "home.files.drop": "Dateien hier ablegen",
   "home.files.formats": "TCX, GPX oder FIT, so viele du willst, notfalls eine ganze Saison. ZIP-Dateien von Garmin und .gz-Dateien von Strava funktionieren direkt.",
   "home.files.fit":
@@ -742,8 +742,6 @@ export const de: Partial<PageCatalog> = {
     "Die anderen Export-Anleitungen",
   "blog.guides":
     "Export-Anleitungen",
-  "home.guides":
-    "So kommst du an deine Dateien: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "guide.garmin.title":
     "Garmin-Daten (FIT) für ChatGPT exportieren: die Anleitung",
   "guide.garmin.description":

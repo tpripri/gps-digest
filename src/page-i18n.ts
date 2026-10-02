@@ -110,14 +110,12 @@ const fr = {
     "Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude. Cet outil en fait un dossier d'entraînement structuré — allures, tours, zones, répétitions, dérive cardiaque — que l'IA peut vraiment analyser.",
   "home.promise":
     "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : le départ et l'arrivée sont rognés par défaut. <a href=\"{{href:confidentialite.html}}\">Ce qui sort, et ce qui n'en sort jamais</a>.",
-  "home.step1.title": "Déposez vos fichiers",
-  "home.step1.text": "Autant que vous voulez, en TCX, GPX ou FIT, exportés de votre montre ou de Strava.",
-  "home.step2.title": "Renseignez vos repères",
-  "home.step2.text": "FC maximale et dernier chrono. Sans eux, zones et projections restent approximatives.",
-  "home.step3.title": "Lisez les avertissements",
-  "home.step3.text": "Changement de capteur, FC peu fiable : ils conditionnent la validité du reste.",
-  "home.step4.title": "Récupérez le dossier",
-  "home.step4.text": "Un fichier texte complet et annoté, à glisser dans ChatGPT, Gemini ou Claude.",
+  "home.step1.title": "Exportez vos séances",
+  "home.step1.text": "Depuis votre montre ou Strava, en FIT, TCX ou GPX. Pas à pas : <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Déposez-les ici",
+  "home.step2.text": "Autant que vous voulez, même en ZIP. Tout est calculé dans votre navigateur : vos fichiers ne sont envoyés nulle part.",
+  "home.step3.title": "Collez le dossier dans votre IA",
+  "home.step3.text": "ChatGPT, Claude, Gemini ou Vibe, avec votre question. <a href=\"{{href:post-ia-coach.html}}\">Quoi lui demander ?</a>",
 
   "home.why.title": "Pourquoi passer par cet outil ?",
   "home.why.p1":
@@ -143,7 +141,7 @@ const fr = {
   "home.why.hardwareText":
     "Sur plusieurs séances, l'outil détecte et date un changement de capteur cardiaque — qui invaliderait silencieusement toute comparaison de FC.",
 
-  "home.set.title": "1. Vos repères",
+  "home.set.title": "Affiner l'analyse (facultatif) : FC max, dernier chrono, météo",
   "home.set.intro":
     "Facultatif, mais sans ces valeurs les zones sont estimées sur la FC maximale observée dans les fichiers, ce qui est approximatif.",
   "home.set.fcmax": "FC maximale",
@@ -170,7 +168,9 @@ const fr = {
   "home.set.weatherHint":
     "Envoie le <strong>milieu</strong> du parcours arrondi à ~1 km et la date à Open-Meteo. Jamais votre départ, jamais vos données.",
 
-  "home.files.title": "2. Vos fichiers",
+  "home.files.title": "Vos fichiers",
+  "home.reads.title":
+    "Guides et articles",
   "home.files.drop": "Déposez vos fichiers ici",
   "home.files.formats": "TCX, GPX ou FIT, autant que vous voulez, une saison entière si besoin. Les ZIP de Garmin et les .gz de Strava passent tels quels.",
   "home.files.fit":
@@ -802,8 +802,6 @@ const fr = {
     "Les autres guides d'export",
   "blog.guides":
     "Guides d'export",
-  "home.guides":
-    "Comment récupérer vos fichiers : <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "guide.garmin.title":
     "Exporter ses données Garmin (FIT) pour ChatGPT : le guide",
   "guide.garmin.description":
