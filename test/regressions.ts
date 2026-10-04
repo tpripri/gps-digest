@@ -11,6 +11,7 @@
 import { parseFitBuffer, parseFitParts } from "../src/parse-fit.ts";
 import { digestActivity } from "../src/digest.ts";
 import { hrZones } from "../src/analyze.ts";
+import { bestEfforts } from "../src/efforts.ts";
 import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
 import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
@@ -204,6 +205,45 @@ section("4. Zones de FC paramétrées, mêmes bornes pour toutes les séances");
     { locale: "fr", athlete: { lthr: 160 } });
   check("avec profil : base annoncée (modèle et valeur)",
     buildDossier(withProfile, { streamMode: "none" }).includes(t("fr", "dossier.hrZonesThreshold", { hr: 160 })));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("5. Meilleurs efforts : sauts GPS rejetés, efforts réels conservés");
+{
+  /** Footing à 3 m/s, cadence 168, FC 140 ; `tweak` modifie le parcours. */
+  const footing = (tweak: (t: number, d: number) => { d: number; cad?: number; hr?: number }) => {
+    const samples: Sample[] = [];
+    let d = 0;
+    for (let t = 0; t <= 1800; t++) {
+      if (t > 0) d += 3;
+      const p = tweak(t, d);
+      samples.push({ t, dist: p.d, ele: 100, cad: p.cad ?? 168, hr: p.hr ?? 140 });
+    }
+    return samples;
+  };
+  // Tunnel : la distance se fige 25 s, puis rattrape d'un coup 80 m de plus.
+  const tunnel = footing((t, d) => ({ d: t >= 600 && t < 625 ? 1800 : t >= 625 ? d + 80 : d }));
+  const e400 = bestEfforts(tunnel).find((e) => e.distanceM === 400);
+  check("tunnel : pas de 400 m irréaliste", !!e400 && e400.timeS > 120, `${e400?.timeS.toFixed(0)} s`);
+
+  // Vrai 400 m rapide au milieu du footing : 6 m/s, cadence 192, FC qui monte.
+  let extra = 0;
+  const fast = footing((t, d) => {
+    if (t >= 900 && t < 967) { extra += 3; return { d: d + extra, cad: 192, hr: 165 }; }
+    return { d: d + extra };
+  });
+  const real = bestEfforts(fast).find((e) => e.distanceM === 400);
+  check("effort réel conservé (400 m à 6 m/s, cadence et FC cohérentes)", !!real && real.timeS < 70, `${real?.timeS.toFixed(0)} s`);
+
+  // Foulée impossible : 400 m à 7 m/s avec une cadence de footing (2,5 m/pas).
+  let extra2 = 0;
+  const stride = footing((t, d) => {
+    if (t >= 900 && t < 958) { extra2 += 4; return { d: d + extra2 }; }
+    return { d: d + extra2 };
+  });
+  const bad = bestEfforts(stride).find((e) => e.distanceM === 400);
+  // L'artefact (400 m en 57 s à cadence de footing) ne doit plus être retenu.
+  check("foulée incohérente avec la cadence : effort rejeté", !!bad && bad.timeS > 60, `${bad?.timeS.toFixed(0)} s`);
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

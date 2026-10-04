@@ -67,12 +67,35 @@ export function confidenceLabel(c: RaceProjection["confidence"], locale?: string
   return t(locale, `proj.confidence.${c}` as const);
 }
 
+/** Au-delà, ce n'est pas un coureur qui accélère : c'est un GPS qui se recale. */
+const MAX_RUN_SPEED_MS = 8;
+/**
+ * Part maximale d'une fenêtre fournie par des pas trop rapides. Un semi
+ * enregistré en ville compte quelques petits sauts qui rattrapent la distance
+ * perdue sous un pont : ils ne faussent pas son temps. Un 400 m bâti sur le
+ * recalage d'un tunnel, si.
+ */
+const MAX_JUMP_SHARE = 0.02;
+/** Foulée au-delà de laquelle allure et cadence se contredisent. */
+const MAX_STRIDE_M = 2.2;
+/**
+ * Écart de FC toléré sous la moyenne de la séance, pour un effort d'au moins
+ * 800 m. En deçà, la FC ne répond pas encore (latence) : on ne la juge pas.
+ */
+const HR_SLACK_BPM = 10;
+
 /**
  * Fenêtre glissante sur la distance : cherche, pour chaque distance cible, la
  * fenêtre la plus rapide de la trace. Deux pointeurs, coût linéaire.
  *
  * On interpole aux deux bornes, sinon un échantillonnage à 1 Hz introduit une
  * erreur systématique de plusieurs secondes sur un 400 m.
+ *
+ * Une fenêtre n'est retenue que si elle est plausible : pas bâtie sur des
+ * sauts de position (pas au-dessus de 8 m/s), foulée cohérente avec la
+ * cadence, FC cohérente avec l'effort. Sans ces garde-fous, la sortie d'un
+ * tunnel donnait un 400 m en 0:37, qui faussait ensuite vitesse critique et
+ * projections.
  */
 export function bestEfforts(
   samples: Sample[],
@@ -83,6 +106,41 @@ export function bestEfforts(
   if (n < 10) return out;
 
   const total = samples[n - 1].dist ?? 0;
+
+  // Sommes cumulées : distance excédentaire (pas trop rapides), cadence, FC.
+  const jump = new Float64Array(n);
+  const cadSum = new Float64Array(n);
+  const cadN = new Float64Array(n);
+  const hrSum = new Float64Array(n);
+  const hrN = new Float64Array(n);
+  for (let i = 1; i < n; i++) {
+    const step = (samples[i].dist ?? 0) - (samples[i - 1].dist ?? 0);
+    const dt = samples[i].t - samples[i - 1].t;
+    jump[i] = jump[i - 1] + Math.max(0, step - MAX_RUN_SPEED_MS * Math.max(0, dt));
+    const cad = samples[i].cad;
+    const valid = cad != null && cad >= 120;
+    cadSum[i] = cadSum[i - 1] + (valid ? cad : 0);
+    cadN[i] = cadN[i - 1] + (valid ? 1 : 0);
+    const hr = samples[i].hr;
+    hrSum[i] = hrSum[i - 1] + (hr != null ? hr : 0);
+    hrN[i] = hrN[i - 1] + (hr != null ? 1 : 0);
+  }
+  const sessionHr = hrN[n - 1] > 0 ? hrSum[n - 1] / hrN[n - 1] : undefined;
+
+  /** Fenêtre [from, to] plausible pour un effort de `target` m en `time` s ? */
+  const plausible = (from: number, to: number, target: number, time: number) => {
+    if (jump[to] - jump[from] > MAX_JUMP_SHARE * target) return false;
+    const cads = cadN[to] - cadN[from];
+    if (cads > 0) {
+      const spm = (cadSum[to] - cadSum[from]) / cads;
+      if (target / time / (spm / 60) > MAX_STRIDE_M) return false;
+    }
+    const hrs = hrN[to] - hrN[from];
+    if (target >= 800 && sessionHr != null && hrs > 0) {
+      if ((hrSum[to] - hrSum[from]) / hrs < sessionHr - HR_SLACK_BPM) return false;
+    }
+    return true;
+  };
 
   for (const target of distances) {
     if (total < target) continue;
@@ -108,7 +166,7 @@ export function bestEfforts(
       const tStart = a.t + frac * (b.t - a.t);
       const time = samples[hi].t - tStart;
 
-      if (time > 0 && time < bestTime) {
+      if (time > 0 && time < bestTime && plausible(lo - 1, hi, target, time)) {
         bestTime = time;
         bestStart = tStart;
       }
