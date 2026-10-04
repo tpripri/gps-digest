@@ -188,6 +188,14 @@ export const ja: Partial<Catalog> = {
   "proj.method.raceAge": "、{months} か月前の記録",
   "proj.method.training": "練習での {ref} の記録からの Riegel 式",
   "proj.method.cs": "クリティカルスピード（CS {pace}/km、R²={r2}）",
+  "proj.method.achievedRace":
+    "{date} のレース記録：モデルより実測を優先",
+  "proj.method.achievedTraining":
+    "{date} の練習で出した記録：モデルより実測を優先",
+  "proj.caveat.gap":
+    "モデル単独では {model}、{date} の実測との差は {pct}%。信頼度を下げています。",
+  "dossier.projNote":
+    "クリティカルスピードと予測：直近 {days} 日間（{from} 以降）のランニング記録のみを使用。achieved = この期間にその距離で出した最速の実測、model_gap_pct = その実測に対するモデルの差（正：モデルの方が遅い）。3% を超えると信頼度を下げます。",
   "proj.caveat.marathon":
     "練習データからのフルマラソン予測は、専門的な準備をやり切っていることが前提です（ロング走、目標ペース走、補給戦略）。すべての予測の中で最も信頼性が低いものです。",
   "proj.caveat.half": "専門的な準備と、安定したペース維持が前提です。",

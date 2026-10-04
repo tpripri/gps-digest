@@ -187,6 +187,14 @@ export const de: Partial<Catalog> = {
   "proj.method.raceAge": ", Ergebnis {months} Monate alt",
   "proj.method.training": "Riegel ausgehend von einer Trainingsbelastung über {ref}",
   "proj.method.cs": "Kritische Geschwindigkeit (CS {pace}/km, R²={r2})",
+  "proj.method.achievedRace":
+    "Wettkampfzeit vom {date}: die echte Zeit geht vor das Modell",
+  "proj.method.achievedTraining":
+    "Im Training gelaufene Leistung vom {date}: die echte Zeit geht vor das Modell",
+  "proj.caveat.gap":
+    "Das Modell allein ergab {model}, {pct} % Abweichung von der echten Zeit vom {date}: Konfidenz herabgesetzt.",
+  "dossier.projNote":
+    "Kritische Geschwindigkeit und Prognosen: Laufleistungen der letzten {days} Tage (seit {from}). achieved = beste echte Zeit über die Distanz in diesem Zeitraum, model_gap_pct = Abweichung des Modells von dieser Zeit (positiv: Modell langsamer). Über 3 % sinkt die Konfidenz.",
   "proj.caveat.marathon":
     "Eine Marathonprognose aus Trainingsdaten setzt eine vollständig durchgeführte spezifische Vorbereitung voraus: lange Läufe, Renntempo, Verpflegungsstrategie. Sie ist die unzuverlässigste aller Prognosen.",
   "proj.caveat.half": "Setzt eine spezifische Vorbereitung und eine gleichmäßig gehaltene Pace voraus.",

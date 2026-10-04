@@ -246,5 +246,55 @@ section("5. Meilleurs efforts : sauts GPS rejetés, efforts réels conservés");
   check("foulée incohérente avec la cadence : effort rejeté", !!bad && bad.timeS > 60, `${bad?.timeS.toFixed(0)} s`);
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+section("6. Vitesse critique sur 90 jours, projections confrontées au réel");
+{
+  /** Séance de course réduite à ses meilleurs efforts : c'est tout ce que le modèle lit. */
+  const effortFile = (date: string, efforts: [number, number][]): FileAnalysis => {
+    const res = digestActivity({
+      sport: "running", startTime: date, device: "test", source: "fit", laps: [],
+      samples: Array.from({ length: 3601 }, (_, t) => ({ t, dist: t * 3, ele: 100, hr: 150 })),
+    }, BASE);
+    return { ...asFile(date, res), efforts: efforts.map(([d, s]) => ({ distanceM: d, timeS: s, paceSPerKm: (s / d) * 1000, speedMS: d / s, startS: 0 })) };
+  };
+  const files = [
+    // Il y a huit mois : très rapide, ne doit plus peser.
+    effortFile("2026-02-01T08:00:00Z", [[1000, 170], [1609.344, 290], [3000, 560], [5000, 960]]),
+    effortFile("2026-09-05T08:00:00Z", [[10000, 2470]]),
+    // Sortie longue sous-maximale : elle tire le modèle vers le haut.
+    effortFile("2026-09-20T08:00:00Z", [[21097.5, 5900]]),
+    // Fractionnés courts pas tout à fait maximaux : vitesse critique trop basse.
+    effortFile("2026-09-28T08:00:00Z", [[1000, 235], [1609.344, 390], [3000, 760], [5000, 1290]]),
+  ];
+  const batch = analyzeBatch(files, { locale: "fr" });
+  const used = batch.criticalSpeed?.usedEfforts ?? [];
+  check("vitesse critique : l'effort de février (hors 90 jours) est écarté",
+    used.length > 0 && !used.some((e) => e.sourceDate === "2026-02-01"), used.map((e) => e.sourceDate).join(","));
+  check("fenêtre annoncée", batch.effortsWindowDays === 90 && batch.effortsWindowFrom === "2026-06-30", batch.effortsWindowFrom);
+  const p10 = batch.projections.find((p) => p.distanceM === 10000);
+  check("projection 10 km jamais plus lente que le 10 km réellement couru dans la fenêtre",
+    !!p10 && p10.timeS <= 2470 + 1, `${p10?.timeS.toFixed(0)} s`);
+  check("écart entre modèle et réel signalé, confiance abaissée",
+    !!p10 && p10.achievedS === 2470 && (p10.modelGapPct ?? 0) > 3 && p10.confidence === "faible" && /2026-09-05/.test(p10.caveat ?? ""),
+    `réel ${p10?.achievedS}, écart ${p10?.modelGapPct?.toFixed(1)} %, confiance ${p10?.confidence}`);
+  // Un 5 km couru tranquillement à l'entraînement : le modèle, plus rapide,
+  // n'a pas tort pour autant.
+  const easy = analyzeBatch([
+    effortFile("2026-09-20T08:00:00Z", [[5000, 1300]]),
+    effortFile("2026-09-28T08:00:00Z", [[1000, 210], [1609.344, 350], [3000, 680]]),
+  ], { locale: "fr" });
+  const p5 = easy.projections.find((p) => p.distanceM === 5000);
+  check("5 km : modèle plus rapide qu'un effort d'entraînement, pas de pénalité",
+    !!p5 && p5.achievedS === 1300 && (p5.modelGapPct ?? 0) < -3 && p5.confidence === "moyenne" && p5.timeS < 1300,
+    `écart ${p5?.modelGapPct?.toFixed(1)} %, confiance ${p5?.confidence}`);
+  const raced = analyzeBatch(files, { locale: "fr", raceResults: [{ distanceM: 10000, timeS: 2490, date: "2026-09-05" }] });
+  const r10 = raced.projections.find((p) => p.distanceM === 10000);
+  check("avec un résultat de course récent, la projection 10 km reste à moins de 2 % du chrono",
+    !!r10 && Math.abs(r10.timeS - 2490) / 2490 < 0.02, `${r10?.timeS.toFixed(0)} s`);
+  const dossier = buildDossier(batch, { streamMode: "none" });
+  check("le dossier montre le chrono réel et l'écart du modèle",
+    /achieved,achieved_on,model_gap_pct/.test(dossier) && /window_days,90/.test(dossier) && /depuis le 2026-06-30/.test(dossier));
+}
+
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");
 process.exitCode = failures ? 1 : 0;

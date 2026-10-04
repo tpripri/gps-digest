@@ -276,7 +276,19 @@ export interface RaceProjection {
   method: string;
   confidence: "haute" | "moyenne" | "faible";
   caveat?: string;
+  /**
+   * Meilleur chrono réellement couru sur cette distance dans la fenêtre
+   * d'analyse : résultat de course, ou meilleur effort à l'entraînement.
+   */
+  achievedS?: number;
+  achievedDate?: string;
+  achievedKind?: "race" | "training";
+  /** Écart du modèle seul à ce chrono, en % (positif : modèle plus lent). */
+  modelGapPct?: number;
 }
+
+/** Écart modèle / réel au-delà duquel la confiance baisse d'un cran. */
+const MODEL_GAP_PCT = 3;
 
 /** Riegel. k = 1,06 par défaut ; plus bas pour un athlète à gros volume. */
 /** s/km -> "4:17". Un « 4.29 min/km » décimal n'est lisible par personne. */
@@ -313,6 +325,11 @@ export interface ProjectionInput {
   targets?: readonly number[];
   /** Date de référence pour pondérer l'ancienneté des chronos. */
   today?: Date;
+  /**
+   * Un résultat de course plus vieux que ce nombre de jours n'est plus un
+   * chrono « réel » auquel confronter le modèle. Défaut : 90.
+   */
+  windowDays?: number;
   locale?: string;
 }
 
@@ -364,15 +381,19 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
   // Meilleure référence disponible, par ordre de qualité décroissant :
   // un résultat de course > un effort long en entraînement > un effort court.
   const races = [...(input.raceResults ?? [])].sort((a, b) => b.distanceM - a.distanceM);
-  const longEffort = [...input.efforts]
-    .filter((e) => e.timeS >= 600)
-    .sort((a, b) => b.distanceM - a.distanceM)[0];
 
   let k = input.riegelExponent ?? 1.06;
   if (!input.riegelExponent && races.length >= 2) {
     const calibrated = calibrateRiegelExponent(races[races.length - 1], races[0]);
     if (calibrated) k = calibrated;
   }
+
+  // Effort d'entraînement de référence : le plus performant à équivalence
+  // Riegel, pas le plus long. Le plus long est presque toujours une sortie
+  // longue en endurance : le prendre projetait un 10 km 20 % trop lent.
+  const longEffort = [...input.efforts]
+    .filter((e) => e.timeS >= 600)
+    .sort((a, b) => a.timeS / a.distanceM ** k - b.timeS / b.distanceM ** k)[0];
 
   for (const target of targets) {
     const estimates: { value: number; method: string; weight: number }[] = [];
@@ -424,9 +445,23 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
     if (!estimates.length) continue;
 
     const totalWeight = estimates.reduce((s, e) => s + e.weight, 0);
-    const blended = estimates.reduce((s, e) => s + e.value * e.weight, 0) / totalWeight;
+    const modelS = estimates.reduce((s, e) => s + e.value * e.weight, 0) / totalWeight;
     const values = estimates.map((e) => e.value);
     const spread = Math.max(...values) - Math.min(...values);
+
+    // Contrôle de vraisemblance. Un chrono réellement couru sur la distance
+    // dans la fenêtre est la mesure la plus directe qui soit : une projection
+    // plus lente que lui n'a pas de sens, l'athlète l'a déjà fait. On le
+    // retient alors, et on affiche l'écart du modèle pour que le lecteur
+    // sache ce que vaut le modèle sur les autres distances.
+    const achieved = achievedAt(target, input);
+    const modelGapPct = achieved ? ((modelS - achieved.timeS) / achieved.timeS) * 100 : undefined;
+    const blended = achieved ? Math.min(modelS, achieved.timeS) : modelS;
+    // Un modèle plus rapide qu'un effort d'entraînement n'a rien d'anormal :
+    // l'effort n'était pas maximal. Plus lent que le réel, ou loin d'une
+    // vraie course, il se trompe.
+    const modelOff = modelGapPct != null && Math.abs(modelGapPct) > MODEL_GAP_PCT
+      && (modelGapPct > 0 || achieved?.kind === "race");
 
     // L'incertitude est le maximum entre la dispersion des modèles et une
     // incertitude plancher qui croît avec l'extrapolation.
@@ -435,12 +470,25 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
 
     // Un chrono de plus d'un an ne justifie plus une confiance « haute ».
     const freshRace = races.some((r) => (monthsSince(r.date, input.today) ?? 99) <= 12);
-    const confidence: RaceProjection["confidence"] =
+    let confidence: RaceProjection["confidence"] =
       freshRace && target <= 21097.5
         ? "haute"
         : races.length || target <= 10000
           ? "moyenne"
           : "faible";
+    if (modelOff) confidence = confidence === "haute" ? "moyenne" : "faible";
+
+    const caveats = [
+      modelOff && achieved
+        ? tr("proj.caveat.gap", {
+            model: formatDuration(modelS),
+            pct: `${modelGapPct! > 0 ? "+" : ""}${modelGapPct!.toFixed(1)}`,
+            date: achieved.date ?? "?",
+          })
+        : undefined,
+      target >= 42195 ? tr("proj.caveat.marathon") : target >= 21097.5 ? tr("proj.caveat.half") : undefined,
+    ].filter(Boolean);
+    const capped = !!achieved && achieved.timeS < modelS;
 
     out.push({
       distanceM: target,
@@ -449,18 +497,41 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       lowS: blended - margin,
       highS: blended + margin,
       paceSPerKm: (blended / target) * 1000,
-      method: estimates.sort((a, b) => b.weight - a.weight)[0].method,
+      method: capped
+        ? tr(achieved!.kind === "race" ? "proj.method.achievedRace" : "proj.method.achievedTraining", { date: achieved!.date ?? "?" })
+        : estimates.sort((a, b) => b.weight - a.weight)[0].method,
       confidence,
-      caveat:
-        target >= 42195
-          ? tr("proj.caveat.marathon")
-          : target >= 21097.5
-            ? tr("proj.caveat.half")
-            : undefined,
+      caveat: caveats.length ? caveats.join(" ") : undefined,
+      achievedS: achieved?.timeS,
+      achievedDate: achieved?.date,
+      achievedKind: achieved?.kind,
+      modelGapPct,
     });
   }
 
   return out;
+}
+
+/**
+ * Meilleur chrono réel sur la distance cible : résultat de course récent, ou
+ * meilleur effort à l'entraînement (les efforts reçus sont déjà ceux de la
+ * fenêtre d'analyse). Le plus rapide des deux.
+ */
+function achievedAt(
+  target: number,
+  input: ProjectionInput,
+): { timeS: number; date?: string; kind: "race" | "training" } | undefined {
+  const maxMonths = (input.windowDays ?? 90) / 30.44;
+  const candidates: { timeS: number; date?: string; kind: "race" | "training" }[] = [];
+  for (const r of input.raceResults ?? []) {
+    if (Math.abs(r.distanceM - target) > target * 0.01) continue;
+    if ((monthsSince(r.date, input.today) ?? 0) > maxMonths) continue;
+    candidates.push({ timeS: r.timeS, date: r.date?.slice(0, 10), kind: "race" });
+  }
+  for (const e of input.efforts) {
+    if (Math.abs(e.distanceM - target) < 1) candidates.push({ timeS: e.timeS, date: e.sourceDate, kind: "training" });
+  }
+  return candidates.sort((a, b) => a.timeS - b.timeS)[0];
 }
 
 export function formatDuration(s: number): string {

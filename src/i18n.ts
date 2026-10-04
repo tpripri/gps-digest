@@ -216,6 +216,14 @@ const fr = {
   "proj.method.raceAge": ", chrono vieux de {months} mois",
   "proj.method.training": "Riegel depuis un effort de {ref} à l'entraînement",
   "proj.method.cs": "Vitesse critique (CS {pace}/km, R²={r2})",
+  "proj.method.achievedRace":
+    "Chrono de la course du {date} : le réel prime sur le modèle",
+  "proj.method.achievedTraining":
+    "Effort couru le {date} à l'entraînement : le réel prime sur le modèle",
+  "proj.caveat.gap":
+    "Le modèle seul donnait {model}, soit {pct} % d'écart avec le chrono réel du {date} : confiance abaissée.",
+  "dossier.projNote":
+    "Vitesse critique et projections : efforts en course des {days} derniers jours (depuis le {from}). achieved = meilleur chrono réel sur la distance dans cette fenêtre, model_gap_pct = écart du modèle à ce chrono (positif : modèle plus lent). Au-delà de 3 %, la confiance baisse.",
   "proj.caveat.marathon":
     "Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes.",
   "proj.caveat.half": "Suppose une préparation spécifique et une allure tenue régulièrement.",
@@ -585,6 +593,14 @@ const en: Catalog = {
   "proj.method.raceAge": ", result {months} months old",
   "proj.method.training": "Riegel from a {ref} training effort",
   "proj.method.cs": "Critical speed (CS {pace}/km, R²={r2})",
+  "proj.method.achievedRace":
+    "Race result from {date}: the real time beats the model",
+  "proj.method.achievedTraining":
+    "Effort run in training on {date}: the real time beats the model",
+  "proj.caveat.gap":
+    "The model alone gave {model}, a {pct} % gap with the real time from {date}: confidence lowered.",
+  "dossier.projNote":
+    "Critical speed and projections: running efforts from the last {days} days (since {from}). achieved = best real time over the distance in that window, model_gap_pct = model gap to that time (positive: model slower). Above 3 %, confidence drops.",
   "proj.caveat.marathon":
     "A marathon projection from training data assumes a specific build completed in full: long runs, goal-pace work, a fueling strategy. It is the least reliable projection of all.",
   "proj.caveat.half": "Assumes a specific build and a pace held consistently.",

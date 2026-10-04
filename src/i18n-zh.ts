@@ -175,6 +175,14 @@ export const zh: Partial<Catalog> = {
   "proj.method.raceAge": "，成绩距今 {months} 个月",
   "proj.method.training": "基于训练中{ref}成绩的 Riegel 公式",
   "proj.method.cs": "临界速度（CS {pace}/km，R²={r2}）",
+  "proj.method.achievedRace":
+    "{date} 比赛成绩：以真实成绩为准，而非模型",
+  "proj.method.achievedTraining":
+    "{date} 训练中跑出的成绩：以真实成绩为准，而非模型",
+  "proj.caveat.gap":
+    "仅凭模型得出 {model}，与 {date} 的真实成绩相差 {pct}%：已降低可信度。",
+  "dossier.projNote":
+    "临界速度与成绩预测：仅使用最近 {days} 天（自 {from} 起）的跑步成绩。achieved = 该时段内该距离的最佳真实成绩，model_gap_pct = 模型与该成绩的偏差（正值：模型更慢）。偏差超过 3% 时降低可信度。",
   "proj.caveat.marathon":
     "根据训练数据预测马拉松成绩，前提是完整完成了专项备赛：长距离跑、目标配速训练、补给策略。这是所有预测中最不可靠的一项。",
   "proj.caveat.half": "前提是进行了专项备赛，并能稳定保持配速。",

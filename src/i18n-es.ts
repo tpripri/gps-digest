@@ -185,6 +185,14 @@ export const es: Partial<Catalog> = {
   "proj.method.raceAge": ", marca de hace {months} meses",
   "proj.method.training": "Riegel a partir de un esfuerzo de {ref} en entrenamiento",
   "proj.method.cs": "Velocidad crítica (CS {pace}/km, R²={r2})",
+  "proj.method.achievedRace":
+    "Marca de la carrera del {date}: el tiempo real prima sobre el modelo",
+  "proj.method.achievedTraining":
+    "Esfuerzo corrido en entrenamiento el {date}: el tiempo real prima sobre el modelo",
+  "proj.caveat.gap":
+    "El modelo solo daba {model}, una diferencia de {pct} % con el tiempo real del {date}: confianza rebajada.",
+  "dossier.projNote":
+    "Velocidad crítica y proyecciones: esfuerzos de carrera de los últimos {days} días (desde el {from}). achieved = mejor tiempo real en la distancia dentro de ese periodo, model_gap_pct = diferencia del modelo con ese tiempo (positiva: modelo más lento). Por encima del 3 %, baja la confianza.",
   "proj.caveat.marathon":
     "Una proyección de maratón a partir de datos de entrenamiento supone una preparación específica completada: tiradas largas, ritmo específico, estrategia de nutrición. Es la proyección menos fiable de todas.",
   "proj.caveat.half": "Supone una preparación específica y un ritmo mantenido con regularidad.",

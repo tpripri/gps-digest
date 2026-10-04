@@ -454,6 +454,8 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           { key: "d_prime_m", value: Math.round(cs.dPrimeM) },
           { key: "r2", value: cs.r2.toFixed(4) },
           { key: "efforts_used", value: cs.usedEfforts.length },
+          { key: "window_days", value: batch.effortsWindowDays },
+          { key: "window_start", value: batch.effortsWindowFrom ?? "" },
         ],
         LLM_DIALECT,
         ["key", "value"],
@@ -461,6 +463,9 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     );
   }
 
+  if (batch.projections.length) {
+    out.push(`# ${tr("dossier.projNote", { days: batch.effortsWindowDays, from: batch.effortsWindowFrom ?? "?" })}`);
+  }
   block(
     "race_projections",
     toCsv(
@@ -471,7 +476,11 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
         range_high: formatDuration(p.highS),
         pace_mmss: paceLabel(p.paceSPerKm),
         confidence: confidenceLabel(p.confidence, locale),
+        achieved: p.achievedS != null ? formatDuration(p.achievedS) : undefined,
+        achieved_on: p.achievedDate,
+        model_gap_pct: p.modelGapPct?.toFixed(1),
         method: p.method,
+        caveat: p.caveat,
       })),
       LLM_DIALECT,
     ),

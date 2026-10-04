@@ -79,6 +79,9 @@ export interface BatchAnalysis {
   consolidatedEfforts: BestEffort[];
   criticalSpeed: CriticalSpeedModel | null;
   projections: RaceProjection[];
+  /** Fenêtre des efforts qui alimentent vitesse critique et projections. */
+  effortsWindowDays: number;
+  effortsWindowFrom?: string;
   sensorChanges: SensorChange[];
   progression: ProgressionAnalysis;
   warnings: string[];
@@ -130,7 +133,31 @@ export interface BatchOptions {
   athlete?: AthleteProfile;
   raceResults?: { distanceM: number; timeS: number; date?: string; label?: string }[];
   riegelExponent?: number;
+  /**
+   * Seuls les efforts en course des N derniers jours (avant la séance la plus
+   * récente du lot) alimentent vitesse critique et projections. Défaut : 90.
+   * 0 : tout le lot.
+   */
+  effortsWindowDays?: number;
   locale?: string;
+}
+
+/** Pour chaque distance, la meilleure performance du lot, avec sa provenance. */
+function bestPerDistance(files: FileAnalysis[]): BestEffort[] {
+  const best = new Map<number, BestEffort>();
+  for (const f of files) {
+    for (const e of f.efforts) {
+      const current = best.get(e.distanceM);
+      if (!current || e.timeS < current.timeS) {
+        best.set(e.distanceM, {
+          ...e,
+          sourceFile: f.filename,
+          sourceDate: f.digest.session.startTimeUtc?.slice(0, 10),
+        });
+      }
+    }
+  }
+  return [...best.values()].sort((a, b) => a.distanceM - b.distanceM);
 }
 
 export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): BatchAnalysis {
@@ -230,38 +257,38 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
 
   // Meilleurs efforts consolidés : pour chaque distance, la meilleure
   // performance toutes séances confondues, avec sa provenance.
-  const bestByDistance = new Map<number, BestEffort>();
-  for (const f of sorted) {
-    for (const e of f.efforts) {
-      const current = bestByDistance.get(e.distanceM);
-      if (!current || e.timeS < current.timeS) {
-        bestByDistance.set(e.distanceM, {
-          ...e,
-          sourceFile: f.filename,
-          sourceDate: f.digest.session.startTimeUtc?.slice(0, 10),
-        });
-      }
-    }
-  }
-  const consolidatedEfforts = [...bestByDistance.values()].sort((a, b) => a.distanceM - b.distanceM);
+  const consolidatedEfforts = bestPerDistance(sorted);
 
   // Seuls les efforts en course alimentent le modèle : mélanger vélo et course
   // dans une courbe durée–vitesse n'a aucun sens.
   // Seules les séances classées « full » en course alimentent le modèle :
   // une séance de renforcement entrecoupée de 400 m y injecterait des
   // meilleurs efforts flatteurs et fausserait toutes les projections.
-  const runFiles = sorted.filter(
-    (f) => f.digest.session.sport === "running" && f.digest.session.tier === "full",
-  );
-  const runEfforts = consolidatedEfforts.filter((e) =>
-    runFiles.some((f) => f.filename === e.sourceFile),
-  );
+  //
+  // Et seulement ceux des 90 derniers jours : des efforts étalés sur 18 mois
+  // décrivent un athlète qui n'existe plus, et quatre découpes d'anciennes
+  // sorties longues donnaient un 10 km projeté près de deux minutes plus lent
+  // qu'un 10 km réellement couru peu avant.
+  const effortsWindowDays = opts.effortsWindowDays ?? 90;
+  const newestMs = Date.parse(sorted[sorted.length - 1]?.digest.session.startTimeUtc ?? "");
+  const windowFromMs = Number.isFinite(newestMs) && effortsWindowDays > 0
+    ? newestMs - effortsWindowDays * 86_400_000
+    : undefined;
+  const runFiles = sorted.filter((f) => {
+    if (f.digest.session.sport !== "running" || f.digest.session.tier !== "full") return false;
+    if (windowFromMs == null) return true;
+    const t = Date.parse(f.digest.session.startTimeUtc ?? "");
+    return Number.isFinite(t) && t >= windowFromMs;
+  });
+  const runEfforts = bestPerDistance(runFiles);
   const criticalSpeed = fitCriticalSpeed(runEfforts);
   const projections = projectRaces({
     efforts: runEfforts,
     cs: criticalSpeed,
     raceResults: opts.raceResults,
     riegelExponent: opts.riegelExponent,
+    today: Number.isFinite(newestMs) ? new Date(newestMs) : undefined,
+    windowDays: effortsWindowDays > 0 ? effortsWindowDays : undefined,
     locale,
   });
 
@@ -382,6 +409,8 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     consolidatedEfforts,
     criticalSpeed,
     projections,
+    effortsWindowDays,
+    effortsWindowFrom: windowFromMs != null ? new Date(windowFromMs).toISOString().slice(0, 10) : undefined,
     sensorChanges,
     progression,
     warnings,
@@ -498,6 +527,8 @@ export function buildBatchBundle(
           { key: "d_prime_m", value: Math.round(cs.dPrimeM) },
           { key: "r2", value: cs.r2.toFixed(4) },
           { key: "efforts_used", value: cs.usedEfforts.length },
+          { key: "window_days", value: batch.effortsWindowDays },
+          { key: "window_start", value: batch.effortsWindowFrom ?? "" },
         ],
         LLM_DIALECT,
         ["key", "value"],
@@ -515,7 +546,11 @@ export function buildBatchBundle(
         range_high: formatDuration(p.highS),
         pace_mmss: paceLabel(p.paceSPerKm),
         confidence: confidenceLabel(p.confidence, locale),
+        achieved: p.achievedS != null ? formatDuration(p.achievedS) : undefined,
+        achieved_on: p.achievedDate,
+        model_gap_pct: p.modelGapPct?.toFixed(1),
         method: p.method,
+        caveat: p.caveat,
       })),
       LLM_DIALECT,
     ),
