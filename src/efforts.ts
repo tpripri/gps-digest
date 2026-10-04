@@ -382,9 +382,15 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
   // un résultat de course > un effort long en entraînement > un effort court.
   const races = [...(input.raceResults ?? [])].sort((a, b) => b.distanceM - a.distanceM);
 
+  // L'exposant ne se calibre qu'entre courses récentes : un semi et un 10 km
+  // courus à six mois d'écart mêlent l'écart de distance et l'évolution de la
+  // forme, et donnaient k = 1,15, de quoi ralentir à tort toutes les
+  // projections longues.
+  const maxMonths = (input.windowDays ?? 90) / 30.44;
+  const recent = races.filter((r) => (monthsSince(r.date, input.today) ?? 0) <= maxMonths);
   let k = input.riegelExponent ?? 1.06;
-  if (!input.riegelExponent && races.length >= 2) {
-    const calibrated = calibrateRiegelExponent(races[races.length - 1], races[0]);
+  if (!input.riegelExponent && recent.length >= 2) {
+    const calibrated = calibrateRiegelExponent(recent[recent.length - 1], recent[0]);
     if (calibrated) k = calibrated;
   }
 
@@ -483,7 +489,7 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
         ? tr("proj.caveat.gap", {
             model: formatDuration(modelS),
             pct: `${modelGapPct! > 0 ? "+" : ""}${modelGapPct!.toFixed(1)}`,
-            date: achieved.date ?? "?",
+            date: achieved.date ?? tr("proj.dateUnknown"),
           })
         : undefined,
       target >= 42195 ? tr("proj.caveat.marathon") : target >= 21097.5 ? tr("proj.caveat.half") : undefined,
@@ -498,7 +504,7 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
       highS: blended + margin,
       paceSPerKm: (blended / target) * 1000,
       method: capped
-        ? tr(achieved!.kind === "race" ? "proj.method.achievedRace" : "proj.method.achievedTraining", { date: achieved!.date ?? "?" })
+        ? tr(achieved!.kind === "race" ? "proj.method.achievedRace" : "proj.method.achievedTraining", { date: achieved!.date ?? tr("proj.dateUnknown") })
         : estimates.sort((a, b) => b.weight - a.weight)[0].method,
       confidence,
       caveat: caveats.length ? caveats.join(" ") : undefined,
@@ -513,25 +519,30 @@ export function projectRaces(input: ProjectionInput): RaceProjection[] {
 }
 
 /**
- * Meilleur chrono réel sur la distance cible : résultat de course récent, ou
- * meilleur effort à l'entraînement (les efforts reçus sont déjà ceux de la
- * fenêtre d'analyse). Le plus rapide des deux.
+ * Meilleur chrono réel sur la distance cible : résultat de course récent en
+ * priorité, sinon meilleur effort à l'entraînement (les efforts reçus sont
+ * déjà ceux de la fenêtre d'analyse).
+ *
+ * Une course prime même sur un effort GPS plus rapide : le meilleur 10 km
+ * découpé dans la trace d'un 10 km officiel sort toujours un peu plus vite que
+ * le chrono, parce que le GPS mesure le parcours un peu long.
  */
 function achievedAt(
   target: number,
   input: ProjectionInput,
 ): { timeS: number; date?: string; kind: "race" | "training" } | undefined {
   const maxMonths = (input.windowDays ?? 90) / 30.44;
-  const candidates: { timeS: number; date?: string; kind: "race" | "training" }[] = [];
+  const races: { timeS: number; date?: string; kind: "race" }[] = [];
   for (const r of input.raceResults ?? []) {
     if (Math.abs(r.distanceM - target) > target * 0.01) continue;
     if ((monthsSince(r.date, input.today) ?? 0) > maxMonths) continue;
-    candidates.push({ timeS: r.timeS, date: r.date?.slice(0, 10), kind: "race" });
+    races.push({ timeS: r.timeS, date: r.date?.slice(0, 10), kind: "race" });
   }
-  for (const e of input.efforts) {
-    if (Math.abs(e.distanceM - target) < 1) candidates.push({ timeS: e.timeS, date: e.sourceDate, kind: "training" });
-  }
-  return candidates.sort((a, b) => a.timeS - b.timeS)[0];
+  if (races.length) return races.sort((a, b) => a.timeS - b.timeS)[0];
+  const training = input.efforts
+    .filter((e) => Math.abs(e.distanceM - target) < 1)
+    .map((e) => ({ timeS: e.timeS, date: e.sourceDate, kind: "training" as const }));
+  return training.sort((a, b) => a.timeS - b.timeS)[0];
 }
 
 export function formatDuration(s: number): string {

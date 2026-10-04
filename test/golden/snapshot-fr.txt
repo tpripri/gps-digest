@@ -4162,9 +4162,9 @@ t_s,dist_m,ele_m,lat,lon
   "lowS": 2359.2866171374135,
   "highS": 2800.7133828625865,
   "paceSPerKm": 258,
-  "method": "Chrono de la course du ? : le réel prime sur le modèle",
+  "method": "Chrono de course (date inconnue) : le réel prime sur le modèle",
   "confidence": "faible",
-  "caveat": "Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée.",
+  "caveat": "Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée.",
   "achievedS": 2580,
   "achievedKind": "race",
   "modelGapPct": 8.592489282799418
@@ -4176,9 +4176,9 @@ t_s,dist_m,ele_m,lat,lon
   "lowS": 5212.377409954752,
   "highS": 6187.622590045248,
   "paceSPerKm": 270.174191254888,
-  "method": "Chrono de la course du ? : le réel prime sur le modèle",
+  "method": "Chrono de course (date inconnue) : le réel prime sur le modèle",
   "confidence": "faible",
-  "caveat": "Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement.",
+  "caveat": "Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel (date inconnue) : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement.",
   "achievedS": 5700,
   "achievedKind": "race",
   "modelGapPct": 7.08559761048006
@@ -4317,8 +4317,8 @@ window_start,2026-05-01
 ## race_projections
 race,estimate,range_low,range_high,pace_mmss,confidence,achieved,achieved_on,model_gap_pct,method,caveat
 5 km,22:41,20:37,24:46,4:32,moyenne,24:07,2026-07-25,-6.0,Riegel depuis 10 km en course (k=1.062),
-10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée."
-semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
+10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée."
+semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel (date inconnue) : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
 marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en course (k=1.062),"Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
 
 
@@ -4425,8 +4425,8 @@ window_start,2026-05-01
 ## race_projections
 race,estimate,range_low,range_high,pace_mmss,confidence,achieved,achieved_on,model_gap_pct,method,caveat
 5 km,22:41,20:37,24:46,4:32,moyenne,24:07,2026-07-25,-6.0,Riegel depuis 10 km en course (k=1.062),
-10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée."
-semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
+10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée."
+semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel (date inconnue) : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
 marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en course (k=1.062),"Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
 
 # FC à allure de référence, dans le temps. Comparer uniquement
@@ -5866,8 +5866,8 @@ window_start,2026-05-01
 ## race_projections
 race,estimate,range_low,range_high,pace_mmss,confidence,achieved,achieved_on,model_gap_pct,method,caveat
 5 km,22:41,20:37,24:46,4:32,moyenne,24:07,2026-07-25,-6.0,Riegel depuis 10 km en course (k=1.062),
-10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée."
-semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
+10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée."
+semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel (date inconnue) : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
 marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en course (k=1.062),"Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
 
 # FC à allure de référence, dans le temps. Comparer uniquement
@@ -6985,8 +6985,8 @@ window_start,2026-05-01
 ## race_projections
 race,estimate,range_low,range_high,pace_mmss,confidence,achieved,achieved_on,model_gap_pct,method,caveat
 5 km,22:41,20:37,24:46,4:32,moyenne,24:07,2026-07-25,-6.0,Riegel depuis 10 km en course (k=1.062),
-10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée."
-semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
+10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée."
+semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de course (date inconnue) : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel (date inconnue) : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
 marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en course (k=1.062),"Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
 
 # FC à allure de référence, dans le temps. Comparer uniquement
@@ -8907,44 +8907,45 @@ distance,time,time_s,pace_mmss,start_s
   "distanceM": 5000,
   "label": "5 km",
   "timeS": 1100,
-  "lowS": 1067,
-  "highS": 1133,
+  "lowS": 1041.3971094228787,
+  "highS": 1158.6028905771213,
   "paceSPerKm": 220,
-  "method": "Effort couru le ? à l'entraînement : le réel prime sur le modèle",
-  "confidence": "haute",
+  "method": "Effort couru à l'entraînement (date inconnue) : le réel prime sur le modèle",
+  "confidence": "moyenne",
+  "caveat": "Le modèle seul donnait 19:22, soit +5.6 % d'écart avec le chrono réel (date inconnue) : confiance abaissée.",
   "achievedS": 1100,
   "achievedKind": "training",
-  "modelGapPct": 2.233324545899491
+  "modelGapPct": 5.647450145563363
  },
  {
   "distanceM": 10000,
   "label": "10 km",
-  "timeS": 2389.388249431428,
-  "lowS": 2294.52458744015,
-  "highS": 2484.251911422706,
-  "paceSPerKm": 238.9388249431428,
-  "method": "Riegel depuis 15 km en course (k=1.129), chrono vieux de 4 mois",
+  "timeS": 2390.9724340348102,
+  "lowS": 2260.970653743093,
+  "highS": 2520.9742143265275,
+  "paceSPerKm": 239.097243403481,
+  "method": "Riegel depuis 15 km en course (k=1.060), chrono vieux de 4 mois",
   "confidence": "haute"
  },
  {
   "distanceM": 21097.5,
   "label": "semi-marathon",
-  "timeS": 5536.257806465003,
-  "lowS": 5146.730874283366,
-  "highS": 5925.784738646641,
-  "paceSPerKm": 262.41297814741097,
-  "method": "Riegel depuis 15 km en course (k=1.129), chrono vieux de 4 mois",
+  "timeS": 5310.860739749187,
+  "lowS": 4988.264041401655,
+  "highS": 5633.457438096719,
+  "paceSPerKm": 251.7293868822935,
+  "method": "Riegel depuis 15 km en course (k=1.060), chrono vieux de 4 mois",
   "confidence": "haute",
   "caveat": "Suppose une préparation spécifique et une allure tenue régulièrement."
  },
  {
   "distanceM": 42195,
   "label": "marathon",
-  "timeS": 11879.25445646173,
-  "lowS": 10889.441892255396,
-  "highS": 12869.067020668062,
-  "paceSPerKm": 281.532277674173,
-  "method": "Riegel depuis un effort de 5 km à l'entraînement",
+  "timeS": 11197.77253125583,
+  "lowS": 10202.233695942243,
+  "highS": 12193.311366569418,
+  "paceSPerKm": 265.38150328844245,
+  "method": "Riegel depuis un effort de 3 000 m à l'entraînement",
   "confidence": "moyenne",
   "caveat": "Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
  }
@@ -9008,7 +9009,7 @@ distance,time,time_s,pace_mmss,start_s
   "lowS": 1067,
   "highS": 1133,
   "paceSPerKm": 220,
-  "method": "Effort couru le ? à l'entraînement : le réel prime sur le modèle",
+  "method": "Effort couru à l'entraînement (date inconnue) : le réel prime sur le modèle",
   "confidence": "moyenne",
   "achievedS": 1100,
   "achievedKind": "training",

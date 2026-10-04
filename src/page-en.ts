@@ -209,6 +209,8 @@ export const en: PageCatalog = {
   "home.results.progressionIntro":
     "Heart rate at the same pace over time: the only fitness indicator that depends neither on the route nor on how you felt that day. Sensors are handled separately.",
   "home.results.projections": "Projections",
+  "home.results.races":
+    "Recognised races",
 
   "home.faq.title": "Frequently asked questions",
   "home.faq.q1": "Why is my TCX file too big for Gemini or ChatGPT?",
@@ -303,6 +305,28 @@ export const en: PageCatalog = {
   "js.projMethod": "Method",
   "js.cs": "Critical speed <b>{pace}/km</b>, D' <b>{d} m</b>, R² <b>{r2}</b>",
   "js.projNone": "No projection: at least one running session is needed.",
+  "js.racesIntro":
+    "Your races calibrate the projections. Tick the ones that are races, untick a session wrongly taken for one: everything recalculates.",
+  "js.racesNone":
+    "No race recognised. If you ran one, enter your latest race time under \"Fine-tune the analysis\": it is the best basis for projections.",
+  "js.raceDate":
+    "Date",
+  "js.raceDistance":
+    "Race",
+  "js.raceTime":
+    "Time",
+  "js.raceSource":
+    "Recognised by",
+  "js.raceBy.user":
+    "you",
+  "js.raceBy.strava":
+    "flagged as a race in Strava",
+  "js.raceBy.name":
+    "activity name",
+  "js.raceBy.auto":
+    "suggestion: official distance, sustained effort",
+  "js.raceCandidate":
+    "to confirm",
   "js.redOriginal": "Your original files",
   "js.redGenerated": "Generated file",
   "js.redReduction": "Reduction",

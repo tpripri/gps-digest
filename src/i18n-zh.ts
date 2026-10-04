@@ -192,11 +192,13 @@ export const zh: Partial<Catalog> = {
   "dossier.setSource.auto":
     "{set}：根据信号识别，文件中没有预设课程。不评估完成度。",
   "proj.method.achievedRace":
-    "{date} 比赛成绩：以真实成绩为准，而非模型",
+    "比赛成绩（{date}）：以真实成绩为准，而非模型",
   "proj.method.achievedTraining":
-    "{date} 训练中跑出的成绩：以真实成绩为准，而非模型",
+    "训练中跑出的成绩（{date}）：以真实成绩为准，而非模型",
   "proj.caveat.gap":
-    "仅凭模型得出 {model}，与 {date} 的真实成绩相差 {pct}%：已降低可信度。",
+    "仅凭模型得出 {model}，与真实成绩（{date}）相差 {pct}%：已降低可信度。",
+  "proj.dateUnknown":
+    "日期未知",
   "dossier.projNote":
     "临界速度与成绩预测：仅使用最近 {days} 天（自 {from} 起）的跑步成绩。achieved = 该时段内该距离的最佳真实成绩，model_gap_pct = 模型与该成绩的偏差（正值：模型更慢）。偏差超过 3% 时降低可信度。",
   "proj.caveat.marathon":
@@ -238,6 +240,16 @@ export const zh: Partial<Catalog> = {
     "临界速度模型拟合一般（R² = {r2}）：预测仅供参考。专门做一次测试（在体力充沛时全力跑 3 分钟和 12 分钟）可以得到可靠得多的模型。",
   "batch.warnNoRace":
     "未提供比赛成绩。预测仅基于训练中的表现，通常会高估比赛成绩。填写一个真实比赛成绩能明显改善校准。",
+  "batch.racesFound":
+    "在文件中识别出的比赛：{list}。它们用于校准成绩预测。请核对列表：周末以全力跑完标准距离的训练也可能被当作比赛。",
+  "race.noteMultisport":
+    "多项运动赛事中的一段，不是单独的跑步比赛",
+  "race.noteNonStandard":
+    "非标准距离",
+  "race.noteMeasured":
+    "实测路线 {km} km，与官方 {official} 相差太大，不用于校准预测",
+  "dossier.racesNote":
+    "识别出的比赛。detected_by：user（运动员勾选）、strava（在 Strava 标记为比赛）、name（活动名称）、auto（推测：标准距离、持续用力、心率高或配速快、周末）。time = 训练的总用时。used = 用于校准预测。",
   "batch.warnMaxHr":
     "观测到的最大心率（{observed} bpm）高于设定值（{maxHr} bpm）。在更正此设置之前，所有区间都会发生偏移。",
   "batch.bundle.title": "gps-digest v1 — 多次训练汇总",

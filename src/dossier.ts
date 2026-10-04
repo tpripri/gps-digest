@@ -404,6 +404,7 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           hr_max: s.hrMax,
           hr_source: hrSourceLabel(f.hrSource.verdict, locale),
           hr_source_basis: hrSourceBasis(f),
+          race: batch.races.find((r) => r.file === f.filename)?.label,
           drift_pct: f.drift.applicable ? f.drift.decouplingPct!.toFixed(1) : "n/a",
           // Température de la montre, chauffée par le poignet : en mode
           // historique, la colonne coûte plus qu'elle n'apprend.
@@ -451,6 +452,26 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
         ],
         LLM_DIALECT,
         ["key", "value"],
+      ),
+    );
+  }
+
+  if (batch.races.length) {
+    out.push(`# ${tr("dossier.racesNote")}`);
+    block(
+      "races",
+      toCsv(
+        batch.races.map((r) => ({
+          date: r.date,
+          race: r.label,
+          time: formatDuration(r.timeS),
+          pace_mmss: r.distanceM ? paceLabel((r.timeS / r.distanceM) * 1000) : undefined,
+          measured_km: (r.measuredM / 1000).toFixed(2),
+          detected_by: r.by,
+          used: r.usable ? 1 : 0,
+          note: r.note,
+        })),
+        LLM_DIALECT,
       ),
     );
   }

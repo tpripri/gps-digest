@@ -209,6 +209,8 @@ export const es: Partial<PageCatalog> = {
   "home.results.progressionIntro":
     "FC a ritmo idéntico a lo largo del tiempo: el único indicador de forma que no depende ni del recorrido ni de las ganas del día. Los sensores se tratan por separado.",
   "home.results.projections": "Proyecciones",
+  "home.results.races":
+    "Carreras reconocidas",
 
   "home.faq.title": "Preguntas frecuentes",
   "home.faq.q1": "¿Por qué mi archivo TCX es demasiado grande para Gemini o ChatGPT?",
@@ -303,6 +305,28 @@ export const es: Partial<PageCatalog> = {
   "js.projMethod": "Método",
   "js.cs": "Velocidad crítica <b>{pace}/km</b>, D' <b>{d} m</b>, R² <b>{r2}</b>",
   "js.projNone": "Ninguna proyección: hace falta al menos una sesión de carrera a pie.",
+  "js.racesIntro":
+    "Tus carreras calibran las proyecciones. Marca las que lo son y desmarca una sesión tomada por error por una carrera: todo se recalcula.",
+  "js.racesNone":
+    "No se ha reconocido ninguna carrera. Si corriste una, indica tu última marca en «Afinar el análisis»: es la mejor base para las proyecciones.",
+  "js.raceDate":
+    "Fecha",
+  "js.raceDistance":
+    "Carrera",
+  "js.raceTime":
+    "Marca",
+  "js.raceSource":
+    "Reconocida por",
+  "js.raceBy.user":
+    "ti",
+  "js.raceBy.strava":
+    "marcada como carrera en Strava",
+  "js.raceBy.name":
+    "nombre de la actividad",
+  "js.raceBy.auto":
+    "sugerencia: distancia oficial, esfuerzo sostenido",
+  "js.raceCandidate":
+    "por confirmar",
   "js.redOriginal": "Tus archivos originales",
   "js.redGenerated": "Informe generado",
   "js.redReduction": "Reducción",

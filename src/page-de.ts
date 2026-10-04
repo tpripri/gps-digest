@@ -209,6 +209,8 @@ export const de: Partial<PageCatalog> = {
   "home.results.progressionIntro":
     "HF bei gleicher Pace im Zeitverlauf: der einzige Formindikator, der weder von der Strecke noch von der Tagesform abhängt. Die Sensoren werden getrennt behandelt.",
   "home.results.projections": "Prognosen",
+  "home.results.races":
+    "Erkannte Wettkämpfe",
 
   "home.faq.title": "Häufige Fragen",
   "home.faq.q1": "Warum ist meine TCX-Datei zu groß für Gemini oder ChatGPT?",
@@ -303,6 +305,28 @@ export const de: Partial<PageCatalog> = {
   "js.projMethod": "Methode",
   "js.cs": "Kritische Geschwindigkeit <b>{pace}/km</b>, D' <b>{d} m</b>, R² <b>{r2}</b>",
   "js.projNone": "Keine Prognose: Es braucht mindestens eine Laufeinheit.",
+  "js.racesIntro":
+    "Deine Wettkämpfe kalibrieren die Prognosen. Hake an, was ein Wettkampf war, und entferne den Haken bei einer fälschlich erkannten Einheit: Alles wird neu berechnet.",
+  "js.racesNone":
+    "Kein Wettkampf erkannt. Wenn du einen gelaufen bist, trage deine letzte Wettkampfzeit unter „Analyse verfeinern“ ein: Sie ist die beste Basis für die Prognosen.",
+  "js.raceDate":
+    "Datum",
+  "js.raceDistance":
+    "Wettkampf",
+  "js.raceTime":
+    "Zeit",
+  "js.raceSource":
+    "Erkannt durch",
+  "js.raceBy.user":
+    "dich",
+  "js.raceBy.strava":
+    "in Strava als Wettkampf markiert",
+  "js.raceBy.name":
+    "Name der Aktivität",
+  "js.raceBy.auto":
+    "Vorschlag: offizielle Distanz, anhaltende Belastung",
+  "js.raceCandidate":
+    "zu bestätigen",
   "js.redOriginal": "Deine Originaldateien",
   "js.redGenerated": "Erzeugtes Dossier",
   "js.redReduction": "Reduktion",

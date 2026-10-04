@@ -205,11 +205,13 @@ export const ja: Partial<Catalog> = {
   "dossier.setSource.auto":
     "{set}：信号から検出。ファイルに設定されたワークアウトはないため、達成度は評価しません。",
   "proj.method.achievedRace":
-    "{date} のレース記録：モデルより実測を優先",
+    "レース記録（{date}）：モデルより実測を優先",
   "proj.method.achievedTraining":
-    "{date} の練習で出した記録：モデルより実測を優先",
+    "練習で出した記録（{date}）：モデルより実測を優先",
   "proj.caveat.gap":
-    "モデル単独では {model}、{date} の実測との差は {pct}%。信頼度を下げています。",
+    "モデル単独では {model}、実測（{date}）との差は {pct}%。信頼度を下げています。",
+  "proj.dateUnknown":
+    "日付不明",
   "dossier.projNote":
     "クリティカルスピードと予測：直近 {days} 日間（{from} 以降）のランニング記録のみを使用。achieved = この期間にその距離で出した最速の実測、model_gap_pct = その実測に対するモデルの差（正：モデルの方が遅い）。3% を超えると信頼度を下げます。",
   "proj.caveat.marathon":
@@ -252,6 +254,16 @@ export const ja: Partial<Catalog> = {
     "クリティカルスピードモデルの当てはまりは平凡です（R² = {r2}）。予測は参考値です。専用のテスト（疲れていない状態で 3 分間と 12 分間の全力走）を行えば、はるかに信頼できるモデルが得られます。",
   "batch.warnNoRace":
     "レース結果が入力されていません。予測は練習での記録だけに基づいており、通常はレースのパフォーマンスを過大評価します。実際のレースタイムを入力すると、キャリブレーションが大きく改善します。",
+  "batch.racesFound":
+    "ファイルから認識したレース：{list}。予測の基準に使います。リストを確認してください。週末に公式距離を全力で走った練習がレースと見なされることがあります。",
+  "race.noteMultisport":
+    "複合競技の一部で、単独のランニングレースではない",
+  "race.noteNonStandard":
+    "標準外の距離",
+  "race.noteMeasured":
+    "コースの実測は {km} km で、公式の {official} と差が大きいため予測には使わない",
+  "dossier.racesNote":
+    "認識したレース。detected_by：user（本人がチェック）、strava（Strava でレースに指定）、name（アクティビティ名）、auto（推定：公式距離、途切れない走り、高い心拍または速いペース、週末）。time = セッションの経過時間。used = 予測の基準に使用。",
   "batch.warnMaxHr":
     "観測された最大心拍数（{observed} bpm）が設定値（{maxHr} bpm）を上回っています。この設定を修正するまで、すべてのゾーンがずれています。",
   "batch.bundle.title": "gps-digest v1 — 複数セッションのまとめ",

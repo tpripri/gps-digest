@@ -207,6 +207,8 @@ export const zh: Partial<PageCatalog> = {
   "home.results.progressionIntro":
     "相同配速下心率随时间的变化：唯一不受路线和当天状态影响的体能指标。不同传感器分开处理。",
   "home.results.projections": "成绩预测",
+  "home.results.races":
+    "识别出的比赛",
 
   "home.faq.title": "常见问题",
   "home.faq.q1": "为什么我的 TCX 文件对 Gemini 或 ChatGPT 来说太大？",
@@ -299,6 +301,28 @@ export const zh: Partial<PageCatalog> = {
   "js.projMethod": "方法",
   "js.cs": "临界速度 <b>{pace}/km</b>，D' <b>{d} m</b>，R² <b>{r2}</b>",
   "js.projNone": "无法预测：至少需要一次跑步训练。",
+  "js.racesIntro":
+    "比赛成绩用于校准预测。勾选真正的比赛，取消被误判为比赛的训练：所有结果会重新计算。",
+  "js.racesNone":
+    "未识别出比赛。如果你参加过比赛，请在“细化分析”中填写最近的比赛成绩：这是预测的最佳依据。",
+  "js.raceDate":
+    "日期",
+  "js.raceDistance":
+    "比赛",
+  "js.raceTime":
+    "成绩",
+  "js.raceSource":
+    "识别依据",
+  "js.raceBy.user":
+    "你",
+  "js.raceBy.strava":
+    "在 Strava 中标记为比赛",
+  "js.raceBy.name":
+    "活动名称",
+  "js.raceBy.auto":
+    "推测：标准距离、持续用力",
+  "js.raceCandidate":
+    "待确认",
   "js.redOriginal": "原始文件",
   "js.redGenerated": "生成的档案",
   "js.redReduction": "压缩率",

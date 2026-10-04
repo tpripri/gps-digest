@@ -29,6 +29,7 @@ import type { WeatherObservation } from "./weather.ts";
 import type { SwimAnalysis } from "./swim.ts";
 import type { AthleteProfile, Digest, HrZoneBasis, Sample, Sport } from "./types.ts";
 import { hrZones } from "./analyze.ts";
+import { detectRaces, type RaceMark } from "./races.ts";
 
 export interface FileAnalysis {
   filename: string;
@@ -46,6 +47,10 @@ export interface FileAnalysis {
   swim?: SwimAnalysis;
   /** Discipline d'un fichier multisport (voir parseFitParts). */
   part?: { index: number; count: number; transition: boolean };
+  /** Nom de l'activité, quand l'archive Strava le donne. */
+  title?: string;
+  /** Marquée « course » dans Strava. */
+  declaredRace?: boolean;
 }
 
 export interface SensorChange {
@@ -100,6 +105,10 @@ export interface BatchAnalysis {
   consolidatedEfforts: BestEffort[];
   criticalSpeed: CriticalSpeedModel | null;
   projections: RaceProjection[];
+  /** Courses reconnues : par l'athlète, Strava, le nom ou une suggestion. */
+  races: RaceMark[];
+  /** Séances sur une distance officielle, non retenues : à confirmer. */
+  raceCandidates: RaceMark[];
   /** Fenêtre des efforts qui alimentent vitesse critique et projections. */
   effortsWindowDays: number;
   effortsWindowFrom?: string;
@@ -170,6 +179,11 @@ export interface BatchOptions {
   athlete?: AthleteProfile;
   raceResults?: { distanceM: number; timeS: number; date?: string; label?: string }[];
   riegelExponent?: number;
+  /**
+   * Corrections de l'athlète, par nom de fichier : true, c'est une course ;
+   * false, ce n'en est pas une.
+   */
+  raceOverrides?: Record<string, boolean>;
   /**
    * Seuls les efforts en course des N derniers jours (avant la séance la plus
    * récente du lot) alimentent vitesse critique et projections. Défaut : 90.
@@ -329,10 +343,32 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   });
   const runEfforts = bestPerDistance(runFiles);
   const criticalSpeed = fitCriticalSpeed(runEfforts);
+
+  // Courses reconnues dans le lot : la meilleure calibration des projections,
+  // en plus du chrono que l'athlète a pu saisir.
+  const { races, candidates: raceCandidates } = detectRaces(
+    sorted.map((f) => ({
+      filename: f.filename,
+      session: f.digest.session,
+      title: f.title,
+      declaredRace: f.declaredRace,
+      hasIntervals: f.digest.intervalSets.length > 0,
+      multisport: !!f.part,
+    })),
+    { maxHr: polarMaxHr, overrides: opts.raceOverrides, locale },
+  );
+  const givenRaces = opts.raceResults ?? [];
+  const raceResults = [
+    ...givenRaces,
+    ...races
+      .filter((r) => r.usable && r.distanceM != null)
+      .filter((r) => !givenRaces.some((g) => g.date?.slice(0, 10) === r.date && Math.abs(g.distanceM - r.distanceM!) < 100))
+      .map((r) => ({ distanceM: r.distanceM!, timeS: r.timeS, date: r.date, label: r.label })),
+  ];
   const projections = projectRaces({
     efforts: runEfforts,
     cs: criticalSpeed,
-    raceResults: opts.raceResults,
+    raceResults,
     riegelExponent: opts.riegelExponent,
     today: Number.isFinite(newestMs) ? new Date(newestMs) : undefined,
     windowDays: effortsWindowDays > 0 ? effortsWindowDays : undefined,
@@ -433,8 +469,12 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     warnings.push(tr("batch.warnCsFit", { r2: criticalSpeed.r2.toFixed(3) }));
   }
 
-  if (!opts.raceResults?.length) {
+  if (!raceResults.length) {
     warnings.push(tr("batch.warnNoRace"));
+  } else if (races.some((r) => r.by !== "user")) {
+    warnings.push(tr("batch.racesFound", {
+      list: races.map((r) => `${r.label} ${r.date}`).join(", "),
+    }));
   }
 
   warnings.push(...progression.warnings);
@@ -458,6 +498,8 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     consolidatedEfforts,
     criticalSpeed,
     projections,
+    races,
+    raceCandidates,
     effortsWindowDays,
     effortsWindowFrom: windowFromMs != null ? new Date(windowFromMs).toISOString().slice(0, 10) : undefined,
     sensorChanges,

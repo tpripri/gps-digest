@@ -209,6 +209,8 @@ export const ja: Partial<PageCatalog> = {
   "home.results.progressionIntro":
     "同じペースでの心拍数の推移。コースにもその日の気分にも左右されない唯一のコンディション指標です。センサーごとに分けて扱います。",
   "home.results.projections": "予測",
+  "home.results.races":
+    "認識したレース",
 
   "home.faq.title": "よくある質問",
   "home.faq.q1": "なぜ TCX ファイルは Gemini や ChatGPT にとって大きすぎるのですか？",
@@ -302,6 +304,28 @@ export const ja: Partial<PageCatalog> = {
   "js.projMethod": "方法",
   "js.cs": "クリティカルスピード <b>{pace}/km</b>、D' <b>{d} m</b>、R² <b>{r2}</b>",
   "js.projNone": "予測できません。ランニングのセッションが 1 回以上必要です。",
+  "js.racesIntro":
+    "レースの記録が予測の基準になります。レースにはチェックを入れ、誤ってレースと判定された練習はチェックを外してください。すべて再計算されます。",
+  "js.racesNone":
+    "レースは認識されませんでした。レースを走った場合は「分析を細かく設定」に最新の記録を入力してください。予測の最良の基準になります。",
+  "js.raceDate":
+    "日付",
+  "js.raceDistance":
+    "レース",
+  "js.raceTime":
+    "記録",
+  "js.raceSource":
+    "判定の根拠",
+  "js.raceBy.user":
+    "あなた",
+  "js.raceBy.strava":
+    "Strava でレースに指定",
+  "js.raceBy.name":
+    "アクティビティ名",
+  "js.raceBy.auto":
+    "推定：公式距離、持続した強度",
+  "js.raceCandidate":
+    "要確認",
   "js.redOriginal": "元のファイル",
   "js.redGenerated": "生成された記録",
   "js.redReduction": "削減率",

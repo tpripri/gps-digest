@@ -233,11 +233,13 @@ const fr = {
   "dossier.setSource.auto":
     "{set} : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.",
   "proj.method.achievedRace":
-    "Chrono de la course du {date} : le réel prime sur le modèle",
+    "Chrono de course ({date}) : le réel prime sur le modèle",
   "proj.method.achievedTraining":
-    "Effort couru le {date} à l'entraînement : le réel prime sur le modèle",
+    "Effort couru à l'entraînement ({date}) : le réel prime sur le modèle",
   "proj.caveat.gap":
-    "Le modèle seul donnait {model}, soit {pct} % d'écart avec le chrono réel du {date} : confiance abaissée.",
+    "Le modèle seul donnait {model}, soit {pct} % d'écart avec le chrono réel ({date}) : confiance abaissée.",
+  "proj.dateUnknown":
+    "date inconnue",
   "dossier.projNote":
     "Vitesse critique et projections : efforts en course des {days} derniers jours (depuis le {from}). achieved = meilleur chrono réel sur la distance dans cette fenêtre, model_gap_pct = écart du modèle à ce chrono (positif : modèle plus lent). Au-delà de 3 %, la confiance baisse.",
   "proj.caveat.marathon":
@@ -283,6 +285,16 @@ const fr = {
     "Ajustement du modèle de vitesse critique moyen (R² = {r2}) : les projections sont indicatives. Un test dédié — 3 min et 12 min à fond, frais — donnerait un modèle bien plus fiable.",
   "batch.warnNoRace":
     "Aucun résultat de course fourni. Les projections reposent uniquement sur des efforts d'entraînement, qui surestiment généralement la performance en compétition. Renseigner un chrono réel améliore nettement la calibration.",
+  "batch.racesFound":
+    "Courses reconnues dans les fichiers : {list}. Elles calent les projections. Vérifiez la liste : une sortie à fond sur une distance officielle le week-end peut passer pour une course.",
+  "race.noteMultisport":
+    "discipline d'un enchaînement multisport, pas une course à pied seule",
+  "race.noteNonStandard":
+    "distance hors standard",
+  "race.noteMeasured":
+    "parcours mesuré à {km} km, trop loin du {official} officiel pour caler les projections",
+  "dossier.racesNote":
+    "Courses reconnues. detected_by : user (cochée par l'athlète), strava (marquée course dans Strava), name (nom de l'activité), auto (suggestion : distance officielle, effort continu, FC haute ou allure rapide, week-end). time = durée écoulée de la séance. used = sert à caler les projections.",
   "batch.warnMaxHr":
     "FC max observée ({observed} bpm) supérieure à celle renseignée ({maxHr} bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.",
   "batch.bundle.title": "gps-digest v1 — synthèse multi-séances",
@@ -632,11 +644,13 @@ const en: Catalog = {
   "dossier.setSource.auto":
     "{set}: detected from the signal, no prescribed workout in the file. No adherence verdict.",
   "proj.method.achievedRace":
-    "Race result from {date}: the real time beats the model",
+    "Race result ({date}): the real time beats the model",
   "proj.method.achievedTraining":
-    "Effort run in training on {date}: the real time beats the model",
+    "Effort run in training ({date}): the real time beats the model",
   "proj.caveat.gap":
-    "The model alone gave {model}, a {pct} % gap with the real time from {date}: confidence lowered.",
+    "The model alone gave {model}, a {pct} % gap with the real time ({date}): confidence lowered.",
+  "proj.dateUnknown":
+    "date unknown",
   "dossier.projNote":
     "Critical speed and projections: running efforts from the last {days} days (since {from}). achieved = best real time over the distance in that window, model_gap_pct = model gap to that time (positive: model slower). Above 3 %, confidence drops.",
   "proj.caveat.marathon":
@@ -680,6 +694,16 @@ const en: Catalog = {
     "Average fit of the critical speed model (R² = {r2}): projections are indicative. A dedicated test (3 min and 12 min all-out, fresh) would give a much more reliable model.",
   "batch.warnNoRace":
     "No race result provided. Projections rely only on training efforts, which usually overestimate race performance. Entering a real race time clearly improves calibration.",
+  "batch.racesFound":
+    "Races recognised in the files: {list}. They calibrate the projections. Check the list: an all-out run over an official distance on a weekend can pass for a race.",
+  "race.noteMultisport":
+    "leg of a multisport event, not a standalone running race",
+  "race.noteNonStandard":
+    "non-standard distance",
+  "race.noteMeasured":
+    "course measured at {km} km, too far from an official {official} to calibrate projections",
+  "dossier.racesNote":
+    "Recognised races. detected_by: user (ticked by the athlete), strava (flagged as a race in Strava), name (activity name), auto (suggestion: official distance, continuous effort, high heart rate or fast pace, weekend). time = elapsed time of the session. used = calibrates the projections.",
   "batch.warnMaxHr":
     "Observed max HR ({observed} bpm) is higher than the one entered ({maxHr} bpm). All zones are shifted until this setting is corrected.",
   "batch.bundle.title": "gps-digest v1 — multi-session summary",

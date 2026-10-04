@@ -383,6 +383,9 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
   <div id="progression"></div>
   <div id="chart-trend"></div>
 
+  <h3>{{home.results.races}}</h3>
+  <div id="races"></div>
+
   <h3>{{home.results.projections}}</h3>
   <div id="projections"></div>
 </section>
@@ -591,6 +594,11 @@ const HISTORY_MIN_SESSIONS = 40;
 const DETAIL_DAYS = 14;
 let historyMode = false;
 let lastPicked = null;
+/** Séances retenues et réglages de la dernière analyse : de quoi recalculer. */
+let lastKept = [];
+let lastBatchSettings = null;
+/** Corrections de l'athlète sur les courses : nom de fichier → course ou non. */
+let raceOverrides = {};
 
 /** Une séance hors de la fenêtre de détail n'a besoin que d'un point sur cinq. */
 function thinSamples(a) {
@@ -628,6 +636,7 @@ async function run(fileList) {
   lastPicked = picked;
 
   const settings = readSettings();
+  raceOverrides = {};
   const analyses = [];
   const failures = [];
 
@@ -651,7 +660,11 @@ async function run(fileList) {
       const plan = await openArchive(file.name, file, LOCALE);
       if (plan.kind === "strava") stravaTotal += plan.entries.length;
       for (const e of plan.entries) {
-        work.push({ name: e.name, read: e.read, archived: true, ordered: plan.kind === "strava" });
+        work.push({
+          name: e.name, read: e.read, archived: true, ordered: plan.kind === "strava",
+          // Nom Strava de l'activité : souvent le seul indice d'une course.
+          title: e.title, declaredRace: e.declaredRace,
+        });
       }
     } catch (e) {
       failures.push({ name: file.name, message: e?.message ?? String(e) });
@@ -695,6 +708,7 @@ async function run(fileList) {
           drift: res.insights.drift, adherence: res.insights.adherence,
           efforts: res.insights.efforts, samples: res.samples,
           hrSpeed: res.insights.hrSpeed, weather: null, part,
+          title: item.title, declaredRace: item.declaredRace,
           rawBytes: k === 0 ? data.byteLength : 0, archived: !!item.archived,
         };
         // Hors de la fenêtre de détail, un point sur cinq suffit au bilan : la
@@ -729,7 +743,9 @@ async function run(fileList) {
     $("errors").insertAdjacentHTML("beforeend",
       `<div class="err"><strong>${esc(f.name)}</strong>${esc(f.message)}</div>`);
   }
-  currentBatch = kept.length ? analyzeBatch(kept, settings.batch) : null;
+  lastKept = kept;
+  lastBatchSettings = settings.batch;
+  currentBatch = kept.length ? analyzeBatch(kept, { ...settings.batch, raceOverrides }) : null;
   if (windowed) {
     // Après dédoublonnage : la note doit annoncer le même nombre que le dossier.
     $("archive-summary").innerHTML = tx("js.archiveNote", {
@@ -915,6 +931,8 @@ function renderAnalysis(batch) {
     ))
     .join("");
 
+  renderRaces(batch);
+
   $("projections").innerHTML = batch.projections.length
     ? `<div class="scroll"><table><thead><tr><th>${tx("js.projDistance")}</th><th class="num">${tx("js.projEstimate")}</th>
         <th class="num">${tx("js.projRange")}</th><th>${tx("js.projReliability")}</th><th>${tx("js.projMethod")}</th></tr></thead><tbody>` +
@@ -931,6 +949,38 @@ function renderAnalysis(batch) {
             r2: batch.criticalSpeed.r2.toFixed(3),
           })}</p>` : "")
     : `<p class="sig">${tx("js.projNone")}</p>`;
+}
+
+/**
+ * Courses reconnues, cochées, et séances à confirmer, décochées. Cocher ou
+ * décocher relance l'analyse du lot : les projections se recalent.
+ */
+function renderRaces(batch) {
+  const rows = [
+    ...batch.races.map((r) => ({ r, on: true })),
+    ...batch.raceCandidates.map((r) => ({ r, on: false })),
+  ].sort((a, b) => b.r.date.localeCompare(a.r.date));
+  if (!rows.length) {
+    $("races").innerHTML = `<p class="sig">${tx("js.racesNone")}</p>`;
+    return;
+  }
+  $("races").innerHTML = `<p class="sig">${tx("js.racesIntro")}</p>
+    <div class="scroll"><table><thead><tr><th></th><th>${tx("js.raceDate")}</th><th>${tx("js.raceDistance")}</th>
+      <th class="num">${tx("js.raceTime")}</th><th>${tx("js.raceSource")}</th></tr></thead><tbody>` +
+    rows.map(({ r, on }) => `<tr>
+      <td><input type="checkbox" class="race-pick" data-file="${esc(r.file)}" ${on ? "checked" : ""}
+        aria-label="${esc(r.label)} ${esc(r.date)}"></td>
+      <td>${esc(r.date)}</td><td>${esc(r.label)}</td><td class="num">${formatDuration(r.timeS)}</td>
+      <td class="sig">${esc(on ? tx(`js.raceBy.${r.by}`) : tx("js.raceCandidate"))}${r.note ? ` · ${esc(r.note)}` : ""}</td></tr>`).join("") +
+    `</tbody></table></div>`;
+  for (const box of $("races").querySelectorAll(".race-pick")) {
+    box.addEventListener("change", () => {
+      raceOverrides[box.dataset.file] = box.checked;
+      currentBatch = analyzeBatch(lastKept, { ...lastBatchSettings, raceOverrides });
+      renderAnalysis(currentBatch);
+      renderDossier();
+    });
+  }
 }
 
 function renderDossier() {

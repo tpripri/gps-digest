@@ -202,11 +202,13 @@ export const pt: Partial<Catalog> = {
   "dossier.setSource.auto":
     "{set}: detectada no sinal, sem treino prescrito no arquivo. Sem avaliação de aderência.",
   "proj.method.achievedRace":
-    "Tempo da prova de {date}: o real prevalece sobre o modelo",
+    "Tempo de prova ({date}): o real prevalece sobre o modelo",
   "proj.method.achievedTraining":
-    "Esforço corrido no treino em {date}: o real prevalece sobre o modelo",
+    "Esforço corrido no treino ({date}): o real prevalece sobre o modelo",
   "proj.caveat.gap":
-    "O modelo sozinho dava {model}, uma diferença de {pct} % em relação ao tempo real de {date}: confiança reduzida.",
+    "O modelo sozinho dava {model}, uma diferença de {pct} % em relação ao tempo real ({date}): confiança reduzida.",
+  "proj.dateUnknown":
+    "data desconhecida",
   "dossier.projNote":
     "Velocidade crítica e projeções: esforços de corrida dos últimos {days} dias (desde {from}). achieved = melhor tempo real na distância nesse período, model_gap_pct = diferença do modelo para esse tempo (positiva: modelo mais lento). Acima de 3 %, a confiança cai.",
   "proj.caveat.marathon":
@@ -250,6 +252,16 @@ export const pt: Partial<Catalog> = {
     "Ajuste mediano do modelo de velocidade crítica (R² = {r2}): as projeções são indicativas. Um teste dedicado (3 min e 12 min no máximo, descansado) daria um modelo bem mais confiável.",
   "batch.warnNoRace":
     "Nenhum resultado de prova informado. As projeções se baseiam apenas em esforços de treino, que costumam superestimar o desempenho em competição. Informar uma marca real melhora bastante a calibração.",
+  "batch.racesFound":
+    "Provas reconhecidas nos arquivos: {list}. Elas calibram as projeções. Confira a lista: um treino a fundo numa distância oficial no fim de semana pode passar por uma prova.",
+  "race.noteMultisport":
+    "etapa de uma prova multiesporte, não uma corrida isolada",
+  "race.noteNonStandard":
+    "distância fora do padrão",
+  "race.noteMeasured":
+    "percurso medido em {km} km, longe demais dos {official} oficiais para calibrar as projeções",
+  "dossier.racesNote":
+    "Provas reconhecidas. detected_by: user (marcada pelo atleta), strava (marcada como prova no Strava), name (nome da atividade), auto (sugestão: distância oficial, esforço contínuo, FC alta ou ritmo rápido, fim de semana). time = tempo decorrido do treino. used = serve para calibrar as projeções.",
   "batch.warnMaxHr":
     "FC máxima observada ({observed} bpm) maior que a informada ({maxHr} bpm). Todas as zonas ficam deslocadas enquanto essa configuração não for corrigida.",
   "batch.bundle.title": "gps-digest v1 — resumo de várias sessões",

@@ -204,11 +204,13 @@ export const de: Partial<Catalog> = {
   "dossier.setSource.auto":
     "{set}: aus dem Signal erkannt, kein vorgegebenes Training in der Datei. Keine Bewertung der Umsetzung.",
   "proj.method.achievedRace":
-    "Wettkampfzeit vom {date}: die echte Zeit geht vor das Modell",
+    "Wettkampfzeit ({date}): die echte Zeit geht vor das Modell",
   "proj.method.achievedTraining":
-    "Im Training gelaufene Leistung vom {date}: die echte Zeit geht vor das Modell",
+    "Im Training gelaufene Leistung ({date}): die echte Zeit geht vor das Modell",
   "proj.caveat.gap":
-    "Das Modell allein ergab {model}, {pct} % Abweichung von der echten Zeit vom {date}: Konfidenz herabgesetzt.",
+    "Das Modell allein ergab {model}, {pct} % Abweichung von der echten Zeit ({date}): Konfidenz herabgesetzt.",
+  "proj.dateUnknown":
+    "Datum unbekannt",
   "dossier.projNote":
     "Kritische Geschwindigkeit und Prognosen: Laufleistungen der letzten {days} Tage (seit {from}). achieved = beste echte Zeit über die Distanz in diesem Zeitraum, model_gap_pct = Abweichung des Modells von dieser Zeit (positiv: Modell langsamer). Über 3 % sinkt die Konfidenz.",
   "proj.caveat.marathon":
@@ -252,6 +254,16 @@ export const de: Partial<Catalog> = {
     "Mäßige Anpassung des Modells der kritischen Geschwindigkeit (R² = {r2}): die Prognosen sind Richtwerte. Ein eigener Test (3 min und 12 min maximal, ausgeruht) ergäbe ein deutlich verlässlicheres Modell.",
   "batch.warnNoRace":
     "Kein Wettkampfergebnis angegeben. Die Prognosen beruhen nur auf Trainingsbelastungen, die die Wettkampfleistung meist überschätzen. Eine echte Wettkampfzeit verbessert die Kalibrierung deutlich.",
+  "batch.racesFound":
+    "In den Dateien erkannte Wettkämpfe: {list}. Sie kalibrieren die Prognosen. Prüfe die Liste: Ein Lauf am Limit über eine offizielle Distanz am Wochenende kann wie ein Wettkampf aussehen.",
+  "race.noteMultisport":
+    "Teil eines Multisport-Wettkampfs, kein reiner Laufwettkampf",
+  "race.noteNonStandard":
+    "keine Standarddistanz",
+  "race.noteMeasured":
+    "Strecke mit {km} km gemessen, zu weit von offiziellen {official} entfernt, um die Prognosen zu kalibrieren",
+  "dossier.racesNote":
+    "Erkannte Wettkämpfe. detected_by: user (vom Athleten markiert), strava (in Strava als Wettkampf markiert), name (Name der Aktivität), auto (Vorschlag: offizielle Distanz, durchgehende Belastung, hohe HF oder schnelles Tempo, Wochenende). time = verstrichene Zeit der Einheit. used = kalibriert die Prognosen.",
   "batch.warnMaxHr":
     "Beobachtete maximale HF ({observed} bpm) höher als die eingetragene ({maxHr} bpm). Alle Zonen sind verschoben, bis diese Einstellung korrigiert ist.",
   "batch.bundle.title": "gps-digest v1 — Übersicht mehrerer Einheiten",

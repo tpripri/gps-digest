@@ -38,6 +38,10 @@ export interface ArchiveEntry {
   /** Chemin complet dans l'archive, pour les messages. */
   path: string;
   read(): Promise<Uint8Array>;
+  /** Archive Strava : nom de l'activité (« 10 km du Parc »). */
+  title?: string;
+  /** Archive Strava : séance marquée « course ». */
+  declaredRace?: boolean;
 }
 
 export interface ArchivePlan {
@@ -125,7 +129,7 @@ export async function openArchive(name: string, file: Blob, locale?: string): Pr
     const source = blobSource(file);
     const directory = await readCentralDirectory(source, tr);
     plan = isStravaArchive(directory)
-      ? { kind: "strava", entries: stravaEntries(source, directory, tr) }
+      ? { kind: "strava", entries: await withStravaMeta(source, directory, stravaEntries(source, directory, tr), tr) }
       : { kind: "files", entries: await zipEntries(source, directory, 0, tr) };
   }
   if (!plan.entries.length) throw new Error(tr("archive.empty"));
@@ -228,6 +232,74 @@ function stravaEntries(source: ByteSource, directory: ZipEntry[], tr: Tr): Archi
       },
     };
   });
+}
+
+/**
+ * Lit activities.csv : nom de chaque activité et marquage « course ». Le nom
+ * est souvent le seul indice qu'une séance était une course (« Marathon de
+ * Paris »). Un CSV illisible n'empêche rien : les séances restent analysées.
+ */
+async function withStravaMeta(source: ByteSource, directory: ZipEntry[], entries: ArchiveEntry[], tr: Tr): Promise<ArchiveEntry[]> {
+  const csv = directory.find((e) => /(^|\/)activities\.csv$/i.test(e.name));
+  if (!csv) return entries;
+  try {
+    const meta = parseStravaActivities(new TextDecoder().decode(await entryData(source, csv, tr)));
+    for (const e of entries) Object.assign(e, meta.get(e.name) ?? {});
+  } catch {
+    // Métadonnées facultatives.
+  }
+  return entries;
+}
+
+/** CSV RFC 4180 : guillemets, virgules et retours à la ligne dans les champs. */
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; } else quoted = false;
+      } else field += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+    else if (c !== "\r") field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+/**
+ * Métadonnées de activities.csv, par fichier d'activité (« 123.fit »). Les
+ * en-têtes suivent la langue du compte : on repère la colonne des fichiers
+ * par son contenu, le nom par sa position (troisième colonne dans toutes les
+ * langues), et le marquage course par les en-têtes connus.
+ */
+export function parseStravaActivities(text: string): Map<string, { title?: string; declaredRace?: boolean }> {
+  const rows = parseCsv(text.replace(/^\uFEFF/, ""));
+  const out = new Map<string, { title?: string; declaredRace?: boolean }>();
+  if (rows.length < 2) return out;
+  const header = rows[0];
+  const data = rows.slice(1);
+  const fileCol = header.findIndex((_, k) => data.some((r) => /^activities\/[^/]+\.(fit|tcx|gpx)(\.gz)?$/i.test(r[k] ?? "")));
+  if (fileCol < 0) return out;
+  const competition = header.findIndex((h) => /^(competition|compétition|competici[oó]n|competi[cç][aã]o|wettkampf)$/i.test(h.trim()));
+  const workoutType = header.findIndex((h) => /^(workout type|type d'entraînement)$/i.test(h.trim()));
+  const yes = (v?: string) => !!v && /^(1|true|vrai|yes|oui)$/i.test(v.trim());
+  for (const r of data) {
+    const file = r[fileCol];
+    if (!file) continue;
+    const name = baseName(file).replace(/\.gz$/i, "");
+    out.set(name, {
+      title: r[2]?.trim() || undefined,
+      // Type d'entraînement Strava : 1 course à pied « compétition », 11 vélo « course ».
+      declaredRace: yes(r[competition]) || ["1", "11"].includes((r[workoutType] ?? "").trim()) || undefined,
+    });
+  }
+  return out;
 }
 
 // ──────────────────────────────────────────────── archive générique

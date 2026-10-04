@@ -259,6 +259,8 @@ const fr = {
   "home.results.progressionIntro":
     "FC à allure identique dans le temps : le seul indicateur de forme qui ne dépende ni du parcours ni de l'envie du jour. Les capteurs sont traités séparément.",
   "home.results.projections": "Projections",
+  "home.results.races":
+    "Courses reconnues",
 
   "home.faq.title": "Questions fréquentes",
   "home.faq.q1": "Pourquoi mon fichier TCX est-il trop gros pour Gemini ou ChatGPT ?",
@@ -354,6 +356,28 @@ const fr = {
   "js.projMethod": "Méthode",
   "js.cs": "Vitesse critique <b>{pace}/km</b>, D' <b>{d} m</b>, R² <b>{r2}</b>",
   "js.projNone": "Aucune projection : il faut au moins une séance de course à pied.",
+  "js.racesIntro":
+    "Vos courses calent les projections. Cochez celles qui en sont, décochez une séance prise à tort pour une course : tout se recalcule.",
+  "js.racesNone":
+    "Aucune course reconnue. Si vous en avez couru une, indiquez votre dernier chrono dans « Affiner l'analyse » : c'est la meilleure base des projections.",
+  "js.raceDate":
+    "Date",
+  "js.raceDistance":
+    "Course",
+  "js.raceTime":
+    "Chrono",
+  "js.raceSource":
+    "Reconnue par",
+  "js.raceBy.user":
+    "vous",
+  "js.raceBy.strava":
+    "marquée course dans Strava",
+  "js.raceBy.name":
+    "nom de l'activité",
+  "js.raceBy.auto":
+    "suggestion : distance officielle, effort soutenu",
+  "js.raceCandidate":
+    "à confirmer",
   "js.redOriginal": "Vos fichiers d'origine",
   "js.redGenerated": "Dossier généré",
   "js.redReduction": "Réduction",

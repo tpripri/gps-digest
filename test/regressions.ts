@@ -13,6 +13,7 @@ import { digestActivity } from "../src/digest.ts";
 import { hrZones } from "../src/analyze.ts";
 import { bestEfforts } from "../src/efforts.ts";
 import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
+import { parseStravaActivities } from "../src/archive.ts";
 import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
 import { t } from "../src/i18n.ts";
@@ -458,6 +459,60 @@ section("9. Source de FC lue dans device_info, séance par séance");
   check("tableau des séances : source de FC et son origine (fichier ou signal)", /hr_source_basis/.test(header), header);
   check("origine « fichier » pour les FIT avec device_info, « signal » sinon",
     lines.some((l) => /2026-09-22/.test(l) && /,device,/.test(l)) && lines.some((l) => /2026-09-24/.test(l) && /,signal,/.test(l)));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("10. Reconnaissance des courses");
+{
+  const run = (day: string, km: number, speedMS: number, hr: number, title?: string): FileAnalysis => {
+    const w = fitWriter();
+    const startIso = `${day}T08:00:00Z`;
+    const durS = Math.round((km * 1000) / speedMS);
+    const parts = writeProfile(w, { startIso, segments: [{ durS, speedMS, hr }] });
+    writeSession(w, { startIso, elapsedS: durS, distM: parts[0].distM, sport: 1 });
+    return { ...asFile(`${day}.fit`, analyse(w.bytes())), title };
+  };
+  const files = [
+    run("2026-05-05", 10, 2.9, 135),                         // mardi, footing
+    run("2026-05-07", 12, 2.9, 137),                         // jeudi, footing
+    run("2026-05-10", 10.05, 4.0, 172),                      // dimanche, à fond : course
+    run("2026-05-13", 10.02, 3.0, 140),                      // mercredi, 10 km tranquille
+    run("2026-05-17", 21.2, 3.6, 162, "Semi de la Ville"),   // dimanche, semi nommé
+    run("2026-05-21", 9.18, 4.0, 168, "10km du Parc"),       // parcours trop court
+  ];
+  const batch = analyzeBatch(files, { locale: "fr", athlete: { maxHr: 185 } });
+  const dates = (b: typeof batch) => b.races.map((r) => r.date).join(",");
+  check("courses reconnues : le 10 km à fond et le semi, pas les footings",
+    batch.races.some((r) => r.date === "2026-05-10" && r.distanceM === 10000)
+    && batch.races.some((r) => r.date === "2026-05-17" && r.distanceM === 21097.5)
+    && !batch.races.some((r) => ["2026-05-05", "2026-05-07", "2026-05-13"].includes(r.date)), dates(batch));
+  const ten = batch.races.find((r) => r.date === "2026-05-10");
+  check("chrono de course : temps écoulé de la séance", !!ten && Math.abs(ten.timeS - 10050 / 4.0) <= 2, `${ten?.timeS}`);
+  const half = batch.races.find((r) => r.date === "2026-05-17");
+  check("le nom de l'activité compte comme preuve", half?.by === "name", half?.by);
+  const short = batch.races.find((r) => r.date === "2026-05-21");
+  check("« 10km du Parc » à 9,18 km : course, mais écartée des projections (parcours court)",
+    !!short && !short.usable, short ? `${short.usable}, ${short.note}` : "absente");
+  check("plus d'avertissement « aucun résultat de course »", !batch.warnings.some((x) => /Aucun résultat de course/.test(x)));
+  const p10 = batch.projections.find((p) => p.distanceM === 10000);
+  check("projection 10 km calée sur la course", !!p10 && (p10.achievedKind === "race" || /course/.test(p10.method)), p10?.method);
+
+  const fixed = analyzeBatch(files, { locale: "fr", athlete: { maxHr: 185 }, raceOverrides: { "2026-05-10.fit": false, "2026-05-13.fit": true } });
+  check("correction manuelle : retirer une course, en ajouter une",
+    !fixed.races.some((r) => r.date === "2026-05-10") && fixed.races.some((r) => r.date === "2026-05-13" && r.by === "user"), dates(fixed));
+
+  const dossier = buildDossier(batch, { streamMode: "none" });
+  const lines = dossier.split("\n");
+  const header = lines[lines.findIndex((l) => /^## races$/.test(l)) + 1] ?? "";
+  check("dossier : bloc des courses reconnues", /date/.test(header) && /time/.test(header) && /detected_by/.test(header), header);
+
+  const csv = 'Activity ID,Activity Date,Activity Name,Activity Type,Activity Description,Elapsed Time,Distance,Max Heart Rate,Relative Effort,Commute,Activity Private Note,Activity Gear,Filename,Competition\n'
+    + '1,"May 10, 2026",10km de la Plage,Run,"Belle course, vent\nde face",2500,10.06,175,,false,,,activities/111.fit.gz,\n'
+    + '2,"Sep 7, 2026",Morning Run,Run,,3000,8.1,150,,false,,,activities/112.fit.gz,1\n';
+  const meta = parseStravaActivities(csv);
+  check("activities.csv : nom et marquage course par fichier, champs entre guillemets compris",
+    meta.get("111.fit")?.title === "10km de la Plage" && meta.get("112.fit")?.declaredRace === true && !meta.get("111.fit")?.declaredRace,
+    JSON.stringify([...meta.entries()]));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

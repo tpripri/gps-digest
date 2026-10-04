@@ -202,11 +202,13 @@ export const es: Partial<Catalog> = {
   "dossier.setSource.auto":
     "{set}: detectada en la señal, sin sesión prescrita en el archivo. Sin valoración de cumplimiento.",
   "proj.method.achievedRace":
-    "Marca de la carrera del {date}: el tiempo real prima sobre el modelo",
+    "Marca de carrera ({date}): el tiempo real prima sobre el modelo",
   "proj.method.achievedTraining":
-    "Esfuerzo corrido en entrenamiento el {date}: el tiempo real prima sobre el modelo",
+    "Esfuerzo corrido en entrenamiento ({date}): el tiempo real prima sobre el modelo",
   "proj.caveat.gap":
-    "El modelo solo daba {model}, una diferencia de {pct} % con el tiempo real del {date}: confianza rebajada.",
+    "El modelo solo daba {model}, una diferencia de {pct} % con el tiempo real ({date}): confianza rebajada.",
+  "proj.dateUnknown":
+    "fecha desconocida",
   "dossier.projNote":
     "Velocidad crítica y proyecciones: esfuerzos de carrera de los últimos {days} días (desde el {from}). achieved = mejor tiempo real en la distancia dentro de ese periodo, model_gap_pct = diferencia del modelo con ese tiempo (positiva: modelo más lento). Por encima del 3 %, baja la confianza.",
   "proj.caveat.marathon":
@@ -250,6 +252,16 @@ export const es: Partial<Catalog> = {
     "Ajuste mediocre del modelo de velocidad crítica (R² = {r2}): las proyecciones son orientativas. Un test específico (3 min y 12 min a tope, descansado) daría un modelo mucho más fiable.",
   "batch.warnNoRace":
     "No se ha indicado ningún resultado de competición. Las proyecciones se basan solo en esfuerzos de entrenamiento, que suelen sobrestimar el rendimiento en carrera. Indicar una marca real mejora claramente la calibración.",
+  "batch.racesFound":
+    "Carreras reconocidas en los archivos: {list}. Calibran las proyecciones. Revisa la lista: una salida a tope sobre una distancia oficial en fin de semana puede pasar por una carrera.",
+  "race.noteMultisport":
+    "segmento de una prueba multideporte, no una carrera a pie aislada",
+  "race.noteNonStandard":
+    "distancia no estándar",
+  "race.noteMeasured":
+    "recorrido medido en {km} km, demasiado lejos de los {official} oficiales para calibrar las proyecciones",
+  "dossier.racesNote":
+    "Carreras reconocidas. detected_by: user (marcada por el atleta), strava (marcada como carrera en Strava), name (nombre de la actividad), auto (sugerencia: distancia oficial, esfuerzo continuo, FC alta o ritmo rápido, fin de semana). time = tiempo transcurrido de la sesión. used = sirve para calibrar las proyecciones.",
   "batch.warnMaxHr":
     "FC máxima observada ({observed} bpm) superior a la indicada ({maxHr} bpm). Todas las zonas están desplazadas mientras no se corrija este ajuste.",
   "batch.bundle.title": "gps-digest v1 — resumen de varias sesiones",
