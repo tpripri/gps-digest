@@ -24,12 +24,14 @@ import {
   lapRows,
   zoneRows,
   intervalRows,
+  paceOrSpeed,
   LLM_DIALECT,
 } from "./serialize.ts";
 import { hrSourceLabel } from "./sensor.ts";
 import { progressionRows, progressionMonthlyRows } from "./progression.ts";
 import { swimRows, paceLabel100 } from "./swim.ts";
 import { formatSpeed } from "./classify.ts";
+import type { Sport } from "./types.ts";
 import { heatStressNote } from "./weather.ts";
 import { formatDuration, raceLabel, confidenceLabel } from "./efforts.ts";
 import { gradeLabel } from "./adherence.ts";
@@ -75,11 +77,15 @@ type Tr = (key: MessageKey, params?: MessageParams) => string;
 // Le guide de lecture vit dans le catalogue (clé dossier.guide) : il se
 // traduit en bloc, avec ses préfixes « # ».
 
-function streamRowsFrom(points: GridPoint[], withCoords: boolean) {
+function streamRowsFrom(points: GridPoint[], withCoords: boolean, sport?: Sport) {
   return points.map((p) => {
     const row: Record<string, string | number | undefined> = { t_s: p.t };
     row.dist_m = p.dist;
-    if (p.paceSPerKm != null) row.pace_s_km = p.paceSPerKm;
+    // À vélo, des km/h : une allure au kilomètre ne s'y lit pas.
+    if (p.paceSPerKm != null) {
+      if (sport === "cycling") row.speed_kmh = p.paceSPerKm > 0 ? Math.round((36000 / p.paceSPerKm)) / 10 : undefined;
+      else row.pace_s_km = p.paceSPerKm;
+    }
     if (p.hr != null) row.hr_bpm = p.hr;
     if (p.cad != null) row.cad_spm = p.cad;
     if (p.pw != null) row.pw_w = p.pw;
@@ -148,12 +154,20 @@ function sessionBlocks(
     ["dur_elapsed_s", s.durElapsedS],
     ["dur_moving_s", s.durMovingS],
     ["dur_moving", formatDuration(s.durMovingS)],
-    ["pace_avg_s_km", s.paceAvgSPerKm != null ? Math.round(s.paceAvgSPerKm) : undefined],
-    ["pace_basis", tr("dossier.paceBasis")],
-    ["pace_avg_mmss", paceLabel(s.paceAvgSPerKm)],
+    ...(s.sport === "cycling"
+      ? [["speed_avg_kmh", s.speedAvgMS != null ? (s.speedAvgMS * 3.6).toFixed(1) : undefined]] as [string, string | number | undefined][]
+      : [
+          ["pace_avg_s_km", s.paceAvgSPerKm != null ? Math.round(s.paceAvgSPerKm) : undefined],
+          ["pace_basis", tr("dossier.paceBasis")],
+          ["pace_avg_mmss", paceLabel(s.paceAvgSPerKm)],
+        ] as [string, string | number | undefined][]),
     ["speed_avg_display", formatSpeed(s.sport, s.speedAvgMS)],
-    ["gap_avg_s_km", s.gapAvgSPerKm != null ? Math.round(s.gapAvgSPerKm) : undefined],
-    ["gap_avg_mmss", paceLabel(s.gapAvgSPerKm)],
+    ...(s.sport === "cycling"
+      ? []
+      : [
+          ["gap_avg_s_km", s.gapAvgSPerKm != null ? Math.round(s.gapAvgSPerKm) : undefined],
+          ["gap_avg_mmss", paceLabel(s.gapAvgSPerKm)],
+        ] as [string, string | number | undefined][]),
     ["ele_gain_m", s.eleGainM],
     ["ele_loss_m", s.eleLossM],
     ["ele_source", s.elevationFromDevice ? tr("dossier.eleDevice") : tr("dossier.eleGps")],
@@ -197,8 +211,15 @@ function sessionBlocks(
       file.drift.firstHalfHr != null ? Math.round(file.drift.firstHalfHr) : undefined],
     ["drift_hr_second_half",
       file.drift.secondHalfHr != null ? Math.round(file.drift.secondHalfHr) : undefined],
-    ["drift_pace_first_half", paceLabel(file.drift.firstHalfPaceSPerKm)],
-    ["drift_pace_second_half", paceLabel(file.drift.secondHalfPaceSPerKm)],
+    ...(s.sport === "cycling"
+      ? [
+          ["drift_speed_first_half_kmh", file.drift.firstHalfPaceSPerKm ? (3600 / file.drift.firstHalfPaceSPerKm).toFixed(1) : undefined],
+          ["drift_speed_second_half_kmh", file.drift.secondHalfPaceSPerKm ? (3600 / file.drift.secondHalfPaceSPerKm).toFixed(1) : undefined],
+        ] as [string, string | number | undefined][]
+      : [
+          ["drift_pace_first_half", paceLabel(file.drift.firstHalfPaceSPerKm)],
+          ["drift_pace_second_half", paceLabel(file.drift.secondHalfPaceSPerKm)],
+        ] as [string, string | number | undefined][]),
     // La régularité est une propriété de la FENÊTRE analysée, pas de la séance
     // entière : c'est le CV du signal d'effort sur la portion retenue.
     ["effort_regularity_cv_pct",
@@ -263,12 +284,12 @@ function sessionBlocks(
   }
 
   // --- Tableaux : c'est ici que vit la précision ---
-  push("splits", toCsv(splitRows(file.digest.splits), LLM_DIALECT));
-  push("laps", toCsv(lapRows(file.digest.laps), LLM_DIALECT));
+  push("splits", toCsv(splitRows(file.digest.splits, s.sport), LLM_DIALECT));
+  push("laps", toCsv(lapRows(file.digest.laps, s.sport), LLM_DIALECT));
   push("hr_zones", toCsv(zoneRows(file.digest.hrZones), LLM_DIALECT));
   push("pace_zones", toCsv(zoneRows(file.digest.paceZones), LLM_DIALECT));
   push("power_zones", toCsv(zoneRows(file.digest.powerZones), LLM_DIALECT));
-  push("intervals", toCsv(intervalRows(file.digest.intervals), LLM_DIALECT));
+  push("intervals", toCsv(intervalRows(file.digest.intervals, s.sport), LLM_DIALECT));
   for (const set of file.digest.intervalSets) {
     if (set.source) out.push(`# ${tr(`dossier.setSource.${set.source}`, { set: set.description })}`);
   }
@@ -282,8 +303,7 @@ function sessionBlocks(
           rep: r.index,
           dur_s: r.durS,
           dist_m: r.distM,
-          pace_s_km: r.paceSPerKm != null ? Math.round(r.paceSPerKm) : undefined,
-          pace_mmss: paceLabel(r.paceSPerKm),
+          ...paceOrSpeed(r.paceSPerKm, s.sport),
           hr_avg: r.hrAvg != null ? Math.round(r.hrAvg) : undefined,
           hr_max: r.hrMax,
           pw_w: r.pwAvgW != null ? Math.round(r.pwAvgW) : undefined,
@@ -322,7 +342,7 @@ function sessionBlocks(
     const mode = opts.streamMode ?? "time";
     const step = mode === "distance" ? `${opts.intervalM ?? 100} m` : `${opts.intervalS ?? 10} s`;
     out.push(`# ${tr("dossier.streamNote", { step })}`);
-    push("stream", toCsv(streamRowsFrom(points, !opts.dropCoordinates), LLM_DIALECT));
+    push("stream", toCsv(streamRowsFrom(points, !opts.dropCoordinates, s.sport), LLM_DIALECT));
   }
 
   return out;

@@ -29,6 +29,7 @@ import type { WeatherObservation } from "./weather.ts";
 import type { SwimAnalysis } from "./swim.ts";
 import type { AthleteProfile, Digest, HrZoneBasis, Sample, Sport } from "./types.ts";
 import { hrZones } from "./analyze.ts";
+import { formatSpeed } from "./classify.ts";
 import { detectRaces, type RaceMark } from "./races.ts";
 
 export interface FileAnalysis {
@@ -551,8 +552,8 @@ export function buildBatchBundle(
           sport: s.sport,
           dist_km: (s.distM / 1000).toFixed(2),
           dur_moving: formatDuration(s.durMovingS),
-          pace_mmss: paceLabel(s.paceAvgSPerKm),
-          gap_mmss: paceLabel(s.gapAvgSPerKm),
+          speed: formatSpeed(s.sport, s.speedAvgMS),
+          gap_mmss: s.sport === "running" ? paceLabel(s.gapAvgSPerKm) : undefined,
           ele_gain_m: s.eleGainM,
           hr_avg: s.hrAvg == null ? undefined : Math.round(s.hrAvg),
           hr_max: s.hrMax,

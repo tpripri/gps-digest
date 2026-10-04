@@ -277,7 +277,7 @@ export function analyzeAdherence(
   if (hrRise != null && Math.abs(hrRise) >= 3) {
     const stablePace = paceCv != null && paceCv < 3;
     if (hrRise > 0 && stablePace) {
-      verdicts.push(tr("adh.hrRiseStable", { bpm: hrRise.toFixed(0) }));
+      verdicts.push(tr(basis === "power" ? "adh.hrRiseStable.power" : "adh.hrRiseStable", { bpm: hrRise.toFixed(0) }));
       if (hrRise > 8) penalty += 1;
     } else if (hrRise > 0) {
       verdicts.push(tr("adh.hrRise", { bpm: hrRise.toFixed(0) }));

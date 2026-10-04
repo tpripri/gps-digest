@@ -122,6 +122,8 @@ export const de: Partial<Catalog> = {
   "adh.restShorter": "Pausen werden kürzer ({s} s pro Wiederholung).",
   "adh.hrRiseStable":
     "Pace gehalten, aber HF über die Serie um {bpm} bpm gestiegen: steigende kardiale Kosten bei gleicher Belastung, Kennzeichen angesammelter Ermüdung.",
+  "adh.hrRiseStable.power":
+    "Leistung gehalten, aber HF über die Serie um {bpm} bpm gestiegen: steigende kardiale Kosten bei gleicher Belastung, Kennzeichen angesammelter Ermüdung.",
   "adh.hrRise": "HF über die Serie um {bpm} bpm gestiegen.",
   "adh.hrrGood":
     "Sehr gute Herzfrequenzerholung: {bpm} bpm Abfall in 60 s nach jeder Wiederholung.",

@@ -120,6 +120,8 @@ export const pt: Partial<Catalog> = {
   "adh.restShorter": "Recuperações cada vez mais curtas ({s} s por repetição).",
   "adh.hrRiseStable":
     "Ritmo mantido, mas FC subindo {bpm} bpm ao longo da série: custo cardíaco crescente com o mesmo esforço, assinatura da fadiga acumulada.",
+  "adh.hrRiseStable.power":
+    "Potência mantida, mas FC subindo {bpm} bpm ao longo da série: custo cardíaco crescente com o mesmo esforço, assinatura da fadiga acumulada.",
   "adh.hrRise": "FC subindo {bpm} bpm ao longo da série.",
   "adh.hrrGood":
     "Recuperação cardíaca muito boa: queda de {bpm} bpm em 60 s após cada repetição.",

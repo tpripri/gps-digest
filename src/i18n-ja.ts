@@ -125,6 +125,8 @@ export const ja: Partial<Catalog> = {
   "adh.restShorter": "レストがだんだん短くなっています（1 本ごとに {s} 秒）。",
   "adh.hrRiseStable":
     "ペースは維持できていますが、セットを通じて心拍数が {bpm} bpm 上昇しています。同じ強度での心臓への負担が増えており、疲労の蓄積を示しています。",
+  "adh.hrRiseStable.power":
+    "パワーは維持できていますが、セットを通じて心拍数が {bpm} bpm 上昇しています。同じ強度での心臓への負担が増えており、疲労の蓄積を示しています。",
   "adh.hrRise": "セットを通じて心拍数が {bpm} bpm 上昇しています。",
   "adh.hrrGood": "心拍の回復は非常に良好です。各レップ後 60 秒で {bpm} bpm 低下しています。",
   "adh.hrrOk": "心拍の回復はまずまずです。60 秒で {bpm} bpm 低下しています。",

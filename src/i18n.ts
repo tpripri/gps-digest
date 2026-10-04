@@ -147,6 +147,8 @@ const fr = {
   "adh.restShorter": "Récupérations qui raccourcissent ({s} s par répétition).",
   "adh.hrRiseStable":
     "Allure tenue mais FC en hausse de {bpm} bpm sur la série : coût cardiaque croissant à effort égal, signature de la fatigue accumulée.",
+  "adh.hrRiseStable.power":
+    "Puissance tenue mais FC en hausse de {bpm} bpm sur la série : coût cardiaque croissant à effort égal, signature de la fatigue accumulée.",
   "adh.hrRise": "FC en hausse de {bpm} bpm sur la série.",
   "adh.hrrGood":
     "Récupération cardiaque très bonne : {bpm} bpm de chute en 60 s après chaque répétition.",
@@ -563,6 +565,8 @@ const en: Catalog = {
   "adh.restShorter": "Recoveries getting shorter ({s} s per rep).",
   "adh.hrRiseStable":
     "Pace held but HR up {bpm} bpm over the set: rising cardiac cost at equal effort, the signature of accumulated fatigue.",
+  "adh.hrRiseStable.power":
+    "Power held but HR up {bpm} bpm over the set: rising cardiac cost at equal effort, the signature of accumulated fatigue.",
   "adh.hrRise": "HR up {bpm} bpm over the set.",
   "adh.hrrGood": "Very good heart rate recovery: {bpm} bpm drop in 60 s after each rep.",
   "adh.hrrOk": "Acceptable heart rate recovery: {bpm} bpm in 60 s.",

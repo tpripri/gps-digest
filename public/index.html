@@ -866,7 +866,10 @@ function renderAnalysis(batch) {
              badge: `<span class="badge ${f.drift.quality === "solide" ? "ok" : "mid"}">${
                esc(driftQualityLabel(f.drift.quality, LOCALE))}</span>`,
              min: Math.round(f.drift.window.durationS / 60),
-             pace: esc(paceLabel(f.drift.window.paceSPerKm) ?? "?"),
+             // À vélo, une vitesse : une allure au kilomètre ne s'y lit pas.
+             pace: esc((s.sport === "cycling"
+               ? formatSpeed(s.sport, f.drift.window.paceSPerKm ? 1000 / f.drift.window.paceSPerKm : undefined)
+               : paceLabel(f.drift.window.paceSPerKm)) ?? "?"),
              coverage: pct(f.drift.windowCoveragePct),
              interpretation: esc(f.drift.interpretation),
            })}

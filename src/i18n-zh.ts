@@ -115,6 +115,8 @@ export const zh: Partial<Catalog> = {
   "adh.restShorter": "恢复时间越来越短（每次重复 {s} 秒）。",
   "adh.hrRiseStable":
     "配速保持住了，但整组心率上升 {bpm} bpm：同等强度下心脏负担递增，是疲劳累积的特征。",
+  "adh.hrRiseStable.power":
+    "功率保持住了，但整组心率上升 {bpm} bpm：同等强度下心脏负担递增，是疲劳累积的特征。",
   "adh.hrRise": "整组心率上升 {bpm} bpm。",
   "adh.hrrGood": "心率恢复很好：每次重复后 60 秒内下降 {bpm} bpm。",
   "adh.hrrOk": "心率恢复尚可：60 秒内下降 {bpm} bpm。",

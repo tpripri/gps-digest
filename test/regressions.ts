@@ -15,6 +15,7 @@ import { bestEfforts } from "../src/efforts.ts";
 import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
 import { parseStravaActivities } from "../src/archive.ts";
 import { buildDossier } from "../src/dossier.ts";
+import { buildBundle } from "../src/serialize.ts";
 import { haversine } from "../src/geo.ts";
 import { t } from "../src/i18n.ts";
 import type { Activity, DigestOptions, Sample } from "../src/types.ts";
@@ -513,6 +514,30 @@ section("10. Reconnaissance des courses");
   check("activities.csv : nom et marquage course par fichier, champs entre guillemets compris",
     meta.get("111.fit")?.title === "10km de la Plage" && meta.get("112.fit")?.declaredRace === true && !meta.get("111.fit")?.declaredRace,
     JSON.stringify([...meta.entries()]));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("11. Vélo : ni allure au kilomètre, ni GAP");
+{
+  const w = fitWriter();
+  const segs: FitSegment[] = [{ durS: 600, speedMS: 8, pw: 150, hr: 120 }];
+  for (let i = 0; i < 4; i++) segs.push({ durS: 120, speedMS: 11, pw: 300, hr: 160 }, { durS: 120, speedMS: 8, pw: 150, hr: 135 });
+  segs.push({ durS: 600, speedMS: 8, pw: 140, hr: 125 });
+  const parts = writeProfile(w, { startIso: START, segments: segs });
+  parts.forEach((p) => writeLap(w, { startIso: START, startS: p.startS, durS: p.durS, distM: p.distM, intensity: 0, trigger: 0 }));
+  writeSession(w, { startIso: START, elapsedS: segs.reduce((a, s) => a + s.durS, 0), distM: parts.reduce((a, p) => a + p.distM, 0), sport: 2 });
+  const res = analyse(w.bytes());
+  const batch = analyzeBatch([asFile("velo.fit", res)], { locale: "fr" });
+  const data = (text: string) => text.split("\n").filter((l) => !l.startsWith("#"));
+  const paceLines = (text: string) => data(text).filter((l) => /pace_s_km|pace_mmss|pace_avg|gap_/.test(l));
+  const dossier = buildDossier(batch, { streamMode: "time", intervalS: 30 });
+  check("dossier : aucune colonne d'allure ni de GAP pour le vélo", paceLines(dossier).length === 0, paceLines(dossier).slice(0, 3).join(" | "));
+  check("dossier : splits, tours, intervalles et flux en km/h",
+    data(dossier).filter((l) => /speed_kmh/.test(l)).length >= 4, `${data(dossier).filter((l) => /speed_kmh/.test(l)).length} tableaux`);
+  const bundle = buildBundle(res.digest, { insights: { ...res.insights, adherence: res.insights.adherence.map((a) => ({ ...a, grade: a.grade })) } });
+  check("fichier d'une séance : pas d'allure non plus", paceLines(bundle).length === 0, paceLines(bundle).slice(0, 3).join(" | "));
+  check("verdicts d'une série en puissance : jamais « allure »", !/Allure tenue|allure/i.test(res.insights.adherence.flatMap((a) => a.verdicts).join(" ")),
+    res.insights.adherence.flatMap((a) => a.verdicts).join(" ").slice(0, 160));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

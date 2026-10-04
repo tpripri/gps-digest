@@ -12,7 +12,7 @@
  */
 
 import { translator } from "./i18n.ts";
-import type { Digest, Lap, Sample, Split, ZoneBin, IntervalBlock } from "./types.ts";
+import type { Digest, Lap, Sample, Split, ZoneBin, IntervalBlock, Sport } from "./types.ts";
 
 export interface CsvDialect {
   delimiter: string;
@@ -84,14 +84,22 @@ export function paceLabel(sPerKm?: number): string | undefined {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export function splitRows(splits: Split[]): Row[] {
+/**
+ * Allure ou vitesse selon le sport. À vélo, une allure au kilomètre ne parle
+ * à personne (« 1:55/km ») : on donne des km/h, et jamais de GAP.
+ */
+export function paceOrSpeed(sPerKm: number | undefined, sport?: Sport): Row {
+  if (sport === "cycling") return { speed_kmh: sPerKm && sPerKm > 0 ? r1(3600 / sPerKm) : undefined };
+  return { pace_s_km: r0(sPerKm), pace_mmss: paceLabel(sPerKm) };
+}
+
+export function splitRows(splits: Split[], sport?: Sport): Row[] {
   return splits.map((s) => ({
     n: s.index,
     dist_m: s.distM,
     dur_s: s.durS,
-    pace_s_km: r0(s.paceSPerKm),
-    pace_mmss: paceLabel(s.paceSPerKm),
-    gap_s_km: r0(s.gapSPerKm),
+    ...paceOrSpeed(s.paceSPerKm, sport),
+    ...(sport === "cycling" ? {} : { gap_s_km: r0(s.gapSPerKm) }),
     hr_bpm: r0(s.hrAvg),
     cad_spm: r0(s.cadAvg),
     pw_w: r0(s.pwAvg),
@@ -101,13 +109,15 @@ export function splitRows(splits: Split[]): Row[] {
   }));
 }
 
-export function lapRows(laps: Lap[]): Row[] {
+export function lapRows(laps: Lap[], sport?: Sport): Row[] {
   return laps.map((l) => ({
     n: l.index + 1,
     start_s: r0(l.startT),
     dur_s: r0(l.durS),
     dist_m: r0(l.distM),
-    pace_s_km: l.distM > 0 ? r0((l.durS / l.distM) * 1000) : undefined,
+    ...(sport === "cycling"
+      ? paceOrSpeed(l.distM > 0 ? (l.durS / l.distM) * 1000 : undefined, sport)
+      : { pace_s_km: l.distM > 0 ? r0((l.durS / l.distM) * 1000) : undefined }),
     hr_avg: r0(l.hrAvg),
     hr_max: r0(l.hrMax),
     kcal: r0(l.calories),
@@ -127,7 +137,7 @@ export function zoneRows(zones: ZoneBin[]): Row[] {
   }));
 }
 
-export function intervalRows(blocks: IntervalBlock[]): Row[] {
+export function intervalRows(blocks: IntervalBlock[], sport?: Sport): Row[] {
   return blocks.map((b) => ({
     n: b.index + 1,
     kind: b.kind,
@@ -135,8 +145,7 @@ export function intervalRows(blocks: IntervalBlock[]): Row[] {
     start_s: b.startT,
     dur_s: b.durS,
     dist_m: b.distM,
-    pace_s_km: r0(b.paceSPerKm),
-    pace_mmss: paceLabel(b.paceSPerKm),
+    ...paceOrSpeed(b.paceSPerKm, sport),
     hr_avg: r0(b.hrAvg),
     hr_max: r0(b.hrMax),
     pw_w: r0(b.pwAvg),
@@ -228,9 +237,13 @@ export function buildBundle(
     dist_m: session.distM,
     ele_gain_m: session.eleGainM,
     ele_loss_m: session.eleLossM,
-    pace_avg_s_km: r0(session.paceAvgSPerKm),
-    pace_avg_mmss: paceLabel(session.paceAvgSPerKm),
-    gap_avg_s_km: r0(session.gapAvgSPerKm),
+    ...(session.sport === "cycling"
+      ? { speed_avg_kmh: r1(session.paceAvgSPerKm ? 3600 / session.paceAvgSPerKm : undefined) }
+      : {
+          pace_avg_s_km: r0(session.paceAvgSPerKm),
+          pace_avg_mmss: paceLabel(session.paceAvgSPerKm),
+          gap_avg_s_km: r0(session.gapAvgSPerKm),
+        }),
     speed_max_ms: r1(session.speedMaxMS),
     hr_avg: r0(session.hrAvg),
     hr_max: r0(session.hrMax),
@@ -258,10 +271,12 @@ export function buildBundle(
           source: s.source,
           reps: s.reps,
           reps_planned: s.repsPlanned,
-          target_pace: paceLabel(s.targetPaceSPerKm),
+          ...(session.sport === "cycling" ? {} : { target_pace: paceLabel(s.targetPaceSPerKm) }),
           target_w: r0(s.targetPwW),
           avg_work_s: s.avgWorkDurS,
-          avg_work_pace: paceLabel(s.avgWorkPaceSPerKm),
+          ...(session.sport === "cycling"
+            ? { avg_work_kmh: r1(s.avgWorkPaceSPerKm ? 3600 / s.avgWorkPaceSPerKm : undefined) }
+            : { avg_work_pace: paceLabel(s.avgWorkPaceSPerKm) }),
           avg_work_w: r0(s.avgWorkPwW),
           avg_rest_s: s.avgRestDurS,
         })),
@@ -269,12 +284,12 @@ export function buildBundle(
     );
   }
 
-  block("splits", toCsv(splitRows(digest.splits)));
-  block("laps", toCsv(lapRows(digest.laps)));
+  block("splits", toCsv(splitRows(digest.splits, session.sport)));
+  block("laps", toCsv(lapRows(digest.laps, session.sport)));
   block("hr_zones", toCsv(zoneRows(digest.hrZones)));
   block("power_zones", toCsv(zoneRows(digest.powerZones)));
   block("pace_zones", toCsv(zoneRows(digest.paceZones)));
-  block("intervals", toCsv(intervalRows(digest.intervals)));
+  block("intervals", toCsv(intervalRows(digest.intervals, session.sport)));
 
   const ins = opts.insights;
   if (ins) {
@@ -293,8 +308,15 @@ export function buildBundle(
         { key: "drift_pct", value: r1(ins.drift.decouplingPct ?? undefined) },
         { key: "drift_hr_first_half", value: r0(ins.drift.firstHalfHr) },
         { key: "drift_hr_second_half", value: r0(ins.drift.secondHalfHr) },
-        { key: "drift_pace_first_half", value: paceLabel(ins.drift.firstHalfPaceSPerKm) },
-        { key: "drift_pace_second_half", value: paceLabel(ins.drift.secondHalfPaceSPerKm) },
+        ...(session.sport === "cycling"
+          ? [
+              { key: "drift_speed_first_half_kmh", value: r1(ins.drift.firstHalfPaceSPerKm ? 3600 / ins.drift.firstHalfPaceSPerKm : undefined) },
+              { key: "drift_speed_second_half_kmh", value: r1(ins.drift.secondHalfPaceSPerKm ? 3600 / ins.drift.secondHalfPaceSPerKm : undefined) },
+            ]
+          : [
+              { key: "drift_pace_first_half", value: paceLabel(ins.drift.firstHalfPaceSPerKm) },
+              { key: "drift_pace_second_half", value: paceLabel(ins.drift.secondHalfPaceSPerKm) },
+            ]),
         { key: "effort_regularity_cv_pct", value: r1(ins.drift.speedCvPct) },
       );
     } else if (ins.drift.reason) {
@@ -347,11 +369,12 @@ export function buildBundle(
 
     if (ins.hrSpeed.length >= 3) {
       block(
-        "hr_vs_pace",
+        session.sport === "cycling" ? "hr_vs_speed" : "hr_vs_pace",
         toCsv(
           ins.hrSpeed.map((p) => ({
-            pace_mmss: paceLabel(p.paceSPerKm),
-            pace_s_km: p.paceSPerKm,
+            ...(session.sport === "cycling"
+              ? { speed_kmh: r1(3600 / p.paceSPerKm) }
+              : { pace_mmss: paceLabel(p.paceSPerKm), pace_s_km: p.paceSPerKm }),
             hr_bpm: r0(p.hrAvg),
             time_s: p.timeS,
           })),
