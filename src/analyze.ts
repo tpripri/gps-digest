@@ -27,6 +27,7 @@ import type {
   SessionSummary,
   Sport,
   Split,
+  WorkoutStep,
   ZoneBin,
 } from "./types.ts";
 
@@ -239,13 +240,71 @@ function twoMeans(values: number[]): { low: number; high: number } {
   return { low, high };
 }
 
+/** Effort au moins 12 % plus rapide (ou puissant) que la récupération qui l'entoure. */
+const MIN_CONTRAST = 0.12;
+/** Au-delà, un coureur n'accélère pas : son GPS se recale. */
+const MAX_RUN_SPEED_MS = 8;
+/** Part maximale d'un effort fournie par des sauts de position. */
+const MAX_JUMP_SHARE = 0.02;
+
+const WORK_INTENSITY = /^(active|interval)$/i;
+const REST_INTENSITY = /^(rest|resting|recovery)$/i;
+
+type Detected = { blocks: IntervalBlock[]; sets: IntervalSet[] };
+const NONE: Detected = { blocks: [], sets: [] };
+
+/** À vélo avec capteur, l'effort se lit en watts ; partout ailleurs, en vitesse. */
+const usePower = (sport: Sport, samples: Sample[]) =>
+  sport === "cycling" && samples.some((s) => s.pw != null);
+
+/** Intensité d'un bloc dans la grandeur qui définit l'effort. */
+const levelOf = (b: IntervalBlock, power: boolean) =>
+  power ? (b.pwAvg ?? 0) : b.durS > 0 ? b.distM / b.durS : 0;
+
+/** Bloc couvrant [fromT, toT[ : FC, puissance et allure lues dans la trace. */
+function blockOver(
+  samples: Sample[],
+  index: number,
+  kind: "work" | "rest",
+  fromT: number,
+  toT: number,
+  durS: number,
+  distM: number,
+  stepIndex?: number,
+): IntervalBlock {
+  const slice = samples.filter((s) => s.t >= fromT && s.t < toT);
+  return {
+    index,
+    kind,
+    startT: Math.round(fromT),
+    durS: Math.round(durS),
+    distM: Math.round(distM),
+    paceSPerKm: distM > 5 ? (durS / distM) * 1000 : undefined,
+    hrAvg: mean(slice.map((s) => s.hr)),
+    hrMax: slice.reduce<number | undefined>(
+      (m, s) => (s.hr != null && (m == null || s.hr > m) ? s.hr : m),
+      undefined,
+    ),
+    pwAvg: mean(slice.map((s) => s.pw)),
+    stepIndex,
+  };
+}
+
 /**
- * Détection automatique des intervalles.
+ * Détection des intervalles, de la source la plus sûre à la plus fragile.
  *
- * 1. Si le fichier porte des laps alternant Active/Resting, on les croit :
- *    l'athlète a appuyé sur le bouton, aucune heuristique ne fera mieux.
- * 2. Sinon : k-moyennes à 2 classes sur la puissance (ou la vitesse), RLE,
- *    fusion des blocs trop courts, puis regroupement en séries.
+ * 1. Séance programmée sur la montre : les tours portent l'étape de la séance
+ *    (FIT), ou une intensité « Repos » explicite (TCX). C'est la prescription
+ *    elle-même, à condition que l'athlète l'ait suivie : si une récupération
+ *    a été courue aussi vite que les efforts, on n'y croit plus.
+ * 2. Tours manuels : un tour par étape, comme Zwift, ou un athlète qui appuie
+ *    sur le bouton à chaque répétition.
+ * 3. Sinon seulement, détection sur le signal : vitesse en course (la
+ *    puissance de course monte dans chaque côte, elle prenait un footing
+ *    vallonné pour un fractionné), puissance à vélo. Un bloc ne compte comme
+ *    effort que s'il dure assez (60 s en course), s'il est nettement plus
+ *    rapide que la récupération qui l'entoure, et s'il ne doit rien à un
+ *    saut de GPS.
  */
 export function detectIntervals(
   samples: Sample[],
@@ -254,37 +313,148 @@ export function detectIntervals(
   minBlockS = 20,
   sport: Sport = "running",
   locale?: string,
-): { blocks: IntervalBlock[]; sets: IntervalSet[] } {
-  const nativeRest = laps.filter((l) => /rest/i.test(l.intensity ?? "")).length;
-  if (nativeRest >= 2 && laps.length >= 4) {
-    const blocks = laps.map((l, i) => ({
-      index: i,
-      kind: /rest/i.test(l.intensity ?? "") ? ("rest" as const) : ("work" as const),
-      startT: Math.round(l.startT),
-      durS: Math.round(l.durS),
-      distM: Math.round(l.distM),
-      paceSPerKm: l.distM > 0 ? (l.durS / l.distM) * 1000 : undefined,
-      hrAvg: l.hrAvg,
-      hrMax: l.hrMax,
-    }));
-    return { blocks, sets: groupSets(blocks, sport, locale) };
-  }
+  steps: WorkoutStep[] = [],
+): Detected {
+  return (
+    workoutIntervals(samples, laps, steps, sport, locale) ??
+    lapIntervals(samples, laps, sport, locale) ??
+    autoIntervals(samples, speed, minBlockS, sport, locale)
+  );
+}
 
-  const hasPower = samples.some((s) => s.pw != null);
-  const smoothed = hasPower
+/** 1. Séance programmée : un bloc par étape, la prescription en prime. */
+function workoutIntervals(
+  samples: Sample[],
+  laps: Lap[],
+  steps: WorkoutStep[],
+  sport: Sport,
+  locale?: string,
+): Detected | null {
+  const stepped = laps.filter((l) => l.stepIndex != null).length >= 3;
+  const restLaps = laps.filter((l) => REST_INTENSITY.test(l.intensity ?? "")).length;
+  if (!stepped && !(restLaps >= 2 && laps.length >= 4)) return null;
+
+  const stepOf = new Map(steps.map((s) => [s.index, s]));
+  const kindOf = (l: Lap): "work" | "rest" => {
+    // Tours hors séance (avant ou après) : de la course libre.
+    if (stepped && l.stepIndex == null) return "rest";
+    const intensity = (l.stepIndex != null ? stepOf.get(l.stepIndex)?.intensity : undefined) ?? l.intensity ?? "";
+    return WORK_INTENSITY.test(intensity) ? "work" : "rest";
+  };
+
+  // Les tours consécutifs d'une même étape forment un seul bloc : l'auto-lap
+  // au kilomètre découpe une répétition de 5000 m en cinq tours. Sans index
+  // d'étape (TCX), rien ne distingue ces tours d'étapes distinctes : chaque
+  // tour reste un bloc.
+  type Group = { kind: "work" | "rest"; stepIndex?: number; fromT: number; toT: number; durS: number; distM: number };
+  const groups: Group[] = [];
+  for (const l of laps) {
+    const kind = kindOf(l);
+    const last = groups[groups.length - 1];
+    if (stepped && last && last.kind === kind && last.stepIndex === l.stepIndex) {
+      last.toT = l.startT + l.durS;
+      last.durS += l.durS;
+      last.distM += l.distM;
+    } else {
+      groups.push({ kind, stepIndex: l.stepIndex, fromT: l.startT, toT: l.startT + l.durS, durS: l.durS, distM: l.distM });
+    }
+  }
+  const blocks = groups.map((g, i) => blockOver(samples, i, g.kind, g.fromT, g.toT, g.durS, g.distM, g.stepIndex));
+
+  const work = blocks.filter((b) => b.kind === "work");
+  if (!work.length) return null;
+  const power = usePower(sport, samples);
+  const workLevel = mean(work.map((b) => levelOf(b, power))) ?? 0;
+  // Séance suivie ? Une récupération courue aussi vite que les efforts veut
+  // dire que l'athlète a appuyé sur le bouton à contretemps : la structure
+  // enregistrée ne décrit plus ce qu'il a fait.
+  const followed = blocks.every(
+    (b) => b.kind === "work" || b.startT < work[0].startT || levelOf(b, power) < workLevel * 0.95,
+  );
+  if (!followed) return null;
+
+  const sets = groupSets(blocks, sport, locale, stepped).map((set) => {
+    const first = blocks.find((b) => b.index === set.workBlockIndices?.[0]);
+    const step = first?.stepIndex != null ? stepOf.get(first.stepIndex) : undefined;
+    const repeat = step
+      ? steps.find((r) => r.repeatCount != null && r.repeatFrom != null && r.repeatFrom <= step.index && step.index < r.index)
+      : undefined;
+    const out: IntervalSet = {
+      ...set,
+      source: "workout",
+      repsPlanned: repeat?.repeatCount,
+      targetPaceSPerKm: step?.targetPaceSPerKm,
+      targetPwW: step?.targetPwW,
+    };
+    // La consigne de la montre prime sur l'arrondi de la distance courue.
+    if (step?.durationM || step?.durationS) {
+      out.kind = step.durationM ? "distance" : "time";
+      out.targetM = step.durationM ? Math.round(step.durationM) : undefined;
+      out.targetS = step.durationS ? Math.round(step.durationS) : undefined;
+      out.description = describeSet(
+        set.reps, out.kind, out.targetM ?? out.targetS ?? set.avgWorkDurS,
+        set.avgWorkDurS, set.avgRestDurS, set.avgWorkPwW, sport, locale,
+      );
+    }
+    return out;
+  });
+  return { blocks, sets };
+}
+
+/** 2. Tours manuels : chaque tour est une étape, on classe effort et récup. */
+function lapIntervals(samples: Sample[], laps: Lap[], sport: Sport, locale?: string): Detected | null {
+  if (laps.length < 4) return null;
+  // Le dernier tour se termine avec la séance : son déclencheur ne dit rien.
+  const inner = laps.slice(0, -1);
+  const manual = inner.filter((l) => /^manual$/i.test(l.trigger ?? "")).length;
+  if (manual < inner.length * 0.6) return null;
+
+  const power = usePower(sport, samples);
+  const blocks = laps.map((l, i) => blockOver(samples, i, "rest", l.startT, l.startT + l.durS, l.durS, l.distM));
+  const levels = blocks.map((b) => levelOf(b, power));
+  const positive = levels.filter((v) => v > 0);
+  if (positive.length < 4) return null;
+  const { low, high } = twoMeans(positive);
+  if (high <= 0 || (high - low) / high < MIN_CONTRAST) return null;
+  const mid = (low + high) / 2;
+
+  for (let i = 0; i < blocks.length; i++) {
+    if (levels[i] < mid || blocks[i].durS < 30) continue;
+    const around = [levels[i - 1], levels[i + 1]].filter((v): v is number => v != null && v < mid);
+    const ref = around.length ? mean(around)! : low;
+    if (levels[i] * (1 - MIN_CONTRAST) >= ref) blocks[i].kind = "work";
+  }
+  if (blocks.filter((b) => b.kind === "work").length < 2) return null;
+
+  const totalS = laps.reduce((s, l) => s + l.durS, 0);
+  const sets = filterMeaningfulSets(groupSets(blocks, sport, locale), blocks, totalS)
+    .map((s) => ({ ...s, source: "laps" as const }));
+  return sets.length ? { blocks, sets } : null;
+}
+
+/** 3. Détection sur le signal, quand le fichier ne dit rien de la séance. */
+function autoIntervals(
+  samples: Sample[],
+  speed: number[],
+  minBlockS: number,
+  sport: Sport,
+  locale?: string,
+): Detected {
+  const power = usePower(sport, samples);
+  const signal = power
     ? smoothByTime(samples, (s) => s.pw, 5).map((v) => v ?? 0)
     : speed;
 
-  const active = smoothed.filter((v) => v > 0.3);
-  if (active.length < 60) return { blocks: [], sets: [] };
+  const active = signal.filter((v) => v > 0.3);
+  if (active.length < 60) return NONE;
 
   const { low, high } = twoMeans(active);
   // Garde-fou : sur une sortie à allure constante, les deux centroïdes sont
   // quasi confondus. Inventer des "intervalles" serait pire que ne rien dire.
-  if (high <= 0 || (high - low) / high < 0.18) return { blocks: [], sets: [] };
+  if (high <= 0 || (high - low) / high < 0.18) return NONE;
 
   const mid = (low + high) / 2;
-  const labels = smoothed.map((v) => (v >= mid ? "work" : "rest"));
+  const labels = signal.map((v) => (v >= mid ? "work" : "rest"));
 
   // RLE
   type Run = { kind: "work" | "rest"; from: number; to: number };
@@ -298,41 +468,69 @@ export function detectIntervals(
   }
 
   // Fusion des micro-blocs (une accélération de 4 s n'est pas un intervalle).
-  const merged: Run[] = [];
-  for (const r of runs) {
-    const dur = samples[r.to].t - samples[r.from].t;
-    const last = merged[merged.length - 1];
-    if (dur < minBlockS && last) last.to = r.to;
-    else if (last && last.kind === r.kind) last.to = r.to;
-    else merged.push({ ...r });
+  const mergeRuns = (input: Run[]) => {
+    const merged: Run[] = [];
+    for (const r of input) {
+      const dur = samples[r.to].t - samples[r.from].t;
+      const last = merged[merged.length - 1];
+      if (dur < minBlockS && last) last.to = r.to;
+      else if (last && last.kind === r.kind) last.to = r.to;
+      else merged.push({ ...r });
+    }
+    return merged;
+  };
+  const merged = mergeRuns(runs);
+
+  // Validation de chaque effort. Référence de récupération : le signal en
+  // mouvement dans les récupérations voisines ; si elles se passent à
+  // l'arrêt (feu rouge, récup debout), l'allure courante de la séance.
+  // Sans ce second cas, chaque portion de footing entre deux feux rouges
+  // devenait une répétition.
+  const sortedActive = [...active].sort((a, b) => a - b);
+  const usual = sortedActive[Math.floor(sortedActive.length * 0.25)];
+  const minWorkS = sport === "running" ? 60 : 30;
+  const restRef = (r: Run | undefined) => {
+    if (!r || r.kind !== "rest") return undefined;
+    let sum = 0;
+    let n = 0;
+    for (let i = r.from; i <= r.to; i++) if (signal[i] > 0.3) { sum += signal[i]; n++; }
+    return n >= (r.to - r.from + 1) / 2 ? sum / n : undefined;
+  };
+  for (let k = 0; k < merged.length; k++) {
+    const r = merged[k];
+    if (r.kind !== "work") continue;
+    const durS = samples[r.to].t - samples[r.from].t;
+    const distM = (samples[r.to].dist ?? 0) - (samples[r.from].dist ?? 0);
+    let jump = 0;
+    if (!power) {
+      for (let i = r.from + 1; i <= r.to; i++) {
+        const step = (samples[i].dist ?? 0) - (samples[i - 1].dist ?? 0);
+        jump += Math.max(0, step - MAX_RUN_SPEED_MS * Math.max(0, samples[i].t - samples[i - 1].t));
+      }
+    }
+    const refs = [restRef(merged[k - 1]), restRef(merged[k + 1])].filter((v): v is number => v != null);
+    const ref = refs.length ? mean(refs)! : usual;
+    const level = power ? (mean(signal.slice(r.from, r.to + 1)) ?? 0) : durS > 0 ? distM / durS : 0;
+    const valid = durS >= minWorkS
+      && (sport !== "running" || jump <= MAX_JUMP_SHARE * distM)
+      && level * (1 - MIN_CONTRAST) >= ref;
+    if (!valid) r.kind = "rest";
   }
 
-  const blocks: IntervalBlock[] = merged
+  const blocks: IntervalBlock[] = mergeRuns(merged)
     .map((r, i) => {
-      const slice = samples.slice(r.from, r.to + 1);
       const durS = samples[r.to].t - samples[r.from].t;
       const distM = (samples[r.to].dist ?? 0) - (samples[r.from].dist ?? 0);
-      return {
-        index: i,
-        kind: r.kind,
-        startT: Math.round(samples[r.from].t),
-        durS: Math.round(durS),
-        distM: Math.round(distM),
-        paceSPerKm: distM > 5 ? (durS / distM) * 1000 : undefined,
-        hrAvg: mean(slice.map((s) => s.hr)),
-        hrMax: slice.reduce<number | undefined>(
-          (m, s) => (s.hr != null && (m == null || s.hr > m) ? s.hr : m),
-          undefined,
-        ),
-        pwAvg: mean(slice.map((s) => s.pw)),
-      };
+      return blockOver(samples, i, r.kind, samples[r.from].t, samples[r.to].t + 1e-6, durS, distM);
     })
     .filter((b) => b.durS >= minBlockS * 0.5);
 
   const workCount = blocks.filter((b) => b.kind === "work").length;
   if (workCount < 2) return { blocks: [], sets: [] };
   const totalMoving = samples[samples.length - 1].t - samples[0].t;
-  return { blocks, sets: filterMeaningfulSets(groupSets(blocks, sport, locale), blocks, totalMoving) };
+  const sets = filterMeaningfulSets(groupSets(blocks, sport, locale), blocks, totalMoving)
+    .map((s) => ({ ...s, source: "auto" as const }));
+  return { blocks, sets };
 }
 
 /**
@@ -404,6 +602,8 @@ function groupSets(
   blocks: IntervalBlock[],
   sport: Sport = "running",
   locale?: string,
+  /** Séance programmée : une série, ce sont les passages d'une même étape. */
+  byStep = false,
 ): IntervalSet[] {
   const work = blocks.filter((b) => b.kind === "work");
   const rest = blocks.filter((b) => b.kind === "rest");
@@ -413,6 +613,7 @@ function groupSets(
   let group: IntervalBlock[] = [work[0]];
 
   const similar = (a: IntervalBlock, b: IntervalBlock) => {
+    if (byStep) return a.stepIndex != null && a.stepIndex === b.stepIndex;
     const byDist =
       a.distM > 50 && b.distM > 50 && Math.abs(a.distM - b.distM) / a.distM < 0.15;
     const byTime = Math.abs(a.durS - b.durS) / Math.max(1, a.durS) < 0.15;

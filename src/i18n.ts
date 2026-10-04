@@ -216,6 +216,12 @@ const fr = {
   "proj.method.raceAge": ", chrono vieux de {months} mois",
   "proj.method.training": "Riegel depuis un effort de {ref} à l'entraînement",
   "proj.method.cs": "Vitesse critique (CS {pace}/km, R²={r2})",
+  "dossier.setSource.workout":
+    "{set} : séance programmée sur la montre, structure et cibles lues dans le fichier.",
+  "dossier.setSource.laps":
+    "{set} : découpage lu dans les tours (un tour par étape).",
+  "dossier.setSource.auto":
+    "{set} : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.",
   "proj.method.achievedRace":
     "Chrono de la course du {date} : le réel prime sur le modèle",
   "proj.method.achievedTraining":
@@ -593,6 +599,12 @@ const en: Catalog = {
   "proj.method.raceAge": ", result {months} months old",
   "proj.method.training": "Riegel from a {ref} training effort",
   "proj.method.cs": "Critical speed (CS {pace}/km, R²={r2})",
+  "dossier.setSource.workout":
+    "{set}: workout programmed on the watch, structure and targets read from the file.",
+  "dossier.setSource.laps":
+    "{set}: structure read from the laps (one lap per step).",
+  "dossier.setSource.auto":
+    "{set}: detected from the signal, no prescribed workout in the file. No adherence verdict.",
   "proj.method.achievedRace":
     "Race result from {date}: the real time beats the model",
   "proj.method.achievedTraining":

@@ -175,6 +175,12 @@ export const zh: Partial<Catalog> = {
   "proj.method.raceAge": "，成绩距今 {months} 个月",
   "proj.method.training": "基于训练中{ref}成绩的 Riegel 公式",
   "proj.method.cs": "临界速度（CS {pace}/km，R²={r2}）",
+  "dossier.setSource.workout":
+    "{set}：手表上预设的课程，结构和目标读取自文件。",
+  "dossier.setSource.laps":
+    "{set}：结构读取自分段（每段一个步骤）。",
+  "dossier.setSource.auto":
+    "{set}：根据信号识别，文件中没有预设课程。不评估完成度。",
   "proj.method.achievedRace":
     "{date} 比赛成绩：以真实成绩为准，而非模型",
   "proj.method.achievedTraining":

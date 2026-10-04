@@ -16,12 +16,23 @@
  */
 
 import {
-  decodeFit, GLOBAL, fitTimeToUnix, semicircles, scaled,
-  FIT_SPORT, FIT_SUB_SPORT, SWIM_STROKE, FIT_MANUFACTURER, type FitMessage,
+  decodeFit,
+  GLOBAL,
+  fitTimeToUnix,
+  semicircles,
+  scaled,
+  FIT_SPORT,
+  FIT_SUB_SPORT,
+  SWIM_STROKE,
+  FIT_MANUFACTURER,
+  type FitMessage,
+  FIT_INTENSITY,
+  FIT_LAP_TRIGGER,
+  type FitFile,
 } from "./fit-decode.ts";
 import { translator } from "./i18n.ts";
 import { fillDistance, sanitizeSamples } from "./geo.ts";
-import type { Activity, Lap, Sample, Sport } from "./types.ts";
+import type { Activity, Lap, Sample, Sport, WorkoutStep } from "./types.ts";
 
 /** Une longueur de bassin, telle que la montre l'a comptée. */
 export interface FitLength {
@@ -244,8 +255,9 @@ function buildFromFit(
       hrAvg: l[15] as number | undefined,
       hrMax: l[16] as number | undefined,
       calories: l[11] as number | undefined,
-      intensity: l[23] != null ? String(l[23]) : undefined,
-      trigger: l[24] != null ? String(l[24]) : undefined,
+      intensity: l[23] != null ? FIT_INTENSITY[l[23] as number] ?? String(l[23]) : undefined,
+      trigger: l[24] != null ? FIT_LAP_TRIGGER[l[24] as number] ?? String(l[24]) : undefined,
+      stepIndex: l[71] as number | undefined,
     };
   });
 
@@ -322,6 +334,7 @@ function buildFromFit(
       source: "fit",
       samples,
       laps,
+      workoutSteps: workoutStepsOf(fit),
     },
     extras: {
       totalAscentM: session?.[22] as number | undefined,
@@ -362,4 +375,39 @@ function recordsEndGap(session: FitMessage | undefined, records: FitMessage[]): 
 /** Décode un .fit. Plus aucune dépendance externe ni import dynamique. */
 export async function parseFit(buf: ArrayBuffer | Uint8Array, locale?: string): Promise<Activity> {
   return parseFitBuffer(buf, locale).activity;
+}
+
+/**
+ * Séance programmée sur la montre (messages workout_step) : durée, cible et
+ * intensité de chaque étape. C'est la prescription elle-même, la seule base
+ * honnête pour juger une séance « conforme ».
+ */
+function workoutStepsOf(fit: FitFile): WorkoutStep[] | undefined {
+  const msgs = fit.byGlobal.get(GLOBAL.WORKOUT_STEP) ?? [];
+  if (!msgs.length) return undefined;
+  return msgs.map((m, i) => {
+    const durationType = m[1] as number | undefined;
+    const value = m[2] as number | undefined;
+    const targetType = m[3] as number | undefined;
+    const low = m[5] as number | undefined;
+    const high = m[6] as number | undefined;
+    const step: WorkoutStep = {
+      index: (m[254] as number | undefined) ?? i,
+      name: typeof m[0] === "string" ? m[0] : undefined,
+      intensity: m[7] != null ? FIT_INTENSITY[m[7] as number] : undefined,
+    };
+    // Durée : 0 temps (ms), 1 distance (cm), 6 « répéter jusqu'à n passages ».
+    if (durationType === 0 && value) step.durationS = value / 1000;
+    if (durationType === 1 && value) step.durationM = value / 100;
+    if (durationType === 6) {
+      step.repeatFrom = value;
+      step.repeatCount = m[4] as number | undefined;
+    }
+    // Cible personnalisée : vitesse en mm/s, puissance en W + 1000 (en
+    // dessous de 1000, c'est un % de FTP qu'on ne sait pas convertir).
+    const mid = low != null && high != null && high > 0 ? (low + high) / 2 : undefined;
+    if (targetType === 0 && mid) step.targetPaceSPerKm = 1e6 / mid;
+    if (targetType === 4 && mid && low! >= 1000) step.targetPwW = mid - 1000;
+    return step;
+  });
 }

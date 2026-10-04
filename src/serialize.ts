@@ -131,6 +131,7 @@ export function intervalRows(blocks: IntervalBlock[]): Row[] {
   return blocks.map((b) => ({
     n: b.index + 1,
     kind: b.kind,
+    step: b.stepIndex,
     start_s: b.startT,
     dur_s: b.durS,
     dist_m: b.distM,
@@ -254,7 +255,11 @@ export function buildBundle(
       toCsv(
         digest.intervalSets.map((s) => ({
           description: s.description,
+          source: s.source,
           reps: s.reps,
+          reps_planned: s.repsPlanned,
+          target_pace: paceLabel(s.targetPaceSPerKm),
+          target_w: r0(s.targetPwW),
           avg_work_s: s.avgWorkDurS,
           avg_work_pace: paceLabel(s.avgWorkPaceSPerKm),
           avg_work_w: r0(s.avgWorkPwW),

@@ -1195,8 +1195,8 @@ temp_avg_c,27
 sampling_hz,1
 
 ## interval_sets
-description,reps,avg_work_s,avg_work_pace,avg_rest_s
-"6 × 179 s, récup 120 s",6,179,4:17,120
+description,source,reps,avg_work_s,avg_work_pace,avg_rest_s
+"6 × 179 s, récup 120 s",auto,6,179,4:17,120
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
@@ -1253,10 +1253,6 @@ drift_pace_second_half,6:10
 effort_regularity_cv_pct,
 temp_avg_c,27
 temp_source,"capteur montre (surestime de 3 à 8 °C, ce n'est PAS la température de l'air)"
-
-## block_adherence
-set,grade,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,notes
-"6 × 179 s, récup 120 s",dégradé,6,3.5,10.3,-12,"Répétitions irrégulières en allure (variation 3.5 %) : gestion à travailler, ou séance mal calibrée. Dégradation de 10.3 % en allure entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel. Récupération cardiaque très bonne : 54 bpm de chute en 60 s après chaque répétition. La récupération s'érode de 3 bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir. Allure cible respectée."
 
 ## best_efforts
 dist_m,time_s,pace_mmss
@@ -1483,36 +1479,7 @@ t_s,dist_m,ele_m,hr_bpm,cad_spm,lat,lon,temp_c
    "caveat": "Capteur de la montre, chauffé par le poignet : surestime généralement de 3 à 8 °C. Ce n'est PAS la température de l'air."
   }
  },
- "adherence": [
-  {
-   "setDescription": "6 × 179 s, récup 120 s",
-   "reps": 6,
-   "target": {
-    "reps": 6,
-    "workS": 179,
-    "targetPaceSPerKm": 260,
-    "restS": 120
-   },
-   "basis": "pace",
-   "paceCvPct": 3.5079577144041965,
-   "fadePctPerRep": 2.053126398297694,
-   "restCvPct": 0.6688963210702342,
-   "restDriftS": 0.5,
-   "hrRiseBpm": -12.191445775653364,
-   "hrr60AvgBpm": 53.5,
-   "hrr60DeclinePerRep": 3,
-   "repsCompleted": 6,
-   "repsPlanned": 6,
-   "verdicts": [
-    "Répétitions irrégulières en allure (variation 3.5 %) : gestion à travailler, ou séance mal calibrée.",
-    "Dégradation de 10.3 % en allure entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel.",
-    "Récupération cardiaque très bonne : 54 bpm de chute en 60 s après chaque répétition.",
-    "La récupération s'érode de 3 bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir.",
-    "Allure cible respectée."
-   ],
-   "grade": "dégradé"
-  }
- ],
+ "adherence": [],
  "zones": [
   [
    "Z1 récup",
@@ -1564,8 +1531,8 @@ temp_avg_c,27
 sampling_hz,1
 
 ## interval_sets
-description,reps,avg_work_s,avg_work_pace,avg_rest_s
-"6 × 179 s, récup 119 s",6,179,4:04,119
+description,source,reps,avg_work_s,avg_work_pace,avg_rest_s
+"6 × 179 s, récup 119 s",auto,6,179,4:04,119
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
@@ -1617,10 +1584,6 @@ drift_applicable,no
 drift_not_computed_because,"Effort en baisse de 13 % entre les deux moitiés de la fenêtre (vitesse 3 → 3) : le rendement chute parce que l'intensité chute, pas parce que le cœur dérive. Aucune dérive calculable."
 temp_avg_c,27
 temp_source,"capteur montre (surestime de 3 à 8 °C, ce n'est PAS la température de l'air)"
-
-## block_adherence
-set,grade,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,notes
-"6 × 179 s, récup 119 s",conforme,6,0,0,2,Allure très régulière entre les répétitions (variation 0.0 %). Allure tenue du début à la fin de la série. Allure cible respectée.
 
 ## best_efforts
 dist_m,time_s,pace_mmss
@@ -1837,32 +1800,7 @@ t_s,dist_m,ele_m,hr_bpm,cad_spm,lat,lon,temp_c
    "caveat": "Capteur de la montre, chauffé par le poignet : surestime généralement de 3 à 8 °C. Ce n'est PAS la température de l'air."
   }
  },
- "adherence": [
-  {
-   "setDescription": "6 × 179 s, récup 119 s",
-   "reps": 6,
-   "target": {
-    "reps": 6,
-    "workS": 179,
-    "targetPaceSPerKm": 245,
-    "restS": 119
-   },
-   "basis": "pace",
-   "paceCvPct": 3.495870259939692e-14,
-   "fadePctPerRep": 1.7978761336832703e-14,
-   "restCvPct": 0,
-   "restDriftS": 0,
-   "hrRiseBpm": 1.8555555555555543,
-   "repsCompleted": 6,
-   "repsPlanned": 6,
-   "verdicts": [
-    "Allure très régulière entre les répétitions (variation 0.0 %).",
-    "Allure tenue du début à la fin de la série.",
-    "Allure cible respectée."
-   ],
-   "grade": "conforme"
-  }
- ],
+ "adherence": [],
  "zones": [
   [
    "Z1 récup",
@@ -1915,8 +1853,8 @@ efficiency_factor,1.44
 sampling_hz,1
 
 ## interval_sets
-description,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
-"6 × 239 s à 260 W, récup 119 s",6,239,2:24,260,119
+description,source,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
+"6 × 239 s à 260 W, récup 119 s",auto,6,239,2:24,260,119
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
@@ -1966,10 +1904,6 @@ drift_hr_second_half,137
 drift_pace_first_half,2:10
 drift_pace_second_half,2:22
 effort_regularity_cv_pct,
-
-## block_adherence
-set,grade,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,notes
-"6 × 239 s à 260 W, récup 119 s",conforme,6,0,0,-1,Puissance très régulière entre les répétitions (variation 0.0 %). Puissance tenue du début à la fin de la série. Récupération cardiaque correcte : 32 bpm en 60 s. Puissance cible respectée.
 
 ## hr_vs_pace
 pace_mmss,pace_s_km,hr_bpm,time_s
@@ -2167,34 +2101,7 @@ t_s,dist_m,ele_m,hr_bpm,cad_spm,pw_w,lat,lon
   "secondHalfPaceSPerKm": 142.21926312512616,
   "interpretation": "Très faible dérive : l'effort était nettement sous le seuil aérobie."
  },
- "adherence": [
-  {
-   "setDescription": "6 × 239 s à 260 W, récup 119 s",
-   "reps": 6,
-   "target": {
-    "reps": 6,
-    "targetPwW": 260,
-    "restS": 119
-   },
-   "basis": "power",
-   "paceCvPct": 0.0046646587685618395,
-   "fadePctPerRep": -0.00013736447182394171,
-   "restCvPct": 0,
-   "restDriftS": 0,
-   "hrRiseBpm": -0.7291666666666572,
-   "hrr60AvgBpm": 31.833333333333332,
-   "hrr60DeclinePerRep": 0.14285714285714285,
-   "repsCompleted": 6,
-   "repsPlanned": 6,
-   "verdicts": [
-    "Puissance très régulière entre les répétitions (variation 0.0 %).",
-    "Puissance tenue du début à la fin de la série.",
-    "Récupération cardiaque correcte : 32 bpm en 60 s.",
-    "Puissance cible respectée."
-   ],
-   "grade": "conforme"
-  }
- ],
+ "adherence": [],
  "zones": [
   [
    "Z1 récup",
@@ -3528,8 +3435,8 @@ efficiency_factor,1.44
 sampling_hz,1
 
 ## interval_sets
-description,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
-"6 × 239 s à 260 W, récup 119 s",6,239,2:24,260,119
+description,source,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
+"6 × 239 s à 260 W, récup 119 s",auto,6,239,2:24,260,119
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
@@ -3579,10 +3486,6 @@ drift_hr_second_half,137
 drift_pace_first_half,2:10
 drift_pace_second_half,2:22
 effort_regularity_cv_pct,
-
-## block_adherence
-set,grade,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,notes
-"6 × 239 s à 260 W, récup 119 s",conforme,6,0,0,-1,Puissance très régulière entre les répétitions (variation 0.0 %). Puissance tenue du début à la fin de la série. Récupération cardiaque correcte : 32 bpm en 60 s. Puissance cible respectée.
 
 ## hr_vs_pace
 pace_mmss,pace_s_km,hr_bpm,time_s
@@ -3750,34 +3653,7 @@ t_s,dist_m,ele_m,hr_bpm,cad_spm,pw_w,lat,lon
   "secondHalfPaceSPerKm": 142.21926312512616,
   "interpretation": "Très faible dérive : l'effort était nettement sous le seuil aérobie."
  },
- "adherence": [
-  {
-   "setDescription": "6 × 239 s à 260 W, récup 119 s",
-   "reps": 6,
-   "target": {
-    "reps": 6,
-    "targetPwW": 260,
-    "restS": 119
-   },
-   "basis": "power",
-   "paceCvPct": 0.0046646587685618395,
-   "fadePctPerRep": -0.00013736447182394171,
-   "restCvPct": 0,
-   "restDriftS": 0,
-   "hrRiseBpm": -0.7291666666666572,
-   "hrr60AvgBpm": 31.833333333333332,
-   "hrr60DeclinePerRep": 0.14285714285714285,
-   "repsCompleted": 6,
-   "repsPlanned": 6,
-   "verdicts": [
-    "Puissance très régulière entre les répétitions (variation 0.0 %).",
-    "Puissance tenue du début à la fin de la série.",
-    "Récupération cardiaque correcte : 32 bpm en 60 s.",
-    "Puissance cible respectée."
-   ],
-   "grade": "conforme"
-  }
- ],
+ "adherence": [],
  "zones": [
   [
    "Z1 récup",
@@ -3830,8 +3706,8 @@ efficiency_factor,1.44
 sampling_hz,1
 
 ## interval_sets
-description,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
-"6 × 239 s à 260 W, récup 119 s",6,239,2:24,260,119
+description,source,reps,avg_work_s,avg_work_pace,avg_work_w,avg_rest_s
+"6 × 239 s à 260 W, récup 119 s",auto,6,239,2:24,260,119
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
@@ -3890,10 +3766,6 @@ drift_hr_second_half,137
 drift_pace_first_half,2:10
 drift_pace_second_half,2:22
 effort_regularity_cv_pct,
-
-## block_adherence
-set,grade,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,notes
-"6 × 239 s à 260 W, récup 119 s",conforme,6,0,0,-1,Puissance très régulière entre les répétitions (variation 0.0 %). Puissance tenue du début à la fin de la série. Récupération cardiaque correcte : 32 bpm en 60 s. Puissance cible respectée.
 
 ## hr_vs_pace
 pace_mmss,pace_s_km,hr_bpm,time_s
@@ -4058,34 +3930,7 @@ t_s,dist_m,ele_m,hr_bpm,cad_spm,pw_w,lat,lon
   "secondHalfPaceSPerKm": 142.21926312512616,
   "interpretation": "Très faible dérive : l'effort était nettement sous le seuil aérobie."
  },
- "adherence": [
-  {
-   "setDescription": "6 × 239 s à 260 W, récup 119 s",
-   "reps": 6,
-   "target": {
-    "reps": 6,
-    "targetPwW": 260,
-    "restS": 119
-   },
-   "basis": "power",
-   "paceCvPct": 0.0046646587685618395,
-   "fadePctPerRep": -0.00013736447182394171,
-   "restCvPct": 0,
-   "restDriftS": 0,
-   "hrRiseBpm": -0.7291666666666572,
-   "hrr60AvgBpm": 31.833333333333332,
-   "hrr60DeclinePerRep": 0.14285714285714285,
-   "repsCompleted": 6,
-   "repsPlanned": 6,
-   "verdicts": [
-    "Puissance très régulière entre les répétitions (variation 0.0 %).",
-    "Puissance tenue du début à la fin de la série.",
-    "Récupération cardiaque correcte : 32 bpm en 60 s.",
-    "Puissance cible respectée."
-   ],
-   "grade": "conforme"
-  }
- ],
+ "adherence": [],
  "zones": [
   [
    "Z1 récup",
@@ -4429,18 +4274,18 @@ t_s,dist_m,ele_m,lat,lon
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-date,sport,dist_km,dur_moving,pace_mmss,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_confidence,drift_pct,drift_valid,temp_c,intervals,adherence,file
-2026-06-02,running,9.42,49:59,5:18,5:20,9,134,168,ceinture,0.90,1.4,1,18,,,a-steady-strap-1.tcx
-2026-06-16,running,9.55,49:59,5:14,5:15,9,137,168,ceinture,0.90,2.3,1,24,,,a-steady-strap-2.tcx
-2026-07-07,running,9.69,49:59,5:09,5:11,9,142,168,ceinture,0.90,3.7,1,30,,,a-steady-strap-3.tcx
-2026-07-21,running,9.42,49:59,5:18,5:20,9,137,166,capteur poignet,0.90,1.4,1,18,,,b-steady-optical.tcx
-2026-07-23,running,9.14,49:59,5:28,5:30,9,132,177,ceinture,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",dégradé,c-intervals-fade.tcx
-2026-07-25,running,9.36,49:59,5:20,5:22,9,135,180,indéterminée,0.30,n/a,0,27,"6 × 179 s, récup 119 s",conforme,c-intervals.tcx
-2026-07-26,cycling,25.50,59:59,2:21,,51,147,168,ceinture,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",conforme,d-erg.tcx
-2026-07-27,swimming,1.20,20:23,16:59,,0,120,128,indéterminée,0.00,n/a,0,,,,e-pool.tcx
-2026-07-28,other,3.51,15:21,4:22,4:18,9,146,168,ceinture,0.90,n/a,0,,,,f-hyrox.tcx
-2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,0.81,n/a,0,,,,g-stroll.tcx
-2026-07-30,hiking,3.12,39:59,12:49,12:34,9,116,168,ceinture,0.90,-0.0,1,,,,h-hike.tcx
+date,sport,dist_km,dur_moving,pace_mmss,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_confidence,drift_pct,drift_valid,temp_c,intervals,file
+2026-06-02,running,9.42,49:59,5:18,5:20,9,134,168,ceinture,0.90,1.4,1,18,,a-steady-strap-1.tcx
+2026-06-16,running,9.55,49:59,5:14,5:15,9,137,168,ceinture,0.90,2.3,1,24,,a-steady-strap-2.tcx
+2026-07-07,running,9.69,49:59,5:09,5:11,9,142,168,ceinture,0.90,3.7,1,30,,a-steady-strap-3.tcx
+2026-07-21,running,9.42,49:59,5:18,5:20,9,137,166,capteur poignet,0.90,1.4,1,18,,b-steady-optical.tcx
+2026-07-23,running,9.14,49:59,5:28,5:30,9,132,177,ceinture,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+2026-07-25,running,9.36,49:59,5:20,5:22,9,135,180,indéterminée,0.30,n/a,0,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+2026-07-26,cycling,25.50,59:59,2:21,,51,147,168,ceinture,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+2026-07-27,swimming,1.20,20:23,16:59,,0,120,128,indéterminée,0.00,n/a,0,,,e-pool.tcx
+2026-07-28,other,3.51,15:21,4:22,4:18,9,146,168,ceinture,0.90,n/a,0,,,f-hyrox.tcx
+2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,0.81,n/a,0,,,g-stroll.tcx
+2026-07-30,hiking,3.12,39:59,12:49,12:34,9,116,168,ceinture,0.90,-0.0,1,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dist_km,dur_moving,ele_gain_m,easy_pct,moderate_pct,hard_pct
@@ -4475,12 +4320,6 @@ race,estimate,range_low,range_high,pace_mmss,confidence,achieved,achieved_on,mod
 10 km,43:00,39:19,46:41,4:18,faible,43:00,,8.6,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 46:42, soit +8.6 % d'écart avec le chrono réel du ? : confiance abaissée."
 semi-marathon,1h35:00,1h26:52,1h43:08,4:30,faible,1h35:00,,7.1,Chrono de la course du ? : le réel prime sur le modèle,"Le modèle seul donnait 1h41:44, soit +7.1 % d'écart avec le chrono réel du ? : confiance abaissée. Suppose une préparation spécifique et une allure tenue régulièrement."
 marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en course (k=1.062),"Une projection marathon depuis des données d'entraînement suppose une préparation spécifique menée à son terme : sorties longues, allure spécifique, stratégie nutritionnelle. C'est la projection la moins fiable de toutes."
-
-## interval_adherence
-date,set,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,grade
-2026-07-23,"6 × 179 s, récup 120 s",6,3.5,10.3,-12,dégradé
-2026-07-25,"6 × 179 s, récup 119 s",6,0.0,0.0,2,conforme
-2026-07-26,"6 × 239 s à 260 W, récup 119 s",6,0.0,-0.0,-1,conforme
 
 
 ==================== dossier {"maxHr":170,"streamMode":"time","intervalS":60}
@@ -4542,18 +4381,18 @@ date,set,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,grade
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,adherence,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",dégradé,c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",conforme,c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",conforme,d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dist_km,dur_moving,ele_gain_m,easy_pct,moderate_pct,hard_pct
@@ -5159,7 +4998,6 @@ drift_window_quality,indicatif
 drift_window_from_s,2389
 drift_window_to_s,2999
 drift_window_coverage_pct,20
-hrr60_avg_bpm,54
 hr_source,ceinture
 hr_source_confidence,0.69
 hr_cadence_lock_pct,10.4
@@ -5216,17 +5054,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max
 12,work,2221,177,655,270,4:30,153,164
 13,rest,2399,600,1578,380,6:20,119,161
 
-## s5_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,rest_after_s,delta_vs_set_pct
-1,180,738,244,4:04,166,177,119,-5.0
-2,179,720,249,4:09,162,174,119,-3.1
-3,179,705,254,4:14,160,171,119,-1.1
-4,179,691,259,4:19,158,169,120,0.9
-5,177,669,265,4:25,156,166,121,3.0
-6,177,655,270,4:30,153,164,,5.3
-
-# 6 × 179 s, récup 120 s — dégradé : Répétitions irrégulières en allure (variation 3.5 %) : gestion à travailler, ou séance mal calibrée. Dégradation de 10.3 % en allure entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel. Récupération cardiaque très bonne : 54 bpm de chute en 60 s après chaque répétition. La récupération s'érode de 3 bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir. Allure cible respectée.
-
+# 6 × 179 s, récup 120 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 ## s5_best_efforts
 distance,time,time_s,pace_mmss,start_s
 400 m,1:38,98,4:04,719
@@ -5365,17 +5193,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max
 12,work,2220,179,734,244,4:04,168,180
 13,rest,2400,599,1576,380,6:20,119,174
 
-## s6_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,rest_after_s,delta_vs_set_pct
-1,179,734,244,4:04,166,177,119,-0.0
-2,179,734,244,4:04,165,177,119,-0.0
-3,179,734,244,4:04,166,178,119,-0.0
-4,179,734,244,4:04,166,179,119,0.0
-5,179,734,244,4:04,167,180,119,0.0
-6,179,734,244,4:04,168,180,,0.0
-
-# 6 × 179 s, récup 119 s — conforme : Allure très régulière entre les répétitions (variation 0.0 %). Allure tenue du début à la fin de la série. Allure cible respectée.
-
+# 6 × 179 s, récup 119 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 ## s6_best_efforts
 distance,time,time_s,pace_mmss,start_s
 400 m,1:38,98,4:04,719
@@ -5468,7 +5286,6 @@ drift_window_quality,indicatif
 drift_window_from_s,2790
 drift_window_to_s,3599
 drift_window_coverage_pct,22
-hrr60_avg_bpm,32
 hr_source,ceinture
 hr_source_confidence,0.81
 drift_applicable,yes
@@ -5520,17 +5337,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,pw_w
 12,work,2400,239,1768,135,2:15,162,168,260
 13,rest,2640,959,6745,142,2:22,137,166,146
 
-## s7_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,pw_w,rest_after_s,delta_vs_set_pct
-1,239,2019,118,1:58,162,168,260,119,0.0
-2,239,1486,161,2:41,162,168,260,119,-0.0
-3,239,1572,152,2:32,162,168,260,119,0.0
-4,239,1992,120,1:60,161,168,260,119,0.0
-5,239,1357,176,2:56,162,168,260,119,-0.0
-6,239,1768,135,2:15,162,168,260,,-0.0
-
-# 6 × 239 s à 260 W, récup 119 s — conforme : Puissance très régulière entre les répétitions (variation 0.0 %). Puissance tenue du début à la fin de la série. Récupération cardiaque correcte : 32 bpm en 60 s. Puissance cible respectée.
-
+# 6 × 239 s à 260 W, récup 119 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 # flux ci-dessous : un point tous les 60 s, valeurs moyennées sur l'intervalle
 ## s7_stream
 t_s,dist_m,pace_s_km,hr_bpm,cad_spm,pw_w,ele_m,lat,lon,grade_pct
@@ -6000,18 +5807,18 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,lat,lon,grade_pct
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,adherence,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",dégradé,c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",conforme,c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",conforme,d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dist_km,dur_moving,ele_gain_m,easy_pct,moderate_pct,hard_pct
@@ -6491,7 +6298,6 @@ drift_window_quality,indicatif
 drift_window_from_s,2389
 drift_window_to_s,2999
 drift_window_coverage_pct,20
-hrr60_avg_bpm,54
 hr_source,ceinture
 hr_source_confidence,0.69
 hr_cadence_lock_pct,10.4
@@ -6548,17 +6354,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max
 12,work,2221,177,655,270,4:30,153,164
 13,rest,2399,600,1578,380,6:20,119,161
 
-## s5_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,rest_after_s,delta_vs_set_pct
-1,180,738,244,4:04,166,177,119,-5.0
-2,179,720,249,4:09,162,174,119,-3.1
-3,179,705,254,4:14,160,171,119,-1.1
-4,179,691,259,4:19,158,169,120,0.9
-5,177,669,265,4:25,156,166,121,3.0
-6,177,655,270,4:30,153,164,,5.3
-
-# 6 × 179 s, récup 120 s — dégradé : Répétitions irrégulières en allure (variation 3.5 %) : gestion à travailler, ou séance mal calibrée. Dégradation de 10.3 % en allure entre la première et la dernière répétition : départ trop fort, ou volume au-dessus du niveau actuel. Récupération cardiaque très bonne : 54 bpm de chute en 60 s après chaque répétition. La récupération s'érode de 3 bpm par répétition : la série entame les réserves plus vite que l'allure ne le laisse voir. Allure cible respectée.
-
+# 6 × 179 s, récup 120 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 ## s5_best_efforts
 distance,time,time_s,pace_mmss,start_s
 400 m,1:38,98,4:04,719
@@ -6665,17 +6461,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max
 12,work,2220,179,734,244,4:04,168,180
 13,rest,2400,599,1576,380,6:20,119,174
 
-## s6_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,rest_after_s,delta_vs_set_pct
-1,179,734,244,4:04,166,177,119,-0.0
-2,179,734,244,4:04,165,177,119,-0.0
-3,179,734,244,4:04,166,178,119,-0.0
-4,179,734,244,4:04,166,179,119,0.0
-5,179,734,244,4:04,167,180,119,0.0
-6,179,734,244,4:04,168,180,,0.0
-
-# 6 × 179 s, récup 119 s — conforme : Allure très régulière entre les répétitions (variation 0.0 %). Allure tenue du début à la fin de la série. Allure cible respectée.
-
+# 6 × 179 s, récup 119 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 ## s6_best_efforts
 distance,time,time_s,pace_mmss,start_s
 400 m,1:38,98,4:04,719
@@ -6736,7 +6522,6 @@ drift_window_quality,indicatif
 drift_window_from_s,2790
 drift_window_to_s,3599
 drift_window_coverage_pct,22
-hrr60_avg_bpm,32
 hr_source,ceinture
 hr_source_confidence,0.81
 drift_applicable,yes
@@ -6788,17 +6573,7 @@ n,kind,start_s,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,pw_w
 12,work,2400,239,1768,135,2:15,162,168,260
 13,rest,2640,959,6745,142,2:22,137,166,146
 
-## s7_block_reps
-rep,dur_s,dist_m,pace_s_km,pace_mmss,hr_avg,hr_max,pw_w,rest_after_s,delta_vs_set_pct
-1,239,2019,118,1:58,162,168,260,119,0.0
-2,239,1486,161,2:41,162,168,260,119,-0.0
-3,239,1572,152,2:32,162,168,260,119,0.0
-4,239,1992,120,1:60,161,168,260,119,0.0
-5,239,1357,176,2:56,162,168,260,119,-0.0
-6,239,1768,135,2:15,162,168,260,,-0.0
-
-# 6 × 239 s à 260 W, récup 119 s — conforme : Puissance très régulière entre les répétitions (variation 0.0 %). Puissance tenue du début à la fin de la série. Récupération cardiaque correcte : 32 bpm en 60 s. Puissance cible respectée.
-
+# 6 × 239 s à 260 W, récup 119 s : détectée sur le signal, sans séance prescrite dans le fichier. Pas de jugement d'adhérence.
 # flux ci-dessous : un point tous les 500 m, valeurs moyennées sur l'intervalle
 ## s7_stream
 t_s,dist_m,pace_s_km,hr_bpm,cad_spm,pw_w,ele_m,grade_pct
@@ -7136,18 +6911,18 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,grade_pct
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,adherence,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",dégradé,c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",conforme,c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",conforme,d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dist_km,dur_moving,ele_gain_m,easy_pct,moderate_pct,hard_pct

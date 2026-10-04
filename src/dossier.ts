@@ -263,6 +263,9 @@ function sessionBlocks(
   push("pace_zones", toCsv(zoneRows(file.digest.paceZones), LLM_DIALECT));
   push("power_zones", toCsv(zoneRows(file.digest.powerZones), LLM_DIALECT));
   push("intervals", toCsv(intervalRows(file.digest.intervals), LLM_DIALECT));
+  for (const set of file.digest.intervalSets) {
+    if (set.source) out.push(`# ${tr(`dossier.setSource.${set.source}`, { set: set.description })}`);
+  }
 
   // --- Respect des blocs, répétition par répétition ---
   for (const a of file.adherence) {

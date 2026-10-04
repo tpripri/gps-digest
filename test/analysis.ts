@@ -23,6 +23,7 @@ import { speedSeries } from "../src/analyze.ts";
 import { estimateTokens, paceLabel } from "../src/serialize.ts";
 import { buildDossier } from "../src/dossier.ts";
 import { coverage, LOCALES, MESSAGE_KEYS, resolveLocale, t } from "../src/i18n.ts";
+import type { DigestOptions } from "../src/types.ts";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -120,12 +121,13 @@ function makeTcx(o: GenOpts): string {
 <Author><Name>Forerunner 255</Name></Author></TrainingCenterDatabase>`;
 }
 
-function analyze(xml: string, filename: string): FileAnalysis {
+function analyze(xml: string, filename: string, extra: Partial<DigestOptions> = {}): FileAnalysis {
   const activity = parseTcx(xml);
   const built = buildFull(activity, {
     athlete: { maxHr: 168 },
     streamTokenBudget: 3000,
     driftWarmupS: 300,
+    ...extra,
   });
   const res = finalize(built, xml.length, { athlete: { maxHr: 168 } });
   return {
@@ -205,7 +207,13 @@ section("Respect des blocs");
 
 const set = intervals.digest.intervalSets[0];
 check("série détectée", !!set, set?.description);
-const adh = intervals.adherence[0];
+// Revue du 4 octobre : pas d'adhérence sans séance prescrite. Une cible
+// devinée à partir de ce qui a été couru jugeait « conforme » n'importe quoi.
+check("pas d'adhérence sur une série détectée sans prescription", !intervals.adherence.length);
+const prescribed = analyze(intervalsXml, "2026-08-14-fractionne.tcx", {
+  blockTargets: [{ reps: set?.reps, workS: set?.avgWorkDurS, targetPaceSPerKm: set?.avgWorkPaceSPerKm }],
+});
+const adh = prescribed.adherence[0];
 check("rapport d'adhérence produit", !!adh, adh?.grade);
 check("répétitions comptées", (adh?.repsCompleted ?? 0) >= 5, `${adh?.repsCompleted}`);
 check("régularité mesurée", adh?.paceCvPct != null, `CV ${adh?.paceCvPct?.toFixed(1)} %`);

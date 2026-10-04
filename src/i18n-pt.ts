@@ -185,6 +185,12 @@ export const pt: Partial<Catalog> = {
   "proj.method.raceAge": ", marca de {months} meses atrás",
   "proj.method.training": "Riegel a partir de um esforço de {ref} no treino",
   "proj.method.cs": "Velocidade crítica (CS {pace}/km, R²={r2})",
+  "dossier.setSource.workout":
+    "{set}: treino programado no relógio, estrutura e metas lidas do arquivo.",
+  "dossier.setSource.laps":
+    "{set}: estrutura lida das voltas (uma volta por etapa).",
+  "dossier.setSource.auto":
+    "{set}: detectada no sinal, sem treino prescrito no arquivo. Sem avaliação de aderência.",
   "proj.method.achievedRace":
     "Tempo da prova de {date}: o real prevalece sobre o modelo",
   "proj.method.achievedTraining":

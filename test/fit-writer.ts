@@ -96,3 +96,85 @@ export function writeSession(
   if (opts.hrMax != null) fields.push({ num: 17, type: FIT.uint8, value: opts.hrMax });
   w.message(18, fields, 2);
 }
+
+/** Une portion de séance à vitesse (et puissance) constante. */
+export interface FitSegment {
+  durS: number;
+  speedMS: number;
+  hr?: number;
+  pw?: number;
+}
+
+/**
+ * Points à 1 Hz d'une séance faite de portions successives, en ligne droite.
+ * Renvoie l'heure de début (s depuis le départ) et la distance de chaque
+ * portion, pour écrire les tours correspondants.
+ */
+export function writeProfile(
+  w: ReturnType<typeof fitWriter>,
+  opts: { startIso: string; segments: FitSegment[]; lat0?: number; lon0?: number },
+): { startS: number; durS: number; distM: number }[] {
+  const t0 = fitTime(opts.startIso);
+  const lat0 = opts.lat0 ?? 48.85;
+  const lon0 = opts.lon0 ?? 2.35;
+  const out: { startS: number; durS: number; distM: number }[] = [];
+  let s = 0;
+  let dist = 0;
+  for (const seg of opts.segments) {
+    out.push({ startS: s, durS: seg.durS, distM: seg.speedMS * seg.durS });
+    for (let k = 0; k < seg.durS; k++, s++) {
+      const fields: FitFieldValue[] = [
+        { num: 253, type: FIT.uint32, value: t0 + s },
+        { num: 0, type: FIT.sint32, value: toSemicircles(lat0 + dist / 111_320) },
+        { num: 1, type: FIT.sint32, value: toSemicircles(lon0) },
+        { num: 5, type: FIT.uint32, value: Math.round(dist * 100) },
+        { num: 3, type: FIT.uint8, value: seg.hr ?? 140 },
+      ];
+      if (seg.pw != null) fields.push({ num: 7, type: FIT.uint16, value: seg.pw });
+      w.message(20, fields, 1);
+      dist += seg.speedMS;
+    }
+  }
+  return out;
+}
+
+/** Message `lap`. intensity : 0 actif, 1 repos, 2 échauffement, 3 retour au calme. */
+export function writeLap(
+  w: ReturnType<typeof fitWriter>,
+  opts: { startIso: string; startS: number; durS: number; distM: number; intensity?: number; trigger?: number; stepIndex?: number },
+) {
+  const fields: FitFieldValue[] = [
+    { num: 253, type: FIT.uint32, value: fitTime(opts.startIso) + opts.startS + opts.durS },
+    { num: 2, type: FIT.uint32, value: fitTime(opts.startIso) + opts.startS },
+    { num: 7, type: FIT.uint32, value: Math.round(opts.durS * 1000) },
+    { num: 8, type: FIT.uint32, value: Math.round(opts.durS * 1000) },
+    { num: 9, type: FIT.uint32, value: Math.round(opts.distM * 100) },
+  ];
+  if (opts.intensity != null) fields.push({ num: 23, type: FIT.enum, value: opts.intensity });
+  if (opts.trigger != null) fields.push({ num: 24, type: FIT.enum, value: opts.trigger });
+  if (opts.stepIndex != null) fields.push({ num: 71, type: FIT.uint16, value: opts.stepIndex });
+  w.message(19, fields, 3);
+}
+
+/**
+ * Message `workout_step`. durationType : 0 temps (ms), 1 distance (cm),
+ * 6 répéter (durationValue = première étape répétée, targetValue = nombre de
+ * répétitions). targetType : 0 vitesse (low/high en mm/s), 4 puissance
+ * (low/high en W + 1000).
+ */
+export function writeWorkoutStep(
+  w: ReturnType<typeof fitWriter>,
+  opts: { index: number; durationType: number; durationValue: number; targetType?: number; targetValue?: number; low?: number; high?: number; intensity?: number },
+) {
+  const fields: FitFieldValue[] = [
+    { num: 254, type: FIT.uint16, value: opts.index },
+    { num: 1, type: FIT.enum, value: opts.durationType },
+    { num: 2, type: FIT.uint32, value: opts.durationValue },
+    { num: 3, type: FIT.enum, value: opts.targetType ?? 2 },
+    { num: 4, type: FIT.uint32, value: opts.targetValue ?? 0 },
+  ];
+  if (opts.low != null) fields.push({ num: 5, type: FIT.uint32, value: opts.low });
+  if (opts.high != null) fields.push({ num: 6, type: FIT.uint32, value: opts.high });
+  if (opts.intensity != null) fields.push({ num: 7, type: FIT.enum, value: opts.intensity });
+  w.message(27, fields, 4);
+}

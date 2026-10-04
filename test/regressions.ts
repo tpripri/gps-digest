@@ -17,7 +17,7 @@ import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
 import { t } from "../src/i18n.ts";
 import type { Activity, DigestOptions, Sample } from "../src/types.ts";
-import { FIT, fitWriter, fitTime, toSemicircles, writeRecords, writeSession } from "./fit-writer.ts";
+import { FIT, fitWriter, fitTime, toSemicircles, writeLap, writeProfile, writeRecords, writeSession, writeWorkoutStep, type FitSegment } from "./fit-writer.ts";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -294,6 +294,93 @@ section("6. Vitesse critique sur 90 jours, projections confrontées au réel");
   const dossier = buildDossier(batch, { streamMode: "none" });
   check("le dossier montre le chrono réel et l'écart du modèle",
     /achieved,achieved_on,model_gap_pct/.test(dossier) && /window_days,90/.test(dossier) && /depuis le 2026-06-30/.test(dossier));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("7. Intervalles : séance prescrite d'abord, détection prudente sinon");
+{
+  const run = (segments: FitSegment[], extra?: (w: ReturnType<typeof fitWriter>, parts: ReturnType<typeof writeProfile>) => void, sport = 1) => {
+    const w = fitWriter();
+    const parts = writeProfile(w, { startIso: START, segments });
+    extra?.(w, parts);
+    const total = segments.reduce((a, s) => a + s.durS, 0);
+    writeSession(w, { startIso: START, elapsedS: total, distM: parts.reduce((a, p) => a + p.distM, 0), sport });
+    return analyse(w.bytes());
+  };
+  const describe = (res: ReturnType<typeof analyse>) => res.digest.intervalSets.map((s) => s.description).join(" + ") || "rien";
+
+  // Séance prescrite sur la montre : 4 × 400 m à 5 m/s, récup 90 s.
+  {
+    const segs: FitSegment[] = [{ durS: 600, speedMS: 2.8 }];
+    for (let i = 0; i < 4; i++) segs.push({ durS: 80, speedMS: 5, hr: 170 }, { durS: 90, speedMS: 2, hr: 130 });
+    segs.push({ durS: 300, speedMS: 2.8 });
+    const res = run(segs, (w, parts) => {
+      writeWorkoutStep(w, { index: 0, durationType: 0, durationValue: 600_000, intensity: 2 });
+      writeWorkoutStep(w, { index: 1, durationType: 1, durationValue: 40_000, targetType: 0, low: 4900, high: 5100, intensity: 0 });
+      writeWorkoutStep(w, { index: 2, durationType: 0, durationValue: 90_000, intensity: 1 });
+      writeWorkoutStep(w, { index: 3, durationType: 6, durationValue: 1, targetValue: 4 });
+      writeWorkoutStep(w, { index: 4, durationType: 5, durationValue: 0, intensity: 3 });
+      parts.forEach((p, i) => {
+        const step = i === 0 ? 0 : i === parts.length - 1 ? 4 : i % 2 === 1 ? 1 : 2;
+        writeLap(w, { startIso: START, startS: p.startS, durS: p.durS, distM: p.distM, stepIndex: step,
+          intensity: step === 0 ? 2 : step === 4 ? 3 : step === 1 ? 0 : 1, trigger: step === 1 ? 2 : 1 });
+      });
+    });
+    const s = res.digest.intervalSets[0];
+    check("séance prescrite : « 4 × 400 m », lue dans les étapes de la montre",
+      res.digest.intervalSets.length === 1 && /^4 × 400 m/.test(s.description) && s.source === "workout", describe(res));
+    const a = res.insights.adherence[0];
+    check("séance prescrite : adhérence jugée contre la cible de la montre (3:20/km, 4 répétitions)",
+      !!a && a.repsPlanned === 4 && Math.round(a.target?.targetPaceSPerKm ?? 0) === 200, `${a?.repsPlanned} rép., cible ${a?.target?.targetPaceSPerKm?.toFixed(0)} s/km`);
+  }
+
+  // Footing avec feux rouges : arrêts de 30 s, allure inchangée entre eux.
+  {
+    const segs: FitSegment[] = [];
+    for (let i = 0; i < 6; i++) segs.push({ durS: 300, speedMS: 3 }, { durS: 30, speedMS: 0 });
+    segs.push({ durS: 300, speedMS: 3 });
+    const res = run(segs);
+    check("footing coupé par des arrêts : aucun intervalle", !res.digest.intervalSets.length, describe(res));
+  }
+
+  // Footing avec lignes droites de 20 s : trop court pour un intervalle.
+  {
+    const segs: FitSegment[] = [{ durS: 600, speedMS: 2.8 }];
+    for (let i = 0; i < 6; i++) segs.push({ durS: 20, speedMS: 5 }, { durS: 100, speedMS: 2.8 });
+    segs.push({ durS: 600, speedMS: 2.8 });
+    const res = run(segs);
+    check("lignes droites de 20 s : aucun intervalle", !res.digest.intervalSets.length, describe(res));
+  }
+
+  // Footing vallonné : la puissance de course varie, l'allure non.
+  {
+    const segs: FitSegment[] = [];
+    for (let i = 0; i < 8; i++) segs.push({ durS: 120, speedMS: 2.9, pw: 320 }, { durS: 150, speedMS: 3, pw: 230 });
+    const res = run(segs);
+    check("course vallonnée : la puissance seule ne fait pas des intervalles", !res.digest.intervalSets.length, describe(res));
+  }
+
+  // Vrai fractionné sans séance enregistrée : détecté, mais sans adhérence.
+  {
+    const segs: FitSegment[] = [{ durS: 600, speedMS: 2.8 }];
+    for (let i = 0; i < 6; i++) segs.push({ durS: 90, speedMS: 4.5, hr: 170 }, { durS: 90, speedMS: 2.4, hr: 130 });
+    segs.push({ durS: 600, speedMS: 2.8 });
+    const res = run(segs);
+    check("fractionné libre : « 6 × 400 m » détecté", /^6 × 400 m/.test(describe(res)) && res.digest.intervalSets[0]?.source === "auto", describe(res));
+    check("fractionné libre : pas d'adhérence sans séance prescrite", !res.insights.adherence.length);
+  }
+
+  // Home trainer : un tour par étape (déclencheur manuel), comme Zwift.
+  {
+    const segs: FitSegment[] = [{ durS: 600, speedMS: 8, pw: 150 }];
+    for (let i = 0; i < 5; i++) segs.push({ durS: 120, speedMS: 10, pw: 300 }, { durS: 120, speedMS: 8, pw: 150 });
+    segs.push({ durS: 300, speedMS: 8, pw: 120 });
+    const res = run(segs, (w, parts) => parts.forEach((p) =>
+      writeLap(w, { startIso: START, startS: p.startS, durS: p.durS, distM: p.distM, intensity: 0, trigger: 0 })), 2);
+    const s = res.digest.intervalSets[0];
+    check("home trainer : les tours donnent « 5 × 120 s à 300 W »",
+      res.digest.intervalSets.length === 1 && s.reps === 5 && s.avgWorkDurS === 120 && Math.round(s.avgWorkPwW ?? 0) === 300, describe(res));
+  }
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

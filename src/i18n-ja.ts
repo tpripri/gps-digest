@@ -188,6 +188,12 @@ export const ja: Partial<Catalog> = {
   "proj.method.raceAge": "、{months} か月前の記録",
   "proj.method.training": "練習での {ref} の記録からの Riegel 式",
   "proj.method.cs": "クリティカルスピード（CS {pace}/km、R²={r2}）",
+  "dossier.setSource.workout":
+    "{set}：ウォッチに設定されたワークアウト。構成と目標はファイルから読み取り。",
+  "dossier.setSource.laps":
+    "{set}：ラップから構成を読み取り（1 ステップ 1 ラップ）。",
+  "dossier.setSource.auto":
+    "{set}：信号から検出。ファイルに設定されたワークアウトはないため、達成度は評価しません。",
   "proj.method.achievedRace":
     "{date} のレース記録：モデルより実測を優先",
   "proj.method.achievedTraining":

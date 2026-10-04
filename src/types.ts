@@ -37,9 +37,29 @@ export interface Lap {
   hrAvg?: number;
   hrMax?: number;
   calories?: number;
-  /** TCX : "Active" | "Resting". Signal en or pour détecter des intervalles. */
+  /**
+   * FIT : "active" | "rest" | "warmup" | "cooldown" | "recovery" | "interval".
+   * TCX : "Active" | "Resting".
+   */
   intensity?: string;
+  /** Déclencheur du tour : "manual" | "time" | "distance"… (FIT), "Manual"… (TCX). */
   trigger?: string;
+  /** Étape de la séance programmée à laquelle appartient le tour (FIT). */
+  stepIndex?: number;
+}
+
+/** Étape d'une séance programmée sur la montre (message FIT workout_step). */
+export interface WorkoutStep {
+  index: number;
+  name?: string;
+  intensity?: string;
+  durationS?: number;
+  durationM?: number;
+  /** Étape « répéter » : première étape du bloc répété et nombre de passages. */
+  repeatFrom?: number;
+  repeatCount?: number;
+  targetPaceSPerKm?: number;
+  targetPwW?: number;
 }
 
 export interface Activity {
@@ -50,6 +70,8 @@ export interface Activity {
   source: SourceFormat;
   samples: Sample[];
   laps: Lap[];
+  /** Séance programmée sur la montre, quand le fichier la contient. */
+  workoutSteps?: WorkoutStep[];
 }
 
 /** Champs présents dans la trace — sert à ne sérialiser que les colonnes utiles. */
@@ -108,6 +130,8 @@ export interface IntervalBlock {
   hrAvg?: number;
   hrMax?: number;
   pwAvg?: number;
+  /** Étape de la séance programmée, quand le bloc en vient. */
+  stepIndex?: number;
 }
 
 /** Regroupement type "8 × 400 m / récup 90 s". */
@@ -123,6 +147,15 @@ export interface IntervalSet {
   description: string;
   /** Indices des blocs de travail qui composent cette série. */
   workBlockIndices?: number[];
+  /**
+   * D'où vient la série : séance programmée sur la montre, tours manuels, ou
+   * détection sur le signal. Seules les deux premières sont une prescription.
+   */
+  source?: "workout" | "laps" | "auto";
+  /** Prescription de la montre, quand le fichier la contient. */
+  repsPlanned?: number;
+  targetPaceSPerKm?: number;
+  targetPwW?: number;
 }
 
 export interface SessionSummary {

@@ -23,7 +23,7 @@ import { classifyActivity, defaultSplitUnit, detectErg, type Classification, typ
 import { analyzeSwim, type SwimAnalysis } from "./swim.ts";
 import { analyzeDrift, hrSpeedProfile, type DriftAnalysis, type HrSpeedPoint } from "./drift.ts";
 import { bestEfforts, type BestEffort } from "./efforts.ts";
-import { analyzeAdherence, inferTarget, type AdherenceReport, type BlockTarget } from "./adherence.ts";
+import { analyzeAdherence, type AdherenceReport, type BlockTarget } from "./adherence.ts";
 import { gradeLabel } from "./adherence.ts";
 import { translator } from "./i18n.ts";
 import type { Activity, AthleteProfile, Digest, DigestOptions, FieldPresence, HrZoneBasis, Sample } from "./types.ts";
@@ -173,7 +173,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   const analysable = classification.tier === "full";
   const splits = analysable ? computeSplits(samples, unit, speed, gap) : [];
   const { blocks, sets } = analysable && wantIntervals
-    ? detectIntervals(samples, speed, activity.laps, 20, sport, locale)
+    ? detectIntervals(samples, speed, activity.laps, 20, sport, locale, activity.workoutSteps)
     : { blocks: [], sets: [] };
   const erg = sport === "cycling" ? detectErg(samples, blocks, locale) : undefined;
 
@@ -252,7 +252,14 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   // passant la totalité, tous les rapports sortaient avec le même coefficient
   // de variation et la même récupération — chiffres identiques donc forcément
   // faux dès qu'une séance contenait plus d'une série.
-  const adherence = !analysable ? [] : sets.map((set, i) => {
+  //
+  // Pas d'adhérence sans séance prescrite : juger une série détectée dans un
+  // footing contre une cible devinée produisait des « conforme » sur des
+  // intervalles qui n'existaient pas. La cible vient de la montre ou de
+  // l'athlète, jamais d'un arrondi de ce qui a été couru.
+  const adherence = !analysable ? [] : sets.flatMap((set, i) => {
+    const given = opts.blockTargets?.[i];
+    if (!given && set.source !== "workout" && set.source !== "laps") return [];
     const own = set.workBlockIndices?.length
       ? blocks.filter(
           (b) =>
@@ -265,9 +272,15 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
               }))),
         )
       : blocks;
-    return analyzeAdherence(
-      own, set, opts.blockTargets?.[i] ?? inferTarget(set, own, sport), samples, sport, locale,
-    );
+    const target: BlockTarget = given ?? {
+      reps: set.repsPlanned,
+      workM: set.targetM,
+      workS: set.targetS,
+      restS: set.avgRestDurS,
+      targetPaceSPerKm: set.targetPaceSPerKm,
+      targetPwW: set.targetPwW,
+    };
+    return [analyzeAdherence(own, set, target, samples, sport, locale)];
   });
 
   return {

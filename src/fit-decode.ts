@@ -86,6 +86,8 @@ export const GLOBAL = {
   RECORD: 20,
   EVENT: 21,
   DEVICE_INFO: 23,
+  WORKOUT: 26,
+  WORKOUT_STEP: 27,
   LENGTH: 101,
 } as const;
 
@@ -274,6 +276,30 @@ export const FIT_SUB_SPORT: Record<number, string> = {
   6: "indoor_cycling",
   5: "treadmill",
   58: "virtual_activity",
+};
+
+/** Intensité d'un tour ou d'une étape de séance. */
+export const FIT_INTENSITY: Record<number, string> = {
+  0: "active",
+  1: "rest",
+  2: "warmup",
+  3: "cooldown",
+  4: "recovery",
+  5: "interval",
+  6: "other",
+};
+
+/** Ce qui a clos un tour : bouton, auto-lap, fin de séance… */
+export const FIT_LAP_TRIGGER: Record<number, string> = {
+  0: "manual",
+  1: "time",
+  2: "distance",
+  3: "position_start",
+  4: "position_lap",
+  5: "position_waypoint",
+  6: "position_marked",
+  7: "session_end",
+  8: "fitness_equipment",
 };
 
 export const SWIM_STROKE: Record<number, string> = {
