@@ -26,14 +26,14 @@ export const en: PageCatalog = {
   "home.ld.feature6": "Race time projections for 5K, 10K, half marathon and marathon",
   "home.ld.feature7": "Unlimited number of files",
   "home.ld.howto": "Get your running sessions analyzed by an AI",
-  "home.ld.step1.name": "Drop your files",
+  "home.ld.step1.name": "Optional: add your history with the Strava archive",
   "home.ld.step1.text":
-    "Drag in the TCX, GPX or FIT files exported from your watch. There is no limit on the number.",
-  "home.ld.step2.name": "Enter your benchmarks",
-  "home.ld.step2.text": "Enter your measured maximum heart rate and a recent race time.",
-  "home.ld.step3.name": "Read the warnings",
+    "Request your Strava account archive (Download your account) and drop the ZIP as is: the tool turns it into a compact year of context.",
+  "home.ld.step2.name": "Export your latest sessions",
+  "home.ld.step2.text": "Get the FIT, TCX or GPX files of your recent sessions from Garmin Connect, Strava or Apple Watch.",
+  "home.ld.step3.name": "Drop the files to compress them",
   "home.ld.step3.text":
-    "The tool flags heart rate sensor changes and sessions where heart rate data is unreliable.",
+    "The tool compresses your sessions into a structured file, right in the browser, without uploading anything.",
   "home.ld.step4.name": "Copy the file into the AI",
   "home.ld.step4.text":
     "Copy the generated file and paste it into ChatGPT, Gemini or Claude along with your question.",
@@ -60,12 +60,16 @@ export const en: PageCatalog = {
     "Your watch files are too big for ChatGPT, Gemini or Claude. This tool turns them into a structured training file (paces, laps, zones, reps, cardiac drift) that the AI can actually analyze.",
   "home.promise":
     "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so coordinates are removed from the file by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
-  "home.step1.title": "Download your Strava archive",
-  "home.step1.text": "On <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, under \"Download your account\". Strava emails you a ZIP, usually within a few hours. In a hurry, or not on Strava? Export a few workouts: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step1.badge":
-    "Recommended",
-  "home.step2.title": "Drop the ZIP here, as is",
-  "home.step2.text": "The tool keeps your last 12 months and skips photos and routes. Everything is computed in your browser: your files are never uploaded.",
+  "home.step0.badge":
+    "Optional, recommended",
+  "home.step0.title":
+    "Give it your history: the Strava archive",
+  "home.step0.text":
+    "Once, on <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, under \"Download your account\". Strava emails you a ZIP within a few hours. Drop it here as is: the tool turns it into a compact year of context, without photos or routes.",
+  "home.step1.title": "Download your latest sessions",
+  "home.step1.text": "The FIT, TCX or GPX files of the sessions you want analysed, from your watch or app: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Drop them here to compress them",
+  "home.step2.text": "The tool turns them into a compact file the AI can read in full. Everything is computed in your browser: your files are never uploaded.",
   "home.step3.title": "Paste the file into your AI",
   "home.step3.text": "ChatGPT, Claude, Gemini or Vibe, with your question. <a href=\"{{href:post-ia-coach.html}}\">What to ask?</a>",
 

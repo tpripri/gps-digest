@@ -30,12 +30,12 @@ export const zh: Partial<PageCatalog> = {
   "home.ld.feature6": "预测 5 公里、10 公里、半程马拉松和全程马拉松成绩",
   "home.ld.feature7": "文件数量不限",
   "home.ld.howto": "让 AI 分析你的跑步训练",
-  "home.ld.step1.name": "上传文件",
-  "home.ld.step1.text": "拖入从手表导出的 TCX、GPX 或 FIT 文件。数量不限。",
-  "home.ld.step2.name": "填写参考值",
-  "home.ld.step2.text": "填写实测最大心率和一个近期比赛成绩。",
-  "home.ld.step3.name": "阅读警告",
-  "home.ld.step3.text": "工具会标出心率传感器的更换，以及心率数据不可靠的训练。",
+  "home.ld.step1.name": "可选：用 Strava 存档提供历史记录",
+  "home.ld.step1.text": "申请 Strava 账户存档（Download your account），把 ZIP 原样拖入：工具会从中提取一年的精简背景数据。",
+  "home.ld.step2.name": "导出最近的训练",
+  "home.ld.step2.text": "从佳明 Connect、Strava 或 Apple Watch 获取最近训练的 FIT、TCX 或 GPX 文件。",
+  "home.ld.step3.name": "拖入文件进行压缩",
+  "home.ld.step3.text": "工具直接在浏览器中把训练压缩成结构化档案，不上传任何内容。",
   "home.ld.step4.name": "把档案复制给 AI",
   "home.ld.step4.text": "复制生成的档案，连同你的问题一起粘贴到 ChatGPT、Gemini 或 Claude。",
   "home.ld.faq1.q": "为什么我的 TCX 文件对 AI 来说太大？",
@@ -61,12 +61,16 @@ export const zh: Partial<PageCatalog> = {
     "手表文件对 ChatGPT、Gemini 或 Claude 来说太大了。本工具把它们整理成结构化训练档案（配速、圈、区间、重复、心率漂移），让 AI 真正能够分析。",
   "home.promise":
     "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此档案默认会移除所有坐标。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
-  "home.step1.title": "下载你的 Strava 存档",
-  "home.step1.text": "在 <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> 的“Download your account”中申请。Strava 会通过电子邮件发送 ZIP 文件，通常几小时内送达。着急或不用 Strava？可以导出几次训练：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
-  "home.step1.badge":
-    "推荐",
-  "home.step2.title": "把 ZIP 原样拖到这里",
-  "home.step2.text": "工具会保留最近 12 个月的数据，并忽略照片和路线。所有计算都在浏览器中完成：你的文件不会上传到任何地方。",
+  "home.step0.badge":
+    "可选，推荐",
+  "home.step0.title":
+    "提供历史记录：Strava 存档",
+  "home.step0.text":
+    "只需一次：在 <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> 的“Download your account”中申请。Strava 会在几小时内通过电子邮件发送 ZIP 文件。把它原样拖到这里：工具会从中提取一年的精简背景数据，不含照片和路线。",
+  "home.step1.title": "下载最近的训练",
+  "home.step1.text": "从手表或应用导出要分析的训练的 FIT、TCX 或 GPX 文件：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step2.title": "拖到这里进行压缩",
+  "home.step2.text": "工具会把它们变成 AI 能完整读取的精简档案。所有计算都在浏览器中完成：你的文件不会上传到任何地方。",
   "home.step3.title": "把档案粘贴给 AI",
   "home.step3.text": "ChatGPT、DeepSeek、Claude 或 Gemini 都可以，再提出你的问题。<a href=\"{{href:post-ia-coach.html}}\">该问什么？</a>",
 

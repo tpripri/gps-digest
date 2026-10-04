@@ -26,14 +26,14 @@ export const pt: Partial<PageCatalog> = {
   "home.ld.feature6": "Projeção de tempos para 5 km, 10 km, meia maratona e maratona",
   "home.ld.feature7": "Número ilimitado de arquivos",
   "home.ld.howto": "Fazer uma IA analisar seus treinos de corrida",
-  "home.ld.step1.name": "Enviar seus arquivos",
+  "home.ld.step1.name": "Opcional: dar o seu histórico com o arquivo do Strava",
   "home.ld.step1.text":
-    "Arraste os arquivos TCX, GPX ou FIT exportados do seu relógio. Não há limite de quantidade.",
-  "home.ld.step2.name": "Informar suas referências",
-  "home.ld.step2.text": "Informe sua frequência cardíaca máxima medida e um tempo de prova recente.",
-  "home.ld.step3.name": "Ler os avisos",
+    "Peça o arquivo da sua conta Strava (Download your account) e solte o ZIP do jeito que veio: a ferramenta extrai um ano de contexto compacto.",
+  "home.ld.step2.name": "Exportar seus últimos treinos",
+  "home.ld.step2.text": "Pegue os arquivos FIT, TCX ou GPX dos seus treinos recentes no Garmin Connect, no Strava ou no Apple Watch.",
+  "home.ld.step3.name": "Soltar os arquivos para comprimi-los",
   "home.ld.step3.text":
-    "A ferramenta sinaliza trocas de sensor cardíaco e treinos cuja frequência cardíaca não é confiável.",
+    "A ferramenta comprime os treinos num dossiê estruturado, no próprio navegador, sem enviar nada.",
   "home.ld.step4.name": "Copiar o dossiê para a IA",
   "home.ld.step4.text":
     "Copie o dossiê gerado e cole no ChatGPT, no Gemini ou no Claude junto com a sua pergunta.",
@@ -60,12 +60,16 @@ export const pt: Partial<PageCatalog> = {
     "Os arquivos do seu relógio são grandes demais para o ChatGPT, o Gemini ou o Claude. Esta ferramenta os transforma em um dossiê de treino estruturado (ritmos, voltas, zonas, repetições, deriva cardíaca) que a IA consegue analisar de verdade.",
   "home.promise":
     "<strong>Seus arquivos não saem do seu navegador.</strong> Todo o cálculo é feito no seu aparelho, e você pode conferir isso na aba Rede. Um percurso GPS revela seu endereço com precisão de metros, por isso as coordenadas são removidas do dossiê por padrão. <a href=\"{{href:confidentialite.html}}\">O que sai, e o que nunca sai</a>.",
-  "home.step1.title": "Baixe o arquivo da sua conta Strava",
-  "home.step1.text": "Em <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, na seção “Download your account”. O Strava envia um ZIP por e-mail, em geral em poucas horas. Com pressa ou sem Strava? Exporte alguns treinos: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step1.badge":
-    "Recomendado",
-  "home.step2.title": "Solte o ZIP aqui, do jeito que veio",
-  "home.step2.text": "A ferramenta fica com os seus últimos 12 meses e ignora fotos e rotas. Tudo é calculado no seu navegador: seus arquivos não são enviados para lugar nenhum.",
+  "home.step0.badge":
+    "Opcional, recomendado",
+  "home.step0.title":
+    "Dê o seu histórico: o arquivo do Strava",
+  "home.step0.text":
+    "Uma única vez, em <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, na seção “Download your account”. O Strava envia um ZIP por e-mail em poucas horas. Solte-o aqui do jeito que veio: a ferramenta extrai um ano de contexto compacto, sem fotos nem rotas.",
+  "home.step1.title": "Baixe seus últimos treinos",
+  "home.step1.text": "Os arquivos FIT, TCX ou GPX dos treinos que você quer analisar, do seu relógio ou app: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Solte-os aqui para comprimi-los",
+  "home.step2.text": "A ferramenta transforma tudo num dossiê compacto que a IA consegue ler inteiro. Tudo é calculado no seu navegador: seus arquivos não são enviados para lugar nenhum.",
   "home.step3.title": "Cole o dossiê na sua IA",
   "home.step3.text": "ChatGPT, Claude, Gemini ou Vibe, com a sua pergunta. <a href=\"{{href:post-ia-coach.html}}\">O que perguntar?</a>",
 

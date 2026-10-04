@@ -17,6 +17,13 @@ the language of the page.
 - [gps-digest, English](https://exemple.com/en/): drop TCX, GPX or FIT files, get a structured training file to paste into an AI.
 - Other languages: [français](https://exemple.com/fr/), [español](https://exemple.com/es/), [português](https://exemple.com/pt/), [Deutsch](https://exemple.com/de/), [中文](https://exemple.com/zh/), [日本語](https://exemple.com/ja/)
 
+## How to use it
+
+1. Optional, recommended: drop the Strava account archive once, for a year of context.
+2. Export the FIT, TCX or GPX files of the latest sessions from the watch or app (guides below).
+3. Drop them on the page: they are compressed into a structured file, in the browser.
+4. Paste that file into ChatGPT, Claude, Gemini or Vibe, with a question.
+
 ## A year of context from one Strava archive
 
 - Drop the full Strava account archive (strava.com/account, "Download your account" ZIP) as is. The archive is read in the browser in chunks, never loaded whole and never uploaded; photos and planned routes are skipped.

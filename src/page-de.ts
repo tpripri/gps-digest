@@ -26,14 +26,14 @@ export const de: Partial<PageCatalog> = {
   "home.ld.feature6": "Zeitprognosen für 5 km, 10 km, Halbmarathon und Marathon",
   "home.ld.feature7": "Unbegrenzte Anzahl an Dateien",
   "home.ld.howto": "Laufeinheiten von einer KI analysieren lassen",
-  "home.ld.step1.name": "Dateien hochladen",
+  "home.ld.step1.name": "Optional: deine Historie mit dem Strava-Archiv mitgeben",
   "home.ld.step1.text":
-    "Zieh die aus deiner Uhr exportierten TCX-, GPX- oder FIT-Dateien hinein. Die Anzahl ist nicht begrenzt.",
-  "home.ld.step2.name": "Eckdaten angeben",
-  "home.ld.step2.text": "Gib deine gemessene maximale Herzfrequenz und eine aktuelle Wettkampfzeit an.",
-  "home.ld.step3.name": "Warnungen lesen",
+    "Fordere das Archiv deines Strava-Kontos an (Download your account) und lege das ZIP unverändert ab: Das Tool macht daraus ein Jahr kompakten Kontext.",
+  "home.ld.step2.name": "Die letzten Einheiten exportieren",
+  "home.ld.step2.text": "Hol dir die FIT-, TCX- oder GPX-Dateien deiner letzten Einheiten aus Garmin Connect, Strava oder von der Apple Watch.",
+  "home.ld.step3.name": "Dateien ablegen und komprimieren",
   "home.ld.step3.text":
-    "Das Tool weist auf Wechsel des Herzfrequenzsensors und auf Einheiten mit unzuverlässiger Herzfrequenz hin.",
+    "Das Tool komprimiert die Einheiten zu einem strukturierten Dossier, direkt im Browser, ohne etwas hochzuladen.",
   "home.ld.step4.name": "Dossier in die KI kopieren",
   "home.ld.step4.text":
     "Kopiere das erzeugte Dossier und füge es zusammen mit deiner Frage in ChatGPT, Gemini oder Claude ein.",
@@ -60,12 +60,16 @@ export const de: Partial<PageCatalog> = {
     "Die Dateien deiner Uhr sind zu groß für ChatGPT, Gemini oder Claude. Dieses Tool macht daraus ein strukturiertes Trainingsdossier (Pace, Runden, Zonen, Wiederholungen, kardiale Drift), das die KI wirklich analysieren kann.",
   "home.promise":
     "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden die Koordinaten standardmäßig aus dem Dossier entfernt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
-  "home.step1.title": "Lade dein Strava-Archiv herunter",
-  "home.step1.text": "Auf <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> unter „Download your account“. Strava schickt dir ein ZIP per E-Mail, meist innerhalb weniger Stunden. Eilig oder nicht bei Strava? Exportiere einzelne Einheiten: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
-  "home.step1.badge":
-    "Empfohlen",
-  "home.step2.title": "Lege das ZIP hier ab, so wie es ist",
-  "home.step2.text": "Das Tool behält deine letzten 12 Monate und ignoriert Fotos und Routen. Alles wird in deinem Browser berechnet: Deine Dateien werden nirgendwohin hochgeladen.",
+  "home.step0.badge":
+    "Optional, empfohlen",
+  "home.step0.title":
+    "Gib ihr deine Historie: das Strava-Archiv",
+  "home.step0.text":
+    "Einmalig auf <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> unter „Download your account“. Strava schickt dir in wenigen Stunden ein ZIP per E-Mail. Leg es hier unverändert ab: Das Tool macht daraus ein Jahr kompakten Kontext, ohne Fotos und Routen.",
+  "home.step1.title": "Lade deine letzten Einheiten herunter",
+  "home.step1.text": "Die FIT-, TCX- oder GPX-Dateien der Einheiten, die du analysieren willst, von deiner Uhr oder App: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
+  "home.step2.title": "Leg sie hier ab, um sie zu komprimieren",
+  "home.step2.text": "Das Tool macht daraus ein kompaktes Dossier, das die KI vollständig lesen kann. Alles wird in deinem Browser berechnet: Deine Dateien werden nirgendwohin hochgeladen.",
   "home.step3.title": "Füge das Dossier in deine KI ein",
   "home.step3.text": "ChatGPT, Claude, Gemini oder Vibe, mit deiner Frage. <a href=\"{{href:post-ia-coach.html}}\">Was fragen?</a>",
 

@@ -129,7 +129,7 @@ nav.langs>*{margin-right:.7rem;display:inline-block;line-height:2}
   font-weight:700;margin-bottom:.4rem}
 .step h3{margin:.2rem 0 .3rem;font-size:.95rem}
 .step p{margin:0;font-size:.87rem;color:var(--ink-soft)}
-.step.featured{border:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--bg))}
+.step.optional{border:2px dashed var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--bg))}
 .step .reco{margin-left:.5rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
 .drop{border:2px dashed var(--line);border-radius:var(--radius);padding:2.2rem 1rem;
   text-align:center;background:var(--panel);transition:border-color .15s}
@@ -202,7 +202,9 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
 <main>
 
 <div class="steps">
-  <div class="step featured"><span class="n">1</span><span class="reco">{{home.step1.badge}}</span><h3>{{home.step1.title}}</h3>
+  <div class="step optional"><span class="n">+</span><span class="reco">{{home.step0.badge}}</span><h3>{{home.step0.title}}</h3>
+    <p>{{home.step0.text}}</p></div>
+  <div class="step"><span class="n">1</span><h3>{{home.step1.title}}</h3>
     <p>{{home.step1.text}}</p></div>
   <div class="step"><span class="n">2</span><h3>{{home.step2.title}}</h3>
     <p>{{home.step2.text}}</p></div>

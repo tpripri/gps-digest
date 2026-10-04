@@ -30,12 +30,12 @@ export const ja: Partial<PageCatalog> = {
   "home.ld.feature6": "5km、10km、ハーフマラソン、フルマラソンのタイム予測",
   "home.ld.feature7": "ファイル数は無制限",
   "home.ld.howto": "ランニングのセッションを AI に分析させる",
-  "home.ld.step1.name": "ファイルをアップロード",
-  "home.ld.step1.text": "ウォッチから書き出した TCX、GPX、FIT ファイルをドラッグします。数に制限はありません。",
-  "home.ld.step2.name": "基準値を入力",
-  "home.ld.step2.text": "実測の最大心拍数と、最近のレースタイムを入力します。",
-  "home.ld.step3.name": "警告を読む",
-  "home.ld.step3.text": "心拍センサーの変更や、心拍数が信頼できないセッションをツールが知らせます。",
+  "home.ld.step1.name": "任意：Strava のアーカイブで履歴を渡す",
+  "home.ld.step1.text": "Strava アカウントのアーカイブ（Download your account）を申請し、ZIP をそのままドロップします。1 年分のコンパクトな背景データになります。",
+  "home.ld.step2.name": "最近のトレーニングを書き出す",
+  "home.ld.step2.text": "Garmin Connect、Strava、Apple Watch から最近のトレーニングの FIT・TCX・GPX ファイルを取得します。",
+  "home.ld.step3.name": "ファイルをドロップして圧縮",
+  "home.ld.step3.text": "ブラウザ内でトレーニングを構造化された記録に圧縮します。何も送信しません。",
   "home.ld.step4.name": "記録を AI にコピー",
   "home.ld.step4.text": "生成された記録をコピーし、質問と一緒に ChatGPT、Gemini、Claude に貼り付けます。",
   "home.ld.faq1.q": "なぜ TCX ファイルは AI にとって大きすぎるのですか？",
@@ -61,12 +61,16 @@ export const ja: Partial<PageCatalog> = {
     "ウォッチのファイルは ChatGPT、Gemini、Claude にとって大きすぎます。このツールは、AI が本当に分析できる構造化されたトレーニング記録（ペース、ラップ、ゾーン、レップ、心拍ドリフト）に変換します。",
   "home.promise":
     "<strong>ファイルはブラウザの外に出ません。</strong>計算はすべてお使いの端末で行われ、ネットワークタブで確認できます。GPS の軌跡は住所をメートル単位で明かしてしまうため、記録からは初期設定で座標を削除します。<a href=\"{{href:confidentialite.html}}\">外に出るもの、決して出ないもの</a>。",
-  "home.step1.title": "Strava のアーカイブをダウンロード",
-  "home.step1.text": "<a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> の「Download your account」から申請します。通常は数時間以内に ZIP がメールで届きます。急いでいる、または Strava を使っていない場合は、個別に書き出しましょう：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
-  "home.step1.badge":
-    "おすすめ",
-  "home.step2.title": "ZIP をそのままここにドロップ",
-  "home.step2.text": "直近 12 か月分を使い、写真やルートは無視します。計算はすべてブラウザ内で行われ、ファイルがどこかに送信されることはありません。",
+  "home.step0.badge":
+    "任意・おすすめ",
+  "home.step0.title":
+    "履歴を渡す：Strava のアーカイブ",
+  "home.step0.text":
+    "一度だけ、<a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> の「Download your account」から申請します。数時間以内に ZIP がメールで届きます。そのままここにドロップすれば、写真やルートを除いた 1 年分のコンパクトな背景データになります。",
+  "home.step1.title": "最近のトレーニングをダウンロード",
+  "home.step1.text": "分析したいトレーニングの FIT・TCX・GPX ファイルを、ウォッチやアプリから書き出します：<a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
+  "home.step2.title": "ここにドロップして圧縮",
+  "home.step2.text": "AI が全文を読めるコンパクトな記録にまとめます。計算はすべてブラウザ内で行われ、ファイルがどこかに送信されることはありません。",
   "home.step3.title": "記録を AI に貼り付ける",
   "home.step3.text": "ChatGPT・Claude・Gemini・Vibe に、質問と一緒に貼り付けます。<a href=\"{{href:post-ia-coach.html}}\">何を聞けばいい？</a>",
 
