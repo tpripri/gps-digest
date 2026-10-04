@@ -372,7 +372,9 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
         return {
           n: i + 1,
           date: s.startTimeUtc?.slice(0, 10),
-          sport: s.sport,
+          sport: f.part?.transition ? "transition" : s.sport,
+          // Rang dans un fichier multisport : « 2/5 » relie le vélo à son triathlon.
+          part: f.part ? `${f.part.index}/${f.part.count}` : undefined,
           dist_km: (s.distM / 1000).toFixed(recentFrom == null ? 2 : 1),
           dur_moving: formatDuration(s.durMovingS),
           // Unité propre au sport : des minutes par kilomètre à vélo ou en

@@ -8,7 +8,7 @@
  *   node --experimental-strip-types test/regressions.ts
  */
 
-import { parseFitBuffer } from "../src/parse-fit.ts";
+import { parseFitBuffer, parseFitParts } from "../src/parse-fit.ts";
 import { digestActivity } from "../src/digest.ts";
 import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
 import { buildDossier } from "../src/dossier.ts";
@@ -96,6 +96,36 @@ section("1. Les totaux du message session font foi, contrôle d'intégrité");
   writeRecords(w2, { startIso: START, fromS: 0, toS: 600, speedMS: 3, hr: 150 });
   writeSession(w2, { startIso: START, elapsedS: 600, distM: 1800, sport: 1 });
   check("fichier complet : aucun écart signalé", analyse(w2.bytes()).digest.session.recordsEndGapS == null);
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("2. Multisport : une sous-séance par message session");
+{
+  // Natation 600 s, transition 120 s, course 900 s, dans un seul fichier.
+  // La distance des points est cumulée sur tout le fichier, comme chez Garmin.
+  const w = fitWriter();
+  writeRecords(w, { startIso: START, fromS: 0, toS: 599, speedMS: 1.2, hr: 130 });
+  writeRecords(w, { startIso: START, fromS: 600, toS: 719, speedMS: 1.5, hr: 120, distOffsetM: 720 });
+  writeRecords(w, { startIso: START, fromS: 720, toS: 1620, speedMS: 3.3, hr: 155, distOffsetM: 900 });
+  writeSession(w, { startIso: START, offsetS: 0, elapsedS: 600, distM: 720, sport: 5, subSport: 18 });
+  writeSession(w, { startIso: START, offsetS: 600, elapsedS: 120, distM: 180, sport: 3 });
+  writeSession(w, { startIso: START, offsetS: 720, elapsedS: 900, distM: 2970, sport: 1 });
+  const parts = parseFitParts(w.bytes(), "fr");
+  check("3 sous-séances", parts.length === 3, `${parts.length}`);
+  check("sports dans l'ordre, transition marquée",
+    parts.map((p) => (p.part?.transition ? "transition" : p.activity.sport)).join(",") === "swimming,transition,running",
+    parts.map((p) => p.activity.sport).join(","));
+  const res = parts.map((p) => digestActivity(p.activity, { ...BASE, fitExtras: p.extras }));
+  check("chaque sous-séance repart de zéro (temps et distance)",
+    res[2].samples[0].t === 0 && Math.abs(res[2].samples[0].dist ?? 0) < 1 && res[2].digest.session.durElapsedS === 900,
+    `t0 ${res[2].samples[0].t}, d0 ${Math.round(res[2].samples[0].dist ?? 0)}, ${res[2].digest.session.durElapsedS} s`);
+  const batch = analyzeBatch(res.map((r, i) => ({ ...asFile("tri.fit", r), part: parts[i].part })), { locale: "fr" });
+  check("transitions hors volumes", Math.round(batch.totalDistanceM) === 720 + 2970, `${Math.round(batch.totalDistanceM)} m`);
+  const dossier = buildDossier(batch, { streamMode: "none" });
+  check("le dossier affiche la transition et rattache les sous-séances", /,transition,/.test(dossier) && /\b3\/3\b/.test(dossier));
+  check("un fichier mono-sport reste une seule séance",
+    parseFitParts((() => { const x = fitWriter(); writeRecords(x, { startIso: START, fromS: 0, toS: 60, speedMS: 3, hr: 150 });
+      writeSession(x, { startIso: START, elapsedS: 60, distM: 180, sport: 1 }); return x.bytes(); })(), "fr").every((p) => !p.part));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

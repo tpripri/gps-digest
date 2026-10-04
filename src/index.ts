@@ -3,8 +3,8 @@ export { LOCALES, DEFAULT_LOCALE, resolveLocale, t, translator, coverage } from 
 export type { Locale, MessageKey, MessageParams } from "./i18n.ts";
 export { parseTcx } from "./parse-tcx.ts";
 export { parseGpx } from "./parse-gpx.ts";
-export { parseFit, parseFitBuffer } from "./parse-fit.ts";
-export type { FitExtras, FitLength } from "./parse-fit.ts";
+export { parseFit, parseFitBuffer, parseFitParts } from "./parse-fit.ts";
+export type { FitExtras, FitLength, FitPart } from "./parse-fit.ts";
 export { decodeFit, GLOBAL } from "./fit-decode.ts";
 export { maskPrivacyZone, trimPrivacyZone, obfuscateCoordinates } from "./privacy.ts";
 export { computeSplits, detectIntervals, hrZones, paceZones, powerZones, summarize } from "./analyze.ts";

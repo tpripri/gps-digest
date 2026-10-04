@@ -200,6 +200,8 @@ export interface DigestOptions {
     /** Totaux du message `session` du FIT : ils font foi quand ils existent. */
     totalDistanceM?: number;
     totalElapsedS?: number;
+    sessionHrAvg?: number;
+    sessionHrMax?: number;
     /** Fin déclarée par la session moins dernier point enregistré, en s. */
     recordsEndGapS?: number;
   };

@@ -51,6 +51,13 @@ export interface FitExtras {
   totalDistanceM?: number;
   /** Durée écoulée déclarée par le message `session`, en secondes. */
   totalElapsedS?: number;
+  /**
+   * FC moyenne et max du message `session`. En natation, elles diffèrent
+   * des points : le capteur du poignet lit mal sous l'eau, la montre (ou une
+   * ceinture qui stocke puis transfère) inscrit sa propre valeur.
+   */
+  sessionHrAvg?: number;
+  sessionHrMax?: number;
   /** Fin déclarée par la session moins dernier point enregistré, en s. */
   recordsEndGapS?: number;
 }
@@ -102,15 +109,73 @@ function detectHrSensor(devices: FitMessage[], locale?: string): {
   return {};
 }
 
+/** Une discipline d'un fichier, ou le fichier entier s'il est mono-sport. */
+export interface FitPart {
+  activity: Activity;
+  extras: FitExtras;
+  /**
+   * Présent pour un fichier multisport (triathlon, duathlon) : rang de la
+   * discipline et nature de transition, à exclure des volumes par sport.
+   */
+  part?: { index: number; count: number; transition: boolean };
+}
+
+/** Sport FIT 3 : transition d'un enchaînement multisport. */
+const FIT_SPORT_TRANSITION = 3;
+
+/**
+ * Découpe un fichier FIT en disciplines.
+ *
+ * Un triathlon enregistré d'un seul tenant porte un message `session` par
+ * discipline (natation, transition, vélo, transition, course). Ne lire que le
+ * premier faisait de l'épreuve entière une « natation » de 53 km à
+ * 0:16/100 m. Chaque session reçoit ici ses propres points (par intervalle de
+ * temps), tours et longueurs, temps et distance repartant de zéro.
+ */
+export function parseFitParts(buffer: ArrayBuffer | Uint8Array, locale?: string): FitPart[] {
+  const fit = decodeFit(buffer, locale);
+  const sessions = [...(fit.byGlobal.get(GLOBAL.SESSION) ?? [])].sort(
+    (a, b) => ((a[2] as number) ?? 0) - ((b[2] as number) ?? 0),
+  );
+  if (sessions.length <= 1) return [buildFromFit(fit, sessions[0], locale)];
+
+  const records = fit.byGlobal.get(GLOBAL.RECORD) ?? [];
+  const laps = fit.byGlobal.get(GLOBAL.LAP) ?? [];
+  const lengths = fit.byGlobal.get(GLOBAL.LENGTH) ?? [];
+  return sessions.map((session, i) => {
+    const from = session[2] as number;
+    const next = sessions[i + 1]?.[2] as number | undefined;
+    const inside = (ts: number | undefined) => ts != null && ts >= from && (next == null || ts < next);
+    const built = buildFromFit(fit, session, locale, {
+      records: records.filter((r) => inside(r[253] as number | undefined)),
+      laps: laps.filter((l) => inside(l[2] as number | undefined)),
+      lengths: lengths.filter((l) => inside(l[2] as number | undefined)),
+    });
+    return {
+      ...built,
+      part: { index: i + 1, count: sessions.length, transition: session[5] === FIT_SPORT_TRANSITION },
+    };
+  });
+}
+
+/** Fichier entier, lu comme une seule séance (premier message session). */
 export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array, locale?: string): {
   activity: Activity;
   extras: FitExtras;
 } {
   const fit = decodeFit(buffer, locale);
-  const records = fit.byGlobal.get(GLOBAL.RECORD) ?? [];
-  const session = (fit.byGlobal.get(GLOBAL.SESSION) ?? [])[0];
-  const lapMsgs = fit.byGlobal.get(GLOBAL.LAP) ?? [];
-  const lengthMsgs = fit.byGlobal.get(GLOBAL.LENGTH) ?? [];
+  return buildFromFit(fit, (fit.byGlobal.get(GLOBAL.SESSION) ?? [])[0], locale);
+}
+
+function buildFromFit(
+  fit: ReturnType<typeof decodeFit>,
+  session: FitMessage | undefined,
+  locale?: string,
+  subset?: { records: FitMessage[]; laps: FitMessage[]; lengths: FitMessage[] },
+): FitPart {
+  const records = subset?.records ?? fit.byGlobal.get(GLOBAL.RECORD) ?? [];
+  const lapMsgs = subset?.laps ?? fit.byGlobal.get(GLOBAL.LAP) ?? [];
+  const lengthMsgs = subset?.lengths ?? fit.byGlobal.get(GLOBAL.LENGTH) ?? [];
   const devices = fit.byGlobal.get(GLOBAL.DEVICE_INFO) ?? [];
   const fileId = (fit.byGlobal.get(GLOBAL.FILE_ID) ?? [])[0];
 
@@ -183,6 +248,13 @@ export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array, locale?: string
       trigger: l[24] != null ? String(l[24]) : undefined,
     };
   });
+
+  // Sous-séance d'un multisport : la distance des points est cumulée sur
+  // tout le fichier ; elle doit repartir de zéro comme le temps.
+  if (subset) {
+    const d0 = samples.find((s) => s.dist != null)?.dist;
+    if (d0) for (const s of samples) if (s.dist != null) s.dist -= d0;
+  }
 
   sanitizeSamples(samples);
 
@@ -266,6 +338,8 @@ export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array, locale?: string
       hrSensorEvidence: hr.evidence,
       totalDistanceM: scaled(session?.[9] as number | undefined, 100),
       totalElapsedS: scaled(session?.[7] as number | undefined, 1000),
+      sessionHrAvg: session?.[16] as number | undefined,
+      sessionHrMax: session?.[17] as number | undefined,
       recordsEndGapS: recordsEndGap(session, records),
     },
   };

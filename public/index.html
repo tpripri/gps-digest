@@ -491,7 +491,7 @@ try {
 
 const {
   digestFile, digestActivity, analyzeBatch, buildDossier, formatDuration, paceLabel,
-  hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitBuffer,
+  hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitParts,
   formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
   gradeLabel, driftQualityLabel, confidenceLabel, t,
   openArchive, isArchiveName, RecentWindow,
@@ -572,19 +572,26 @@ function thinSamples(a) {
 const isRecent = (a, newestMs) =>
   Date.parse(a.digest.session.startTimeUtc ?? "") >= newestMs - DETAIL_DAYS * 86400000;
 
+/**
+ * Analyse un fichier. Renvoie une séance, ou plusieurs pour un FIT
+ * multisport (une par discipline, transitions comprises).
+ */
 async function analyzeBytes(name, data, settings) {
   if (name.toLowerCase().endsWith(".fit")) {
     // Le FIT est décodé sur place : c'est le seul format qui porte les
     // longueurs de bassin et le matériel réellement appairé.
-    const { activity, extras } = parseFitBuffer(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
-    return digestActivity(activity, {
-      ...settings.digest,
-      hrSensorHint: extras.hrSensor ? { hrSensor: extras.hrSensor } : undefined,
-      // Le message `session` du FIT fait foi pour les totaux de la séance.
-      fitExtras: extras,
-    });
+    const parts = parseFitParts(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength), LOCALE);
+    return parts.map(({ activity, extras, part }) => ({
+      part,
+      res: digestActivity(activity, {
+        ...settings.digest,
+        hrSensorHint: extras.hrSensor ? { hrSensor: extras.hrSensor } : undefined,
+        // Le message `session` du FIT fait foi pour les totaux de la séance.
+        fitExtras: extras,
+      }),
+    }));
   }
-  return digestFile(name, new TextDecoder().decode(data), settings.digest);
+  return [{ res: await digestFile(name, new TextDecoder().decode(data), settings.digest) }];
 }
 
 async function run(fileList) {
@@ -643,8 +650,8 @@ async function run(fileList) {
     await new Promise((r) => setTimeout(r, 0));
     try {
       const data = await item.read();
-      const res = await analyzeBytes(item.name, data, settings);
-      const startIso = res.digest.session.startTimeUtc;
+      const results = await analyzeBytes(item.name, data, settings);
+      const startIso = results[0].res.digest.session.startTimeUtc;
       if (item.archived && windowed) {
         const verdict = win.judge(startIso);
         if (verdict === "stop" && item.ordered) stopOrdered = true;
@@ -652,17 +659,21 @@ async function run(fileList) {
       }
       const startMs = Date.parse(startIso ?? "");
       if (startMs > newestMs) newestMs = startMs;
-      const a = {
-        filename: item.name, digest: res.digest, hrSource: res.insights.hrSource,
-        drift: res.insights.drift, adherence: res.insights.adherence,
-        efforts: res.insights.efforts, samples: res.samples,
-        hrSpeed: res.insights.hrSpeed, weather: null,
-        rawBytes: data.byteLength, archived: !!item.archived,
-      };
-      // Hors de la fenêtre de détail, un point sur cinq suffit au bilan : la
-      // mémoire tient ainsi une année entière, même sur téléphone.
-      if (windowed && !isRecent(a, newestMs)) thinSamples(a);
-      analyses.push(a);
+      results.forEach(({ res, part }, k) => {
+        const a = {
+          // Un triathlon donne cinq lignes : le rang les rend lisibles et uniques.
+          filename: part ? `${item.name} · ${part.index}/${part.count}` : item.name,
+          digest: res.digest, hrSource: res.insights.hrSource,
+          drift: res.insights.drift, adherence: res.insights.adherence,
+          efforts: res.insights.efforts, samples: res.samples,
+          hrSpeed: res.insights.hrSpeed, weather: null, part,
+          rawBytes: k === 0 ? data.byteLength : 0, archived: !!item.archived,
+        };
+        // Hors de la fenêtre de détail, un point sur cinq suffit au bilan : la
+        // mémoire tient ainsi une année entière, même sur téléphone.
+        if (windowed && !isRecent(a, newestMs)) thinSamples(a);
+        analyses.push(a);
+      });
     } catch (e) {
       failures.push({ name: item.name, message: e?.message ?? String(e) });
     }

@@ -154,6 +154,8 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   const fx = opts.fitExtras;
   if (fx?.totalDistanceM && fx.totalDistanceM > 0) session.distM = fx.totalDistanceM;
   if (fx?.totalElapsedS && fx.totalElapsedS > 0) session.durElapsedS = Math.round(fx.totalElapsedS);
+  if (fx?.sessionHrAvg) session.hrAvg = fx.sessionHrAvg;
+  if (fx?.sessionHrMax) session.hrMax = fx.sessionHrMax;
   if (fx?.recordsEndGapS != null && fx.recordsEndGapS > 30) session.recordsEndGapS = Math.round(fx.recordsEndGapS);
   if (privacy.masked > 0) session.privacyMaskRadiusM = privacyRadiusM;
 

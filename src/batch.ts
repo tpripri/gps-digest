@@ -43,6 +43,8 @@ export interface FileAnalysis {
   weather?: WeatherObservation | null;
   /** Analyse de natation, quand la séance en est une. */
   swim?: SwimAnalysis;
+  /** Discipline d'un fichier multisport (voir parseFitParts). */
+  part?: { index: number; count: number; transition: boolean };
 }
 
 export interface SensorChange {
@@ -157,6 +159,9 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   let totalMovingS = 0;
 
   for (const f of sorted) {
+    // Une transition de triathlon n'est ni de la natation, ni du vélo, ni de
+    // la course : elle reste dans le tableau des séances, pas dans les volumes.
+    if (f.part?.transition) continue;
     const s = f.digest.session;
     sports[s.sport] = (sports[s.sport] ?? 0) + 1;
     totalDistanceM += s.distM;
@@ -279,7 +284,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
       }),
     );
   }
-  const loadOnly = sorted.filter((f) => f.digest.session.tier === "load");
+  const loadOnly = sorted.filter((f) => f.digest.session.tier === "load" && !f.part?.transition);
   if (loadOnly.length) {
     warnings.push(tr("batch.warnLoadOnly", { n: loadOnly.length }));
   }
