@@ -346,7 +346,11 @@ export const es: Partial<Catalog> = {
   "chart.repsNote": "barras: esfuerzo, puntos: frecuencia cardíaca",
   "chart.trendNote": "FC en bpm, una bajada indica progresión",
   "chart.load": "Carga semanal",
-  "chart.loadNote": "parte oscura: tiempo a intensidad alta",
+  "chart.loadNote": "barras: TRIMP, carga basada en la FC, común a todos los deportes; parte oscura: tiempo a intensidad moderada o alta",
+  "chart.loadNoteHours":
+    "barras: horas en movimiento, todos los deportes (sin FC en los archivos)",
+  "dossier.loadNote":
+    "Carga semanal: una columna por disciplina (distancia, duración, desnivel), nunca sumadas. trimp = TRIMP de Edwards (minutos en cada zona de FC × número de zona), la única carga común a todos los deportes; hr_coverage_pct = parte del tiempo en movimiento con FC. Una sesión sin FC no suma nada al trimp.",
 
   "heat.humid": ", {pct} % de humedad",
   "heat.strong":

@@ -383,7 +383,11 @@ const fr = {
   "chart.repsNote": "barres : effort — points : fréquence cardiaque",
   "chart.trendNote": "FC en bpm — une baisse est une progression",
   "chart.load": "Charge hebdomadaire",
-  "chart.loadNote": "partie foncée : temps passé en intensité élevée",
+  "chart.loadNote": "barres : TRIMP, charge fondée sur la FC, commune à tous les sports ; partie foncée : temps en intensité modérée ou élevée",
+  "chart.loadNoteHours":
+    "barres : heures en mouvement, tous sports (aucune FC dans les fichiers)",
+  "dossier.loadNote":
+    "Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.",
 
   // ── weather.ts ─────────────────────────────────────────────────────────
   "heat.humid": ", {pct} % d'humidité",
@@ -759,7 +763,11 @@ const en: Catalog = {
   "chart.repsNote": "bars: effort, dots: heart rate",
   "chart.trendNote": "HR in bpm, a drop means progress",
   "chart.load": "Weekly load",
-  "chart.loadNote": "dark part: time spent at high intensity",
+  "chart.loadNote": "bars: TRIMP, heart-rate load common to all sports; dark part: time at moderate or high intensity",
+  "chart.loadNoteHours":
+    "bars: moving hours, all sports (no heart rate in the files)",
+  "dossier.loadNote":
+    "Weekly load: one column per discipline (distance, duration, elevation), never added together. trimp = Edwards TRIMP (minutes in each HR zone × zone number), the only load common to all sports; hr_coverage_pct = share of moving time with heart rate. A session without heart rate adds nothing to trimp.",
 
   "heat.humid": ", {pct}% humidity",
   "heat.strong":

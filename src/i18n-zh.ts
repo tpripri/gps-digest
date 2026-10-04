@@ -329,7 +329,11 @@ export const zh: Partial<Catalog> = {
   "chart.repsNote": "柱：强度；点：心率",
   "chart.trendNote": "心率（bpm），下降表示进步",
   "chart.load": "每周负荷",
-  "chart.loadNote": "深色部分：高强度时间",
+  "chart.loadNote": "柱：TRIMP，基于心率的负荷，适用于所有运动；深色部分：中高强度时间",
+  "chart.loadNoteHours":
+    "柱：所有运动的运动时长（文件中没有心率）",
+  "dossier.loadNote":
+    "每周负荷：每个项目单独一列（距离、时长、爬升），从不相加。trimp = Edwards TRIMP（各心率区间的分钟数 × 区间编号），是所有运动唯一共用的负荷；hr_coverage_pct = 运动时间中有心率的比例。没有心率的训练不计入 trimp。",
 
   "heat.humid": "，湿度 {pct}%",
   "heat.strong":

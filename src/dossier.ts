@@ -36,6 +36,7 @@ import { gradeLabel } from "./adherence.ts";
 import { driftQualityLabel } from "./drift.ts";
 import { resolveLocale, translator, type Locale, type MessageKey, type MessageParams } from "./i18n.ts";
 import type { BatchAnalysis, FileAnalysis } from "./batch.ts";
+import { weeklyLoadRows } from "./batch.ts";
 
 export type StreamMode = "time" | "distance" | "adaptive" | "none";
 
@@ -412,26 +413,8 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     ),
   );
 
-  block(
-    "weekly_load",
-    toCsv(
-      batch.weeks.map((w) => {
-        const total = w.easyS + w.moderateS + w.hardS;
-        const pct = (v: number) => (total > 0 ? Math.round((v / total) * 100) : undefined);
-        return {
-          week: w.isoWeek,
-          sessions: w.sessions,
-          dist_km: (w.distanceM / 1000).toFixed(1),
-          dur_moving: formatDuration(w.movingS),
-          ele_gain_m: Math.round(w.elevationM),
-          easy_pct: pct(w.easyS),
-          moderate_pct: pct(w.moderateS),
-          hard_pct: pct(w.hardS),
-        };
-      }),
-      LLM_DIALECT,
-    ),
-  );
+  out.push(`# ${tr("dossier.loadNote")}`);
+  block("weekly_load", toCsv(weeklyLoadRows(batch.weeks), LLM_DIALECT));
 
   block(
     "best_efforts_all_sessions",

@@ -474,7 +474,8 @@ emit("heat dry", heatStressNote({ tempC: 26, source: "Open-Meteo" } as WeatherOb
   emit("chart reps", repsChart([{ index: 1, value: 240, hr: 160 }, { index: 2, value: 242, hr: 163 }], { unit: "pace", ...c }));
   emit("chart reps nohr", repsChart([{ index: 1, value: 250 }, { index: 2, value: 252 }], { unit: "power", ...c }));
   emit("chart trend", trendChart([{ date: "2026-01-01", value: 150 }, { date: "2026-02-01", value: 147 }, { date: "2026-03-01", value: 144 }], "FC à 5:00/km", LOCALE));
-  emit("chart load", loadChart([{ label: "2026-S01", km: 30, hardPct: 20 }, { label: "2026-S02", km: 42 }], LOCALE));
+  emit("chart load", loadChart([{ label: "2026-S01", value: 300, hardPct: 20 }, { label: "2026-S02", value: 420 }], LOCALE));
+  emit("chart load hours", loadChart([{ label: "2026-S01", value: 3, hardPct: 20 }, { label: "2026-S02", value: 4.5 }], LOCALE, "hours"));
 }
 
 async function errorOf(f: () => unknown): Promise<string> {

@@ -892,16 +892,19 @@ function renderAnalysis(batch) {
         <td class="sig">${esc(s.verdict ?? "")}</td></tr>`).join("") + `</tbody></table></div>`
     : `<p class="sig">${tx("js.progNone")}</p>`;
 
+  // Charge en TRIMP, commune à toutes les disciplines ; en heures sans FC.
+  const loadBasis = batch.weeks.some((w) => w.trimp > 0) ? "trimp" : "hours";
   $("chart-load").innerHTML = loadChart(
     batch.weeks.map((w) => {
       const total = w.easyS + w.moderateS + w.hardS;
       return {
         label: w.isoWeek,
-        km: w.distanceM / 1000,
+        value: loadBasis === "trimp" ? w.trimp : w.movingS / 3600,
         hardPct: total > 0 ? ((w.moderateS + w.hardS) / total) * 100 : 0,
       };
     }),
     LOCALE,
+    loadBasis,
   );
 
   $("chart-trend").innerHTML = prog.series

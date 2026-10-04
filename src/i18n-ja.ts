@@ -346,7 +346,11 @@ export const ja: Partial<Catalog> = {
   "chart.repsNote": "棒：強度、点：心拍数",
   "chart.trendNote": "心拍数（bpm）、低下は成長を示す",
   "chart.load": "週間負荷",
-  "chart.loadNote": "濃い部分：高強度で過ごした時間",
+  "chart.loadNote": "棒：TRIMP（心拍に基づく全種目共通の負荷）。濃い部分：中〜高強度の時間",
+  "chart.loadNoteHours":
+    "棒：全種目の移動時間（ファイルに心拍データなし）",
+  "dossier.loadNote":
+    "週間負荷：種目ごとに列を分ける（距離・時間・獲得標高）。合算はしない。trimp = Edwards TRIMP（各心拍ゾーンの分数 × ゾーン番号）で、全種目に共通する唯一の負荷。hr_coverage_pct = 移動時間のうち心拍がある割合。心拍のないセッションは trimp に加算されない。",
 
   "heat.humid": "、湿度 {pct}%",
   "heat.strong":

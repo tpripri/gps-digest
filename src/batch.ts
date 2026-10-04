@@ -56,12 +56,33 @@ export interface SensorChange {
   filesAfter: number;
 }
 
-export interface WeekBucket {
-  isoWeek: string;
+/** Volume d'une discipline sur la semaine. */
+export interface SportVolume {
   sessions: number;
   distanceM: number;
   movingS: number;
   elevationM: number;
+}
+
+export interface WeekBucket {
+  isoWeek: string;
+  sessions: number;
+  /** Temps en mouvement, toutes disciplines : le temps s'additionne, les km non. */
+  movingS: number;
+  /**
+   * Volume par discipline. 10 km de course et 10 km de vélo ne coûtent pas
+   * la même chose : les additionner donnait une « charge » sans unité.
+   */
+  bySport: Partial<Record<Sport, SportVolume>>;
+  /**
+   * Charge commune à toutes les disciplines : TRIMP d'Edwards, minutes
+   * passées dans chaque zone FC multipliées par le numéro de la zone.
+   */
+  trimp: number;
+  /** Part du temps en mouvement couverte par une FC, en %. */
+  hrCoveragePct?: number;
+  /** Temps avec FC, en secondes (sert à hrCoveragePct). */
+  hrS: number;
   /** Répartition du temps par intensité, en secondes. */
   easyS: number;
   moderateS: number;
@@ -92,7 +113,7 @@ export interface BatchAnalysis {
 }
 
 
-function isoWeek(d: Date, locale?: string): string {
+export function isoWeek(d: Date, locale?: string): string {
   const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const day = t.getUTCDay() || 7;
   t.setUTCDate(t.getUTCDate() + 4 - day);
@@ -102,6 +123,22 @@ function isoWeek(d: Date, locale?: string): string {
     year: t.getUTCFullYear(),
     week: String(week).padStart(2, "0"),
   });
+}
+
+/** TRIMP d'Edwards d'une séance : minutes dans chaque zone × numéro de zone. */
+function edwardsTrimp(zones: { zone: number; timeS: number }[]): number {
+  return zones.reduce((sum, z) => sum + (z.timeS / 60) * z.zone, 0);
+}
+
+/** Secondes couvertes par une FC plausible. */
+function hrSeconds(samples: Sample[]): number {
+  let s = 0;
+  for (let i = 1; i < samples.length; i++) {
+    const hr = samples[i].hr;
+    if (hr == null || hr < 30) continue;
+    s += Math.max(0, Math.min(samples[i].t - samples[i - 1].t, 10));
+  }
+  return s;
 }
 
 /**
@@ -218,6 +255,9 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     }
   }
 
+  // Répartition polarisée : FC max donnée, sinon celle des zones du lot.
+  const polarMaxHr = opts.maxHr ?? athlete?.maxHr ?? hrZoneBasis?.maxHr;
+
   const sports: Partial<Record<Sport, number>> = {};
   const weekMap = new Map<string, WeekBucket>();
   let totalDistanceM = 0;
@@ -234,21 +274,28 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
 
     if (!s.startTimeUtc) continue;
     const key = isoWeek(new Date(s.startTimeUtc), locale);
-    const b = weekMap.get(key) ?? {
+    const b: WeekBucket = weekMap.get(key) ?? {
       isoWeek: key,
       sessions: 0,
-      distanceM: 0,
       movingS: 0,
-      elevationM: 0,
+      bySport: {},
+      trimp: 0,
+      hrS: 0,
       easyS: 0,
       moderateS: 0,
       hardS: 0,
     };
-    const { easy, moderate, hard } = intensityBuckets(f.samples, opts.maxHr);
+    const { easy, moderate, hard } = intensityBuckets(f.samples, polarMaxHr);
     b.sessions++;
-    b.distanceM += s.distM;
     b.movingS += s.durMovingS;
-    b.elevationM += s.eleGainM ?? 0;
+    const v = (b.bySport[s.sport] ??= { sessions: 0, distanceM: 0, movingS: 0, elevationM: 0 });
+    v.sessions++;
+    v.distanceM += s.distM;
+    v.movingS += s.durMovingS;
+    v.elevationM += s.eleGainM ?? 0;
+    b.trimp += edwardsTrimp(f.digest.hrZones);
+    b.hrS += hrSeconds(f.samples);
+    b.hrCoveragePct = b.movingS > 0 ? Math.min(100, (b.hrS / b.movingS) * 100) : undefined;
     b.easyS += easy;
     b.moderateS += moderate;
     b.hardS += hard;
@@ -479,28 +526,7 @@ export function buildBatchBundle(
     ),
   );
 
-  block(
-    "weekly_load",
-    toCsv(
-      batch.weeks.map((w) => ({
-        week: w.isoWeek,
-        sessions: w.sessions,
-        dist_km: (w.distanceM / 1000).toFixed(1),
-        dur_moving: formatDuration(w.movingS),
-        ele_gain_m: Math.round(w.elevationM),
-        easy_pct: w.easyS + w.moderateS + w.hardS > 0
-          ? Math.round((w.easyS / (w.easyS + w.moderateS + w.hardS)) * 100)
-          : undefined,
-        moderate_pct: w.easyS + w.moderateS + w.hardS > 0
-          ? Math.round((w.moderateS / (w.easyS + w.moderateS + w.hardS)) * 100)
-          : undefined,
-        hard_pct: w.easyS + w.moderateS + w.hardS > 0
-          ? Math.round((w.hardS / (w.easyS + w.moderateS + w.hardS)) * 100)
-          : undefined,
-      })),
-      LLM_DIALECT,
-    ),
-  );
+  block("weekly_load", toCsv(weeklyLoadRows(batch.weeks), LLM_DIALECT));
 
   block(
     "best_efforts",
@@ -575,4 +601,44 @@ export function buildBatchBundle(
 
 export function batchBundleTokens(bundle: string): number {
   return estimateTokens(bundle);
+}
+
+/** Colonnes de volume par discipline, dans un ordre stable. */
+const SPORT_COLUMNS: { sport: Sport; prefix: string; unit: "km" | "m" | null; ele: boolean }[] = [
+  { sport: "running", prefix: "run", unit: "km", ele: true },
+  { sport: "cycling", prefix: "bike", unit: "km", ele: true },
+  { sport: "swimming", prefix: "swim", unit: "m", ele: false },
+  { sport: "hiking", prefix: "hike", unit: "km", ele: true },
+  { sport: "other", prefix: "other", unit: null, ele: false },
+];
+
+/**
+ * Charge hebdomadaire : une colonne par discipline (distance, durée,
+ * dénivelé), et une charge commune fondée sur la FC. Seules les disciplines
+ * présentes dans le lot ont leurs colonnes.
+ */
+export function weeklyLoadRows(weeks: WeekBucket[]): Record<string, string | number | undefined>[] {
+  const present = SPORT_COLUMNS.filter((c) => weeks.some((w) => w.bySport[c.sport]?.sessions));
+  return weeks.map((w) => {
+    const total = w.easyS + w.moderateS + w.hardS;
+    const pct = (v: number) => (total > 0 ? Math.round((v / total) * 100) : undefined);
+    const row: Record<string, string | number | undefined> = {
+      week: w.isoWeek,
+      sessions: w.sessions,
+      dur_moving: formatDuration(w.movingS),
+    };
+    for (const c of present) {
+      const v = w.bySport[c.sport];
+      if (c.unit === "km") row[`${c.prefix}_km`] = v ? (v.distanceM / 1000).toFixed(1) : undefined;
+      if (c.unit === "m") row[`${c.prefix}_m`] = v ? Math.round(v.distanceM) : undefined;
+      row[`${c.prefix}_time`] = v ? formatDuration(v.movingS) : undefined;
+      if (c.ele) row[`${c.prefix}_ele_m`] = v ? Math.round(v.elevationM) : undefined;
+    }
+    row.trimp = w.trimp > 0 ? Math.round(w.trimp) : undefined;
+    row.hr_coverage_pct = w.hrCoveragePct != null ? Math.round(w.hrCoveragePct) : undefined;
+    row.easy_pct = pct(w.easyS);
+    row.moderate_pct = pct(w.moderateS);
+    row.hard_pct = pct(w.hardS);
+    return row;
+  });
 }

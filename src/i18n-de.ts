@@ -351,7 +351,11 @@ export const de: Partial<Catalog> = {
   "chart.repsNote": "Balken: Belastung, Punkte: Herzfrequenz",
   "chart.trendNote": "HF in bpm, ein Rückgang bedeutet Fortschritt",
   "chart.load": "Wochenbelastung",
-  "chart.loadNote": "dunkler Anteil: Zeit in hoher Intensität",
+  "chart.loadNote": "Balken: TRIMP, herzfrequenzbasierte Belastung für alle Sportarten; dunkler Anteil: Zeit in mittlerer oder hoher Intensität",
+  "chart.loadNoteHours":
+    "Balken: Stunden in Bewegung, alle Sportarten (keine Herzfrequenz in den Dateien)",
+  "dossier.loadNote":
+    "Wochenbelastung: eine Spalte pro Disziplin (Distanz, Dauer, Höhenmeter), nie addiert. trimp = Edwards-TRIMP (Minuten in jeder HF-Zone × Zonennummer), die einzige gemeinsame Belastung aller Sportarten; hr_coverage_pct = Anteil der Bewegungszeit mit Herzfrequenz. Eine Einheit ohne Herzfrequenz zählt nicht zum trimp.",
 
   "heat.humid": ", {pct} % Luftfeuchtigkeit",
   "heat.strong":

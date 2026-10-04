@@ -383,5 +383,41 @@ section("7. Intervalles : séance prescrite d'abord, détection prudente sinon")
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+section("8. Volume hebdomadaire par sport, charge commune");
+{
+  const session = (day: string, sport: number, segments: FitSegment[]) => {
+    const w = fitWriter();
+    const startIso = `${day}T07:00:00Z`;
+    const parts = writeProfile(w, { startIso, segments });
+    writeSession(w, { startIso, elapsedS: segments.reduce((a, s) => a + s.durS, 0), distM: parts.reduce((a, p) => a + p.distM, 0), sport });
+    return asFile(`${day}.fit`, analyse(w.bytes()));
+  };
+  // Même semaine : 10,8 km de course (FC 152, 80 % de 190 : zone 4), 54 km
+  // de vélo (FC 128, 67 % : zone 2), 36 km de vélo sans FC.
+  const files = [
+    session("2026-09-21", 1, [{ durS: 3600, speedMS: 3, hr: 152 }]),
+    session("2026-09-23", 2, [{ durS: 5400, speedMS: 10, hr: 128 }]),
+    session("2026-09-25", 2, [{ durS: 3600, speedMS: 10, hr: 0 }]),
+  ];
+  const batch = analyzeBatch(files, { locale: "fr", athlete: { maxHr: 190 } });
+  const week = batch.weeks[0];
+  check("une seule semaine", batch.weeks.length === 1, batch.weeks.map((x) => x.isoWeek).join(","));
+  check("course et vélo comptés à part",
+    Math.round((week.bySport.running?.distanceM ?? 0) / 100) === 108 && Math.round((week.bySport.cycling?.distanceM ?? 0) / 1000) === 90,
+    `course ${week.bySport.running?.distanceM?.toFixed(0)} m, vélo ${week.bySport.cycling?.distanceM?.toFixed(0)} m`);
+  check("durée par sport", Math.round((week.bySport.cycling?.movingS ?? 0) / 60) === 150, `${week.bySport.cycling?.movingS} s`);
+  // TRIMP d'Edwards : minutes par zone × numéro de zone.
+  check("charge commune : TRIMP fondé sur la FC (60 min × 4 + 90 min × 2 = 420)",
+    Math.abs(week.trimp - 420) <= 5, `${week.trimp.toFixed(0)}`);
+  check("part du temps couverte par la FC annoncée (150 / 210 min)",
+    Math.round(week.hrCoveragePct ?? 0) === 71, `${week.hrCoveragePct?.toFixed(0)} %`);
+  const dossier = buildDossier(batch, { streamMode: "none" });
+  const header = dossier.split("\n")[dossier.split("\n").findIndex((l) => /weekly_load/.test(l)) + 1] ?? "";
+  check("weekly_load : une colonne par sport, plus de distance tous sports confondus",
+    /run_km/.test(header) && /bike_km/.test(header) && /bike_time/.test(header) && /trimp/.test(header) && !/(^|,)dist_km/.test(header) && !/swim_m/.test(header),
+    header);
+}
+
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");
 process.exitCode = failures ? 1 : 0;

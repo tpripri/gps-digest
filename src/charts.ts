@@ -250,20 +250,26 @@ export function trendChart(series: TrendPoint[], title: string, locale?: string)
 
 export interface WeekBar {
   label: string;
-  km: number;
+  /** TRIMP de la semaine, ou heures en mouvement faute de FC. */
+  value: number;
   hardPct?: number;
 }
 
-export function loadChart(weeks: WeekBar[], locale?: string): string {
+/**
+ * Charge hebdomadaire, toutes disciplines. Les barres sont en TRIMP (charge
+ * fondée sur la FC) : des kilomètres empilaient course, vélo et natation.
+ * Sans aucune FC, en heures.
+ */
+export function loadChart(weeks: WeekBar[], locale?: string, basis: "trimp" | "hours" = "trimp"): string {
   if (weeks.length < 2) return "";
-  const s = scaleY([0, ...weeks.map((w) => w.km)], false, 0.05);
+  const s = scaleY([0, ...weeks.map((w) => w.value)], false, 0.05);
   const slot = PLOT_W / weeks.length;
   const bw = Math.min(50, slot * 0.7);
 
-  let body = gridAndAxis(s, null, (v) => `${Math.round(v)} km`);
+  let body = gridAndAxis(s, null, (v) => basis === "trimp" ? `${Math.round(v)}` : `${Math.round(v)} h`);
   weeks.forEach((w, i) => {
     const cx = PAD.left + slot * (i + 0.5);
-    const y = s.to(w.km);
+    const y = s.to(w.value);
     const h = Math.max(1, PAD.top + PLOT_H - y);
     body += `<rect class="bar2" x="${(cx - bw / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2"/>`;
     if (w.hardPct != null && w.hardPct > 0) {
@@ -277,5 +283,5 @@ export function loadChart(weeks: WeekBar[], locale?: string): string {
   });
 
   const tr = translator(locale);
-  return frame(tr("chart.load"), body, tr("chart.loadNote"));
+  return frame(tr("chart.load"), body, tr(basis === "trimp" ? "chart.loadNote" : "chart.loadNoteHours"));
 }
