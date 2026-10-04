@@ -31,6 +31,16 @@ export const de: Partial<Catalog> = {
   "sensor.label.optical": "Handgelenksensor",
   "sensor.label.unknown": "unbestimmt",
   "sensor.lockRange": "HF auf die Kadenz eingerastet",
+  "sensor.device.name":
+    "In der Datei angegebene Hardware",
+  "sensor.device.note":
+    "Quelle aus den device_info-Nachrichten der FIT-Datei gelesen.",
+  "sensor.startDrop.name":
+    "Auffälliger Start",
+  "sensor.startDrop.note":
+    "Die HF fällt um {min} min um {bpm} bpm, ohne dass sich das Tempo ändert: Der Sensor hat sich neu eingependelt (kaltes Handgelenk, trockener Gurt). Der Beginn der Einheit bleibt bei den HF-Berechnungen außen vor.",
+  "sensor.startDrop.reason":
+    "auffällige HF zu Beginn (Abfall um {bpm} bpm ohne Tempoänderung)",
   "sensor.swim.name": "Erkennung nicht anwendbar",
   "sensor.swim.note":
     "Beim Schwimmen wird die HF zwischengespeichert und erst nach dem Verlassen des Wassers übertragen: die Form des Signals sagt nichts über den Sensor aus. Mit der FIT-Datei lässt sich dagegen die gekoppelte Hardware direkt auslesen.",
@@ -232,8 +242,8 @@ export const de: Partial<Catalog> = {
     "{n} Einheit(en) umklassifiziert: die in der Datei angegebene Sportart passte nicht zur Form der Daten ({list}).",
   "batch.warnLoadOnly":
     "{n} Einheit(en) ohne Ausdauercharakter im Umfang gezählt, aber von Pace-, Drift- und Prognoseanalysen ausgeschlossen.",
-  "batch.warnSensorChange":
-    "Wechsel des HF-Sensors um den {date} erkannt ({from} → {to}). Herzfrequenzvergleiche über dieses Datum hinweg sind nicht gültig: Zonen, Drift und HF-Trends müssen für jeden Zeitraum getrennt analysiert werden.",
+  "batch.warnHrSources":
+    "Die HF-Quelle wechselt von Einheit zu Einheit: {strap} mit Brustgurt, {optical} am Handgelenk, {unknown} unbestimmt. Herzfrequenzen sind nur zwischen Einheiten derselben Quelle vergleichbar (Spalte hr_source der Einheitentabelle): Zonen, Drift und Trends Quelle für Quelle lesen.",
   "batch.warnCadenceLock":
     "{n} Datei(en) zeigen eine auf die Kadenz eingerastete HF: die Herzfrequenzwerte sind dort teilweise falsch und die zugehörigen Driftwerte nicht verwertbar.",
   "batch.warnDriftPartial":
@@ -368,6 +378,8 @@ export const de: Partial<Catalog> = {
   "fit.hrEvidence":
     "Externer Herzfrequenzsensor über {source}{product} gekoppelt: aus der Datei gelesen, nicht geschätzt.",
   "fit.hrEvidenceProduct": " (Produkt {id})",
+  "fit.hrEvidenceWrist":
+    "Die Uhr meldet nur ihren optischen Handgelenksensor, kein externer Herzfrequenzsensor verbunden: aus der Datei gelesen, nicht geschätzt.",
   "fit.sourceN": "Quelle {n}",
   "fit.errHeader": "Ungültige FIT-Datei: unerwarteter Header.",
   "fit.errSignature": "Ungültige FIT-Datei: Signatur fehlt.",

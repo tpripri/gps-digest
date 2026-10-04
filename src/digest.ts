@@ -238,7 +238,13 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
   };
 
   // --- Analyses autonomes, lisibles sans passer par un LLM ---
-  const hrSource = analyzeHrSource(samples, speed, sport, opts.hrSensorHint, locale);
+  // Matériel déclaré par le FIT (device_info). TCX et GPX n'en portent pas :
+  // la source y est déduite du signal, et le dossier le dit.
+  const fitHint = opts.fitExtras?.hrSensor
+    ? { hrSensor: opts.fitExtras.hrSensor, evidence: opts.fitExtras.hrSensorEvidence }
+    : undefined;
+  const hrHint = fitHint || opts.hrSensorHint ? { ...fitHint, ...opts.hrSensorHint } : undefined;
+  const hrSource = analyzeHrSource(samples, speed, sport, hrHint, locale);
   const drift = analyzeDrift(samples, speed, sport, {
     warmupS: opts.driftWarmupS ?? 600,
     // Les segments où la FC est verrouillée sur la cadence sont faux. Les

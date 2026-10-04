@@ -29,6 +29,16 @@ export const es: Partial<Catalog> = {
   "sensor.label.optical": "sensor de muñeca",
   "sensor.label.unknown": "indeterminada",
   "sensor.lockRange": "FC bloqueada en la cadencia",
+  "sensor.device.name":
+    "Hardware declarado en el archivo",
+  "sensor.device.note":
+    "Fuente leída en los mensajes device_info del FIT.",
+  "sensor.startDrop.name":
+    "Inicio anómalo",
+  "sensor.startDrop.note":
+    "La FC cae {bpm} ppm hacia el minuto {min} sin cambio de ritmo: el sensor se reajustó (muñeca fría, banda seca). El inicio de la sesión se excluye de los cálculos cardiacos.",
+  "sensor.startDrop.reason":
+    "FC anómala al inicio (caída de {bpm} ppm sin cambio de ritmo)",
   "sensor.swim.name": "Detección no aplicable",
   "sensor.swim.note":
     "En natación, la FC se almacena y se vuelca al salir del agua: la forma de la señal no dice nada del sensor. Subir el archivo FIT permite, en cambio, leer directamente el equipo emparejado.",
@@ -230,8 +240,8 @@ export const es: Partial<Catalog> = {
     "{n} sesión(es) reclasificada(s): el deporte declarado en el archivo no correspondía a la forma de los datos ({list}).",
   "batch.warnLoadOnly":
     "{n} sesión(es) ajena(s) a la resistencia contada(s) en el volumen pero excluida(s) de los análisis de ritmo, deriva y proyección.",
-  "batch.warnSensorChange":
-    "Cambio de sensor de FC detectado hacia el {date} ({from} → {to}). Las comparaciones cardíacas a uno y otro lado de esta fecha no son válidas: zonas, derivas y tendencias de FC deben analizarse por separado en cada periodo.",
+  "batch.warnHrSources":
+    "La fuente de FC varía de una sesión a otra: {strap} con banda, {optical} en la muñeca, {unknown} sin determinar. Las FC solo se comparan entre sesiones de la misma fuente (columna hr_source de la tabla de sesiones): zonas, derivas y tendencias se leen fuente por fuente.",
   "batch.warnCadenceLock":
     "{n} archivo(s) presentan un bloqueo de la FC en la cadencia: los valores cardíacos son parcialmente falsos y las derivas correspondientes no son utilizables.",
   "batch.warnDriftPartial":
@@ -363,6 +373,8 @@ export const es: Partial<Catalog> = {
   "fit.hrEvidence":
     "Sensor cardíaco externo emparejado por {source}{product}: información leída en el archivo, no estimada.",
   "fit.hrEvidenceProduct": " (producto {id})",
+  "fit.hrEvidenceWrist":
+    "El reloj solo indica su sensor óptico de muñeca, sin sensor de frecuencia cardiaca externo conectado: dato leído del archivo, no estimado.",
   "fit.sourceN": "fuente {n}",
   "fit.errHeader": "Archivo FIT no válido: encabezado inesperado.",
   "fit.errSignature": "Archivo FIT no válido: falta la firma.",

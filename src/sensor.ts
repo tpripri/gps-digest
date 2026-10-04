@@ -49,6 +49,8 @@ export interface HrSignal {
 
 export interface HrSourceAnalysis {
   verdict: HrSource;
+  /** Preuve matérielle, quand le verdict vient du fichier (device_info). */
+  evidence?: string;
   /** 0 à 1. Au-dessous de 0,6, l'outil doit dire « probable », pas « détecté ». */
   confidence: number;
   fromDeviceMetadata: boolean;
@@ -255,11 +257,46 @@ function startupSpike(samples: Sample[], speed: number[]): boolean {
   return restHr != null && later != null && restHr > 150 && restHr - later > 30;
 }
 
+/**
+ * Départ aberrant : dans le premier quart d'heure, la FC chute d'au moins
+ * 20 bpm en deux minutes alors que l'allure ne bouge pas. Le cœur ne fait pas
+ * ça à effort constant : c'est le capteur qui se recale (poignet froid,
+ * ceinture sèche). Tout ce qui précède la chute est suspect.
+ *
+ * L'allure doit être stable sur quatre minutes, chute comprise : juste après
+ * une répétition, la FC redescend de 20 bpm en trottinant à allure constante,
+ * et c'est de la physiologie, pas un capteur.
+ */
+function startupDrop(samples: Sample[], speed: number[]): { atS: number; bpm: number } | undefined {
+  const hr = smoothByTime(samples, (s) => s.hr, 30);
+  const proxy = samples.map((s, i) => ({ t: s.t, dist: speed[i] }) as Sample);
+  const v = smoothByTime(proxy, (s) => s.dist, 30);
+  const before = smoothByTime(proxy, (s) => s.dist, 120);
+  let best: { atS: number; bpm: number } | undefined;
+  let j = 0;
+  let k = 0;
+  for (let i = 0; i < samples.length && samples[i].t <= 900; i++) {
+    if (samples[i].t < 120) continue;
+    while (j < samples.length - 1 && samples[j].t < samples[i].t + 120) j++;
+    while (k < i && samples[k].t < samples[i].t - 60) k++;
+    const h0 = hr[i];
+    const h1 = hr[j];
+    const v0 = v[i];
+    const v1 = v[j];
+    const vb = before[k];
+    if (h0 == null || h1 == null || v0 == null || v1 == null || vb == null) continue;
+    if (v0 < 1.5 || v1 < 1.5 || Math.abs(v1 - v0) / v0 > 0.08 || Math.abs(vb - v0) / v0 > 0.08) continue;
+    const drop = h0 - h1;
+    if (drop >= 20 && (!best || drop > best.bpm)) best = { atS: Math.round(samples[j].t), bpm: Math.round(drop) };
+  }
+  return best;
+}
+
 export function analyzeHrSource(
   samples: Sample[],
   speed: number[],
   sport: Sport,
-  deviceHint?: { hrSensor?: HrSource },
+  deviceHint?: { hrSensor?: HrSource; evidence?: string },
   locale?: string,
 ): HrSourceAnalysis {
   const tr = translator(locale);
@@ -305,6 +342,12 @@ export function analyzeHrSource(
   const plateau = longestPlateauS(samples);
   const lag = responseLagS(samples, speed);
   const spike = startupSpike(samples, speed);
+  // Une chute qui suit la fin d'un verrouillage sur la cadence est déjà
+  // expliquée : la plage verrouillée est suspecte, pas tout le début.
+  const rawDrop = startupDrop(samples, speed);
+  const drop = rawDrop && !lock.ranges.some((r) => r.toS >= rawDrop.atS - 180 && r.fromS <= rawDrop.atS)
+    ? rawDrop
+    : undefined;
 
   // Le verrouillage cadence n'existe qu'en course : à vélo la cadence tourne
   // autour de 90 rpm, trop loin d'une FC d'effort pour créer l'ambiguïté.
@@ -389,12 +432,34 @@ export function analyzeHrSource(
     score += 2;
   }
 
+  const suspectRanges = [...lock.ranges];
+  if (drop) {
+    const min = Math.round(drop.atS / 60);
+    signals.push({
+      name: tr("sensor.startDrop.name"),
+      value: drop.bpm,
+      unit: " bpm",
+      points: "neutral",
+      note: tr("sensor.startDrop.note", { bpm: drop.bpm, min }),
+    });
+    suspectRanges.push({ fromS: 0, toS: drop.atS, reason: tr("sensor.startDrop.reason", { bpm: drop.bpm }) });
+  }
+
   let verdict: HrSource;
   let confidence: number;
+  const fromDevice = !!deviceHint?.hrSensor && deviceHint.hrSensor !== "unknown";
 
   if (deviceHint?.hrSensor && deviceHint.hrSensor !== "unknown") {
+    // Le fichier dit quel capteur était connecté : ce n'est plus un indice.
     verdict = deviceHint.hrSensor;
     confidence = 1;
+    signals.unshift({
+      name: tr("sensor.device.name"),
+      value: 1,
+      unit: "",
+      points: deviceHint.hrSensor,
+      note: deviceHint.evidence ?? tr("sensor.device.note"),
+    });
   } else {
     const magnitude = Math.abs(score);
     verdict = score >= 2 ? "chest_strap" : score <= -2 ? "optical" : "unknown";
@@ -418,10 +483,11 @@ export function analyzeHrSource(
   return {
     verdict,
     confidence,
-    fromDeviceMetadata: !!deviceHint?.hrSensor,
+    fromDeviceMetadata: fromDevice,
+    evidence: fromDevice ? deviceHint?.evidence : undefined,
     signals,
     cadenceLockPct: lock.pct,
-    suspectRanges: lock.ranges,
+    suspectRanges,
   };
 }
 

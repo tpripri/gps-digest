@@ -34,6 +34,16 @@ export const ja: Partial<Catalog> = {
   "sensor.label.optical": "手首の光学センサー",
   "sensor.label.unknown": "判定不能",
   "sensor.lockRange": "心拍数がケイデンスに固定",
+  "sensor.device.name":
+    "ファイルに記録された機器",
+  "sensor.device.note":
+    "FIT の device_info メッセージから読み取ったソース。",
+  "sensor.startDrop.name":
+    "開始時の異常",
+  "sensor.startDrop.note":
+    "{min} 分ごろにペースが変わらないまま心拍が {bpm} bpm 下がっています。センサーが安定し直したためです（手首の冷え、乾いたベルト）。開始部分は心拍の計算から除外します。",
+  "sensor.startDrop.reason":
+    "開始時の心拍異常（ペースが変わらず {bpm} bpm 低下）",
   "sensor.swim.name": "検出対象外",
   "sensor.swim.note":
     "水泳中の心拍数はいったん記録され、水から上がったときにまとめて送られます。そのため信号の形からはセンサーの種類がわかりません。FIT ファイルをアップロードすれば、ペアリングされた機器を直接読み取れます。",
@@ -232,8 +242,8 @@ export const ja: Partial<Catalog> = {
     "{n} 件のセッションを再分類しました。ファイルに記録されたスポーツがデータの形と一致しませんでした（{list}）。",
   "batch.warnLoadOnly":
     "持久系以外の {n} 件のセッションは、ボリュームには含めていますが、ペース・ドリフト・予測の分析からは除外しています。",
-  "batch.warnSensorChange":
-    "{date} 前後で心拍センサーの変更を検出しました（{from} → {to}）。この日付をまたいだ心拍数の比較は無効です。ゾーン、ドリフト、心拍の傾向は期間ごとに分けて分析してください。",
+  "batch.warnHrSources":
+    "心拍のソースはセッションごとに異なります：胸ベルト {strap} 回、手首 {optical} 回、不明 {unknown} 回。心拍は同じソースのセッション同士でしか比較できません（セッション表の hr_source 列）。ゾーン、ドリフト、傾向はソースごとに読んでください。",
   "batch.warnCadenceLock":
     "{n} 件のファイルで心拍数がケイデンスに固定されています。心拍数の値は部分的に誤っており、対応するドリフトは利用できません。",
   "batch.warnDriftPartial":
@@ -363,6 +373,8 @@ export const ja: Partial<Catalog> = {
   "fit.hrEvidence":
     "{source}{product} でペアリングされた外部心拍センサー：推定ではなく、ファイルから読み取った情報です。",
   "fit.hrEvidenceProduct": "（製品 {id}）",
+  "fit.hrEvidenceWrist":
+    "ウォッチが記録しているのは手首の光学センサーのみで、外部心拍センサーは未接続：推定ではなくファイルから読み取った情報です。",
   "fit.sourceN": "ソース {n}",
   "fit.errHeader": "無効な FIT ファイル：ヘッダーが想定外です。",
   "fit.errSignature": "無効な FIT ファイル：シグネチャがありません。",

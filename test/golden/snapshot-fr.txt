@@ -4132,7 +4132,7 @@ t_s,dist_m,ele_m,lat,lon
  "1 doublon(s) écarté(s) — même horodatage de départ et même distance : a-steady-strap-1 (1).tcx (identique à a-steady-strap-1.tcx).",
  "2 séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (2026-07-27 other→swimming, 2026-07-28 running→other).",
  "3 séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.",
- "Changement de capteur de FC détecté autour du 2026-07-23 (capteur poignet → ceinture). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.",
+ "Source de FC variable d'une séance à l'autre : 8 avec ceinture, 1 au poignet, 2 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.",
  "1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.",
  "Dérive cardiaque calculée sur 7 séance(s) sur 11 : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.",
  "Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.",
@@ -4267,25 +4267,25 @@ t_s,dist_m,ele_m,lat,lon
 # ⚠ 1 doublon(s) écarté(s) — même horodatage de départ et même distance : a-steady-strap-1 (1).tcx (identique à a-steady-strap-1.tcx).
 # ⚠ 2 séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (2026-07-27 other→swimming, 2026-07-28 running→other).
 # ⚠ 3 séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.
-# ⚠ Changement de capteur de FC détecté autour du 2026-07-23 (capteur poignet → ceinture). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.
+# ⚠ Source de FC variable d'une séance à l'autre : 8 avec ceinture, 1 au poignet, 2 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.
 # ⚠ 1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.
 # ⚠ Dérive cardiaque calculée sur 7 séance(s) sur 11 : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.
 # ⚠ Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-date,sport,dist_km,dur_moving,pace_mmss,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_confidence,drift_pct,drift_valid,temp_c,intervals,file
-2026-06-02,running,9.42,49:59,5:18,5:20,9,134,168,ceinture,0.90,1.4,1,18,,a-steady-strap-1.tcx
-2026-06-16,running,9.55,49:59,5:14,5:15,9,137,168,ceinture,0.90,2.3,1,24,,a-steady-strap-2.tcx
-2026-07-07,running,9.69,49:59,5:09,5:11,9,142,168,ceinture,0.90,3.7,1,30,,a-steady-strap-3.tcx
-2026-07-21,running,9.42,49:59,5:18,5:20,9,137,166,capteur poignet,0.90,1.4,1,18,,b-steady-optical.tcx
-2026-07-23,running,9.14,49:59,5:28,5:30,9,132,177,ceinture,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-2026-07-25,running,9.36,49:59,5:20,5:22,9,135,180,indéterminée,0.30,n/a,0,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-2026-07-26,cycling,25.50,59:59,2:21,,51,147,168,ceinture,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
-2026-07-27,swimming,1.20,20:23,16:59,,0,120,128,indéterminée,0.00,n/a,0,,,e-pool.tcx
-2026-07-28,other,3.51,15:21,4:22,4:18,9,146,168,ceinture,0.90,n/a,0,,,f-hyrox.tcx
-2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,0.81,n/a,0,,,g-stroll.tcx
-2026-07-30,hiking,3.12,39:59,12:49,12:34,9,116,168,ceinture,0.90,-0.0,1,,,h-hike.tcx
+date,sport,dist_km,dur_moving,pace_mmss,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,hr_confidence,drift_pct,drift_valid,temp_c,intervals,file
+2026-06-02,running,9.42,49:59,5:18,5:20,9,134,168,ceinture,signal,0.90,1.4,1,18,,a-steady-strap-1.tcx
+2026-06-16,running,9.55,49:59,5:14,5:15,9,137,168,ceinture,signal,0.90,2.3,1,24,,a-steady-strap-2.tcx
+2026-07-07,running,9.69,49:59,5:09,5:11,9,142,168,ceinture,signal,0.90,3.7,1,30,,a-steady-strap-3.tcx
+2026-07-21,running,9.42,49:59,5:18,5:20,9,137,166,capteur poignet,signal,0.90,1.4,1,18,,b-steady-optical.tcx
+2026-07-23,running,9.14,49:59,5:28,5:30,9,132,177,ceinture,signal,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+2026-07-25,running,9.36,49:59,5:20,5:22,9,135,180,indéterminée,signal,0.30,n/a,0,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+2026-07-26,cycling,25.50,59:59,2:21,,51,147,168,ceinture,signal,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+2026-07-27,swimming,1.20,20:23,16:59,,0,120,128,indéterminée,signal,0.00,n/a,0,,,e-pool.tcx
+2026-07-28,other,3.51,15:21,4:22,4:18,9,146,168,ceinture,signal,0.90,n/a,0,,,f-hyrox.tcx
+2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,0.81,n/a,0,,,g-stroll.tcx
+2026-07-30,hiking,3.12,39:59,12:49,12:34,9,116,168,ceinture,signal,0.90,-0.0,1,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,bike_km,bike_time,bike_ele_m,swim_m,swim_time,hike_km,hike_time,hike_ele_m,other_time,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
@@ -4374,25 +4374,25 @@ marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en 
 # ⚠ 1 doublon(s) écarté(s) — même horodatage de départ et même distance : a-steady-strap-1 (1).tcx (identique à a-steady-strap-1.tcx).
 # ⚠ 2 séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (2026-07-27 other→swimming, 2026-07-28 running→other).
 # ⚠ 3 séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.
-# ⚠ Changement de capteur de FC détecté autour du 2026-07-23 (capteur poignet → ceinture). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.
+# ⚠ Source de FC variable d'une séance à l'autre : 8 avec ceinture, 1 au poignet, 2 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.
 # ⚠ 1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.
 # ⚠ Dérive cardiaque calculée sur 7 séance(s) sur 11 : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.
 # ⚠ Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
@@ -4470,6 +4470,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,1.4
@@ -4601,6 +4602,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,2.3
@@ -4736,6 +4738,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,3.7
@@ -4868,7 +4871,9 @@ drift_window_from_s,325
 drift_window_to_s,2939
 drift_window_coverage_pct,87
 hr_source,capteur poignet
+hr_source_basis,signal
 hr_source_confidence,0.90
+hr_suspect_ranges,420-499 s FC verrouillée sur la cadence; 840-919 s FC verrouillée sur la cadence; 1260-1339 s FC verrouillée sur la cadence; 1680-1759 s FC verrouillée sur la cadence; 2100-2179 s FC verrouillée sur la cadence; 2520-2599 s FC verrouillée sur la cadence; 2940-2999 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,18.0
 drift_applicable,yes
 drift_pct,1.4
@@ -5000,7 +5005,9 @@ drift_window_from_s,2389
 drift_window_to_s,2999
 drift_window_coverage_pct,20
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.69
+hr_suspect_ranges,777-907 s FC verrouillée sur la cadence; 1091-1206 s FC verrouillée sur la cadence; 1391-1505 s FC verrouillée sur la cadence; 1753-1804 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,10.4
 drift_applicable,yes
 drift_pct,-2.0
@@ -5146,7 +5153,9 @@ hr_max,180
 cad_avg,165
 temp_watch_c,27
 hr_source,indéterminée
+hr_source_basis,signal
 hr_source_confidence,0.30
+hr_suspect_ranges,777-907 s FC verrouillée sur la cadence; 1077-1206 s FC verrouillée sur la cadence; 1376-1506 s FC verrouillée sur la cadence; 1676-1808 s FC verrouillée sur la cadence; 1971-2108 s FC verrouillée sur la cadence; 2270-2408 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,24.0
 drift_applicable,no
 drift_not_computed_because,"Effort en baisse de 13 % entre les deux moitiés de la fenêtre (vitesse 3 → 3) : le rendement chute parce que l'intensité chute, pas parce que le cœur dérive. Aucune dérive calculable."
@@ -5288,6 +5297,7 @@ drift_window_from_s,2790
 drift_window_to_s,3599
 drift_window_coverage_pct,22
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.81
 drift_applicable,yes
 drift_pct,0.1
@@ -5427,6 +5437,7 @@ ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 �
 hr_avg,120
 hr_max,128
 hr_source,indéterminée
+hr_source_basis,signal
 hr_source_confidence,0.00
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -5492,6 +5503,7 @@ hr_avg,146
 hr_max,168
 cad_avg,59
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -5596,6 +5608,7 @@ ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 �
 hr_avg,93
 hr_max,96
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.81
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -5678,6 +5691,7 @@ drift_window_from_s,300
 drift_window_to_s,2399
 drift_window_coverage_pct,87
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,-0.0
@@ -5801,25 +5815,25 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,lat,lon,grade_pct
 # ⚠ 1 doublon(s) écarté(s) — même horodatage de départ et même distance : a-steady-strap-1 (1).tcx (identique à a-steady-strap-1.tcx).
 # ⚠ 2 séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (2026-07-27 other→swimming, 2026-07-28 running→other).
 # ⚠ 3 séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.
-# ⚠ Changement de capteur de FC détecté autour du 2026-07-23 (capteur poignet → ceinture). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.
+# ⚠ Source de FC variable d'une séance à l'autre : 8 avec ceinture, 1 au poignet, 2 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.
 # ⚠ 1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.
 # ⚠ Dérive cardiaque calculée sur 7 séance(s) sur 11 : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.
 # ⚠ Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
@@ -5897,6 +5911,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,1.4
@@ -5996,6 +6011,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,2.3
@@ -6100,6 +6116,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,3.7
@@ -6201,7 +6218,9 @@ drift_window_from_s,325
 drift_window_to_s,2939
 drift_window_coverage_pct,87
 hr_source,capteur poignet
+hr_source_basis,signal
 hr_source_confidence,0.90
+hr_suspect_ranges,420-499 s FC verrouillée sur la cadence; 840-919 s FC verrouillée sur la cadence; 1260-1339 s FC verrouillée sur la cadence; 1680-1759 s FC verrouillée sur la cadence; 2100-2179 s FC verrouillée sur la cadence; 2520-2599 s FC verrouillée sur la cadence; 2940-2999 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,18.0
 drift_applicable,yes
 drift_pct,1.4
@@ -6301,7 +6320,9 @@ drift_window_from_s,2389
 drift_window_to_s,2999
 drift_window_coverage_pct,20
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.69
+hr_suspect_ranges,777-907 s FC verrouillée sur la cadence; 1091-1206 s FC verrouillée sur la cadence; 1391-1505 s FC verrouillée sur la cadence; 1753-1804 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,10.4
 drift_applicable,yes
 drift_pct,-2.0
@@ -6415,7 +6436,9 @@ hr_max,180
 cad_avg,165
 temp_watch_c,27
 hr_source,indéterminée
+hr_source_basis,signal
 hr_source_confidence,0.30
+hr_suspect_ranges,777-907 s FC verrouillée sur la cadence; 1077-1206 s FC verrouillée sur la cadence; 1376-1506 s FC verrouillée sur la cadence; 1676-1808 s FC verrouillée sur la cadence; 1971-2108 s FC verrouillée sur la cadence; 2270-2408 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,24.0
 drift_applicable,no
 drift_not_computed_because,"Effort en baisse de 13 % entre les deux moitiés de la fenêtre (vitesse 3 → 3) : le rendement chute parce que l'intensité chute, pas parce que le cœur dérive. Aucune dérive calculable."
@@ -6525,6 +6548,7 @@ drift_window_from_s,2790
 drift_window_to_s,3599
 drift_window_coverage_pct,22
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.81
 drift_applicable,yes
 drift_pct,0.1
@@ -6654,6 +6678,7 @@ ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 �
 hr_avg,120
 hr_max,128
 hr_source,indéterminée
+hr_source_basis,signal
 hr_source_confidence,0.00
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -6719,6 +6744,7 @@ hr_avg,146
 hr_max,168
 cad_avg,59
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -6770,6 +6796,7 @@ ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 �
 hr_avg,93
 hr_max,96
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.81
 drift_applicable,no
 drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régulière dans cette séance. La dérive cardiaque ne se mesure que sur un effort continu ; analyser plutôt les répétitions une à une.
@@ -6818,6 +6845,7 @@ drift_window_from_s,300
 drift_window_to_s,2399
 drift_window_coverage_pct,87
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,-0.0
@@ -6906,25 +6934,25 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,grade_pct
 # ⚠ 1 doublon(s) écarté(s) — même horodatage de départ et même distance : a-steady-strap-1 (1).tcx (identique à a-steady-strap-1.tcx).
 # ⚠ 2 séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données (2026-07-27 other→swimming, 2026-07-28 running→other).
 # ⚠ 3 séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.
-# ⚠ Changement de capteur de FC détecté autour du 2026-07-23 (capteur poignet → ceinture). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.
+# ⚠ Source de FC variable d'une séance à l'autre : 8 avec ceinture, 1 au poignet, 2 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.
 # ⚠ 1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.
 # ⚠ Dérive cardiaque calculée sur 7 séance(s) sur 11 : les autres sont trop courtes ou trop irrégulières pour que le calcul ait un sens.
 # ⚠ Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.
 # ⚠ FC max observée (180 bpm) supérieure à celle renseignée (170 bpm). Toutes les zones sont décalées tant que ce réglage n'est pas corrigé.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
-8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,n/a,,,f-hyrox.tcx
-10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,-0.0,,,h-hike.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
@@ -6974,7 +7002,7 @@ date,pace_ref,hr_bpm,time_at_pace_s,hr_source,temp_air_c,pace_held,efficiency
 
 ==================== batch2 warnings
 [
- "Changement de capteur de FC détecté autour du 2026-07-21 (ceinture → capteur poignet). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.",
+ "Source de FC variable d'une séance à l'autre : 3 avec ceinture, 1 au poignet, 0 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.",
  "1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.",
  "Aucun résultat de course fourni. Les projections reposent uniquement sur des efforts d'entraînement, qui surestiment généralement la performance en compétition. Renseigner un chrono réel améliore nettement la calibration.",
  "Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens."
@@ -7028,17 +7056,17 @@ date,pace_ref,hr_bpm,time_at_pace_s,hr_source,temp_air_c,pace_held,efficiency
 # ─────────────────────────────────────────────────────────────────────
 
 # ⚠ AVERTISSEMENTS — à lire avant toute conclusion
-# ⚠ Changement de capteur de FC détecté autour du 2026-07-21 (ceinture → capteur poignet). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.
+# ⚠ Source de FC variable d'une séance à l'autre : 3 avec ceinture, 1 au poignet, 0 indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.
 # ⚠ 1 fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.
 # ⚠ Aucun résultat de course fourni. Les projections reposent uniquement sur des efforts d'entraînement, qui surestiment généralement la performance en compétition. Renseigner un chrono réel améliore nettement la calibration.
 # ⚠ Plusieurs sources de FC dans le lot : les courbes sont construites séparément par capteur. Comparer les deux entre elles n'aurait pas de sens.
 
 ## sessions
-n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,drift_pct,temp_c,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,1.4,18,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,2.3,24,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,3.7,30,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,1.4,18,b-steady-optical.tcx
+n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,file
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,b-steady-optical.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
@@ -7106,6 +7134,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,1.4
@@ -7183,6 +7212,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,2.3
@@ -7264,6 +7294,7 @@ drift_window_from_s,330
 drift_window_to_s,2999
 drift_window_coverage_pct,89
 hr_source,ceinture
+hr_source_basis,signal
 hr_source_confidence,0.90
 drift_applicable,yes
 drift_pct,3.7
@@ -7342,7 +7373,9 @@ drift_window_from_s,325
 drift_window_to_s,2939
 drift_window_coverage_pct,87
 hr_source,capteur poignet
+hr_source_basis,signal
 hr_source_confidence,0.90
+hr_suspect_ranges,420-499 s FC verrouillée sur la cadence; 840-919 s FC verrouillée sur la cadence; 1260-1339 s FC verrouillée sur la cadence; 1680-1759 s FC verrouillée sur la cadence; 2100-2179 s FC verrouillée sur la cadence; 2520-2599 s FC verrouillée sur la cadence; 2940-2999 s FC verrouillée sur la cadence
 hr_cadence_lock_pct,18.0
 drift_applicable,yes
 drift_pct,1.4

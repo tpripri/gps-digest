@@ -53,6 +53,16 @@ const fr = {
   "sensor.label.optical": "capteur poignet",
   "sensor.label.unknown": "indéterminée",
   "sensor.lockRange": "FC verrouillée sur la cadence",
+  "sensor.device.name":
+    "Matériel déclaré dans le fichier",
+  "sensor.device.note":
+    "Source lue dans les messages device_info du FIT.",
+  "sensor.startDrop.name":
+    "Départ aberrant",
+  "sensor.startDrop.note":
+    "La FC chute de {bpm} bpm vers {min} min sans changement d'allure : le capteur s'est recalé (poignet froid, ceinture sèche). Le début de séance est écarté des calculs cardiaques.",
+  "sensor.startDrop.reason":
+    "FC aberrante au départ (chute de {bpm} bpm sans changement d'allure)",
   "sensor.swim.name": "Détection non applicable",
   "sensor.swim.note":
     "En natation, la FC est bufferisée puis déversée à la sortie de l'eau : la forme du signal ne dit rien du capteur. Déposer le fichier FIT permet en revanche de lire directement le matériel appairé.",
@@ -263,8 +273,8 @@ const fr = {
     "{n} séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données ({list}).",
   "batch.warnLoadOnly":
     "{n} séance(s) hors endurance comptée(s) dans le volume mais exclue(s) des analyses d'allure, de dérive et de projection.",
-  "batch.warnSensorChange":
-    "Changement de capteur de FC détecté autour du {date} ({from} → {to}). Les comparaisons cardiaques de part et d'autre de cette date ne sont pas valides : zones, dérives et tendances de FC doivent être analysées séparément sur chaque période.",
+  "batch.warnHrSources":
+    "Source de FC variable d'une séance à l'autre : {strap} avec ceinture, {optical} au poignet, {unknown} indéterminée(s). Les FC ne se comparent qu'entre séances de même source (colonne hr_source du tableau des séances) : zones, dérives et tendances se lisent source par source.",
   "batch.warnCadenceLock":
     "{n} fichier(s) présentent un verrouillage de la FC sur la cadence : les valeurs cardiaques y sont partiellement fausses et les dérives correspondantes ne sont pas exploitables.",
   "batch.warnDriftPartial":
@@ -402,6 +412,8 @@ const fr = {
   "fit.hrEvidence":
     "Capteur cardiaque externe appairé en {source}{product} : information lue dans le fichier, pas estimée.",
   "fit.hrEvidenceProduct": " (produit {id})",
+  "fit.hrEvidenceWrist":
+    "La montre ne liste que son capteur optique au poignet, aucun capteur cardiaque externe connecté : information lue dans le fichier, pas estimée.",
   "fit.sourceN": "source {n}",
   "fit.errHeader": "Fichier FIT invalide : en-tête inattendu.",
   "fit.errSignature": "Fichier FIT invalide : signature absente.",
@@ -448,6 +460,16 @@ const en: Catalog = {
   "sensor.label.optical": "wrist sensor",
   "sensor.label.unknown": "undetermined",
   "sensor.lockRange": "HR locked onto cadence",
+  "sensor.device.name":
+    "Hardware declared in the file",
+  "sensor.device.note":
+    "Source read from the FIT device_info messages.",
+  "sensor.startDrop.name":
+    "Aberrant start",
+  "sensor.startDrop.note":
+    "Heart rate drops by {bpm} bpm around {min} min with no change in pace: the sensor resettled (cold wrist, dry strap). The start of the session is left out of heart rate calculations.",
+  "sensor.startDrop.reason":
+    "aberrant heart rate at the start ({bpm} bpm drop with no change in pace)",
   "sensor.swim.name": "Detection not applicable",
   "sensor.swim.note":
     "When swimming, HR is buffered and released when you leave the water: the shape of the signal says nothing about the sensor. Uploading the FIT file instead lets the tool read the paired hardware directly.",
@@ -648,8 +670,8 @@ const en: Catalog = {
     "{n} session(s) reclassified: the sport declared in the file did not match the shape of the data ({list}).",
   "batch.warnLoadOnly":
     "{n} non-endurance session(s) counted in volume but excluded from pace, drift and projection analysis.",
-  "batch.warnSensorChange":
-    "HR sensor change detected around {date} ({from} → {to}). Heart rate comparisons across this date are not valid: zones, drift and HR trends must be analyzed separately for each period.",
+  "batch.warnHrSources":
+    "Heart rate source varies from session to session: {strap} with a chest strap, {optical} at the wrist, {unknown} undetermined. Heart rates only compare between sessions with the same source (hr_source column of the sessions table): read zones, drift and trends source by source.",
   "batch.warnCadenceLock":
     "{n} file(s) show HR locked onto cadence: heart rate values there are partly wrong and the related drift figures cannot be used.",
   "batch.warnDriftPartial":
@@ -780,6 +802,8 @@ const en: Catalog = {
   "fit.hrEvidence":
     "External heart rate sensor paired over {source}{product}: read from the file, not estimated.",
   "fit.hrEvidenceProduct": " (product {id})",
+  "fit.hrEvidenceWrist":
+    "The watch lists only its wrist optical sensor, no external heart rate sensor connected: read from the file, not estimated.",
   "fit.sourceN": "source {n}",
   "fit.errHeader": "Invalid FIT file: unexpected header.",
   "fit.errSignature": "Invalid FIT file: signature missing.",

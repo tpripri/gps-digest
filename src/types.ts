@@ -237,7 +237,7 @@ export interface DigestOptions {
   detectIntervals?: boolean;
   locale?: string;
   /** Vérité terrain du capteur de FC, quand le fichier la fournit (FIT). */
-  hrSensorHint?: { hrSensor?: "chest_strap" | "optical" | "unknown" };
+  hrSensorHint?: { hrSensor?: "chest_strap" | "optical" | "unknown"; evidence?: string };
   /** Données propres au FIT : longueurs de bassin, longueur du bassin. */
   fitExtras?: {
     poolLengthM?: number;
@@ -251,6 +251,9 @@ export interface DigestOptions {
     sessionHrMax?: number;
     /** Fin déclarée par la session moins dernier point enregistré, en s. */
     recordsEndGapS?: number;
+    /** Capteur cardiaque lu dans les messages device_info. */
+    hrSensor?: "chest_strap" | "optical" | "unknown";
+    hrSensorEvidence?: string;
   };
   /** Échauffement à écarter du calcul de dérive, en secondes. */
   driftWarmupS?: number;

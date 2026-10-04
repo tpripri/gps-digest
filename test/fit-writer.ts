@@ -178,3 +178,22 @@ export function writeWorkoutStep(
   if (opts.intensity != null) fields.push({ num: 7, type: FIT.enum, value: opts.intensity });
   w.message(27, fields, 4);
 }
+
+/**
+ * Message `device_info`. sourceType : 1 ANT+, 3 Bluetooth LE, 5 capteur
+ * interne. deviceType : 120 cardio ANT+, 1 cardio BLE, 10 optique au
+ * poignet quand le capteur est interne.
+ */
+export function writeDeviceInfo(
+  w: ReturnType<typeof fitWriter>,
+  opts: { startIso: string; offsetS?: number; deviceIndex: number; deviceType: number; sourceType: number; product?: number },
+) {
+  const fields: FitFieldValue[] = [
+    { num: 253, type: FIT.uint32, value: fitTime(opts.startIso) + (opts.offsetS ?? 0) },
+    { num: 0, type: FIT.uint8, value: opts.deviceIndex },
+    { num: 1, type: FIT.uint8, value: opts.deviceType },
+    { num: 25, type: FIT.enum, value: opts.sourceType },
+  ];
+  if (opts.product != null) fields.push({ num: 4, type: FIT.uint16, value: opts.product });
+  w.message(23, fields, 5);
+}

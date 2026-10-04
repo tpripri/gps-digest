@@ -294,8 +294,10 @@ check("changement de capteur détecté", batch.sensorChanges.length >= 1,
   batch.sensorChanges[0]
     ? `${batch.sensorChanges[0].date} : ${hrSourceLabel(batch.sensorChanges[0].from)} → ${hrSourceLabel(batch.sensorChanges[0].to)}`
     : "");
+// Revue du 4 octobre : un décompte des sources séance par séance remplace
+// l'ancienne « bascule » unique de capteur.
 check("avertissement de comparabilité émis",
-  batch.warnings.some((w) => w.includes("Changement de capteur")));
+  batch.warnings.some((w) => w.includes("Source de FC variable")));
 check("efforts consolidés avec provenance",
   batch.consolidatedEfforts.every((e) => !!e.sourceFile),
   `${batch.consolidatedEfforts.length} distances`);

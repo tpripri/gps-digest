@@ -117,6 +117,12 @@ function detectHrSensor(devices: FitMessage[], locale?: string): {
       }),
     };
   }
+  // Sans capteur externe, une montre qui liste son capteur optique (capteur
+  // interne de type 10, « whr ») mesure forcément la FC au poignet. De quoi
+  // trancher entre une ceinture mal humidifiée et un poignet froid.
+  if (devices.some((d) => d[25] === 5 && d[1] === 10)) {
+    return { verdict: "optical", evidence: tr("fit.hrEvidenceWrist") };
+  }
   return {};
 }
 

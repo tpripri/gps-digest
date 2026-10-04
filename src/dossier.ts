@@ -36,7 +36,7 @@ import { gradeLabel } from "./adherence.ts";
 import { driftQualityLabel } from "./drift.ts";
 import { resolveLocale, translator, type Locale, type MessageKey, type MessageParams } from "./i18n.ts";
 import type { BatchAnalysis, FileAnalysis } from "./batch.ts";
-import { weeklyLoadRows } from "./batch.ts";
+import { hrSourceBasis, weeklyLoadRows } from "./batch.ts";
 
 export type StreamMode = "time" | "distance" | "adaptive" | "none";
 
@@ -181,7 +181,12 @@ function sessionBlocks(
         ? Math.round(file.adherence[0].hrr60AvgBpm)
         : undefined],
     ["hr_source", hrSourceLabel(file.hrSource.verdict, locale)],
+    ["hr_source_basis", hrSourceBasis(file)],
+    ["hr_source_evidence", file.hrSource.evidence],
     ["hr_source_confidence", file.hrSource.confidence.toFixed(2)],
+    ["hr_suspect_ranges", file.hrSource.suspectRanges.length
+      ? file.hrSource.suspectRanges.map((r) => `${Math.round(r.fromS)}-${Math.round(r.toS)} s ${r.reason}`).join("; ")
+      : undefined],
     ["hr_cadence_lock_pct",
       file.hrSource.cadenceLockPct > 1 ? file.hrSource.cadenceLockPct.toFixed(1) : undefined],
     ["drift_applicable", file.drift.applicable ? "yes" : "no"],
@@ -398,6 +403,7 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
           hr_avg: s.hrAvg != null ? Math.round(s.hrAvg) : undefined,
           hr_max: s.hrMax,
           hr_source: hrSourceLabel(f.hrSource.verdict, locale),
+          hr_source_basis: hrSourceBasis(f),
           drift_pct: f.drift.applicable ? f.drift.decouplingPct!.toFixed(1) : "n/a",
           // Température de la montre, chauffée par le poignet : en mode
           // historique, la colonne coûte plus qu'elle n'apprend.

@@ -33,6 +33,16 @@ export const zh: Partial<Catalog> = {
   "sensor.label.optical": "手腕光学传感器",
   "sensor.label.unknown": "未确定",
   "sensor.lockRange": "心率锁定在步频上",
+  "sensor.device.name":
+    "文件中声明的设备",
+  "sensor.device.note":
+    "来源读取自 FIT 的 device_info 消息。",
+  "sensor.startDrop.name":
+    "开头异常",
+  "sensor.startDrop.note":
+    "心率在约 {min} 分钟时下降 {bpm} bpm，而配速未变：传感器重新校准（手腕冰冷、胸带干燥）。训练开头部分不计入心率计算。",
+  "sensor.startDrop.reason":
+    "开头心率异常（配速未变而下降 {bpm} bpm）",
   "sensor.swim.name": "检测不适用",
   "sensor.swim.note":
     "游泳时，心率数据先被缓存，出水后才导出：信号形态无法说明传感器类型。上传 FIT 文件则可以直接读取已配对的设备。",
@@ -218,8 +228,8 @@ export const zh: Partial<Catalog> = {
     "{n} 次训练已重新分类：文件中声明的运动类型与数据形态不符（{list}）。",
   "batch.warnLoadOnly":
     "{n} 次非耐力训练计入了训练量，但不参与配速、漂移和成绩预测分析。",
-  "batch.warnSensorChange":
-    "在 {date} 前后检测到心率传感器更换（{from} → {to}）。该日期前后的心率比较无效：心率区间、漂移和心率趋势必须按各时段分别分析。",
+  "batch.warnHrSources":
+    "各次训练的心率来源不同：{strap} 次使用胸带，{optical} 次为腕部，{unknown} 次无法确定。心率只能在同一来源的训练之间比较（训练表中的 hr_source 列）：区间、漂移和趋势需按来源分别解读。",
   "batch.warnCadenceLock":
     "{n} 个文件存在心率锁定步频的现象：其中的心率数值部分错误，相应的漂移结果不可用。",
   "batch.warnDriftPartial":
@@ -343,6 +353,8 @@ export const zh: Partial<Catalog> = {
 
   "fit.hrEvidence": "通过 {source}{product} 配对的外部心率传感器：信息读取自文件，而非估算。",
   "fit.hrEvidenceProduct": "（产品 {id}）",
+  "fit.hrEvidenceWrist":
+    "手表只列出其腕部光学传感器，未连接外部心率传感器：信息读取自文件，而非推测。",
   "fit.sourceN": "来源 {n}",
   "fit.errHeader": "无效的 FIT 文件：文件头异常。",
   "fit.errSignature": "无效的 FIT 文件：缺少签名。",

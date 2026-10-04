@@ -17,7 +17,7 @@ import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
 import { t } from "../src/i18n.ts";
 import type { Activity, DigestOptions, Sample } from "../src/types.ts";
-import { FIT, fitWriter, fitTime, toSemicircles, writeLap, writeProfile, writeRecords, writeSession, writeWorkoutStep, type FitSegment } from "./fit-writer.ts";
+import { FIT, fitWriter, fitTime, toSemicircles, writeLap, writeProfile, writeRecords, writeSession, writeWorkoutStep, writeDeviceInfo, type FitSegment } from "./fit-writer.ts";
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -417,6 +417,47 @@ section("8. Volume hebdomadaire par sport, charge commune");
   check("weekly_load : une colonne par sport, plus de distance tous sports confondus",
     /run_km/.test(header) && /bike_km/.test(header) && /bike_time/.test(header) && /trimp/.test(header) && !/(^|,)dist_km/.test(header) && !/swim_m/.test(header),
     header);
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("9. Source de FC lue dans device_info, séance par séance");
+{
+  // FC qui suit l'allure : rien dans le signal ne trahit le capteur.
+  const session = (day: string, devices: { deviceType: number; sourceType: number; product?: number }[]) => {
+    const w = fitWriter();
+    const startIso = `${day}T07:00:00Z`;
+    devices.forEach((d, i) => writeDeviceInfo(w, { startIso, deviceIndex: i + 1, ...d }));
+    const segs: FitSegment[] = [];
+    for (let i = 0; i < 6; i++) segs.push({ durS: 300, speedMS: 2.8, hr: 135 + i }, { durS: 300, speedMS: 3.1, hr: 145 + i });
+    const parts = writeProfile(w, { startIso, segments: segs });
+    writeSession(w, { startIso, elapsedS: 3600, distM: parts.reduce((a, p) => a + p.distM, 0), sport: 1 });
+    return asFile(`${day}.fit`, analyse(w.bytes()));
+  };
+  const WRIST = { deviceType: 10, sourceType: 5 };
+  const STRAP = { deviceType: 1, sourceType: 3, product: 1234 };
+  const strap1 = session("2026-09-21", [WRIST, STRAP]);
+  const wrist = session("2026-09-22", [WRIST]);
+  const strap2 = session("2026-09-23", [WRIST, STRAP]);
+  const bare = session("2026-09-24", []);
+  check("ceinture Bluetooth listée : ceinture, lue dans le fichier",
+    strap1.hrSource.verdict === "chest_strap" && strap1.hrSource.fromDeviceMetadata, `${strap1.hrSource.verdict}`);
+  check("seul le capteur optique de la montre : poignet, lu dans le fichier",
+    wrist.hrSource.verdict === "optical" && wrist.hrSource.fromDeviceMetadata && wrist.hrSource.confidence === 1,
+    `${wrist.hrSource.verdict}, ${wrist.hrSource.confidence}`);
+  check("sans device_info : déduction sur le signal, jamais présentée comme certaine",
+    !bare.hrSource.fromDeviceMetadata && bare.hrSource.confidence < 1, `${bare.hrSource.verdict}, ${bare.hrSource.confidence}`);
+
+  const batch = analyzeBatch([strap1, wrist, strap2, bare], { locale: "fr" });
+  check("plus de « changement de capteur autour du … » quand les sources alternent",
+    !batch.warnings.some((x) => /autour du/.test(x)), batch.warnings.find((x) => /autour du/.test(x)) ?? "");
+  const mixed = batch.warnings.find((x) => /ceinture/.test(x) && /poignet/.test(x));
+  check("avertissement : décompte des sources, séance par séance", !!mixed && /2 avec ceinture/.test(mixed) && /2 au poignet/.test(mixed), mixed ?? "absent");
+  const dossier = buildDossier(batch, { streamMode: "none" });
+  const lines = dossier.split("\n");
+  const header = lines[lines.findIndex((l) => /^## sessions$/.test(l)) + 1] ?? "";
+  check("tableau des séances : source de FC et son origine (fichier ou signal)", /hr_source_basis/.test(header), header);
+  check("origine « fichier » pour les FIT avec device_info, « signal » sinon",
+    lines.some((l) => /2026-09-22/.test(l) && /,device,/.test(l)) && lines.some((l) => /2026-09-24/.test(l) && /,signal,/.test(l)));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

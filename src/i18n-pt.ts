@@ -29,6 +29,16 @@ export const pt: Partial<Catalog> = {
   "sensor.label.optical": "sensor de pulso",
   "sensor.label.unknown": "indeterminada",
   "sensor.lockRange": "FC travada na cadência",
+  "sensor.device.name":
+    "Hardware declarado no arquivo",
+  "sensor.device.note":
+    "Fonte lida nas mensagens device_info do FIT.",
+  "sensor.startDrop.name":
+    "Início anômalo",
+  "sensor.startDrop.note":
+    "A FC cai {bpm} bpm por volta de {min} min sem mudança de ritmo: o sensor se reajustou (pulso frio, cinta seca). O início do treino fica fora dos cálculos cardíacos.",
+  "sensor.startDrop.reason":
+    "FC anômala no início (queda de {bpm} bpm sem mudança de ritmo)",
   "sensor.swim.name": "Detecção não aplicável",
   "sensor.swim.note":
     "Na natação, a FC é armazenada e descarregada ao sair da água: a forma do sinal não diz nada sobre o sensor. Enviar o arquivo FIT permite, por outro lado, ler diretamente o equipamento pareado.",
@@ -230,8 +240,8 @@ export const pt: Partial<Catalog> = {
     "{n} sessão(ões) reclassificada(s): o esporte declarado no arquivo não correspondia à forma dos dados ({list}).",
   "batch.warnLoadOnly":
     "{n} sessão(ões) fora de resistência contada(s) no volume, mas excluída(s) das análises de ritmo, deriva e projeção.",
-  "batch.warnSensorChange":
-    "Mudança de sensor de FC detectada por volta de {date} ({from} → {to}). As comparações cardíacas antes e depois dessa data não são válidas: zonas, derivas e tendências de FC devem ser analisadas separadamente em cada período.",
+  "batch.warnHrSources":
+    "A fonte de FC varia de um treino para outro: {strap} com cinta, {optical} no pulso, {unknown} indeterminada(s). As FC só se comparam entre treinos da mesma fonte (coluna hr_source da tabela de treinos): zonas, derivas e tendências se leem fonte por fonte.",
   "batch.warnCadenceLock":
     "{n} arquivo(s) apresentam FC travada na cadência: os valores cardíacos estão parcialmente errados e as derivas correspondentes não são utilizáveis.",
   "batch.warnDriftPartial":
@@ -364,6 +374,8 @@ export const pt: Partial<Catalog> = {
   "fit.hrEvidence":
     "Sensor cardíaco externo pareado via {source}{product}: informação lida no arquivo, não estimada.",
   "fit.hrEvidenceProduct": " (produto {id})",
+  "fit.hrEvidenceWrist":
+    "O relógio só lista o sensor óptico de pulso, nenhum sensor cardíaco externo conectado: informação lida do arquivo, não estimada.",
   "fit.sourceN": "fonte {n}",
   "fit.errHeader": "Arquivo FIT inválido: cabeçalho inesperado.",
   "fit.errSignature": "Arquivo FIT inválido: assinatura ausente.",

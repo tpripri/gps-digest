@@ -401,15 +401,17 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     warnings.push(tr("batch.warnLoadOnly", { n: loadOnly.length }));
   }
 
-  if (sensorChanges.length) {
-    const c = sensorChanges[sensorChanges.length - 1];
-    warnings.push(
-      tr("batch.warnSensorChange", {
-        date: c.date,
-        from: hrSourceLabel(c.from, locale),
-        to: hrSourceLabel(c.to, locale),
-      }),
-    );
+  // Source de FC séance par séance. Une « bascule » unique ne décrit pas un
+  // athlète qui alterne ceinture en séance et poignet en footing : on donne
+  // le décompte, le tableau des séances donne la source de chacune.
+  const withHr = sorted.filter((f) => f.digest.session.hrAvg != null && !f.part?.transition);
+  const bySource = (v: string) => withHr.filter((f) => f.hrSource.verdict === v).length;
+  if (bySource("chest_strap") && bySource("optical")) {
+    warnings.push(tr("batch.warnHrSources", {
+      strap: bySource("chest_strap"),
+      optical: bySource("optical"),
+      unknown: bySource("unknown"),
+    }));
   }
 
   const opticalFiles = sorted.filter((f) => f.hrSource.verdict === "optical");
@@ -513,6 +515,7 @@ export function buildBatchBundle(
           hr_avg: s.hrAvg == null ? undefined : Math.round(s.hrAvg),
           hr_max: s.hrMax,
           hr_source: hrSourceLabel(f.hrSource.verdict, locale),
+          hr_source_basis: hrSourceBasis(f),
           hr_confidence: f.hrSource.confidence.toFixed(2),
           drift_pct: f.drift.decouplingPct == null ? "n/a" : f.drift.decouplingPct.toFixed(1),
           drift_valid: f.drift.applicable ? 1 : 0,
@@ -641,4 +644,14 @@ export function weeklyLoadRows(weeks: WeekBucket[]): Record<string, string | num
     row.hard_pct = pct(w.hardS);
     return row;
   });
+}
+
+/**
+ * D'où vient la source de FC : « device » quand le FIT déclare le capteur
+ * (certain), « signal » quand elle est déduite de la trace (indice). TCX et
+ * GPX n'ont jamais de device_info.
+ */
+export function hrSourceBasis(f: FileAnalysis): "device" | "signal" | undefined {
+  if (f.digest.session.hrAvg == null) return undefined;
+  return f.hrSource.fromDeviceMetadata ? "device" : "signal";
 }
