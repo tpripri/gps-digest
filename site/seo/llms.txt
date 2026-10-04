@@ -68,7 +68,7 @@ How to get workout files out of each platform before giving them to an AI. The t
 
 ## Privacy
 
-- [Privacy](https://exemple.com/en/confidentialite): files are read and analyzed in the browser and never sent to a server. The only outgoing request is the optional weather lookup, which sends the route midpoint rounded to two decimals (about 1.1 km) and the date to Open-Meteo, never the start point. Start and finish of the track are trimmed by 250 m by default before any export.
+- [Privacy](https://exemple.com/en/confidentialite): files are read and analyzed in the browser and never sent to a server. The only outgoing request is the optional weather lookup, which sends the route midpoint rounded to two decimals (about 1.1 km) and the date to Open-Meteo, never the start point. GPS coordinates are removed from the exported file by default. If the user keeps them, an optional privacy zone erases positions near the start and finish without cutting the session: distances, durations and all calculations always cover the full recording.
 
 ## Optional
 

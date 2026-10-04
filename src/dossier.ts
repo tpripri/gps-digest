@@ -200,6 +200,8 @@ function sessionBlocks(
         ? file.drift.window.speedCvPct.toFixed(1)
         : undefined],
     ["raw_sample_count", s.sampleCountRaw],
+    ["privacy_mask_radius_m", opts.dropCoordinates ? undefined : s.privacyMaskRadiusM],
+    ["records_end_gap_s", s.recordsEndGapS],
   ];
   push(
     "summary",
@@ -340,6 +342,10 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     })}`,
   );
   if (opts.maxHr) out.push(`# ${tr("common.refMaxHr", { hr: opts.maxHr })}`);
+  // Des positions ont été effacées : l'IA doit savoir que les totaux, eux,
+  // portent sur la séance complète, et ne pas les recalculer depuis la trace.
+  const masked = Math.max(0, ...batch.files.map((f) => f.digest.session.privacyMaskRadiusM ?? 0));
+  if (masked > 0 && !opts.dropCoordinates) out.push(`# ${tr("dossier.privacyMasked", { m: masked })}`);
   if (recentFrom != null && detail) {
     out.push(`# ${tr("dossier.contextNote", {
       total: batch.files.length,

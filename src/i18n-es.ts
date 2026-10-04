@@ -210,6 +210,8 @@ export const es: Partial<Catalog> = {
   "batch.duplicateOf": "{file} (idéntico a {first})",
   "batch.warnDuplicates":
     "{n} duplicado(s) descartado(s) (misma hora de inicio y misma distancia): {list}.",
+  "batch.warnRecordsGap":
+    "{n} archivo(s) cuyos puntos se detienen antes del final declarado de la sesión ({list}): falta el final de la grabación. Los totales vienen del resumen del reloj, pero las tablas y la FC del final pueden estar incompletas.",
   "batch.warnReclassified":
     "{n} sesión(es) reclasificada(s): el deporte declarado en el archivo no correspondía a la forma de los datos ({list}).",
   "batch.warnLoadOnly":
@@ -291,6 +293,8 @@ export const es: Partial<Catalog> = {
   "dossier.volume": "volumen: {km} km, {dur} en movimiento",
   "dossier.contextNote":
     "Historial: {total} sesiones. Detalle completo de los últimos {days} días ({n} sesión(es)); las más antiguas solo aparecen en la tabla «sessions», una línea cada una.",
+  "dossier.privacyMasked":
+    "Posiciones GPS borradas en un radio de {m} m alrededor de la salida y la llegada. Distancias, duraciones y cálculos cubren la sesión completa: solo faltan las coordenadas.",
   "dossier.warningsHeader": "⚠ ADVERTENCIAS — leer antes de sacar conclusiones",
   "dossier.unknownDate": "fecha desconocida",
   "dossier.sessionHeader": "═══ SESIÓN {n} — {date} — {sport} — {label} ═══",

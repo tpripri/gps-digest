@@ -42,7 +42,7 @@ export const pt: Partial<PageCatalog> = {
     "Um TCX de uma hora gravado a 1 Hz pesa cerca de 1,7 MB, quase 90% de tags XML, ou seja, uns 533 mil tokens. Mesmo quando esse volume cabe na janela de contexto, o modelo raciocina mal: pede-se a ele uma análise de treino a partir de milhares de linhas de coordenadas brutas.",
   "home.ld.faq2.q": "Meus arquivos GPS são enviados para um servidor?",
   "home.ld.faq2.a":
-    "Não. Todo o cálculo é feito no seu navegador. Nenhum arquivo passa por um servidor, o que você pode verificar na aba Rede. Um percurso GPS revela o endereço da sua casa com precisão de metros: a ferramenta recorta a largada e a chegada por padrão.",
+    "Não. Todo o cálculo é feito no seu navegador. Nenhum arquivo passa por um servidor, e você pode conferir isso na aba Rede. Um percurso GPS revela o endereço da sua casa com precisão de metros: as coordenadas são removidas do dossiê por padrão.",
   "home.ld.faq3.q": "Como saber se um treino foi gravado com cinta peitoral ou com o sensor de pulso?",
   "home.ld.faq3.a":
     "O arquivo quase nunca informa. A ferramenta deduz isso pela assinatura do sinal, cujo marcador mais característico é o travamento na cadência: o sensor óptico confunde o ritmo das passadas com os batimentos e mostra, por exemplo, 172 bpm em vez de 140. Uma cinta peitoral mede um sinal elétrico e não pode cometer esse erro.",
@@ -59,7 +59,7 @@ export const pt: Partial<PageCatalog> = {
   "home.lede":
     "Os arquivos do seu relógio são grandes demais para o ChatGPT, o Gemini ou o Claude. Esta ferramenta os transforma em um dossiê de treino estruturado (ritmos, voltas, zonas, repetições, deriva cardíaca) que a IA consegue analisar de verdade.",
   "home.promise":
-    "<strong>Seus arquivos não saem do seu navegador.</strong> Todo o cálculo é feito no seu aparelho, e você pode conferir isso na aba Rede. Um percurso GPS revela seu endereço com precisão de metros, por isso a largada e a chegada são recortadas por padrão. <a href=\"{{href:confidentialite.html}}\">O que sai, e o que nunca sai</a>.",
+    "<strong>Seus arquivos não saem do seu navegador.</strong> Todo o cálculo é feito no seu aparelho, e você pode conferir isso na aba Rede. Um percurso GPS revela seu endereço com precisão de metros, por isso as coordenadas são removidas do dossiê por padrão. <a href=\"{{href:confidentialite.html}}\">O que sai, e o que nunca sai</a>.",
   "home.step1.title": "Baixe o arquivo da sua conta Strava",
   "home.step1.text": "Em <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, na seção “Download your account”. O Strava envia um ZIP por e-mail, em geral em poucas horas. Com pressa ou sem Strava? Exporte alguns treinos: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "home.step1.badge":
@@ -112,8 +112,8 @@ export const pt: Partial<PageCatalog> = {
   "home.set.refTimeHint": "h:mm:ss",
   "home.set.refDate": "Data da prova",
   "home.set.refDateHint": "Pondera a antiguidade",
-  "home.set.privacy": "Recorte de privacidade",
-  "home.set.privacyHint": "Metros na largada e na chegada",
+  "home.set.privacy": "Zona de privacidade",
+  "home.set.privacyHint": "Raio em metros onde as posições são apagadas, se você mantiver as coordenadas. Nunca corta o treino.",
   "home.set.weather": "Temperatura do ar",
   "home.set.weatherOn": "Buscar o clima real",
   "home.set.weatherOff": "Não enviar nada",
@@ -192,7 +192,7 @@ export const pt: Partial<PageCatalog> = {
     "Um TCX de uma hora a 1 Hz pesa cerca de 1,7 MB, quase 90% de tags XML, ou seja, uns 533 mil tokens. Mesmo quando esse volume cabe na janela de contexto, o modelo raciocina mal sobre milhares de linhas de coordenadas brutas.",
   "home.faq.q2": "Meus arquivos são enviados para um servidor?",
   "home.faq.a2":
-    "Não. Todo o cálculo é feito no seu navegador, e você pode conferir isso na aba Rede. Um percurso GPS contém o endereço da sua casa com precisão de metros nos primeiros e últimos pontos: a ferramenta os recorta por padrão.",
+    "Não. Todo o cálculo é feito no seu navegador, e você pode conferir isso na aba Rede. Um percurso GPS revela o endereço da sua casa com precisão de metros: as coordenadas são removidas do dossiê por padrão, e uma zona de privacidade apaga as da largada e da chegada se você decidir mantê-las.",
   "home.faq.q3": "Como a ferramenta adivinha se eu usava cinta peitoral?",
   "home.faq.a3":
     "O marcador mais característico é o travamento na cadência: um sensor óptico confunde o ritmo das passadas com os batimentos e mostra, por exemplo, 172 bpm em vez de 140. Uma cinta peitoral mede um sinal elétrico e não pode cometer esse erro. Somam-se a isso a duração dos platôs de valores idênticos, a granularidade batimento a batimento e a latência de resposta às mudanças de ritmo. É uma heurística: sua confiança tem um teto, e é exibida.",
@@ -303,9 +303,9 @@ export const pt: Partial<PageCatalog> = {
   "privacy.ld.q2": "O que é transmitido a terceiros?",
   "privacy.ld.a2":
     "Apenas a requisição de clima, quando ativada: o ponto médio do percurso arredondado a duas casas decimais (cerca de 1,1 km de resolução) e a data do treino, enviados ao Open-Meteo. Nunca o ponto de largada, que geralmente corresponde à residência, e nunca dados fisiológicos ou identificadores.",
-  "privacy.ld.q3": "Por que a ferramenta recorta o início e o fim do percurso?",
+  "privacy.ld.q3": "Como a ferramenta protege o endereço da sua casa?",
   "privacy.ld.a3":
-    "Porque os primeiros e últimos pontos de um percurso GPS revelam o endereço da residência com precisão de metros. Esse recorte vem ativado por padrão em 250 metros e é aplicado antes de qualquer exportação, inclusive a destinada a uma inteligência artificial.",
+    "Os primeiros e últimos pontos de um percurso GPS revelam o endereço da sua casa com precisão de metros. Por padrão, o dossiê não contém nenhuma coordenada. Se você decidir mantê-las, uma zona de privacidade ajustável apaga as posições próximas da largada e da chegada sem cortar o treino: distâncias, durações e cálculos continuam completos.",
   "privacy.back": "← Voltar para a ferramenta",
   "privacy.h1": "Privacidade",
   "privacy.lede":
@@ -346,9 +346,9 @@ export const pt: Partial<PageCatalog> = {
     "Nem frequência cardíaca, nem ritmo, nem percurso, nem identificador, nem cookie. Uma latitude arredondada, uma longitude arredondada, uma data. A requisição completa é assim:",
   "privacy.weather.recipient":
     "O destinatário é o <a href=\"https://open-meteo.com\" rel=\"nofollow noopener\">Open-Meteo</a>, um serviço de clima aberto. A função pode ser desativada por um menu na página inicial, e a ferramenta continua funcionando sem ela.",
-  "privacy.trim.title": "O recorte da sua casa",
+  "privacy.trim.title": "A zona de privacidade",
   "privacy.trim.text":
-    "Os primeiros e últimos pontos de um percurso revelam a porta da sua casa. A ferramenta remove <strong>250 metros por padrão</strong>, tanto na largada quanto na chegada, antes de qualquer análise e de qualquer exportação. A configuração pode ser alterada, e uma opção remove completamente as coordenadas, mantendo altimetria, ritmos e frequência cardíaca.",
+    "Os primeiros e últimos pontos de um percurso revelam a porta da sua casa. Por padrão, <strong>o dossiê não contém nenhuma coordenada</strong>: altimetria, pace e frequência cardíaca bastam para a análise. Se você decidir manter as coordenadas, ajuste uma zona de privacidade: as posições dentro desse raio em volta da largada e da chegada são apagadas, inclusive quando o percurso volta a passar perto da sua casa. O treino nunca é cortado: distâncias, durações e cálculos cobrem a gravação completa, e o dossiê avisa a IA.",
   "privacy.note.title": "O que não controlamos",
   "privacy.note.text":
     "O dossiê que você copia para o ChatGPT, o Gemini ou o Claude sai do seu navegador no momento em que você cola, e passa a seguir os termos desse serviço, não os nossos. Se o dossiê ainda tiver coordenadas, elas vão junto. É exatamente por isso que a opção “remover as coordenadas” vem ativada por padrão na exportação.",

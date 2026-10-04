@@ -154,6 +154,17 @@ export interface SessionSummary {
   reclassified?: boolean;
   declaredSport?: Sport;
   classificationReasons?: string[];
+  /**
+   * Rayon de la zone de confidentialité, quand des positions ont été
+   * effacées. Les totaux portent toujours sur la séance complète.
+   */
+  privacyMaskRadiusM?: number;
+  /**
+   * Secondes entre le dernier point enregistré et la fin déclarée par le
+   * message `session` du FIT, quand l'écart dépasse 30 s : la fin de
+   * l'enregistrement manque.
+   */
+  recordsEndGapS?: number;
 }
 
 export interface AthleteProfile {
@@ -186,6 +197,11 @@ export interface DigestOptions {
     lengths?: import("./swim.ts").RawLength[];
     totalAscentM?: number;
     totalDescentM?: number;
+    /** Totaux du message `session` du FIT : ils font foi quand ils existent. */
+    totalDistanceM?: number;
+    totalElapsedS?: number;
+    /** Fin déclarée par la session moins dernier point enregistré, en s. */
+    recordsEndGapS?: number;
   };
   /** Échauffement à écarter du calcul de dérive, en secondes. */
   driftWarmupS?: number;

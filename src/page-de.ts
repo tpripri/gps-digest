@@ -42,7 +42,7 @@ export const de: Partial<PageCatalog> = {
     "Eine einstündige TCX-Datei mit 1 Hz ist etwa 1,7 MB groß, davon fast 90 % XML-Tags, also rund 533.000 Tokens. Selbst wenn dieses Volumen ins Kontextfenster passt, argumentiert das Modell schlecht: Es soll eine Trainingsanalyse aus Tausenden Zeilen roher Koordinaten liefern.",
   "home.ld.faq2.q": "Werden meine GPS-Dateien an einen Server geschickt?",
   "home.ld.faq2.a":
-    "Nein. Die gesamte Berechnung läuft in deinem Browser. Keine Datei geht über einen Server, was du im Netzwerk-Tab prüfen kannst. Ein GPS-Track verrät deine Wohnadresse auf den Meter genau: Das Tool kürzt Start und Ziel standardmäßig.",
+    "Nein. Die gesamte Berechnung läuft in deinem Browser. Keine Datei geht über einen Server, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Wohnadresse auf den Meter genau: Die Koordinaten werden standardmäßig aus dem Dossier entfernt.",
   "home.ld.faq3.q": "Woran erkennt man, ob eine Einheit mit Brustgurt oder Handgelenksensor aufgezeichnet wurde?",
   "home.ld.faq3.a":
     "Die Datei sagt es fast nie. Das Tool leitet es aus der Signatur des Signals ab. Das deutlichste Merkmal ist das Einrasten auf die Kadenz: Der optische Sensor verwechselt die Schrittfrequenz mit dem Puls und zeigt zum Beispiel 172 bpm statt 140. Ein Brustgurt misst ein elektrisches Signal und kann diesen Fehler nicht machen.",
@@ -59,7 +59,7 @@ export const de: Partial<PageCatalog> = {
   "home.lede":
     "Die Dateien deiner Uhr sind zu groß für ChatGPT, Gemini oder Claude. Dieses Tool macht daraus ein strukturiertes Trainingsdossier (Pace, Runden, Zonen, Wiederholungen, kardiale Drift), das die KI wirklich analysieren kann.",
   "home.promise":
-    "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden Start und Ziel standardmäßig gekürzt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
+    "<strong>Deine Dateien verlassen deinen Browser nicht.</strong> Die gesamte Berechnung läuft auf deinem Gerät, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Adresse auf den Meter genau, deshalb werden die Koordinaten standardmäßig aus dem Dossier entfernt. <a href=\"{{href:confidentialite.html}}\">Was hinausgeht und was nie hinausgeht</a>.",
   "home.step1.title": "Lade dein Strava-Archiv herunter",
   "home.step1.text": "Auf <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> unter „Download your account“. Strava schickt dir ein ZIP per E-Mail, meist innerhalb weniger Stunden. Eilig oder nicht bei Strava? Exportiere einzelne Einheiten: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "home.step1.badge":
@@ -112,8 +112,8 @@ export const de: Partial<PageCatalog> = {
   "home.set.refTimeHint": "h:mm:ss",
   "home.set.refDate": "Datum der Zeit",
   "home.set.refDateHint": "Gewichtet das Alter",
-  "home.set.privacy": "Datenschutz-Kürzung",
-  "home.set.privacyHint": "Meter an Start und Ziel",
+  "home.set.privacy": "Privatsphäre-Zone",
+  "home.set.privacyHint": "Radius in Metern, in dem Positionen gelöscht werden, wenn du die Koordinaten behältst. Kürzt die Einheit nie.",
   "home.set.weather": "Lufttemperatur",
   "home.set.weatherOn": "Echtes Wetter abrufen",
   "home.set.weatherOff": "Nichts senden",
@@ -192,7 +192,7 @@ export const de: Partial<PageCatalog> = {
     "Eine einstündige TCX-Datei mit 1 Hz ist etwa 1,7 MB groß, davon fast 90 % XML-Tags, also rund 533.000 Tokens. Selbst wenn dieses Volumen ins Kontextfenster passt, argumentiert das Modell schlecht über Tausende Zeilen roher Koordinaten.",
   "home.faq.q2": "Werden meine Dateien an einen Server geschickt?",
   "home.faq.a2":
-    "Nein. Die gesamte Berechnung läuft in deinem Browser, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track enthält in seinen ersten und letzten Punkten deine Wohnadresse auf den Meter genau: Das Tool kürzt sie standardmäßig.",
+    "Nein. Die gesamte Berechnung läuft in deinem Browser, und du kannst das im Netzwerk-Tab prüfen. Ein GPS-Track verrät deine Wohnadresse auf den Meter genau: Die Koordinaten werden standardmäßig aus dem Dossier entfernt, und eine Privatsphäre-Zone löscht die an Start und Ziel, wenn du sie behalten willst.",
   "home.faq.q3": "Wie errät das Tool, ob ich einen Brustgurt getragen habe?",
   "home.faq.a3":
     "Das deutlichste Merkmal ist das Einrasten auf die Kadenz: Ein optischer Sensor verwechselt die Schrittfrequenz mit dem Puls und zeigt zum Beispiel 172 bpm statt 140. Ein Brustgurt misst ein elektrisches Signal und kann diesen Fehler nicht machen. Hinzu kommen die Länge von Plateaus identischer Werte, die Schlag-zu-Schlag-Auflösung und die Reaktionszeit auf Tempowechsel. Es ist eine Heuristik: Ihre Konfidenz ist gedeckelt und wird angezeigt.",
@@ -303,9 +303,9 @@ export const de: Partial<PageCatalog> = {
   "privacy.ld.q2": "Was wird an Dritte übertragen?",
   "privacy.ld.a2":
     "Nur die Wetteranfrage, wenn sie aktiviert ist: der Mittelpunkt der Strecke auf zwei Dezimalstellen gerundet (etwa 1,1 km Auflösung) und das Datum der Einheit, gesendet an Open-Meteo. Nie der Startpunkt, der meist der Wohnadresse entspricht, und nie physiologische Daten oder Kennungen.",
-  "privacy.ld.q3": "Warum kürzt das Tool Anfang und Ende des Tracks?",
+  "privacy.ld.q3": "Wie schützt das Tool deine Wohnadresse?",
   "privacy.ld.a3":
-    "Weil die ersten und letzten Punkte eines GPS-Tracks die Wohnadresse auf den Meter genau verraten. Diese Kürzung ist standardmäßig auf 250 Meter aktiv und gilt vor jedem Export, auch vor dem für eine künstliche Intelligenz.",
+    "Die ersten und letzten Punkte eines GPS-Tracks verraten deine Wohnadresse auf den Meter genau. Standardmäßig enthält das Dossier keine einzige Koordinate. Wenn du sie behalten willst, löscht eine einstellbare Privatsphäre-Zone die Positionen nahe Start und Ziel, ohne die Einheit zu kürzen: Distanzen, Dauern und Berechnungen bleiben vollständig.",
   "privacy.back": "← Zurück zum Tool",
   "privacy.h1": "Datenschutz",
   "privacy.lede":
@@ -346,9 +346,9 @@ export const de: Partial<PageCatalog> = {
     "Keine Herzfrequenz, keine Pace, kein Track, keine Kennung, kein Cookie. Ein gerundeter Breitengrad, ein gerundeter Längengrad, ein Datum. Die vollständige Anfrage sieht so aus:",
   "privacy.weather.recipient":
     "Empfänger ist <a href=\"https://open-meteo.com\" rel=\"nofollow noopener\">Open-Meteo</a>, ein offener Wetterdienst. Die Funktion lässt sich über ein Auswahlmenü auf der Startseite abschalten, und das Tool funktioniert auch ohne sie.",
-  "privacy.trim.title": "Die Kürzung um die Wohnung",
+  "privacy.trim.title": "Die Privatsphäre-Zone",
   "privacy.trim.text":
-    "Die ersten und letzten Punkte eines Tracks verraten deine Haustür. Das Tool entfernt <strong>standardmäßig 250 Meter</strong> an Start und Ziel, vor jeder Analyse und vor jedem Export. Die Einstellung lässt sich ändern, und eine Option entfernt die Koordinaten vollständig, während Höhenprofil, Pace und Herzfrequenz erhalten bleiben.",
+    "Die ersten und letzten Punkte eines Tracks verraten deine Haustür. Standardmäßig <strong>enthält das Dossier keine einzige Koordinate</strong>: Höhenprofil, Tempo und Herzfrequenz reichen für die Analyse. Wenn du die Koordinaten behalten willst, stelle eine Privatsphäre-Zone ein: Positionen in diesem Radius um Start und Ziel werden gelöscht, auch wenn der Track später wieder nahe an deiner Wohnung vorbeiführt. Die Einheit wird nie gekürzt: Distanzen, Dauern und Berechnungen beziehen sich auf die vollständige Aufzeichnung, und das Dossier sagt das der KI.",
   "privacy.note.title": "Was wir nicht kontrollieren",
   "privacy.note.text":
     "Das Dossier, das du in ChatGPT, Gemini oder Claude kopierst, verlässt deinen Browser in dem Moment, in dem du es einfügst, und unterliegt dann den Bedingungen dieses Dienstes, nicht unseren. Enthält das Dossier noch Koordinaten, gehen sie mit. Genau deshalb ist die Option „Koordinaten entfernen“ beim Export standardmäßig aktiv.",

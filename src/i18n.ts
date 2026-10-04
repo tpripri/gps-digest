@@ -243,6 +243,8 @@ const fr = {
   "batch.duplicateOf": "{file} (identique à {first})",
   "batch.warnDuplicates":
     "{n} doublon(s) écarté(s) — même horodatage de départ et même distance : {list}.",
+  "batch.warnRecordsGap":
+    "{n} fichier(s) dont les points s'arrêtent avant la fin déclarée de la séance ({list}) : la fin de l'enregistrement manque. Les totaux viennent du résumé de la montre, mais les tableaux et la FC de la fin peuvent être incomplets.",
   "batch.warnReclassified":
     "{n} séance(s) reclassée(s) : le sport déclaré dans le fichier ne correspondait pas à la forme des données ({list}).",
   "batch.warnLoadOnly":
@@ -327,6 +329,8 @@ const fr = {
   "dossier.volume": "volume : {km} km, {dur} en mouvement",
   "dossier.contextNote":
     "Historique : {total} séances. Détail complet pour les {days} derniers jours ({n} séance(s)) ; les plus anciennes ne figurent que dans le tableau « sessions », une ligne chacune.",
+  "dossier.privacyMasked":
+    "Positions GPS effacées dans un rayon de {m} m autour du départ et de l'arrivée. Distances, durées et calculs portent sur la séance complète : seules les coordonnées manquent.",
   "dossier.warningsHeader": "⚠ AVERTISSEMENTS — à lire avant toute conclusion",
   "dossier.unknownDate": "date inconnue",
   "dossier.sessionHeader": "═══ SÉANCE {n} — {date} — {sport} — {label} ═══",
@@ -598,6 +602,8 @@ const en: Catalog = {
   "batch.duplicateOf": "{file} (same as {first})",
   "batch.warnDuplicates":
     "{n} duplicate(s) dropped (same start timestamp and same distance): {list}.",
+  "batch.warnRecordsGap":
+    "{n} file(s) whose points stop before the declared end of the session ({list}): the end of the recording is missing. Totals come from the watch summary, but tables and end-of-session HR may be incomplete.",
   "batch.warnReclassified":
     "{n} session(s) reclassified: the sport declared in the file did not match the shape of the data ({list}).",
   "batch.warnLoadOnly":
@@ -678,6 +684,8 @@ const en: Catalog = {
   "dossier.volume": "volume: {km} km, {dur} moving",
   "dossier.contextNote":
     "History: {total} sessions. Full detail for the last {days} days ({n} session(s)); older ones appear only in the \"sessions\" table, one line each.",
+  "dossier.privacyMasked":
+    "GPS positions erased within {m} m of the start and finish. Distances, durations and calculations cover the full session: only the coordinates are missing.",
   "dossier.warningsHeader": "⚠ WARNINGS — read before drawing any conclusion",
   "dossier.unknownDate": "unknown date",
   "dossier.sessionHeader": "═══ SESSION {n} — {date} — {sport} — {label} ═══",

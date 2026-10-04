@@ -260,6 +260,14 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     warnings.push(tr("batch.warnDuplicates", { n: duplicates.length, list: duplicates.join(", ") }));
   }
 
+  const gaps = sorted.filter((f) => f.digest.session.recordsEndGapS != null);
+  if (gaps.length) {
+    warnings.push(tr("batch.warnRecordsGap", {
+      n: gaps.length,
+      list: gaps.map((f) => `${f.filename} (${f.digest.session.recordsEndGapS} s)`).join(", "),
+    }));
+  }
+
   const reclassified = sorted.filter((f) => f.digest.session.reclassified);
   if (reclassified.length) {
     warnings.push(

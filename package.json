@@ -8,7 +8,8 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts && node --experimental-strip-types test/snapshot.ts && node --experimental-strip-types test/pages.ts && node --experimental-strip-types test/archive.ts",
+    "test": "node --experimental-strip-types test/run.ts && node --experimental-strip-types test/analysis.ts && node --experimental-strip-types test/snapshot.ts && node --experimental-strip-types test/pages.ts && node --experimental-strip-types test/archive.ts && node --experimental-strip-types test/regressions.ts",
+    "test:revue": "node --experimental-strip-types test/revue.ts",
     "typecheck": "npx tsc --noEmit",
     "build": "node --experimental-strip-types scripts/build.mjs",
     "deploy": "npm run typecheck && npm test && npm run build && wrangler deploy && npm run indexnow",

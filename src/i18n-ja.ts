@@ -212,6 +212,8 @@ export const ja: Partial<Catalog> = {
   "batch.week": "{year}-W{week}",
   "batch.duplicateOf": "{file}（{first} と同一）",
   "batch.warnDuplicates": "重複 {n} 件を除外しました（開始時刻と距離が同じ）：{list}。",
+  "batch.warnRecordsGap":
+    "{n} ファイルで、記録ポイントがセッションの終了時刻より前に途切れています（{list}）。記録の終わりが欠けています。合計値はウォッチの集計に基づきますが、表や終盤の心拍数は不完全な可能性があります。",
   "batch.warnReclassified":
     "{n} 件のセッションを再分類しました。ファイルに記録されたスポーツがデータの形と一致しませんでした（{list}）。",
   "batch.warnLoadOnly":
@@ -291,6 +293,8 @@ export const ja: Partial<Catalog> = {
   "dossier.volume": "ボリューム：{km} km、移動時間 {dur}",
   "dossier.contextNote":
     "履歴：全 {total} セッション。直近 {days} 日分（{n} セッション）は詳細あり。それより前は「sessions」表に 1 行ずつ記載。",
+  "dossier.privacyMasked":
+    "スタート地点とゴール地点から半径 {m} m 以内の GPS 位置を消去しました。距離・時間・各種計算はセッション全体が対象で、欠けているのは座標だけです。",
   "dossier.warningsHeader": "⚠ 警告 — 結論を出す前に読むこと",
   "dossier.unknownDate": "日付不明",
   "dossier.sessionHeader": "═══ セッション {n} — {date} — {sport} — {label} ═══",

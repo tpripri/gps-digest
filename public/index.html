@@ -244,7 +244,7 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
       </div>
       <div class="field">
         <label for="privacy">{{home.set.privacy}} <span class="hint">{{home.set.privacyHint}}</span></label>
-        <input type="number" id="privacy" value="250" min="0" max="2000" step="50">
+        <input type="number" id="privacy" value="0" min="0" max="2000" step="50">
       </div>
       <div class="field">
         <label for="weather">{{home.set.weather}}</label>
@@ -580,12 +580,8 @@ async function analyzeBytes(name, data, settings) {
     return digestActivity(activity, {
       ...settings.digest,
       hrSensorHint: extras.hrSensor ? { hrSensor: extras.hrSensor } : undefined,
-      fitExtras: {
-        poolLengthM: extras.poolLengthM,
-        lengths: extras.lengths,
-        totalAscentM: extras.totalAscentM,
-        totalDescentM: extras.totalDescentM,
-      },
+      // Le message `session` du FIT fait foi pour les totaux de la séance.
+      fitExtras: extras,
     });
   }
   return digestFile(name, new TextDecoder().decode(data), settings.digest);

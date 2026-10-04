@@ -42,7 +42,7 @@ export const en: PageCatalog = {
     "A one-hour TCX recorded at 1 Hz weighs about 1.7 MB, nearly 90% of it XML tags, which is roughly 533,000 tokens. Even when that fits in the context window, the model reasons poorly: it is asked for a training analysis from thousands of lines of raw coordinates.",
   "home.ld.faq2.q": "Are my GPS files sent to a server?",
   "home.ld.faq2.a":
-    "No. All computation runs in your browser. No file goes through a server, which you can check in the Network tab. A GPS track reveals your home address to the meter: the tool trims the start and finish by default.",
+    "No. All computation happens in your browser. No file goes through a server, which you can check in the Network tab. A GPS track reveals your home address to the meter: coordinates are removed from the file by default.",
   "home.ld.faq3.q": "How can I tell whether a session was recorded with a chest strap or the wrist sensor?",
   "home.ld.faq3.a":
     "The file almost never says. The tool infers it from the signature of the signal, the most telling marker being cadence lock: the optical sensor mistakes your stride rate for your pulse and shows, for example, 172 bpm instead of 140. A chest strap measures an electrical signal and cannot make that error.",
@@ -59,7 +59,7 @@ export const en: PageCatalog = {
   "home.lede":
     "Your watch files are too big for ChatGPT, Gemini or Claude. This tool turns them into a structured training file (paces, laps, zones, reps, cardiac drift) that the AI can actually analyze.",
   "home.promise":
-    "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so the start and finish are trimmed by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
+    "<strong>Your files never leave your browser.</strong> All computation happens on your device, and you can check it in the Network tab. A GPS track reveals your address to the meter, so coordinates are removed from the file by default. <a href=\"{{href:confidentialite.html}}\">What leaves, and what never does</a>.",
   "home.step1.title": "Download your Strava archive",
   "home.step1.text": "On <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, under \"Download your account\". Strava emails you a ZIP, usually within a few hours. In a hurry, or not on Strava? Export a few workouts: <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "home.step1.badge":
@@ -112,8 +112,8 @@ export const en: PageCatalog = {
   "home.set.refTimeHint": "h:mm:ss",
   "home.set.refDate": "Race date",
   "home.set.refDateHint": "Weights for age",
-  "home.set.privacy": "Privacy trim",
-  "home.set.privacyHint": "Meters removed at start and finish",
+  "home.set.privacy": "Privacy zone",
+  "home.set.privacyHint": "Radius in meters where positions are erased, if you keep coordinates. Never cuts the session.",
   "home.set.weather": "Air temperature",
   "home.set.weatherOn": "Fetch the actual weather",
   "home.set.weatherOff": "Send nothing",
@@ -192,7 +192,7 @@ export const en: PageCatalog = {
     "A one-hour TCX at 1 Hz weighs about 1.7 MB, nearly 90% of it XML tags, which is roughly 533,000 tokens. Even when that fits in the context window, the model reasons poorly over thousands of lines of raw coordinates.",
   "home.faq.q2": "Are my files sent to a server?",
   "home.faq.a2":
-    "No. All computation runs in your browser, and you can check it in the Network tab. A GPS track contains your home address to the meter in its first and last points: the tool trims them by default.",
+    "No. All computation happens in your browser, and you can check it in the Network tab. A GPS track reveals your home address to the meter: coordinates are removed from the file by default, and a privacy zone erases those near the start and finish if you choose to keep them.",
   "home.faq.q3": "How does the tool guess whether I wore a chest strap?",
   "home.faq.a3":
     "The most telling marker is cadence lock: an optical sensor mistakes your stride rate for your pulse and shows, for example, 172 bpm instead of 140. A chest strap measures an electrical signal and cannot make that error. Other clues add up: the length of plateaus of identical values, beat-to-beat granularity and how fast heart rate responds to pace changes. It is a heuristic: its confidence is capped, and shown.",
@@ -303,9 +303,9 @@ export const en: PageCatalog = {
   "privacy.ld.q2": "What is sent to a third party?",
   "privacy.ld.a2":
     "Only the weather request, when enabled: the midpoint of the route rounded to two decimals (about 1.1 km resolution) and the date of the session, sent to Open-Meteo. Never the start point, which usually matches the home address, and never any physiological data or identifier.",
-  "privacy.ld.q3": "Why does the tool trim the start and end of the track?",
+  "privacy.ld.q3": "How does the tool protect your home address?",
   "privacy.ld.a3":
-    "Because the first and last points of a GPS track reveal the home address to the meter. Trimming is on by default over 250 meters and applies before any export, including the one meant for an artificial intelligence.",
+    "The first and last points of a GPS track reveal your home address to the meter. By default, the file contains no coordinates at all. If you choose to keep them, an adjustable privacy zone erases the positions near the start and finish without cutting the session: distances, durations and calculations stay complete.",
   "privacy.back": "← Back to the tool",
   "privacy.h1": "Privacy",
   "privacy.lede":
@@ -346,9 +346,9 @@ export const en: PageCatalog = {
     "No heart rate, no pace, no track, no identifier, no cookie. A rounded latitude, a rounded longitude, a date. The full request looks like this:",
   "privacy.weather.recipient":
     "The recipient is <a href=\"https://open-meteo.com\" rel=\"nofollow noopener\">Open-Meteo</a>, an open weather service. The feature can be turned off from a drop-down menu on the home page, and the tool keeps working without it.",
-  "privacy.trim.title": "Trimming your home",
+  "privacy.trim.title": "The privacy zone",
   "privacy.trim.text":
-    "The first and last points of a track reveal your front door. The tool removes <strong>250 meters by default</strong>, at both start and finish, before any analysis and before any export. The setting can be changed, and an option removes coordinates entirely while keeping the elevation profile, paces and heart rate.",
+    "The first and last points of a track reveal your front door. By default, <strong>the file contains no coordinates at all</strong>: elevation profile, pace and heart rate are enough for the analysis. If you choose to keep coordinates, set a privacy zone: positions within that radius of the start and finish are erased, including when the track passes near your home again. The session is never cut: distances, durations and calculations cover the full recording, and the file says so to the AI.",
   "privacy.note.title": "What we do not control",
   "privacy.note.text":
     "The file you copy into ChatGPT, Gemini or Claude leaves your browser the moment you paste it, and is then subject to that service's terms, not ours. If the file still contains coordinates, they go with it. That is exactly why the \"remove coordinates\" option is on by default at export.",

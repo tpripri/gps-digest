@@ -14,6 +14,40 @@
 import { haversine } from "./geo.ts";
 import type { Activity, Sample } from "./types.ts";
 
+/**
+ * Efface les positions proches du départ et de l'arrivée, sans retirer un
+ * seul point.
+ *
+ * Remplace le rognage (trimPrivacyZone) dans la chaîne d'analyse : couper la
+ * trace amputait distance, durée et FC des dernières minutes, et une boucle
+ * autour du domicile pouvait perdre une bonne part de son volume. Ici, tous
+ * les calculs portent sur la séance entière ; seules disparaissent les
+ * coordonnées qui pourraient trahir une adresse, y compris quand la trace
+ * repasse près du départ en milieu de sortie.
+ */
+export function maskPrivacyZone(samples: Sample[], radiusM: number): { samples: Sample[]; masked: number } {
+  if (radiusM <= 0) return { samples, masked: 0 };
+  const first = samples.find((s) => s.lat != null && s.lon != null);
+  const last = [...samples].reverse().find((s) => s.lat != null && s.lon != null);
+  if (!first || !last) return { samples, masked: 0 };
+  let masked = 0;
+  const out = samples.map((s) => {
+    if (s.lat == null || s.lon == null) return s;
+    const near =
+      haversine(s.lat, s.lon, first.lat!, first.lon!) < radiusM ||
+      haversine(s.lat, s.lon, last.lat!, last.lon!) < radiusM;
+    if (!near) return s;
+    masked++;
+    return { ...s, lat: undefined, lon: undefined };
+  });
+  return { samples: out, masked };
+}
+
+/**
+ * Rognage historique : retire les points de départ et d'arrivée. Conservé
+ * pour l'API publique, mais plus utilisé par l'analyse, qui masque au lieu de
+ * couper (maskPrivacyZone).
+ */
 export function trimPrivacyZone(samples: Sample[], radiusM: number): Sample[] {
   if (radiusM <= 0 || samples.length < 3) return samples;
 

@@ -210,6 +210,8 @@ export const pt: Partial<Catalog> = {
   "batch.duplicateOf": "{file} (idêntico a {first})",
   "batch.warnDuplicates":
     "{n} duplicata(s) descartada(s) (mesmo horário de início e mesma distância): {list}.",
+  "batch.warnRecordsGap":
+    "{n} arquivo(s) cujos pontos param antes do fim declarado do treino ({list}): o fim da gravação está faltando. Os totais vêm do resumo do relógio, mas as tabelas e a FC do final podem estar incompletas.",
   "batch.warnReclassified":
     "{n} sessão(ões) reclassificada(s): o esporte declarado no arquivo não correspondia à forma dos dados ({list}).",
   "batch.warnLoadOnly":
@@ -292,6 +294,8 @@ export const pt: Partial<Catalog> = {
   "dossier.volume": "volume: {km} km, {dur} em movimento",
   "dossier.contextNote":
     "Histórico: {total} treinos. Detalhe completo dos últimos {days} dias ({n} treino(s)); os mais antigos aparecem só na tabela “sessions”, uma linha cada.",
+  "dossier.privacyMasked":
+    "Posições GPS apagadas num raio de {m} m em volta da largada e da chegada. Distâncias, durações e cálculos cobrem o treino completo: só faltam as coordenadas.",
   "dossier.warningsHeader": "⚠ AVISOS — ler antes de qualquer conclusão",
   "dossier.unknownDate": "data desconhecida",
   "dossier.sessionHeader": "═══ SESSÃO {n} — {date} — {sport} — {label} ═══",

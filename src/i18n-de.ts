@@ -212,6 +212,8 @@ export const de: Partial<Catalog> = {
   "batch.duplicateOf": "{file} (identisch mit {first})",
   "batch.warnDuplicates":
     "{n} Duplikat(e) verworfen (gleicher Startzeitpunkt und gleiche Distanz): {list}.",
+  "batch.warnRecordsGap":
+    "{n} Datei(en), deren Punkte vor dem angegebenen Ende der Einheit aufhören ({list}): Das Ende der Aufzeichnung fehlt. Die Summen stammen aus der Zusammenfassung der Uhr, Tabellen und HF am Ende können aber unvollständig sein.",
   "batch.warnReclassified":
     "{n} Einheit(en) umklassifiziert: die in der Datei angegebene Sportart passte nicht zur Form der Daten ({list}).",
   "batch.warnLoadOnly":
@@ -296,6 +298,8 @@ export const de: Partial<Catalog> = {
   "dossier.volume": "Umfang: {km} km, {dur} in Bewegung",
   "dossier.contextNote":
     "Verlauf: {total} Einheiten. Vollständiges Detail für die letzten {days} Tage ({n} Einheit(en)); ältere stehen nur in der Tabelle „sessions“, eine Zeile pro Einheit.",
+  "dossier.privacyMasked":
+    "GPS-Positionen im Umkreis von {m} m um Start und Ziel gelöscht. Distanzen, Dauern und Berechnungen beziehen sich auf die ganze Einheit: Nur die Koordinaten fehlen.",
   "dossier.warningsHeader": "⚠ WARNUNGEN — vor jeder Schlussfolgerung lesen",
   "dossier.unknownDate": "Datum unbekannt",
   "dossier.sessionHeader": "═══ EINHEIT {n} — {date} — {sport} — {label} ═══",

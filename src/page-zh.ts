@@ -43,7 +43,7 @@ export const zh: Partial<PageCatalog> = {
     "一个以 1 Hz 记录的一小时 TCX 文件约 1.7 MB，其中近 90% 是 XML 标签，相当于约 533,000 个 token。即使这个体量能放进上下文窗口，模型的推理效果也很差：它要从成千上万行原始坐标中做训练分析。",
   "home.ld.faq2.q": "我的 GPS 文件会被上传到服务器吗？",
   "home.ld.faq2.a":
-    "不会。所有计算都在你的浏览器中进行。没有任何文件经过服务器，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露住址：工具默认会裁剪起点和终点。",
+    "不会。所有计算都在你的浏览器中完成，没有任何文件经过服务器，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址：档案默认会移除所有坐标。",
   "home.ld.faq3.q": "如何判断一次训练用的是胸带还是手腕传感器？",
   "home.ld.faq3.a":
     "文件几乎从不注明。工具根据信号特征来推断，其中最典型的标志是心率锁定步频：光学传感器把步频误当成心跳，例如显示 172 bpm 而不是 140。胸带测量的是电信号，不会出现这种错误。",
@@ -60,7 +60,7 @@ export const zh: Partial<PageCatalog> = {
   "home.lede":
     "手表文件对 ChatGPT、Gemini 或 Claude 来说太大了。本工具把它们整理成结构化训练档案（配速、圈、区间、重复、心率漂移），让 AI 真正能够分析。",
   "home.promise":
-    "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此起点和终点默认会被裁剪。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
+    "<strong>你的文件不会离开浏览器。</strong>所有计算都在你的设备上完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址，因此档案默认会移除所有坐标。<a href=\"{{href:confidentialite.html}}\">哪些数据会发出，哪些永远不会</a>。",
   "home.step1.title": "下载你的 Strava 存档",
   "home.step1.text": "在 <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a> 的“Download your account”中申请。Strava 会通过电子邮件发送 ZIP 文件，通常几小时内送达。着急或不用 Strava？可以导出几次训练：<a href=\"{{href:guide-garmin.html}}\">佳明</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>。",
   "home.step1.badge":
@@ -112,8 +112,8 @@ export const zh: Partial<PageCatalog> = {
   "home.set.refTimeHint": "h:mm:ss",
   "home.set.refDate": "成绩日期",
   "home.set.refDateHint": "按时间远近加权",
-  "home.set.privacy": "隐私裁剪",
-  "home.set.privacyHint": "起点和终点各裁掉的米数",
+  "home.set.privacy": "隐私区域",
+  "home.set.privacyHint": "保留坐标时，在此半径（米）内的位置会被删除。绝不会截断训练。",
   "home.set.weather": "气温",
   "home.set.weatherOn": "获取实际天气",
   "home.set.weatherOff": "不发送任何数据",
@@ -190,7 +190,7 @@ export const zh: Partial<PageCatalog> = {
     "一个以 1 Hz 记录的一小时 TCX 文件约 1.7 MB，其中近 90% 是 XML 标签，相当于约 533,000 个 token。即使这个体量能放进上下文窗口，模型面对成千上万行原始坐标时推理效果也很差。",
   "home.faq.q2": "我的文件会被上传到服务器吗？",
   "home.faq.a2":
-    "不会。所有计算都在你的浏览器中进行，你可以在“网络”标签页中验证。GPS 轨迹的起始和结束几个点会精确到米地暴露住址：工具默认会把它们裁掉。",
+    "不会。所有计算都在你的浏览器中完成，你可以在“网络”标签页中验证。GPS 轨迹能精确到米地暴露你的住址：档案默认会移除所有坐标；如果你选择保留坐标，隐私区域会删除起点和终点附近的位置。",
   "home.faq.q3": "工具怎么判断我戴了胸带？",
   "home.faq.a3":
     "最典型的标志是心率锁定步频：光学传感器把步频误当成心跳，例如显示 172 bpm 而不是 140。胸带测量的是电信号，不会出现这种错误。此外还会参考相同数值的平台长度、逐拍变化的细腻程度，以及对配速变化的响应延迟。这是一种启发式方法：置信度设有上限，并会显示出来。",
@@ -299,9 +299,9 @@ export const zh: Partial<PageCatalog> = {
   "privacy.ld.q2": "哪些数据会发送给第三方？",
   "privacy.ld.a2":
     "只有启用时的天气查询：取整到两位小数（约 1.1 公里精度）的路线中点和训练日期，发送给 Open-Meteo。绝不发送通常对应住址的起点，也绝不发送任何生理数据或标识符。",
-  "privacy.ld.q3": "为什么工具要裁剪轨迹的起点和终点？",
+  "privacy.ld.q3": "工具如何保护你的住址？",
   "privacy.ld.a3":
-    "因为 GPS 轨迹的最初和最后几个点会精确到米地暴露住址。这项裁剪默认开启，范围为 250 米，在任何导出之前执行，包括导出给人工智能的档案。",
+    "GPS 轨迹的起点和终点能精确到米地暴露你的住址。默认情况下，档案不包含任何坐标。如果你选择保留坐标，可调节的隐私区域会删除起点和终点附近的位置，但不会截断训练：距离、时长和各项计算都保持完整。",
   "privacy.back": "← 返回工具",
   "privacy.h1": "隐私",
   "privacy.lede":
@@ -340,9 +340,9 @@ export const zh: Partial<PageCatalog> = {
     "没有心率，没有配速，没有轨迹，没有标识符，没有 cookie。只有一个取整后的纬度、一个取整后的经度和一个日期。完整请求如下：",
   "privacy.weather.recipient":
     "接收方是开放天气服务 <a href=\"https://open-meteo.com\" rel=\"nofollow noopener\">Open-Meteo</a>。可以在首页的下拉菜单中关闭这项功能，工具在没有它的情况下照常运行。",
-  "privacy.trim.title": "裁剪住址附近的轨迹",
+  "privacy.trim.title": "隐私区域",
   "privacy.trim.text":
-    "轨迹的最初和最后几个点会暴露你家的大门。工具<strong>默认裁掉 250 米</strong>，起点和终点都裁，并且在任何分析和导出之前执行。该设置可以调整，另有选项可完全移除坐标，同时保留海拔剖面、配速和心率。",
+    "轨迹的起点和终点会暴露你家的门口。默认情况下，<strong>档案不包含任何坐标</strong>：海拔剖面、配速和心率足以完成分析。如果你选择保留坐标，可以设置隐私区域：起点和终点周围该半径内的位置都会被删除，包括轨迹中途再次经过你家附近的地方。训练绝不会被截断：距离、时长和各项计算覆盖完整的记录，档案也会向 AI 说明这一点。",
   "privacy.note.title": "我们无法控制的部分",
   "privacy.note.text":
     "你复制到 ChatGPT、Gemini 或 Claude 的档案，在你粘贴的那一刻就离开了浏览器，此后适用的是该服务的条款，而不是我们的。如果档案里仍有坐标，它们也会一并发出。这正是导出时默认开启“移除坐标”选项的原因。",

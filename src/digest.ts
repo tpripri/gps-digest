@@ -3,7 +3,7 @@
 import { parseTcx } from "./parse-tcx.ts";
 import { parseGpx } from "./parse-gpx.ts";
 import { parseFit, parseFitBuffer, type FitExtras } from "./parse-fit.ts";
-import { trimPrivacyZone, rebase } from "./privacy.ts";
+import { maskPrivacyZone } from "./privacy.ts";
 import { fillDistance } from "./geo.ts";
 import {
   computeSplits,
@@ -110,13 +110,15 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     locale,
   } = opts;
 
-  let samples = activity.samples;
+  const samples = activity.samples;
   if (!samples.length) throw new Error(translator(locale)("digest.errNoPoints"));
 
-  if (privacyRadiusM > 0) {
-    samples = rebase(activity, trimPrivacyZone(samples, privacyRadiusM));
-    if (samples.some((s) => s.dist == null)) fillDistance(samples);
-  }
+  // Zone de confidentialité : elle efface des positions, elle ne coupe plus
+  // rien. Tous les calculs ci-dessous portent sur la séance entière ; seuls le
+  // flux exporté et les points renvoyés à l'appelant perdent leurs
+  // coordonnées près du départ et de l'arrivée.
+  const privacy = maskPrivacyZone(samples, privacyRadiusM);
+  const exported = privacy.samples;
 
   const speed = speedSeries(samples);
   const grade = gradeSeries(samples);
@@ -146,6 +148,14 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     athlete,
     { gainM: opts.fitExtras?.totalAscentM, lossM: opts.fitExtras?.totalDescentM },
   );
+
+  // Le message `session` du FIT fait foi pour les totaux : il couvre la
+  // séance entière, même quand les points s'arrêtent avant la fin.
+  const fx = opts.fitExtras;
+  if (fx?.totalDistanceM && fx.totalDistanceM > 0) session.distM = fx.totalDistanceM;
+  if (fx?.totalElapsedS && fx.totalElapsedS > 0) session.durElapsedS = Math.round(fx.totalElapsedS);
+  if (fx?.recordsEndGapS != null && fx.recordsEndGapS > 30) session.recordsEndGapS = Math.round(fx.recordsEndGapS);
+  if (privacy.masked > 0) session.privacyMaskRadiusM = privacyRadiusM;
 
   session.tier = classification.tier;
   session.reclassified = classification.reclassified;
@@ -195,11 +205,11 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
   let stream: Sample[] = [];
   if (rowBudget > 0) {
-    stream = reduceSamples({ samples, speed, anchors }, rowBudget, { dropCoordinates });
+    stream = reduceSamples({ samples: exported, speed, anchors }, rowBudget, { dropCoordinates });
     const actual = estimateTokens(toCsv(streamRows(stream, fields), LLM_DIALECT));
     if (actual > streamTokenBudget * 1.1) {
       rowBudget = Math.max(20, Math.floor(rowBudget * (streamTokenBudget / actual) * 0.95));
-      stream = reduceSamples({ samples, speed, anchors }, rowBudget, { dropCoordinates });
+      stream = reduceSamples({ samples: exported, speed, anchors }, rowBudget, { dropCoordinates });
     }
   }
 
@@ -259,7 +269,9 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
   return {
     digest,
-    samples,
+    // Points renvoyés à l'appelant (flux du dossier, cartes, météo) : ceux de
+    // la séance entière, positions masquées dans la zone de confidentialité.
+    samples: exported,
     speed,
     insights: {
       classification,

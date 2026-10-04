@@ -198,6 +198,8 @@ export const zh: Partial<Catalog> = {
   "batch.week": "{year}-W{week}",
   "batch.duplicateOf": "{file}（与 {first} 相同）",
   "batch.warnDuplicates": "已剔除 {n} 个重复文件（开始时间和距离均相同）：{list}。",
+  "batch.warnRecordsGap":
+    "{n} 个文件的数据点在训练声明的结束时间之前就中断了（{list}）：记录的结尾缺失。总计来自手表的汇总，但表格和结尾阶段的心率可能不完整。",
   "batch.warnReclassified":
     "{n} 次训练已重新分类：文件中声明的运动类型与数据形态不符（{list}）。",
   "batch.warnLoadOnly":
@@ -274,6 +276,8 @@ export const zh: Partial<Catalog> = {
   "dossier.volume": "训练量：{km} km，运动时间 {dur}",
   "dossier.contextNote":
     "历史记录：共 {total} 次训练。最近 {days} 天（{n} 次）提供完整明细；更早的训练只在 sessions 表中各占一行。",
+  "dossier.privacyMasked":
+    "已删除起点和终点 {m} 米范围内的 GPS 位置。距离、时长和各项计算覆盖整次训练：缺少的只是坐标。",
   "dossier.warningsHeader": "⚠ 警告 — 得出任何结论前请先阅读",
   "dossier.unknownDate": "日期未知",
   "dossier.sessionHeader": "═══ 训练 {n} — {date} — {sport} — {label} ═══",

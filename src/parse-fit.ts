@@ -49,6 +49,10 @@ export interface FitExtras {
   hrSensor?: "chest_strap" | "optical" | "unknown";
   hrSensorEvidence?: string;
   totalDistanceM?: number;
+  /** Durée écoulée déclarée par le message `session`, en secondes. */
+  totalElapsedS?: number;
+  /** Fin déclarée par la session moins dernier point enregistré, en s. */
+  recordsEndGapS?: number;
 }
 
 /**
@@ -261,8 +265,24 @@ export function parseFitBuffer(buffer: ArrayBuffer | Uint8Array, locale?: string
       hrSensor: hr.verdict,
       hrSensorEvidence: hr.evidence,
       totalDistanceM: scaled(session?.[9] as number | undefined, 100),
+      totalElapsedS: scaled(session?.[7] as number | undefined, 1000),
+      recordsEndGapS: recordsEndGap(session, records),
     },
   };
+}
+
+/**
+ * Écart entre la fin déclarée par le message `session` (départ + durée
+ * écoulée) et le dernier point enregistré. Positif quand des points manquent
+ * en fin de fichier.
+ */
+function recordsEndGap(session: FitMessage | undefined, records: FitMessage[]): number | undefined {
+  const start = fitTimeToUnix(session?.[2] as number | undefined);
+  const elapsed = scaled(session?.[7] as number | undefined, 1000);
+  let last: number | undefined;
+  for (let i = records.length - 1; i >= 0 && last == null; i--) last = fitTimeToUnix(records[i][253] as number | undefined);
+  if (start == null || elapsed == null || last == null) return undefined;
+  return start + elapsed - last;
 }
 
 /** Décode un .fit. Plus aucune dépendance externe ni import dynamique. */

@@ -91,7 +91,7 @@ const fr = {
     "Un TCX d'une heure enregistré à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de balises XML, soit à peu près 533 000 tokens. Même quand ce volume tient dans la fenêtre de contexte, le modèle raisonne mal : on lui demande une analyse d'entraînement à partir de milliers de lignes de coordonnées brutes.",
   "home.ld.faq2.q": "Mes fichiers GPS sont-ils envoyés sur un serveur ?",
   "home.ld.faq2.a":
-    "Non. Tout le calcul s'exécute dans votre navigateur. Aucun fichier ne transite par un serveur, ce que vous pouvez vérifier dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près : l'outil rogne par défaut le départ et l'arrivée.",
+    "Non. Tout le calcul s'exécute dans votre navigateur. Aucun fichier ne transite par un serveur, ce que vous pouvez vérifier dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près : les coordonnées sont retirées du dossier par défaut.",
   "home.ld.faq3.q": "Comment savoir si une séance vient d'une ceinture ou du capteur du poignet ?",
   "home.ld.faq3.a":
     "Le fichier ne le dit presque jamais. L'outil le déduit de la signature du signal, dont le marqueur le plus caractéristique est le verrouillage sur la cadence : le capteur optique confond le rythme des foulées avec les pulsations et affiche par exemple 172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut pas produire cette erreur.",
@@ -109,7 +109,7 @@ const fr = {
   "home.lede":
     "Vos fichiers de montre sont trop volumineux pour ChatGPT, Gemini ou Claude. Cet outil en fait un dossier d'entraînement structuré — allures, tours, zones, répétitions, dérive cardiaque — que l'IA peut vraiment analyser.",
   "home.promise":
-    "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : le départ et l'arrivée sont rognés par défaut. <a href=\"{{href:confidentialite.html}}\">Ce qui sort, et ce qui n'en sort jamais</a>.",
+    "<strong>Vos fichiers ne quittent pas votre navigateur.</strong> Tout le calcul se fait sur votre appareil ; vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient votre adresse au mètre près : les coordonnées sont retirées du dossier par défaut. <a href=\"{{href:confidentialite.html}}\">Ce qui sort, et ce qui n'en sort jamais</a>.",
   "home.step1.title": "Téléchargez votre archive Strava",
   "home.step1.text": "Sur <a href=\"https://www.strava.com/account\" rel=\"noopener\">strava.com/account</a>, rubrique « Download your account ». Strava vous envoie un ZIP par e-mail, en général en quelques heures. Pressé, ou pas sur Strava ? Exportez quelques séances : <a href=\"{{href:guide-garmin.html}}\">Garmin</a> · <a href=\"{{href:guide-strava.html}}\">Strava</a> · <a href=\"{{href:guide-apple.html}}\">Apple Watch</a>.",
   "home.step1.badge":
@@ -162,8 +162,8 @@ const fr = {
   "home.set.refTimeHint": "h:mm:ss",
   "home.set.refDate": "Date du chrono",
   "home.set.refDateHint": "Pondère l'ancienneté",
-  "home.set.privacy": "Rognage vie privée",
-  "home.set.privacyHint": "Mètres au départ et à l'arrivée",
+  "home.set.privacy": "Zone de confidentialité",
+  "home.set.privacyHint": "Rayon en mètres où les positions sont effacées, si vous gardez les coordonnées. Ne coupe jamais la séance.",
   "home.set.weather": "Température de l'air",
   "home.set.weatherOn": "Récupérer la météo réelle",
   "home.set.weatherOff": "Ne rien envoyer",
@@ -242,7 +242,7 @@ const fr = {
     "Un TCX d'une heure à 1 Hz pèse environ 1,7 Mo, dont près de 90 % de balises XML, soit à peu près 533 000 tokens. Même quand ce volume tient dans la fenêtre de contexte, le modèle raisonne mal sur des milliers de lignes de coordonnées brutes.",
   "home.faq.q2": "Mes fichiers sont-ils envoyés sur un serveur ?",
   "home.faq.a2":
-    "Non. Tout le calcul s'exécute dans votre navigateur, et vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près dans ses premiers et derniers points : l'outil les rogne par défaut.",
+    "Non. Tout le calcul s'exécute dans votre navigateur, et vous pouvez le vérifier dans l'onglet Réseau. Une trace GPS contient l'adresse du domicile au mètre près : les coordonnées sont retirées du dossier par défaut, et une zone de confidentialité efface celles du départ et de l'arrivée si vous choisissez de les garder.",
   "home.faq.q3": "Comment l'outil devine-t-il si j'avais une ceinture ?",
   "home.faq.a3":
     "Le marqueur le plus caractéristique est le verrouillage sur la cadence : un capteur optique confond le rythme des foulées avec les pulsations et affiche par exemple 172 bpm au lieu de 140. Une ceinture, qui mesure un signal électrique, ne peut pas produire cette erreur. S'y ajoutent la longueur des plateaux de valeurs identiques, la granularité battement à battement et la latence de réponse aux changements d'allure. C'est une heuristique : sa confiance est plafonnée, et affichée.",
@@ -355,9 +355,9 @@ const fr = {
   "privacy.ld.q2": "Qu'est-ce qui est transmis à un tiers ?",
   "privacy.ld.a2":
     "Uniquement la requête météo, quand elle est activée : le point milieu du parcours arrondi à deux décimales (environ 1,1 km de résolution) et la date de la séance, envoyés à Open-Meteo. Jamais le point de départ, qui correspond généralement au domicile, et jamais de donnée physiologique ni d'identifiant.",
-  "privacy.ld.q3": "Pourquoi l'outil rogne-t-il le début et la fin de la trace ?",
+  "privacy.ld.q3": "Comment l'outil protège-t-il l'adresse du domicile ?",
   "privacy.ld.a3":
-    "Parce que les premiers et derniers points d'une trace GPS révèlent l'adresse du domicile au mètre près. Ce rognage est actif par défaut sur 250 mètres et s'applique avant tout export, y compris celui destiné à une intelligence artificielle.",
+    "Les premiers et derniers points d'une trace GPS révèlent l'adresse du domicile au mètre près. Par défaut, le dossier ne contient aucune coordonnée. Si vous choisissez de les garder, une zone de confidentialité réglable efface les positions proches du départ et de l'arrivée, sans couper la séance : distances, durées et calculs restent complets.",
   "privacy.back": "← Retour à l'outil",
   "privacy.h1": "Confidentialité",
   "privacy.lede":
@@ -398,9 +398,9 @@ const fr = {
     "Pas de fréquence cardiaque, pas d'allure, pas de trace, pas d'identifiant, pas de cookie. Une latitude arrondie, une longitude arrondie, une date. La requête complète ressemble à ceci :",
   "privacy.weather.recipient":
     "Le destinataire est <a href=\"https://open-meteo.com\" rel=\"nofollow noopener\">Open-Meteo</a>, service météo ouvert. La fonction se désactive d'un menu déroulant sur la page d'accueil, et l'outil continue de fonctionner sans elle.",
-  "privacy.trim.title": "Le rognage du domicile",
+  "privacy.trim.title": "La zone de confidentialité",
   "privacy.trim.text":
-    "Les premiers et derniers points d'une trace révèlent votre porte d'entrée. L'outil en retire <strong>250 mètres par défaut</strong>, au départ comme à l'arrivée, avant toute analyse et avant tout export. Le réglage est modifiable, et une option permet de retirer complètement les coordonnées tout en conservant profil, allures et fréquence cardiaque.",
+    "Les premiers et derniers points d'une trace révèlent votre porte d'entrée. Par défaut, <strong>le dossier ne contient aucune coordonnée</strong> : profil, allures et fréquence cardiaque suffisent à l'analyse. Si vous choisissez de garder les coordonnées, réglez une zone de confidentialité : les positions situées dans ce rayon autour du départ et de l'arrivée sont effacées, y compris quand la trace repasse près de chez vous. La séance n'est jamais coupée : distances, durées et calculs portent sur l'enregistrement complet, et le dossier le précise à l'IA.",
   "privacy.note.title": "Ce que nous ne contrôlons pas",
   "privacy.note.text":
     "Le dossier que vous copiez dans ChatGPT, Gemini ou Claude quitte votre navigateur au moment où vous le collez, et il est alors soumis aux conditions de ce service, pas aux nôtres. Si le dossier contient encore des coordonnées, elles partent avec. C'est précisément pourquoi l'option « retirer les coordonnées » est active par défaut à l'export.",

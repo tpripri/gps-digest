@@ -6,7 +6,7 @@ export { parseGpx } from "./parse-gpx.ts";
 export { parseFit, parseFitBuffer } from "./parse-fit.ts";
 export type { FitExtras, FitLength } from "./parse-fit.ts";
 export { decodeFit, GLOBAL } from "./fit-decode.ts";
-export { trimPrivacyZone, obfuscateCoordinates } from "./privacy.ts";
+export { maskPrivacyZone, trimPrivacyZone, obfuscateCoordinates } from "./privacy.ts";
 export { computeSplits, detectIntervals, hrZones, paceZones, powerZones, summarize } from "./analyze.ts";
 export { selectIndices, reduceSamples, resampleByTime, resampleByDistance } from "./reduce.ts";
 export type { GridPoint } from "./reduce.ts";
