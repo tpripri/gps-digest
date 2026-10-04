@@ -294,6 +294,14 @@ export const pt: Partial<Catalog> = {
   "dossier.volume": "volume: {km} km, {dur} em movimento",
   "dossier.contextNote":
     "Histórico: {total} treinos. Detalhe completo dos últimos {days} dias ({n} treino(s)); os mais antigos aparecem só na tabela “sessions”, uma linha cada.",
+  "dossier.hrZonesObserved":
+    "Zonas de FC: % da FC máxima observada no período ({hr} bpm), na falta de perfil de atleta. Mesmos limites para todos os treinos; informar a FC máxima ou a FC de limiar os torna confiáveis.",
+  "dossier.hrZonesMax":
+    "Zonas de FC: % da FC máxima ({hr} bpm), mesmos limites para todos os treinos.",
+  "dossier.hrZonesReserve":
+    "Zonas de FC: % da FC de reserva (FC máxima {max} bpm, repouso {rest} bpm), mesmos limites para todos os treinos.",
+  "dossier.hrZonesThreshold":
+    "Zonas de FC: % da FC de limiar ({hr} bpm), mesmos limites para todos os treinos. A Z5 começa no limiar.",
   "dossier.privacyMasked":
     "Posições GPS apagadas num raio de {m} m em volta da largada e da chegada. Distâncias, durações e cálculos cobrem o treino completo: só faltam as coordenadas.",
   "dossier.warningsHeader": "⚠ AVISOS — ler antes de qualquer conclusão",

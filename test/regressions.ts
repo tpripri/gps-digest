@@ -10,6 +10,7 @@
 
 import { parseFitBuffer, parseFitParts } from "../src/parse-fit.ts";
 import { digestActivity } from "../src/digest.ts";
+import { hrZones } from "../src/analyze.ts";
 import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
 import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
@@ -168,6 +169,41 @@ section("3. Allure ajustée à la pente (GAP) dans le bon sens");
   const bike = digestActivity(course("cycling", () => 0.03, 15000, 8), BASE).digest;
   check("vélo : pas de GAP, ni dans la séance ni dans les splits",
     bike.session.gapAvgSPerKm == null && bike.splits.every((s) => s.gapSPerKm == null));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("4. Zones de FC paramétrées, mêmes bornes pour toutes les séances");
+{
+  const bounds = (z: { lowerInclusive: number }[]) => z.map((x) => x.lowerInclusive).join(",");
+  /** 20 min de course, FC constante. */
+  const flat = (hr: number, startTime = START): Activity => ({
+    sport: "running", startTime, device: "test", source: "fit", laps: [],
+    samples: Array.from({ length: 1201 }, (_, t) => ({ t, dist: t * 3, ele: 100, hr })),
+  });
+
+  check("% FC max : 50/60/70/80/90 % de 200",
+    bounds(hrZones(flat(150).samples, { maxHr: 200 })) === "100,120,140,160,180", bounds(hrZones(flat(150).samples, { maxHr: 200 })));
+  check("% FC de réserve (Karvonen) : repos + 50 à 90 % de la réserve",
+    bounds(hrZones(flat(150).samples, { maxHr: 200, restHr: 50, hrZoneModel: "reserve" })) === "125,140,155,170,185",
+    bounds(hrZones(flat(150).samples, { maxHr: 200, restHr: 50, hrZoneModel: "reserve" })));
+  const thr = hrZones(flat(150).samples, { lthr: 160 });
+  check("% FC seuil, retenu d'office quand le seuil est connu : Z5 à partir du seuil",
+    thr[4]?.lowerInclusive === 160 && thr[3]?.lowerInclusive === 152, bounds(thr));
+
+  // Sans profil : la FC max observée sur TOUTE la période, pas celle de chaque séance.
+  const a = digestActivity(flat(140), BASE);
+  const b = digestActivity(flat(185, "2026-09-21T07:00:00Z"), BASE);
+  const batch = analyzeBatch([asFile("a.fit", a), asFile("b.fit", b)], { locale: "fr" });
+  check("sans profil : bornes identiques pour toutes les séances (FC max de la période)",
+    bounds(batch.files[0].digest.hrZones) === bounds(batch.files[1].digest.hrZones) && batch.files[0].digest.hrZones[4]?.lowerInclusive === Math.round(0.9 * 185),
+    `${bounds(batch.files[0].digest.hrZones)} / ${bounds(batch.files[1].digest.hrZones)}`);
+  check("le footing à 140 ne compte plus de VO2max", (batch.files.find((f) => f.filename === "a.fit")!.digest.hrZones[4]?.timeS ?? 0) === 0);
+  check("base des zones annoncée en tête de dossier",
+    buildDossier(batch, { streamMode: "none" }).includes(t("fr", "dossier.hrZonesObserved", { hr: 185 })));
+  const withProfile = analyzeBatch([asFile("a.fit", digestActivity(flat(140), { ...BASE, athlete: { lthr: 160 } }))],
+    { locale: "fr", athlete: { lthr: 160 } });
+  check("avec profil : base annoncée (modèle et valeur)",
+    buildDossier(withProfile, { streamMode: "none" }).includes(t("fr", "dossier.hrZonesThreshold", { hr: 160 })));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

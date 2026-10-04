@@ -114,6 +114,26 @@ export const es: Partial<PageCatalog> = {
   "home.set.refDateHint": "Pondera la antigüedad",
   "home.set.privacy": "Zona de privacidad",
   "home.set.privacyHint": "Radio en metros donde se borran las posiciones, si conservas las coordenadas. Nunca corta la sesión.",
+  "home.set.lthr":
+    "FC umbral",
+  "home.set.lthrHint":
+    "ppm, la base más fiable",
+  "home.set.lthrPlaceholder":
+    "p. ej. 160",
+  "home.set.restHr":
+    "FC en reposo",
+  "home.set.restHrHint":
+    "ppm, para el modelo de FC de reserva",
+  "home.set.zoneModel":
+    "Zonas de FC",
+  "home.set.zoneAuto":
+    "Automático (umbral si se conoce, si no FC máxima)",
+  "home.set.zoneMax":
+    "% de la FC máxima",
+  "home.set.zoneReserve":
+    "% de la FC de reserva",
+  "home.set.zoneThreshold":
+    "% de la FC umbral",
   "home.set.weather": "Temperatura del aire",
   "home.set.weatherOn": "Obtener la meteorología real",
   "home.set.weatherOff": "No enviar nada",

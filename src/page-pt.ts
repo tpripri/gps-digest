@@ -114,6 +114,26 @@ export const pt: Partial<PageCatalog> = {
   "home.set.refDateHint": "Pondera a antiguidade",
   "home.set.privacy": "Zona de privacidade",
   "home.set.privacyHint": "Raio em metros onde as posições são apagadas, se você mantiver as coordenadas. Nunca corta o treino.",
+  "home.set.lthr":
+    "FC de limiar",
+  "home.set.lthrHint":
+    "bpm, a base mais confiável",
+  "home.set.lthrPlaceholder":
+    "ex.: 160",
+  "home.set.restHr":
+    "FC de repouso",
+  "home.set.restHrHint":
+    "bpm, para o modelo de FC de reserva",
+  "home.set.zoneModel":
+    "Zonas de FC",
+  "home.set.zoneAuto":
+    "Automático (limiar se souber, senão FC máxima)",
+  "home.set.zoneMax":
+    "% da FC máxima",
+  "home.set.zoneReserve":
+    "% da FC de reserva",
+  "home.set.zoneThreshold":
+    "% da FC de limiar",
   "home.set.weather": "Temperatura do ar",
   "home.set.weatherOn": "Buscar o clima real",
   "home.set.weatherOff": "Não enviar nada",

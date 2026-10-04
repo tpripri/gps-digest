@@ -276,6 +276,14 @@ export const zh: Partial<Catalog> = {
   "dossier.volume": "训练量：{km} km，运动时间 {dur}",
   "dossier.contextNote":
     "历史记录：共 {total} 次训练。最近 {days} 天（{n} 次）提供完整明细；更早的训练只在 sessions 表中各占一行。",
+  "dossier.hrZonesObserved":
+    "心率区间：因缺少运动员资料，按该时段观测到的最大心率（{hr} bpm）的百分比划分。所有训练使用相同界限；填写最大心率或阈值心率可使其更可靠。",
+  "dossier.hrZonesMax":
+    "心率区间：按最大心率（{hr} bpm）的百分比划分，所有训练使用相同界限。",
+  "dossier.hrZonesReserve":
+    "心率区间：按储备心率的百分比划分（最大心率 {max} bpm，静息心率 {rest} bpm），所有训练使用相同界限。",
+  "dossier.hrZonesThreshold":
+    "心率区间：按阈值心率（{hr} bpm）的百分比划分，所有训练使用相同界限。Z5 从阈值开始。",
   "dossier.privacyMasked":
     "已删除起点和终点 {m} 米范围内的 GPS 位置。距离、时长和各项计算覆盖整次训练：缺少的只是坐标。",
   "dossier.warningsHeader": "⚠ 警告 — 得出任何结论前请先阅读",

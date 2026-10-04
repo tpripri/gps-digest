@@ -293,6 +293,14 @@ export const ja: Partial<Catalog> = {
   "dossier.volume": "ボリューム：{km} km、移動時間 {dur}",
   "dossier.contextNote":
     "履歴：全 {total} セッション。直近 {days} 日分（{n} セッション）は詳細あり。それより前は「sessions」表に 1 行ずつ記載。",
+  "dossier.hrZonesObserved":
+    "心拍ゾーン：アスリート情報がないため、期間中に観測された最大心拍数（{hr} bpm）に対する割合で設定。全セッションで同じ境界を使用。最大心拍数か閾値心拍数を入力すると信頼性が上がります。",
+  "dossier.hrZonesMax":
+    "心拍ゾーン：最大心拍数（{hr} bpm）に対する割合。全セッションで同じ境界を使用。",
+  "dossier.hrZonesReserve":
+    "心拍ゾーン：予備心拍数に対する割合（最大心拍数 {max} bpm、安静時 {rest} bpm）。全セッションで同じ境界を使用。",
+  "dossier.hrZonesThreshold":
+    "心拍ゾーン：閾値心拍数（{hr} bpm）に対する割合。全セッションで同じ境界を使用。Z5 は閾値から。",
   "dossier.privacyMasked":
     "スタート地点とゴール地点から半径 {m} m 以内の GPS 位置を消去しました。距離・時間・各種計算はセッション全体が対象で、欠けているのは座標だけです。",
   "dossier.warningsHeader": "⚠ 警告 — 結論を出す前に読むこと",

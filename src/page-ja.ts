@@ -115,6 +115,26 @@ export const ja: Partial<PageCatalog> = {
   "home.set.refDateHint": "古さに応じて重み付け",
   "home.set.privacy": "プライバシーゾーン",
   "home.set.privacyHint": "座標を残す場合に位置を消去する半径（m）。セッションを切り詰めることはありません。",
+  "home.set.lthr":
+    "閾値心拍数",
+  "home.set.lthrHint":
+    "bpm。最も信頼できる基準",
+  "home.set.lthrPlaceholder":
+    "例：160",
+  "home.set.restHr":
+    "安静時心拍数",
+  "home.set.restHrHint":
+    "bpm。予備心拍数モデルで使用",
+  "home.set.zoneModel":
+    "心拍ゾーン",
+  "home.set.zoneAuto":
+    "自動（閾値がわかれば閾値、なければ最大心拍数）",
+  "home.set.zoneMax":
+    "最大心拍数の %",
+  "home.set.zoneReserve":
+    "予備心拍数の %",
+  "home.set.zoneThreshold":
+    "閾値心拍数の %",
   "home.set.weather": "気温",
   "home.set.weatherOn": "実際の天気を取得",
   "home.set.weatherOff": "何も送信しない",

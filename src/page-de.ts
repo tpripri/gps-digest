@@ -114,6 +114,26 @@ export const de: Partial<PageCatalog> = {
   "home.set.refDateHint": "Gewichtet das Alter",
   "home.set.privacy": "Privatsphäre-Zone",
   "home.set.privacyHint": "Radius in Metern, in dem Positionen gelöscht werden, wenn du die Koordinaten behältst. Kürzt die Einheit nie.",
+  "home.set.lthr":
+    "Schwellen-HF",
+  "home.set.lthrHint":
+    "bpm, die verlässlichste Basis",
+  "home.set.lthrPlaceholder":
+    "z. B. 160",
+  "home.set.restHr":
+    "Ruhe-HF",
+  "home.set.restHrHint":
+    "bpm, für das Modell Herzfrequenzreserve",
+  "home.set.zoneModel":
+    "HF-Zonen",
+  "home.set.zoneAuto":
+    "Automatisch (Schwelle, falls bekannt, sonst max. HF)",
+  "home.set.zoneMax":
+    "% der maximalen HF",
+  "home.set.zoneReserve":
+    "% der HF-Reserve",
+  "home.set.zoneThreshold":
+    "% der Schwellen-HF",
   "home.set.weather": "Lufttemperatur",
   "home.set.weatherOn": "Echtes Wetter abrufen",
   "home.set.weatherOff": "Nichts senden",

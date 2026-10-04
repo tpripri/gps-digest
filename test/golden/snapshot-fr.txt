@@ -4475,6 +4475,7 @@ date,set,reps_done,pace_cv_pct,fade_total_pct,hr_rise_bpm,grade
 # 11 séance(s) du 2026-06-02 au 2026-07-30
 # volume : 90.4 km, 7h15:36 en mouvement
 # FC max de référence : 170 bpm
+# Zones FC : % de la FC max (170 bpm), mêmes bornes pour toutes les séances.
 
 # ─────────────────────────────────────────────────────────────────────
 # COMMENT LIRE CE DOSSIER
@@ -5929,6 +5930,7 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,lat,lon,grade_pct
 # 11 séance(s) du 2026-06-02 au 2026-07-30
 # volume : 90.4 km, 7h15:36 en mouvement
 # FC max de référence : 170 bpm
+# Zones FC : % de la FC max (170 bpm), mêmes bornes pour toutes les séances.
 
 # ─────────────────────────────────────────────────────────────────────
 # COMMENT LIRE CE DOSSIER
@@ -7061,6 +7063,7 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,grade_pct
 # gps-digest — dossier d'entraînement
 # 11 séance(s) du 2026-06-02 au 2026-07-30
 # volume : 90.4 km, 7h15:36 en mouvement
+# Zones FC : % de la FC max (170 bpm), mêmes bornes pour toutes les séances.
 
 # ─────────────────────────────────────────────────────────────────────
 # COMMENT LIRE CE DOSSIER
@@ -7181,6 +7184,7 @@ date,pace_ref,hr_bpm,time_at_pace_s,hr_source,temp_air_c,pace_held,efficiency
 # gps-digest — dossier d'entraînement
 # 4 séance(s) du 2026-06-02 au 2026-07-21
 # volume : 38.1 km, 3h19:56 en mouvement
+# Zones FC : % de la FC max (180 bpm), mêmes bornes pour toutes les séances.
 
 # ─────────────────────────────────────────────────────────────────────
 # COMMENT LIRE CE DOSSIER

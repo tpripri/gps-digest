@@ -114,6 +114,26 @@ export const zh: Partial<PageCatalog> = {
   "home.set.refDateHint": "按时间远近加权",
   "home.set.privacy": "隐私区域",
   "home.set.privacyHint": "保留坐标时，在此半径（米）内的位置会被删除。绝不会截断训练。",
+  "home.set.lthr":
+    "阈值心率",
+  "home.set.lthrHint":
+    "bpm，最可靠的依据",
+  "home.set.lthrPlaceholder":
+    "例如 160",
+  "home.set.restHr":
+    "静息心率",
+  "home.set.restHrHint":
+    "bpm，用于储备心率模型",
+  "home.set.zoneModel":
+    "心率区间",
+  "home.set.zoneAuto":
+    "自动（已知阈值则用阈值，否则用最大心率）",
+  "home.set.zoneMax":
+    "最大心率百分比",
+  "home.set.zoneReserve":
+    "储备心率百分比",
+  "home.set.zoneThreshold":
+    "阈值心率百分比",
   "home.set.weather": "气温",
   "home.set.weatherOn": "获取实际天气",
   "home.set.weatherOff": "不发送任何数据",

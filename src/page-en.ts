@@ -114,6 +114,26 @@ export const en: PageCatalog = {
   "home.set.refDateHint": "Weights for age",
   "home.set.privacy": "Privacy zone",
   "home.set.privacyHint": "Radius in meters where positions are erased, if you keep coordinates. Never cuts the session.",
+  "home.set.lthr":
+    "Threshold HR",
+  "home.set.lthrHint":
+    "bpm, the most reliable basis",
+  "home.set.lthrPlaceholder":
+    "e.g. 160",
+  "home.set.restHr":
+    "Resting HR",
+  "home.set.restHrHint":
+    "bpm, for the heart rate reserve model",
+  "home.set.zoneModel":
+    "HR zones",
+  "home.set.zoneAuto":
+    "Automatic (threshold if known, else max HR)",
+  "home.set.zoneMax":
+    "% of max HR",
+  "home.set.zoneReserve":
+    "% of HR reserve",
+  "home.set.zoneThreshold":
+    "% of threshold HR",
   "home.set.weather": "Air temperature",
   "home.set.weatherOn": "Fetch the actual weather",
   "home.set.weatherOff": "Send nothing",

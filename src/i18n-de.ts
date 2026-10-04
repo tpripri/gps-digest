@@ -298,6 +298,14 @@ export const de: Partial<Catalog> = {
   "dossier.volume": "Umfang: {km} km, {dur} in Bewegung",
   "dossier.contextNote":
     "Verlauf: {total} Einheiten. Vollständiges Detail für die letzten {days} Tage ({n} Einheit(en)); ältere stehen nur in der Tabelle „sessions“, eine Zeile pro Einheit.",
+  "dossier.hrZonesObserved":
+    "HF-Zonen: % der im Zeitraum beobachteten maximalen HF ({hr} bpm), mangels Athletenprofil. Gleiche Grenzen für alle Einheiten; mit maximaler HF oder Schwellen-HF werden sie verlässlich.",
+  "dossier.hrZonesMax":
+    "HF-Zonen: % der maximalen HF ({hr} bpm), gleiche Grenzen für alle Einheiten.",
+  "dossier.hrZonesReserve":
+    "HF-Zonen: % der Herzfrequenzreserve (maximale HF {max} bpm, Ruhe-HF {rest} bpm), gleiche Grenzen für alle Einheiten.",
+  "dossier.hrZonesThreshold":
+    "HF-Zonen: % der Schwellen-HF ({hr} bpm), gleiche Grenzen für alle Einheiten. Z5 beginnt an der Schwelle.",
   "dossier.privacyMasked":
     "GPS-Positionen im Umkreis von {m} m um Start und Ziel gelöscht. Distanzen, Dauern und Berechnungen beziehen sich auf die ganze Einheit: Nur die Koordinaten fehlen.",
   "dossier.warningsHeader": "⚠ WARNUNGEN — vor jeder Schlussfolgerung lesen",

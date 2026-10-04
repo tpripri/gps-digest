@@ -329,6 +329,14 @@ const fr = {
   "dossier.volume": "volume : {km} km, {dur} en mouvement",
   "dossier.contextNote":
     "Historique : {total} séances. Détail complet pour les {days} derniers jours ({n} séance(s)) ; les plus anciennes ne figurent que dans le tableau « sessions », une ligne chacune.",
+  "dossier.hrZonesObserved":
+    "Zones FC : % de la FC max observée sur la période ({hr} bpm), faute de profil athlète. Mêmes bornes pour toutes les séances ; renseigner la FC max ou la FC seuil les rend fiables.",
+  "dossier.hrZonesMax":
+    "Zones FC : % de la FC max ({hr} bpm), mêmes bornes pour toutes les séances.",
+  "dossier.hrZonesReserve":
+    "Zones FC : % de la FC de réserve (FC max {max} bpm, repos {rest} bpm), mêmes bornes pour toutes les séances.",
+  "dossier.hrZonesThreshold":
+    "Zones FC : % de la FC seuil ({hr} bpm), mêmes bornes pour toutes les séances. Z5 commence au seuil.",
   "dossier.privacyMasked":
     "Positions GPS effacées dans un rayon de {m} m autour du départ et de l'arrivée. Distances, durées et calculs portent sur la séance complète : seules les coordonnées manquent.",
   "dossier.warningsHeader": "⚠ AVERTISSEMENTS — à lire avant toute conclusion",
@@ -684,6 +692,14 @@ const en: Catalog = {
   "dossier.volume": "volume: {km} km, {dur} moving",
   "dossier.contextNote":
     "History: {total} sessions. Full detail for the last {days} days ({n} session(s)); older ones appear only in the \"sessions\" table, one line each.",
+  "dossier.hrZonesObserved":
+    "HR zones: % of the max HR observed over the period ({hr} bpm), for lack of an athlete profile. Same bounds for every session; entering max HR or threshold HR makes them reliable.",
+  "dossier.hrZonesMax":
+    "HR zones: % of max HR ({hr} bpm), same bounds for every session.",
+  "dossier.hrZonesReserve":
+    "HR zones: % of heart rate reserve (max HR {max} bpm, resting {rest} bpm), same bounds for every session.",
+  "dossier.hrZonesThreshold":
+    "HR zones: % of threshold HR ({hr} bpm), same bounds for every session. Z5 starts at threshold.",
   "dossier.privacyMasked":
     "GPS positions erased within {m} m of the start and finish. Distances, durations and calculations cover the full session: only the coordinates are missing.",
   "dossier.warningsHeader": "⚠ WARNINGS — read before drawing any conclusion",

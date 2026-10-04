@@ -80,6 +80,15 @@ export interface Split {
   partial: boolean;
 }
 
+/** Base des zones FC : profil renseigné, ou FC max observée faute de mieux. */
+export interface HrZoneBasis {
+  model: "max" | "reserve" | "threshold";
+  source: "athlete" | "observed";
+  maxHr?: number;
+  restHr?: number;
+  lthr?: number;
+}
+
 export interface ZoneBin {
   zone: number;
   label: string;
@@ -175,6 +184,11 @@ export interface AthleteProfile {
   ftpW?: number;
   /** Allure seuil en s/km, pour les zones d'allure. */
   thresholdPaceSPerKm?: number;
+  /**
+   * Modèle des zones FC. Par défaut : % de la FC seuil si elle est connue
+   * (le plus fiable), sinon % de la FC max.
+   */
+  hrZoneModel?: "max" | "reserve" | "threshold";
 }
 
 export interface DigestOptions {
@@ -218,6 +232,8 @@ export interface Digest {
   laps: Lap[];
   splits: Split[];
   hrZones: ZoneBin[];
+  /** Base des zones FC de cette séance. */
+  hrZoneBasis?: HrZoneBasis;
   paceZones: ZoneBin[];
   powerZones: ZoneBin[];
   intervals: IntervalBlock[];

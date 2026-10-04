@@ -8,7 +8,7 @@ import { fillDistance } from "./geo.ts";
 import {
   computeSplits,
   detectIntervals,
-  hrZones,
+  hrZones, hrZoneBounds,
   paceZones,
   powerZones,
   summarize,
@@ -26,7 +26,7 @@ import { bestEfforts, type BestEffort } from "./efforts.ts";
 import { analyzeAdherence, inferTarget, type AdherenceReport, type BlockTarget } from "./adherence.ts";
 import { gradeLabel } from "./adherence.ts";
 import { translator } from "./i18n.ts";
-import type { Activity, Digest, DigestOptions, FieldPresence, Sample } from "./types.ts";
+import type { Activity, AthleteProfile, Digest, DigestOptions, FieldPresence, HrZoneBasis, Sample } from "./types.ts";
 
 export function detectFormat(filename: string, head: string): "tcx" | "gpx" | "fit" | null {
   const ext = filename.toLowerCase().split(".").pop();
@@ -220,6 +220,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
     laps: activity.laps,
     splits,
     hrZones: hrZones(samples, athlete, locale),
+    hrZoneBasis: zoneBasis(samples, athlete),
     paceZones: paceZones(samples, speed, athlete, locale),
     powerZones: powerZones(samples, athlete, locale),
     intervals: blocks,
@@ -288,6 +289,16 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
       hrSpeed: hrSpeedProfile(samples, speed),
     },
   };
+}
+
+/** Base des zones FC d'une séance : profil renseigné ou FC max observée. */
+function zoneBasis(samples: Sample[], athlete?: AthleteProfile): HrZoneBasis | undefined {
+  const observed = Math.max(0, ...samples.map((s) => s.hr ?? 0));
+  if (observed < 60) return undefined;
+  const { model } = hrZoneBounds(athlete, observed);
+  return athlete?.maxHr || athlete?.lthr
+    ? { model, source: "athlete", maxHr: athlete.maxHr, restHr: athlete.restHr, lthr: athlete.lthr }
+    : { model: "max", source: "observed", maxHr: observed };
 }
 
 /** Analyses lisibles telles quelles, sans passer par un LLM. */

@@ -27,7 +27,8 @@ import { analyzeProgression, type ProgressionAnalysis } from "./progression.ts";
 import { hrSpeedProfile, type HrSpeedPoint } from "./drift.ts";
 import type { WeatherObservation } from "./weather.ts";
 import type { SwimAnalysis } from "./swim.ts";
-import type { Digest, Sample, Sport } from "./types.ts";
+import type { AthleteProfile, Digest, HrZoneBasis, Sample, Sport } from "./types.ts";
+import { hrZones } from "./analyze.ts";
 
 export interface FileAnalysis {
   filename: string;
@@ -83,7 +84,10 @@ export interface BatchAnalysis {
   warnings: string[];
   /** Langue des textes produits. Le dossier et la synthèse la reprennent. */
   locale: Locale;
+  /** Base des zones FC, identique pour toutes les séances du lot. */
+  hrZoneBasis?: HrZoneBasis;
 }
+
 
 function isoWeek(d: Date, locale?: string): string {
   const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
@@ -122,6 +126,8 @@ function intensityBuckets(samples: Sample[], maxHr?: number) {
 
 export interface BatchOptions {
   maxHr?: number;
+  /** Profil complet : FC max, de repos, au seuil, modèle de zones. */
+  athlete?: AthleteProfile;
   raceResults?: { distanceM: number; timeS: number; date?: string; label?: string }[];
   riegelExponent?: number;
   locale?: string;
@@ -152,6 +158,38 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
   }
   sorted.length = 0;
   sorted.push(...unique);
+
+  // Zones FC : mêmes bornes pour toutes les séances. Sans profil athlète,
+  // chaque séance avait les siennes (50 à 90 % de SA FC max). Un profil,
+  // donné au lot ou à l'analyse d'une séance, s'applique à tout le lot ; à
+  // défaut, la FC max de toute la période.
+  const given: AthleteProfile = { ...opts.athlete, maxHr: opts.athlete?.maxHr ?? opts.maxHr };
+  const fromFile = sorted.map((f) => f.digest.hrZoneBasis).find((b) => b?.source === "athlete");
+  const athlete: AthleteProfile | undefined = given.maxHr || given.lthr
+    ? given
+    : fromFile && { maxHr: fromFile.maxHr, restHr: fromFile.restHr, lthr: fromFile.lthr, hrZoneModel: fromFile.model };
+  let hrZoneBasis: HrZoneBasis | undefined;
+  if (athlete) {
+    const model = athlete.hrZoneModel ?? (athlete.lthr ? "threshold" : "max");
+    hrZoneBasis = { model, source: "athlete", maxHr: athlete.maxHr, restHr: athlete.restHr, lthr: athlete.lthr };
+    for (const f of sorted) {
+      if (f.digest.hrZones.length && f.digest.hrZoneBasis?.source !== "athlete") {
+        f.digest.hrZones = hrZones(f.samples, athlete, locale);
+        f.digest.hrZoneBasis = hrZoneBasis;
+      }
+    }
+  } else {
+    // Au-delà de 220, c'est un artefact de capteur, pas une FC.
+    const periodMax = Math.max(0, ...sorted.map((f) => f.digest.session.hrMax ?? 0).filter((v) => v <= 220));
+    if (periodMax >= 60) {
+      hrZoneBasis = { model: "max", source: "observed", maxHr: periodMax };
+      for (const f of sorted) {
+        if (!f.digest.hrZones.length) continue;
+        f.digest.hrZones = hrZones(f.samples, { maxHr: periodMax }, locale);
+        f.digest.hrZoneBasis = hrZoneBasis;
+      }
+    }
+  }
 
   const sports: Partial<Record<Sport, number>> = {};
   const weekMap = new Map<string, WeekBucket>();
@@ -348,6 +386,7 @@ export function analyzeBatch(files: FileAnalysis[], opts: BatchOptions = {}): Ba
     progression,
     warnings,
     locale,
+    hrZoneBasis,
   };
 }
 

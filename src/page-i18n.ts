@@ -164,6 +164,26 @@ const fr = {
   "home.set.refDateHint": "Pondère l'ancienneté",
   "home.set.privacy": "Zone de confidentialité",
   "home.set.privacyHint": "Rayon en mètres où les positions sont effacées, si vous gardez les coordonnées. Ne coupe jamais la séance.",
+  "home.set.lthr":
+    "FC au seuil",
+  "home.set.lthrHint":
+    "bpm, la base la plus fiable",
+  "home.set.lthrPlaceholder":
+    "ex. 160",
+  "home.set.restHr":
+    "FC de repos",
+  "home.set.restHrHint":
+    "bpm, pour le modèle FC de réserve",
+  "home.set.zoneModel":
+    "Zones de FC",
+  "home.set.zoneAuto":
+    "Automatique (seuil si connu, sinon FC max)",
+  "home.set.zoneMax":
+    "% de la FC max",
+  "home.set.zoneReserve":
+    "% de la FC de réserve",
+  "home.set.zoneThreshold":
+    "% de la FC seuil",
   "home.set.weather": "Température de l'air",
   "home.set.weatherOn": "Récupérer la météo réelle",
   "home.set.weatherOff": "Ne rien envoyer",

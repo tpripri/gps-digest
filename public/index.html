@@ -221,6 +221,23 @@ footer a{margin-right:1rem;display:inline-block;line-height:2}
         <input type="number" id="fcmax" min="120" max="230" placeholder="{{attr:home.set.fcmaxPlaceholder}}">
       </div>
       <div class="field">
+        <label for="lthr">{{home.set.lthr}} <span class="hint">{{home.set.lthrHint}}</span></label>
+        <input type="number" id="lthr" min="100" max="220" placeholder="{{attr:home.set.lthrPlaceholder}}">
+      </div>
+      <div class="field">
+        <label for="resthr">{{home.set.restHr}} <span class="hint">{{home.set.restHrHint}}</span></label>
+        <input type="number" id="resthr" min="30" max="100" placeholder="50">
+      </div>
+      <div class="field">
+        <label for="zonemodel">{{home.set.zoneModel}}</label>
+        <select id="zonemodel">
+          <option value="" selected>{{home.set.zoneAuto}}</option>
+          <option value="max">{{home.set.zoneMax}}</option>
+          <option value="reserve">{{home.set.zoneReserve}}</option>
+          <option value="threshold">{{home.set.zoneThreshold}}</option>
+        </select>
+      </div>
+      <div class="field">
         <label for="seuil">{{home.set.threshold}} <span class="hint">{{home.set.thresholdHint}}</span></label>
         <input type="text" id="seuil" inputmode="numeric" placeholder="4:35">
       </div>
@@ -519,9 +536,17 @@ function readSettings() {
   const maxHr = Number($("fcmax").value) || undefined;
   const refDist = Number($("refdist").value) || undefined;
   const refTime = parseClock($("reftime").value);
+  // Profil athlète : mêmes zones FC pour toutes les séances (voir hrZoneBounds).
+  const athlete = {
+    maxHr,
+    thresholdPaceSPerKm: parseClock($("seuil").value),
+    lthr: Number($("lthr").value) || undefined,
+    restHr: Number($("resthr").value) || undefined,
+    hrZoneModel: $("zonemodel").value || undefined,
+  };
   return {
     digest: {
-      athlete: { maxHr, thresholdPaceSPerKm: parseClock($("seuil").value) },
+      athlete,
       streamTokenBudget: 6000,
       privacyRadiusM: Number($("privacy").value) || 0,
       driftWarmupS: 600,
@@ -529,6 +554,7 @@ function readSettings() {
     },
     batch: {
       maxHr,
+      athlete,
       locale: LOCALE,
       raceResults: refDist && refTime
         ? [{ distanceM: refDist, timeS: refTime, date: $("refdate").value || undefined }]

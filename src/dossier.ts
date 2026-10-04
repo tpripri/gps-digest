@@ -342,6 +342,14 @@ export function buildDossier(batch: BatchAnalysis, opts: DossierOptions = {}): s
     })}`,
   );
   if (opts.maxHr) out.push(`# ${tr("common.refMaxHr", { hr: opts.maxHr })}`);
+  // Base des zones FC : l'IA doit savoir sur quoi reposent les pourcentages.
+  const z = batch.hrZoneBasis;
+  if (z) {
+    if (z.source === "observed") out.push(`# ${tr("dossier.hrZonesObserved", { hr: z.maxHr! })}`);
+    else if (z.model === "threshold") out.push(`# ${tr("dossier.hrZonesThreshold", { hr: z.lthr! })}`);
+    else if (z.model === "reserve") out.push(`# ${tr("dossier.hrZonesReserve", { max: z.maxHr!, rest: z.restHr! })}`);
+    else out.push(`# ${tr("dossier.hrZonesMax", { hr: z.maxHr! })}`);
+  }
   // Des positions ont été effacées : l'IA doit savoir que les totaux, eux,
   // portent sur la séance complète, et ne pas les recalculer depuis la trace.
   const masked = Math.max(0, ...batch.files.map((f) => f.digest.session.privacyMaskRadiusM ?? 0));

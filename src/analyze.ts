@@ -144,16 +144,38 @@ function binTime(
  * **observée dans le fichier** : approximatif, mais toujours plus utile que rien
  * — et le bundle l'annonce explicitement au modèle.
  */
+export type HrZoneModel = "max" | "reserve" | "threshold";
+
+/**
+ * Bornes des cinq zones FC selon le modèle.
+ *
+ * - « threshold » : % de la FC au seuil (Friel, course à pied : Z2 dès 85 %,
+ *   Z5 à partir du seuil). Retenu d'office quand le seuil est connu.
+ * - « reserve » : Karvonen, FC de repos + 50 à 90 % de la FC de réserve.
+ * - « max » : 50 à 90 % de la FC max.
+ *
+ * Sans profil, la FC max est celle observée : à l'échelle d'une séance, elle
+ * ne vaut rien (un footing à 159 de max affichait 18 % en « VO2max ») ;
+ * analyzeBatch la remplace par la FC max de toute la période.
+ */
+export function hrZoneBounds(athlete: AthleteProfile | undefined, observedMax: number): { model: HrZoneModel; bounds: number[] } {
+  const model = athlete?.hrZoneModel ?? (athlete?.lthr ? "threshold" : "max");
+  if (model === "threshold" && athlete?.lthr) {
+    const lthr = athlete.lthr;
+    return { model, bounds: [0.65, 0.85, 0.9, 0.95, 1.0, 1.25].map((p) => p * lthr) };
+  }
+  const maxHr = athlete?.maxHr ?? (athlete?.lthr ? athlete.lthr / 0.9 : observedMax);
+  if (model === "reserve" && athlete?.restHr && maxHr > athlete.restHr) {
+    const rest = athlete.restHr;
+    return { model, bounds: [0.5, 0.6, 0.7, 0.8, 0.9, 1.01].map((p) => rest + p * (maxHr - rest)) };
+  }
+  return { model: "max", bounds: [0.5, 0.6, 0.7, 0.8, 0.9, 1.01].map((p) => p * maxHr) };
+}
+
 export function hrZones(samples: Sample[], athlete?: AthleteProfile, locale?: string): ZoneBin[] {
   const observed = Math.max(0, ...samples.map((s) => s.hr ?? 0));
   if (observed < 60) return [];
-
-  let maxHr = athlete?.maxHr;
-  if (!maxHr && athlete?.lthr) maxHr = athlete.lthr / 0.9;
-  if (!maxHr) maxHr = observed;
-
-  const pcts = [0.5, 0.6, 0.7, 0.8, 0.9, 1.01];
-  const bounds = pcts.map((p) => p * maxHr);
+  const { bounds } = hrZoneBounds(athlete, observed);
   return binTime(
     samples,
     (i) => samples[i].hr,
