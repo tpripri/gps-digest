@@ -12,6 +12,7 @@ import {
   movingTime,
   gradeSeries,
   gapSeries,
+  gapCostRatio,
   normalizedPower,
   decoupling,
   efficiencyFactor,
@@ -56,7 +57,8 @@ export function computeSplits(
     const durS = endT - startT;
     const distM = endDist - startDist;
     const { gain, loss } = elevationGainLoss(slice, 2);
-    const gapSlice = gap.slice(startIdx, endIdx + 1).filter((v) => v > 0);
+    const pace = distM > 0 ? (durS / distM) * 1000 : undefined;
+    const ratio = gapCostRatio(samples, speed, gap, startIdx + 1, endIdx);
 
     splits.push({
       index: splits.length + 1,
@@ -64,8 +66,8 @@ export function computeSplits(
       startT: Math.round(startT),
       durS: Math.round(durS),
       distM: Math.round(distM),
-      paceSPerKm: distM > 0 ? (durS / distM) * 1000 : undefined,
-      gapSPerKm: gapSlice.length ? mean(gapSlice) : undefined,
+      paceSPerKm: pace,
+      gapSPerKm: pace != null && ratio ? pace / ratio : undefined,
       hrAvg: mean(slice.map((s) => s.hr)),
       cadAvg: mean(slice.map((s) => s.cad)),
       pwAvg: mean(slice.map((s) => s.pw)),
@@ -456,7 +458,7 @@ export function summarize(
 ): SessionSummary {
   const speed = speedSeries(samples);
   const grade = gradeSeries(samples);
-  const gap = gapSeries(samples, speed, grade);
+  const gap = gapSeries(samples, speed, grade, sport);
   const durElapsed = samples.length ? samples[samples.length - 1].t - samples[0].t : 0;
   const durMoving = movingTime(samples, sport, speed);
   const distM = samples.length ? (samples[samples.length - 1].dist ?? 0) : 0;
@@ -470,6 +472,8 @@ export function summarize(
   const elevationFromDevice = deviceElevation?.gainM != null;
 
   const hrAvg = mean(samples.map((s) => s.hr));
+  const paceAvg = distM > 0 ? (durMoving / distM) * 1000 : undefined;
+  const gapRatio = gapCostRatio(samples, speed, gap);
   const speedAvg = durMoving > 0 ? distM / durMoving : undefined;
   // La puissance en course à pied est une estimation propre à chaque
   // constructeur, sans référentiel commun avec la puissance mécanique d'un
@@ -496,8 +500,8 @@ export function summarize(
     eleGainM: Math.round(gain),
     eleLossM: Math.round(loss),
     elevationFromDevice,
-    paceAvgSPerKm: distM > 0 ? (durMoving / distM) * 1000 : undefined,
-    gapAvgSPerKm: mean(gap.filter((v) => v > 0)),
+    paceAvgSPerKm: paceAvg,
+    gapAvgSPerKm: paceAvg != null && gapRatio ? paceAvg / gapRatio : undefined,
     speedAvgMS: speedAvg,
     speedMaxMS: speed.length ? Math.max(...speed) : undefined,
     hrAvg,

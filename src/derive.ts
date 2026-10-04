@@ -27,12 +27,21 @@ export function movingTime(samples: Sample[], sport: Sport, speed?: number[]): n
 }
 
 /**
- * Pente en %, calculée sur une fenêtre de distance et non de temps : à 3 min/km
- * une fenêtre de 10 s couvre 55 m, à l'arrêt elle couvre 0 m et la pente
- * diverge. On lisse l'altitude puis on dérive sur ~30 m de parcours.
+ * Pente bornée à ±30 % : au-delà, sur une course, c'est presque toujours un
+ * saut de l'altimètre ou du GPS, pas un mur. Minetti reste valide jusqu'à
+ * 45 %, mais une pente aberrante y produirait une GAP aberrante.
  */
-export function gradeSeries(samples: Sample[], windowM = 30): number[] {
-  const ele = smoothByTime(samples, (s) => s.ele, 20);
+const MAX_GRADE = 0.3;
+
+/**
+ * Pente (rise/run), calculée sur une fenêtre de distance et non de temps : à
+ * 3 min/km une fenêtre de 10 s couvre 55 m, à l'arrêt elle couvre 0 m et la
+ * pente diverge. L'altitude est d'abord lissée sur ±20 m de parcours (et non
+ * sur 20 s : à l'arrêt, un lissage temporel concentrait le bruit de
+ * l'altimètre sur quelques mètres), puis dérivée sur 40 m.
+ */
+export function gradeSeries(samples: Sample[], windowM = 40): number[] {
+  const ele = smoothByDistance(samples, windowM / 2);
   const n = samples.length;
   const out = new Array<number>(n).fill(0);
   let lo = 0;
@@ -42,7 +51,32 @@ export function gradeSeries(samples: Sample[], windowM = 30): number[] {
     while (lo < i && (samples[lo].dist ?? 0) < d - windowM) lo++;
     const dd = d - (samples[lo].dist ?? 0);
     const de = (ele[i] ?? 0) - (ele[lo] ?? 0);
-    out[i] = dd > 1 ? Math.max(-0.5, Math.min(0.5, de / dd)) : 0;
+    out[i] = dd > 1 ? Math.max(-MAX_GRADE, Math.min(MAX_GRADE, de / dd)) : 0;
+  }
+  return out;
+}
+
+/** Moyenne glissante de l'altitude sur ±halfM mètres de parcours. */
+function smoothByDistance(samples: Sample[], halfM: number): (number | undefined)[] {
+  const n = samples.length;
+  const out = new Array<number | undefined>(n);
+  let lo = 0;
+  let hi = 0;
+  let sum = 0;
+  let count = 0;
+  const dist = (k: number) => samples[k].dist ?? 0;
+  for (let i = 0; i < n; i++) {
+    while (hi < n && dist(hi) <= dist(i) + halfM) {
+      const e = samples[hi].ele;
+      if (e != null) { sum += e; count++; }
+      hi++;
+    }
+    while (lo < i && dist(lo) < dist(i) - halfM) {
+      const e = samples[lo].ele;
+      if (e != null) { sum -= e; count--; }
+      lo++;
+    }
+    out[i] = count ? sum / count : samples[i].ele;
   }
   return out;
 }
@@ -60,13 +94,55 @@ export function gapFactor(i: number): number {
   return c / 3.6;
 }
 
-/** Allure ajustée à la pente, en s/km, point par point. */
-export function gapSeries(samples: Sample[], speed: number[], grade: number[]): number[] {
+/** La GAP n'a de sens qu'à pied : à vélo, la pente agit tout autrement. */
+const GAP_SPORTS: ReadonlySet<Sport> = new Set(["running", "hiking"]);
+
+/**
+ * Allure ajustée à la pente, en s/km, point par point.
+ *
+ * Une montée coûte plus d'énergie par mètre (C(i) > C(0)) : à vitesse égale,
+ * elle « vaut » une vitesse plus élevée sur le plat. Vitesse équivalente =
+ * v × C(i)/C(0), donc GAP = allure × C(0)/C(i). L'ancienne version divisait
+ * par le facteur : montées plus lentes, descentes plus rapides, l'inverse du
+ * réel (−2,2 % à 6:30/km donnait 5:45 au lieu de 7:20).
+ */
+export function gapSeries(samples: Sample[], speed: number[], grade: number[], sport?: Sport): number[] {
+  if (sport && !GAP_SPORTS.has(sport)) return speed.map(() => 0);
   return speed.map((v, i) => {
     if (v <= 0.3) return 0;
-    const adjusted = v / gapFactor(grade[i]);
-    return adjusted > 0.1 ? 1000 / adjusted : 0;
+    const flat = v * gapFactor(grade[i]);
+    return flat > 0.1 ? 1000 / flat : 0;
   });
+}
+
+/**
+ * Facteur de coût moyen d'une portion, pondéré par la distance parcourue :
+ * GAP de la portion = allure de la portion ÷ ce facteur.
+ *
+ * Diviser l'allure elle-même garde GAP et allure sur la même base de temps.
+ * Deux pièges évités : moyenner les allures point par point surpondérait les
+ * passages lents (une marche en côte à 30 min/km tirait la GAP d'une sortie
+ * vallonnée 12 % au-dessus de l'allure), et exclure les arrêts d'un seul côté
+ * faisait paraître plus rapide un kilomètre en descente qui comptait un feu.
+ */
+export function gapCostRatio(
+  samples: Sample[],
+  speed: number[],
+  gap: number[],
+  from = 1,
+  to = samples.length - 1,
+): number | undefined {
+  let flat = 0;
+  let real = 0;
+  for (let i = Math.max(from, 1); i <= to; i++) {
+    const g = gap[i];
+    if (!(g > 0)) continue;
+    const dt = Math.min(samples[i].t - samples[i - 1].t, MAX_GAP_S);
+    if (dt <= 0) continue;
+    real += speed[i] * dt;
+    flat += (1000 / g) * dt;
+  }
+  return real > 0 ? flat / real : undefined;
 }
 
 /**

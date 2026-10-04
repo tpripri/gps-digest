@@ -14,7 +14,7 @@ import { analyzeBatch, type FileAnalysis } from "../src/batch.ts";
 import { buildDossier } from "../src/dossier.ts";
 import { haversine } from "../src/geo.ts";
 import { t } from "../src/i18n.ts";
-import type { DigestOptions } from "../src/types.ts";
+import type { Activity, DigestOptions, Sample } from "../src/types.ts";
 import { FIT, fitWriter, fitTime, toSemicircles, writeRecords, writeSession } from "./fit-writer.ts";
 
 let failures = 0;
@@ -126,6 +126,48 @@ section("2. Multisport : une sous-séance par message session");
   check("un fichier mono-sport reste une seule séance",
     parseFitParts((() => { const x = fitWriter(); writeRecords(x, { startIso: START, fromS: 0, toS: 60, speedMS: 3, hr: 150 });
       writeSession(x, { startIso: START, elapsedS: 60, distM: 180, sport: 1 }); return x.bytes(); })(), "fr").every((p) => !p.part));
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+section("3. Allure ajustée à la pente (GAP) dans le bon sens");
+{
+  /**
+   * Course à vitesse constante (3 m/s) sur un profil donné par grade(d), en %.
+   * Le sens du GAP ne doit dépendre que de la pente, pas de l'allure.
+   */
+  const course = (sport: Activity["sport"], grade: (d: number) => number, distM = 3000, v = 3): Activity => {
+    const samples: Sample[] = [];
+    let ele = 100;
+    for (let t = 0; t * v <= distM; t++) {
+      const d = t * v;
+      if (t > 0) ele += grade(d) * v;
+      samples.push({ t, dist: d, ele, hr: 150 });
+    }
+    return { sport, startTime: START, device: "test", source: "fit", samples, laps: [] };
+  };
+  const session = (a: Activity) => digestActivity(a, BASE).digest.session;
+
+  const up = session(course("running", () => 0.05));
+  check("montée à 5 % : GAP plus rapide que l'allure", (up.gapAvgSPerKm ?? Infinity) < (up.paceAvgSPerKm ?? 0),
+    `GAP ${up.gapAvgSPerKm?.toFixed(0)} s/km, allure ${up.paceAvgSPerKm?.toFixed(0)} s/km`);
+  const down = session(course("running", () => -0.05));
+  check("descente à 5 % : GAP plus lente que l'allure", (down.gapAvgSPerKm ?? 0) > (down.paceAvgSPerKm ?? Infinity),
+    `GAP ${down.gapAvgSPerKm?.toFixed(0)} s/km, allure ${down.paceAvgSPerKm?.toFixed(0)} s/km`);
+
+  // Aller-retour sur une bosse : 1,5 km à +4 %, retour à −4 %.
+  const loop = session(course("running", (d) => (d < 1500 ? 0.04 : -0.04)));
+  const gapLoop = Math.abs((loop.gapAvgSPerKm ?? 0) - (loop.paceAvgSPerKm ?? 0)) / (loop.paceAvgSPerKm ?? 1);
+  check("boucle (départ = arrivée) : GAP à moins de 3 % de l'allure", gapLoop < 0.03, `${(gapLoop * 100).toFixed(1)} %`);
+
+  // Pente aberrante (saut d'altitude) : bornée à ±30 %, pas de GAP absurde.
+  const spike = session(course("running", (d) => (d > 1000 && d < 1010 ? 3 : 0)));
+  check("pente bornée : un saut d'altitude ne fait pas exploser la GAP",
+    Math.abs((spike.gapAvgSPerKm ?? 0) - (spike.paceAvgSPerKm ?? 0)) / (spike.paceAvgSPerKm ?? 1) < 0.05,
+    `GAP ${spike.gapAvgSPerKm?.toFixed(0)} s/km, allure ${spike.paceAvgSPerKm?.toFixed(0)} s/km`);
+
+  const bike = digestActivity(course("cycling", () => 0.03, 15000, 8), BASE).digest;
+  check("vélo : pas de GAP, ni dans la séance ni dans les splits",
+    bike.session.gapAvgSPerKm == null && bike.splits.every((s) => s.gapSPerKm == null));
 }
 
 console.log(failures ? `\n\u001b[31m${failures} échec(s)\u001b[0m\n` : "\n\u001b[32mToutes les régressions passent\u001b[0m\n");

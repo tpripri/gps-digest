@@ -122,7 +122,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
   const speed = speedSeries(samples);
   const grade = gradeSeries(samples);
-  const gap = gapSeries(samples, speed, grade);
+  const gap = gapSeries(samples, speed, grade, activity.sport);
 
   // La classification passe avant tout le reste : elle décide quelles analyses
   // ont un sens sur cette séance. Le champ Sport du fichier n'y suffit pas.
