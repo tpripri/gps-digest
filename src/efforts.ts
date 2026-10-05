@@ -21,6 +21,7 @@
  * Quand les deux divergent, l'écart est l'information : il mesure l'incertitude.
  */
 
+import { mmss } from "./geo.ts";
 import { t, translator, type MessageKey } from "./i18n.ts";
 import type { Sample } from "./types.ts";
 
@@ -293,9 +294,7 @@ const MODEL_GAP_PCT = 3;
 /** Riegel. k = 1,06 par défaut ; plus bas pour un athlète à gros volume. */
 /** s/km -> "4:17". Un « 4.29 min/km » décimal n'est lisible par personne. */
 function paceText(sPerKm: number): string {
-  const m = Math.floor(sPerKm / 60);
-  const s = Math.round(sPerKm % 60);
-  return `${m}:${String(s).padStart(2, "0")}`;
+  return mmss(sPerKm);
 }
 
 export function riegel(refDistM: number, refTimeS: number, targetM: number, k = 1.06): number {

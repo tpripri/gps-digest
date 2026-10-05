@@ -342,7 +342,27 @@ export function resampleByDistance(
   return out;
 }
 
-/** Allègement des séances anciennes du mode archive : un point sur cinq. */
-export function thinByTime<T extends { t: number }>(samples: T[]): T[] {
-  return samples.filter((_, i) => i % 5 === 0);
+/**
+ * Allège une séance ancienne du mode archive : un point toutes les `minStepS`
+ * secondes au moins, premier et dernier points toujours gardés.
+ *
+ * Garder un point sur cinq, quelle que soit la cadence d'enregistrement,
+ * espaçait de 20 s les points d'une montre en enregistrement « intelligent »
+ * (un point toutes les 4 s). Or le temps passé en zones plafonne chaque écart
+ * à 10 s : temps en zones, couverture FC et charge (TRIMP) étaient divisés par
+ * deux pour toutes les séances de plus de deux semaines. Un point par seconde
+ * reste allégé d'un facteur 5.
+ */
+export function thinByTime<T extends { t: number }>(samples: T[], minStepS = 5): T[] {
+  if (samples.length < 3) return samples.slice();
+  const out: T[] = [samples[0]];
+  let lastT = samples[0].t;
+  for (let i = 1; i < samples.length - 1; i++) {
+    if (samples[i].t - lastT >= minStepS) {
+      out.push(samples[i]);
+      lastT = samples[i].t;
+    }
+  }
+  out.push(samples[samples.length - 1]);
+  return out;
 }

@@ -3974,18 +3974,18 @@ dist_m,5000
 ele_gain_m,0
 ele_loss_m,0
 pace_avg_s_km,600
-pace_avg_mmss,9:60
+pace_avg_mmss,10:00
 gap_avg_s_km,600
 speed_max_ms,1.7
 sampling_hz,0.5
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,ele_gain_m,ele_loss_m,partial
-1,1000,600,600,9:60,600,0,0,0
-2,1000,600,600,9:60,600,0,0,0
-3,1000,600,600,9:60,600,0,0,0
-4,1000,600,600,9:60,600,0,0,0
-5,1000,600,600,9:60,600,0,0,0
+1,1000,600,600,10:00,600,0,0,0
+2,1000,600,600,10:00,600,0,0,0
+3,1000,600,600,10:00,600,0,0,0
+4,1000,600,600,10:00,600,0,0,0
+5,1000,600,600,10:00,600,0,0,0
 
 ## analysis
 key,value
@@ -3996,12 +3996,12 @@ drift_not_computed_because,Aucune portion d'au moins 10 minutes à allure régul
 
 ## best_efforts
 dist_m,time_s,pace_mmss
-400,240,9:60
-800,480,9:60
-1000,600,9:60
-1609,965,9:60
-3000,1799,9:60
-5000,2998,9:60
+400,240,10:00
+800,480,10:00
+1000,600,10:00
+1609,965,10:00
+3000,1799,10:00
+5000,2998,10:00
 
 ## stream
 t_s,dist_m,ele_m,lat,lon

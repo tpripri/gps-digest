@@ -20,6 +20,7 @@
  * l'analyse, pas du tableau.
  */
 
+import { mmss } from "./geo.ts";
 import { translator } from "./i18n.ts";
 import type { Activity, Sample, Sport } from "./types.ts";
 
@@ -223,10 +224,10 @@ export function formatSpeed(sport: Sport, speedMS: number | undefined): string |
   if (sport === "cycling") return `${(speedMS * 3.6).toFixed(1)} km/h`;
   if (sport === "swimming") {
     const per100 = 100 / speedMS;
-    return `${Math.floor(per100 / 60)}:${String(Math.round(per100 % 60)).padStart(2, "0")}/100m`;
+    return `${mmss(per100)}/100m`;
   }
   const perKm = 1000 / speedMS;
-  return `${Math.floor(perKm / 60)}:${String(Math.round(perKm % 60)).padStart(2, "0")}/km`;
+  return `${mmss(perKm)}/km`;
 }
 
 

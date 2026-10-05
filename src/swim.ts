@@ -20,7 +20,7 @@
  *    que le TCX ne porte pas toujours.
  */
 
-import { mean } from "./geo.ts";
+import { mean, mmss } from "./geo.ts";
 import { translator, type MessageKey, type MessageParams } from "./i18n.ts";
 import type { Activity, Lap, Sample } from "./types.ts";
 
@@ -63,8 +63,7 @@ export interface SwimAnalysis {
   caveats: string[];
 }
 
-const paceLabel100 = (s: number): string =>
-  `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
+const paceLabel100 = (s: number): string => mmss(s);
 
 /**
  * Regroupe les longueurs en séries : « 6 × 100 m, récup 30 s ».

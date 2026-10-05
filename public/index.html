@@ -514,7 +514,7 @@ try {
 const {
   digestFile, digestActivity, analyzeBatch, buildDossier, formatDuration, paceLabel,
   hrSourceLabel, hrSpeedProfile, fetchWeather, heatStressNote, parseFitParts,
-  formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime,
+  formatSpeed, sessionChart, repsChart, trendChart, loadChart, resampleByTime, thinByTime,
   gradeLabel, driftQualityLabel, confidenceLabel, t,
   openArchive, isArchiveName, RecentWindow,
 } = lib;
@@ -600,9 +600,12 @@ let lastBatchSettings = null;
 /** Corrections de l'athlète sur les courses : nom de fichier → course ou non. */
 let raceOverrides = {};
 
-/** Une séance hors de la fenêtre de détail n'a besoin que d'un point sur cinq. */
+/**
+ * Une séance hors de la fenêtre de détail n'a besoin que d'un point toutes les
+ * 5 s : de quoi tenir une année en mémoire, sans fausser le temps en zones.
+ */
 function thinSamples(a) {
-  a.samples = a.samples.filter((_, i) => i % 5 === 0);
+  a.samples = thinByTime(a.samples);
 }
 
 const isRecent = (a, newestMs) =>
@@ -867,8 +870,8 @@ function renderAnalysis(batch) {
                esc(driftQualityLabel(f.drift.quality, LOCALE))}</span>`,
              min: Math.round(f.drift.window.durationS / 60),
              // À vélo, une vitesse : une allure au kilomètre ne s'y lit pas.
-             pace: esc((s.sport === "cycling"
-               ? formatSpeed(s.sport, f.drift.window.paceSPerKm ? 1000 / f.drift.window.paceSPerKm : undefined)
+             pace: esc((f.digest.session.sport === "cycling"
+               ? formatSpeed("cycling", f.drift.window.paceSPerKm ? 1000 / f.drift.window.paceSPerKm : undefined)
                : paceLabel(f.drift.window.paceSPerKm)) ?? "?"),
              coverage: pct(f.drift.windowCoveragePct),
              interpretation: esc(f.drift.interpretation),

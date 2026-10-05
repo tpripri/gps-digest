@@ -20,7 +20,7 @@
  *     tranches d'allure occupées assez longtemps comptent.
  */
 
-import { mean } from "./geo.ts";
+import { mean, mmss } from "./geo.ts";
 import type { HrSpeedPoint } from "./drift.ts";
 import type { HrSource } from "./sensor.ts";
 import { translator } from "./i18n.ts";
@@ -71,9 +71,7 @@ export interface SessionProfile {
 }
 
 function paceText(sPerKm: number): string {
-  const m = Math.floor(sPerKm / 60);
-  const s = Math.round(sPerKm % 60);
-  return `${m}:${String(s).padStart(2, "0")}`;
+  return mmss(sPerKm);
 }
 
 /**
@@ -258,7 +256,7 @@ export function progressionRows(analysis: ProgressionAnalysis) {
       time_at_pace_s: p.timeS,
       hr_source: p.hrSource,
       temp_air_c: p.tempC != null ? Math.round(p.tempC) : undefined,
-      pace_held: `${Math.floor(p.actualPaceSPerKm / 60)}:${String(Math.round(p.actualPaceSPerKm % 60)).padStart(2, "0")}`,
+      pace_held: mmss(p.actualPaceSPerKm),
       efficiency: Math.round(p.efficiency * 1000) / 1000,
     })),
   );

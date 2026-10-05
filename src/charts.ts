@@ -14,7 +14,7 @@
  */
 
 import { translator } from "./i18n.ts";
-import { maxOf, minOf } from "./geo.ts";
+import { maxOf, minOf, mmss } from "./geo.ts";
 
 const W = 720;
 const H = 220;
@@ -95,8 +95,6 @@ function gridAndAxis(left: Scale, right: Scale | null, fmtL: (v: number) => stri
   return out;
 }
 
-const mmss = (s: number) =>
-  `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
 
 // ─────────────────────────────────────────── allure/puissance + FC dans le temps
 

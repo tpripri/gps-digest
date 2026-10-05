@@ -8,7 +8,7 @@ export type { FitExtras, FitLength, FitPart } from "./parse-fit.ts";
 export { decodeFit, GLOBAL } from "./fit-decode.ts";
 export { maskPrivacyZone, trimPrivacyZone, obfuscateCoordinates } from "./privacy.ts";
 export { computeSplits, detectIntervals, hrZones, paceZones, powerZones, summarize } from "./analyze.ts";
-export { selectIndices, reduceSamples, resampleByTime, resampleByDistance } from "./reduce.ts";
+export { selectIndices, reduceSamples, resampleByTime, resampleByDistance, thinByTime } from "./reduce.ts";
 export type { GridPoint } from "./reduce.ts";
 export { buildDossier, buildStream, estimateDossierTokens } from "./dossier.ts";
 export type { DossierOptions, StreamMode } from "./dossier.ts";

@@ -11,6 +11,7 @@
  * Gemini un fichier où "3,45" est lu comme deux champs.
  */
 
+import { mmss } from "./geo.ts";
 import { translator } from "./i18n.ts";
 import type { Digest, Lap, Sample, Split, ZoneBin, IntervalBlock, Sport } from "./types.ts";
 
@@ -79,9 +80,7 @@ const r2 = (v?: number) => (v == null ? undefined : Math.round(v * 100) / 100);
 /** s/km -> "4:32" — beaucoup plus lisible pour le modèle que 272 secondes. */
 export function paceLabel(sPerKm?: number): string | undefined {
   if (sPerKm == null || !Number.isFinite(sPerKm) || sPerKm <= 0) return undefined;
-  const m = Math.floor(sPerKm / 60);
-  const s = Math.round(sPerKm % 60);
-  return `${m}:${String(s).padStart(2, "0")}`;
+  return mmss(sPerKm);
 }
 
 /**
