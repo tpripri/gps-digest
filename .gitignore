@@ -38,3 +38,10 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Données et notes personnelles : fichiers d'entraînement réels, banc
+# d'essai sur ces fichiers, notes de travail. Jamais dans le dépôt public.
+perso/
+BRIEFING-CLAUDE-CODE.md
+.claude/
+.head-src/
