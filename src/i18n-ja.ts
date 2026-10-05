@@ -390,6 +390,7 @@ export const ja: Partial<Catalog> = {
   "fit.hrEvidenceWrist":
     "ウォッチが記録しているのは手首の光学センサーのみで、外部心拍センサーは未接続：推定ではなくファイルから読み取った情報です。",
   "fit.sourceN": "ソース {n}",
+  "fit.manufacturerN": "メーカー {id}",
   "fit.errHeader": "無効な FIT ファイル：ヘッダーが想定外です。",
   "fit.errSignature": "無効な FIT ファイル：シグネチャがありません。",
   "strava.errNoTime": "Strava アクティビティ {id}：時間のデータ列がありません。",

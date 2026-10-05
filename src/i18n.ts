@@ -429,6 +429,7 @@ const fr = {
   "fit.hrEvidenceWrist":
     "La montre ne liste que son capteur optique au poignet, aucun capteur cardiaque externe connecté : information lue dans le fichier, pas estimée.",
   "fit.sourceN": "source {n}",
+  "fit.manufacturerN": "fabricant {id}",
   "fit.errHeader": "Fichier FIT invalide : en-tête inattendu.",
   "fit.errSignature": "Fichier FIT invalide : signature absente.",
   "strava.errNoTime": "Activité Strava {id} : flux temporel absent.",
@@ -833,6 +834,7 @@ const en: Catalog = {
   "fit.hrEvidenceWrist":
     "The watch lists only its wrist optical sensor, no external heart rate sensor connected: read from the file, not estimated.",
   "fit.sourceN": "source {n}",
+  "fit.manufacturerN": "manufacturer {id}",
   "fit.errHeader": "Invalid FIT file: unexpected header.",
   "fit.errSignature": "Invalid FIT file: signature missing.",
   "strava.errNoTime": "Strava activity {id}: time stream missing.",

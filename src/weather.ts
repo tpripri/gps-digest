@@ -161,7 +161,8 @@ export async function fetchWeather(
   const urls = ageDays > 6
     ? [`https://archive-api.open-meteo.com/v1/archive?${common}&start_date=${date}&end_date=${date}`]
     : [
-        `https://api.open-meteo.com/v1/forecast?${common}&start_date=${date}&end_date=${date}&past_days=14`,
+        // past_days est incompatible avec start_date : l'API répondait 400.
+        `https://api.open-meteo.com/v1/forecast?${common}&start_date=${date}&end_date=${date}`,
         `https://archive-api.open-meteo.com/v1/archive?${common}&start_date=${date}&end_date=${date}`,
       ];
 

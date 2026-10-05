@@ -370,6 +370,7 @@ export const zh: Partial<Catalog> = {
   "fit.hrEvidenceWrist":
     "手表只列出其腕部光学传感器，未连接外部心率传感器：信息读取自文件，而非推测。",
   "fit.sourceN": "来源 {n}",
+  "fit.manufacturerN": "制造商 {id}",
   "fit.errHeader": "无效的 FIT 文件：文件头异常。",
   "fit.errSignature": "无效的 FIT 文件：缺少签名。",
   "strava.errNoTime": "Strava 活动 {id}：缺少时间数据流。",

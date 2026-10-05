@@ -68,6 +68,8 @@ interface MessageDef {
   littleEndian: boolean;
   fields: FieldDef[];
   devFieldBytes: number;
+  /** Taille d'un message de données, en octets. */
+  size: number;
 }
 
 /** Message décodé : numéro de champ → valeur brute. */
@@ -94,7 +96,10 @@ export const GLOBAL = {
 /**
  * Décode un fichier FIT. Ne vérifie pas le CRC : un fichier tronqué par un
  * transfert interrompu reste largement exploitable, et refuser de le lire
- * rendrait un mauvais service.
+ * rendrait un mauvais service. La lecture s'arrête au dernier message
+ * complet : une coupure au milieu d'une définition levait auparavant une
+ * erreur technique (« Offset is outside the bounds of the DataView ») et le
+ * fichier entier était perdu.
  */
 export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): FitFile {
   const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
@@ -127,6 +132,8 @@ export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): Fi
 
     if (!compressed && (header & 0x40) !== 0) {
       // ---- Message de définition ----
+      // En-tête fixe de 5 octets, puis 3 octets par champ.
+      if (pos + 5 > end || pos + 5 + bytes[pos + 4] * 3 > end) break;
       pos++; // réservé
       const littleEndian = bytes[pos++] === 0;
       const globalNum = view.getUint16(pos, littleEndian);
@@ -143,6 +150,7 @@ export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): Fi
       // pour pouvoir les sauter, sans chercher à les interpréter.
       let devFieldBytes = 0;
       if ((header & 0x20) !== 0) {
+        if (pos >= end || pos + 1 + bytes[pos] * 3 > end) break;
         const devCount = bytes[pos++];
         for (let i = 0; i < devCount; i++) {
           devFieldBytes += bytes[pos + 1];
@@ -150,7 +158,8 @@ export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): Fi
         }
       }
 
-      defs.set(header & 0x0f, { globalNum, littleEndian, fields, devFieldBytes });
+      const size = fields.reduce((sum, f) => sum + f.size, 0) + devFieldBytes;
+      defs.set(header & 0x0f, { globalNum, littleEndian, fields, devFieldBytes, size });
       continue;
     }
 
@@ -158,6 +167,7 @@ export function decodeFit(buffer: ArrayBuffer | Uint8Array, locale?: string): Fi
     const localNum = compressed ? (header >> 5) & 0x03 : header & 0x0f;
     const def = defs.get(localNum);
     if (!def) break; // définition manquante : on ne peut plus avancer sûrement
+    if (pos + def.size > end) break; // message tronqué : on garde ceux d'avant
 
     const msg: FitMessage = {};
 
@@ -271,10 +281,11 @@ export const FIT_SPORT: Record<number, string> = {
 
 /** Sous-sports utiles : distinguent le bassin de l'eau libre. */
 export const FIT_SUB_SPORT: Record<number, string> = {
+  1: "treadmill",
+  5: "spin",
+  6: "indoor_cycling",
   17: "lap_swimming",
   18: "open_water",
-  6: "indoor_cycling",
-  5: "treadmill",
   58: "virtual_activity",
 };
 

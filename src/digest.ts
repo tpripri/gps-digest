@@ -397,9 +397,16 @@ export async function digestFile(
   data: string | ArrayBuffer | Uint8Array,
   opts: DigestOptions = {},
 ): Promise<DigestResult> {
+  if (typeof data !== "string") {
+    // FIT : on garde ce que le fichier apporte en plus des points (totaux du
+    // message session, matériel appairé, longueurs de bassin). Les passer par
+    // parseAny les perdait. Un multisport se découpe avec parseFitParts.
+    const { activity, extras } = parseFitBuffer(data, opts.locale);
+    const fitOpts = { ...opts, fitExtras: { ...extras, ...opts.fitExtras } };
+    return finalize(buildFull(activity, fitOpts), data.byteLength, fitOpts);
+  }
   const activity = await parseAny(filename, data, opts.locale);
-  const rawBytes = typeof data === "string" ? data.length : data.byteLength;
-  return finalize(buildFull(activity, opts), rawBytes, opts);
+  return finalize(buildFull(activity, opts), data.length, opts);
 }
 
 /** Même pipeline, à partir d'une activité déjà construite (flux Strava). */

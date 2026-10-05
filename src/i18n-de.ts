@@ -395,6 +395,7 @@ export const de: Partial<Catalog> = {
   "fit.hrEvidenceWrist":
     "Die Uhr meldet nur ihren optischen Handgelenksensor, kein externer Herzfrequenzsensor verbunden: aus der Datei gelesen, nicht geschätzt.",
   "fit.sourceN": "Quelle {n}",
+  "fit.manufacturerN": "Hersteller {id}",
   "fit.errHeader": "Ungültige FIT-Datei: unerwarteter Header.",
   "fit.errSignature": "Ungültige FIT-Datei: Signatur fehlt.",
   "strava.errNoTime": "Strava-Aktivität {id}: Zeitstrom fehlt.",

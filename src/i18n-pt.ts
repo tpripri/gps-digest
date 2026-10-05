@@ -391,6 +391,7 @@ export const pt: Partial<Catalog> = {
   "fit.hrEvidenceWrist":
     "O relógio só lista o sensor óptico de pulso, nenhum sensor cardíaco externo conectado: informação lida do arquivo, não estimada.",
   "fit.sourceN": "fonte {n}",
+  "fit.manufacturerN": "fabricante {id}",
   "fit.errHeader": "Arquivo FIT inválido: cabeçalho inesperado.",
   "fit.errSignature": "Arquivo FIT inválido: assinatura ausente.",
   "strava.errNoTime": "Atividade Strava {id}: fluxo de tempo ausente.",

@@ -329,7 +329,7 @@ function buildFromFit(
   const manufacturerId = fileId?.[1] as number | undefined;
   const manufacturer =
     manufacturerId != null
-      ? (FIT_MANUFACTURER[manufacturerId] ?? `fabricant ${manufacturerId}`)
+      ? (FIT_MANUFACTURER[manufacturerId] ?? translator(locale)("fit.manufacturerN", { id: manufacturerId }))
       : undefined;
 
   return {

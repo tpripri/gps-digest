@@ -390,6 +390,7 @@ export const es: Partial<Catalog> = {
   "fit.hrEvidenceWrist":
     "El reloj solo indica su sensor óptico de muñeca, sin sensor de frecuencia cardiaca externo conectado: dato leído del archivo, no estimado.",
   "fit.sourceN": "fuente {n}",
+  "fit.manufacturerN": "fabricante {id}",
   "fit.errHeader": "Archivo FIT no válido: encabezado inesperado.",
   "fit.errSignature": "Archivo FIT no válido: falta la firma.",
   "strava.errNoTime": "Actividad de Strava {id}: falta el flujo temporal.",
