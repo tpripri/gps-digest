@@ -19,8 +19,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9420
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,318
 pace_avg_mmss,5:18
 gap_avg_s_km,320
@@ -35,14 +35,14 @@ sampling_hz,1
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,119,161,4,0,0
+1,997,368,369,6:09,357,119,161,6,0,0
 2,1000,313,313,5:13,305,135,166,4,0,0
 3,1000,313,313,5:13,310,135,166,0,0,0
 4,1000,313,313,5:13,316,135,166,0,2,0
-5,1000,313,313,5:13,321,136,166,0,4,0
-6,1000,313,313,5:13,324,136,166,0,4,0
-7,1000,313,313,5:13,322,137,166,0,4,0
-8,1000,313,313,5:13,318,137,166,0,2,0
+5,1000,313,313,5:13,321,136,166,0,5,0
+6,1000,313,313,5:13,324,136,166,0,6,0
+7,1000,313,313,5:13,322,137,166,0,5,0
+8,1000,313,313,5:13,318,137,166,0,3,0
 9,1000,313,313,5:13,312,138,166,0,0,0
 10,420,131,313,5:13,308,138,166,0,0,1
 
@@ -302,8 +302,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9555
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,314
 pace_avg_mmss,5:14
 gap_avg_s_km,315
@@ -318,14 +318,14 @@ sampling_hz,1
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,367,368,6:08,356,120,161,4,0,0
+1,997,367,368,6:08,356,120,161,6,0,0
 2,1000,308,308,5:08,300,137,166,4,0,0
 3,1000,308,308,5:08,305,138,166,0,0,0
 4,1000,308,308,5:08,312,139,166,0,2,0
-5,1000,308,308,5:08,316,139,166,0,4,0
+5,1000,308,308,5:08,316,139,166,0,5,0
 6,1000,308,308,5:08,318,140,166,0,6,0
-7,1000,308,308,5:08,317,141,166,0,4,0
-8,1000,308,308,5:08,313,142,166,0,2,0
+7,1000,308,308,5:08,317,141,166,0,5,0
+8,1000,308,308,5:08,313,142,166,0,3,0
 9,1000,308,308,5:08,308,142,166,0,0,0
 10,555,171,308,5:08,302,143,166,0,0,1
 
@@ -584,8 +584,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9690
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,309
 pace_avg_mmss,5:09
 gap_avg_s_km,311
@@ -600,14 +600,14 @@ sampling_hz,1
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,366,367,6:07,354,120,161,4,0,0
+1,997,366,367,6:07,354,120,161,6,0,0
 2,1000,303,303,5:03,295,140,166,4,0,0
 3,1000,303,303,5:03,301,141,166,0,0,0
 4,1000,303,303,5:03,306,143,166,0,2,0
-5,1000,303,303,5:03,312,144,166,0,4,0
+5,1000,303,303,5:03,312,144,166,0,5,0
 6,1000,303,303,5:03,314,145,166,0,6,0
-7,1000,303,303,5:03,312,146,166,0,4,0
-8,1000,303,303,5:03,309,147,166,0,2,0
+7,1000,303,303,5:03,312,146,166,0,6,0
+8,1000,303,303,5:03,309,147,166,0,3,0
 9,1000,303,303,5:03,303,149,166,0,0,0
 10,690,209,303,5:03,297,150,166,2,0,1
 
@@ -867,8 +867,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9420
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,318
 pace_avg_mmss,5:18
 gap_avg_s_km,320
@@ -883,14 +883,14 @@ sampling_hz,1
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,108,161,4,0,0
+1,997,368,369,6:09,357,108,161,6,0,0
 2,1000,313,313,5:13,305,141,166,4,0,0
 3,1000,313,313,5:13,310,143,166,0,0,0
 4,1000,313,313,5:13,316,139,166,0,2,0
-5,1000,313,313,5:13,321,138,166,0,4,0
-6,1000,313,313,5:13,324,143,166,0,4,0
-7,1000,313,313,5:13,322,143,166,0,4,0
-8,1000,313,313,5:13,318,139,166,0,2,0
+5,1000,313,313,5:13,321,138,166,0,5,0
+6,1000,313,313,5:13,324,143,166,0,6,0
+7,1000,313,313,5:13,322,143,166,0,5,0
+8,1000,313,313,5:13,318,139,166,0,3,0
 9,1000,313,313,5:13,312,141,166,0,0,0
 10,420,131,313,5:13,308,150,166,0,0,1
 
@@ -1180,8 +1180,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9144
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,328
 pace_avg_mmss,5:28
 gap_avg_s_km,330
@@ -1200,14 +1200,14 @@ description,source,reps,avg_work_s,avg_work_pace,avg_rest_s
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,294,145,168,0,0,0
 4,1000,299,299,4:59,302,143,168,0,2,0
-5,1000,302,302,5:02,311,142,166,0,4,0
+5,1000,302,302,5:02,311,142,166,0,5,0
 6,1000,306,306,5:06,317,140,167,0,6,0
-7,1000,311,311,5:11,320,139,166,0,4,0
-8,1000,329,329,5:29,336,135,164,0,2,0
+7,1000,311,311,5:11,320,139,166,0,5,0
+8,1000,329,329,5:29,336,135,164,0,3,0
 9,1000,370,370,6:10,370,120,162,0,0,0
 10,144,53,370,6:10,363,120,162,0,0,1
 
@@ -1516,8 +1516,8 @@ device,Forerunner 255
 dur_elapsed_s,2999
 dur_moving_s,2999
 dist_m,9360
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 pace_avg_s_km,320
 pace_avg_mmss,5:20
 gap_avg_s_km,322
@@ -1536,14 +1536,14 @@ description,source,reps,avg_work_s,avg_work_pace,avg_rest_s
 
 ## splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,293,145,168,0,0,0
 4,1000,295,295,4:55,299,146,168,0,2,0
-5,1000,294,294,4:54,302,147,168,0,4,0
+5,1000,294,294,4:54,302,147,168,0,5,0
 6,1000,291,291,4:51,302,148,168,0,6,0
-7,1000,291,291,4:51,301,148,168,0,4,0
-8,1000,291,291,4:51,297,149,168,0,2,0
+7,1000,291,291,4:51,301,148,168,0,6,0
+8,1000,291,291,4:51,297,149,168,0,3,0
 9,1000,374,374,6:14,374,118,162,0,0,0
 10,360,133,370,6:10,364,120,162,0,0,1
 
@@ -1838,8 +1838,8 @@ device,Forerunner 255
 dur_elapsed_s,3599
 dur_moving_s,3599
 dist_m,25499
-ele_gain_m,51
-ele_loss_m,42
+ele_gain_m,60
+ele_loss_m,48
 speed_avg_kmh,25.5
 speed_max_ms,9
 hr_avg,147
@@ -1857,11 +1857,11 @@ description,source,reps,avg_work_s,avg_work_kmh,avg_work_w,avg_rest_s
 
 ## splits
 n,dist_m,dur_s,speed_kmh,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
-1,4993,692,26,141,88,165,10,6,0
-2,5000,686,26.2,153,90,211,0,14,0
-3,5000,736,24.4,154,88,214,18,0,0
-4,5000,740,24.3,151,87,200,0,22,0
-5,5000,687,26.2,137,88,150,22,0,0
+1,4993,692,26,141,88,165,11,8,0
+2,5000,686,26.2,153,90,211,4,16,0
+3,5000,736,24.4,154,88,214,20,0,0
+4,5000,740,24.3,151,87,200,0,23,0
+5,5000,687,26.2,137,88,150,23,0,0
 6,499,57,31.7,137,88,150,0,0,1
 
 ## laps
@@ -2574,7 +2574,7 @@ device,Forerunner 255
 dur_elapsed_s,3599
 dur_moving_s,921
 dist_m,3510
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 pace_avg_s_km,262
 pace_avg_mmss,4:22
@@ -3149,7 +3149,7 @@ device,Forerunner 255
 dur_elapsed_s,2399
 dur_moving_s,2399
 dist_m,3120
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 pace_avg_s_km,769
 pace_avg_mmss,12:49
@@ -3419,8 +3419,8 @@ device,Forerunner 255
 dur_elapsed_s,3599
 dur_moving_s,3599
 dist_m,25499
-ele_gain_m,51
-ele_loss_m,42
+ele_gain_m,60
+ele_loss_m,48
 speed_avg_kmh,25.5
 speed_max_ms,9
 hr_avg,147
@@ -3438,11 +3438,11 @@ description,source,reps,avg_work_s,avg_work_kmh,avg_work_w,avg_rest_s
 
 ## splits
 n,dist_m,dur_s,speed_kmh,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
-1,4993,692,26,141,88,165,10,6,0
-2,5000,686,26.2,153,90,211,0,14,0
-3,5000,736,24.4,154,88,214,18,0,0
-4,5000,740,24.3,151,87,200,0,22,0
-5,5000,687,26.2,137,88,150,22,0,0
+1,4993,692,26,141,88,165,11,8,0
+2,5000,686,26.2,153,90,211,4,16,0
+3,5000,736,24.4,154,88,214,20,0,0
+4,5000,740,24.3,151,87,200,0,23,0
+5,5000,687,26.2,137,88,150,23,0,0
 6,499,57,31.7,137,88,150,0,0,1
 
 ## laps
@@ -3687,8 +3687,8 @@ device,Forerunner 255
 dur_elapsed_s,3599
 dur_moving_s,3599
 dist_m,25499
-ele_gain_m,51
-ele_loss_m,42
+ele_gain_m,60
+ele_loss_m,48
 speed_avg_kmh,25.5
 speed_max_ms,9
 hr_avg,147
@@ -3708,11 +3708,11 @@ description,source,reps,avg_work_s,avg_work_kmh,avg_work_w,avg_rest_s
 
 ## splits
 n,dist_m,dur_s,speed_kmh,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
-1,4993,692,26,141,88,165,10,6,0
-2,5000,686,26.2,153,90,211,0,14,0
-3,5000,736,24.4,154,88,214,18,0,0
-4,5000,740,24.3,151,87,200,0,22,0
-5,5000,687,26.2,137,88,150,22,0,0
+1,4993,692,26,141,88,165,11,8,0
+2,5000,686,26.2,153,90,211,4,16,0
+3,5000,736,24.4,154,88,214,20,0,0
+4,5000,740,24.3,151,87,200,0,23,0
+5,5000,687,26.2,137,88,150,23,0,0
 6,499,57,31.7,137,88,150,0,0,1
 
 ## laps
@@ -4272,25 +4272,25 @@ t_s,dist_m,ele_m,lat,lon
 
 ## sessions
 date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,hr_confidence,drift_pct,drift_valid,temp_c,intervals,file
-2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,0.90,1.4,1,18,,a-steady-strap-1.tcx
-2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,0.90,2.3,1,24,,a-steady-strap-2.tcx
-2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,0.90,3.7,1,30,,a-steady-strap-3.tcx
-2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,0.90,1.4,1,18,,b-steady-optical.tcx
-2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,0.30,n/a,0,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+2026-06-02,running,9.42,49:59,5:18/km,5:20,12,134,168,ceinture,signal,0.90,1.4,1,18,,a-steady-strap-1.tcx
+2026-06-16,running,9.55,49:59,5:14/km,5:15,12,137,168,ceinture,signal,0.90,2.3,1,24,,a-steady-strap-2.tcx
+2026-07-07,running,9.69,49:59,5:09/km,5:11,12,142,168,ceinture,signal,0.90,3.7,1,30,,a-steady-strap-3.tcx
+2026-07-21,running,9.42,49:59,5:18/km,5:20,12,137,166,capteur poignet,signal,0.90,1.4,1,18,,b-steady-optical.tcx
+2026-07-23,running,9.14,49:59,5:28/km,5:30,12,132,177,ceinture,signal,0.69,-2.0,1,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+2026-07-25,running,9.36,49:59,5:20/km,5:22,12,135,180,indéterminée,signal,0.30,n/a,0,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+2026-07-26,cycling,25.50,59:59,25.5 km/h,,60,147,168,ceinture,signal,0.81,0.1,1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
 2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,0.00,n/a,0,,,e-pool.tcx
-2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,0.90,n/a,0,,,f-hyrox.tcx
+2026-07-28,other,3.51,15:21,4:22/km,,12,146,168,ceinture,signal,0.90,n/a,0,,,f-hyrox.tcx
 2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,0.81,n/a,0,,,g-stroll.tcx
-2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,0.90,-0.0,1,,,h-hike.tcx
+2026-07-30,hiking,3.12,39:59,12:49/km,,12,116,168,ceinture,signal,0.90,-0.0,1,,,h-hike.tcx
 
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,bike_km,bike_time,bike_ele_m,swim_m,swim_time,hike_km,hike_time,hike_ele_m,other_time,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
-2026-S23,1,49:59,9.4,49:59,9,,,,,,,,,,146,100,41,58,1
-2026-S25,1,49:59,9.6,49:59,9,,,,,,,,,,149,100,12,87,1
-2026-S28,1,49:59,9.7,49:59,9,,,,,,,,,,174,100,10,81,9
-2026-S30,4,3h29:56,27.9,2h29:57,27,25.5,59:59,51,,,,,,,676,100,45,23,32
-2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,9,15:21,378,100,61,29,11
+2026-S23,1,49:59,9.4,49:59,12,,,,,,,,,,146,100,41,58,1
+2026-S25,1,49:59,9.6,49:59,12,,,,,,,,,,149,100,12,87,1
+2026-S28,1,49:59,9.7,49:59,12,,,,,,,,,,174,100,10,81,9
+2026-S30,4,3h29:56,27.9,2h29:57,36,25.5,59:59,60,,,,,,,676,100,45,23,32
+2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,12,15:21,378,100,61,29,11
 
 ## best_efforts
 distance,time,pace_mmss,date,file
@@ -4379,26 +4379,26 @@ marathon,3h33:14,3h16:16,3h50:12,5:03,moyenne,,,,Riegel depuis semi-marathon en 
 
 ## sessions
 n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,12,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,12,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,12,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,12,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,12,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,12,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,60,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
 8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,12,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
 10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,12,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,bike_km,bike_time,bike_ele_m,swim_m,swim_time,hike_km,hike_time,hike_ele_m,other_time,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
-2026-S23,1,49:59,9.4,49:59,9,,,,,,,,,,146,100,41,58,1
-2026-S25,1,49:59,9.6,49:59,9,,,,,,,,,,149,100,12,87,1
-2026-S28,1,49:59,9.7,49:59,9,,,,,,,,,,174,100,10,81,9
-2026-S30,4,3h29:56,27.9,2h29:57,27,25.5,59:59,51,,,,,,,676,100,45,23,32
-2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,9,15:21,378,100,61,29,11
+2026-S23,1,49:59,9.4,49:59,12,,,,,,,,,,146,100,41,58,1
+2026-S25,1,49:59,9.6,49:59,12,,,,,,,,,,149,100,12,87,1
+2026-S28,1,49:59,9.7,49:59,12,,,,,,,,,,174,100,10,81,9
+2026-S30,4,3h29:56,27.9,2h29:57,36,25.5,59:59,60,,,,,,,676,100,45,23,32
+2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,12,15:21,378,100,61,29,11
 
 ## best_efforts_all_sessions
 distance,time,pace_mmss,date,file
@@ -4455,8 +4455,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,134
 hr_max,168
@@ -4482,14 +4482,14 @@ raw_sample_count,3000
 
 ## s1_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,119,161,4,0,0
+1,997,368,369,6:09,357,119,161,6,0,0
 2,1000,313,313,5:13,305,135,166,4,0,0
 3,1000,313,313,5:13,310,135,166,0,0,0
 4,1000,313,313,5:13,316,135,166,0,2,0
-5,1000,313,313,5:13,321,136,166,0,4,0
-6,1000,313,313,5:13,324,136,166,0,4,0
-7,1000,313,313,5:13,322,137,166,0,4,0
-8,1000,313,313,5:13,318,137,166,0,2,0
+5,1000,313,313,5:13,321,136,166,0,5,0
+6,1000,313,313,5:13,324,136,166,0,6,0
+7,1000,313,313,5:13,322,137,166,0,5,0
+8,1000,313,313,5:13,318,137,166,0,3,0
 9,1000,313,313,5:13,312,138,166,0,0,0
 10,420,131,313,5:13,308,138,166,0,0,1
 
@@ -4587,8 +4587,8 @@ pace_avg_mmss,5:14
 speed_avg_display,5:14/km
 gap_avg_s_km,315
 gap_avg_mmss,5:15
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,168
@@ -4614,14 +4614,14 @@ raw_sample_count,3000
 
 ## s2_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,367,368,6:08,356,120,161,4,0,0
+1,997,367,368,6:08,356,120,161,6,0,0
 2,1000,308,308,5:08,300,137,166,4,0,0
 3,1000,308,308,5:08,305,138,166,0,0,0
 4,1000,308,308,5:08,312,139,166,0,2,0
-5,1000,308,308,5:08,316,139,166,0,4,0
+5,1000,308,308,5:08,316,139,166,0,5,0
 6,1000,308,308,5:08,318,140,166,0,6,0
-7,1000,308,308,5:08,317,141,166,0,4,0
-8,1000,308,308,5:08,313,142,166,0,2,0
+7,1000,308,308,5:08,317,141,166,0,5,0
+8,1000,308,308,5:08,313,142,166,0,3,0
 9,1000,308,308,5:08,308,142,166,0,0,0
 10,555,171,308,5:08,302,143,166,0,0,1
 
@@ -4719,8 +4719,8 @@ pace_avg_mmss,5:09
 speed_avg_display,5:09/km
 gap_avg_s_km,311
 gap_avg_mmss,5:11
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,142
 hr_max,168
@@ -4751,14 +4751,14 @@ raw_sample_count,3000
 
 ## s3_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,366,367,6:07,354,120,161,4,0,0
+1,997,366,367,6:07,354,120,161,6,0,0
 2,1000,303,303,5:03,295,140,166,4,0,0
 3,1000,303,303,5:03,301,141,166,0,0,0
 4,1000,303,303,5:03,306,143,166,0,2,0
-5,1000,303,303,5:03,312,144,166,0,4,0
+5,1000,303,303,5:03,312,144,166,0,5,0
 6,1000,303,303,5:03,314,145,166,0,6,0
-7,1000,303,303,5:03,312,146,166,0,4,0
-8,1000,303,303,5:03,309,147,166,0,2,0
+7,1000,303,303,5:03,312,146,166,0,6,0
+8,1000,303,303,5:03,309,147,166,0,3,0
 9,1000,303,303,5:03,303,149,166,0,0,0
 10,690,209,303,5:03,297,150,166,2,0,1
 
@@ -4856,8 +4856,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,166
@@ -4885,14 +4885,14 @@ raw_sample_count,3000
 
 ## s4_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,108,161,4,0,0
+1,997,368,369,6:09,357,108,161,6,0,0
 2,1000,313,313,5:13,305,141,166,4,0,0
 3,1000,313,313,5:13,310,143,166,0,0,0
 4,1000,313,313,5:13,316,139,166,0,2,0
-5,1000,313,313,5:13,321,138,166,0,4,0
-6,1000,313,313,5:13,324,143,166,0,4,0
-7,1000,313,313,5:13,322,143,166,0,4,0
-8,1000,313,313,5:13,318,139,166,0,2,0
+5,1000,313,313,5:13,321,138,166,0,5,0
+6,1000,313,313,5:13,324,143,166,0,6,0
+7,1000,313,313,5:13,322,143,166,0,5,0
+8,1000,313,313,5:13,318,139,166,0,3,0
 9,1000,313,313,5:13,312,141,166,0,0,0
 10,420,131,313,5:13,308,150,166,0,0,1
 
@@ -4990,8 +4990,8 @@ pace_avg_mmss,5:28
 speed_avg_display,5:28/km
 gap_avg_s_km,330
 gap_avg_mmss,5:30
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,132
 hr_max,177
@@ -5020,14 +5020,14 @@ raw_sample_count,3000
 
 ## s5_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,294,145,168,0,0,0
 4,1000,299,299,4:59,302,143,168,0,2,0
-5,1000,302,302,5:02,311,142,166,0,4,0
+5,1000,302,302,5:02,311,142,166,0,5,0
 6,1000,306,306,5:06,317,140,167,0,6,0
-7,1000,311,311,5:11,320,139,166,0,4,0
-8,1000,329,329,5:29,336,135,164,0,2,0
+7,1000,311,311,5:11,320,139,166,0,5,0
+8,1000,329,329,5:29,336,135,164,0,3,0
 9,1000,370,370,6:10,370,120,162,0,0,0
 10,144,53,370,6:10,363,120,162,0,0,1
 
@@ -5142,8 +5142,8 @@ pace_avg_mmss,5:20
 speed_avg_display,5:20/km
 gap_avg_s_km,322
 gap_avg_mmss,5:22
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,135
 hr_max,180
@@ -5161,14 +5161,14 @@ raw_sample_count,3000
 
 ## s6_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,293,145,168,0,0,0
 4,1000,295,295,4:55,299,146,168,0,2,0
-5,1000,294,294,4:54,302,147,168,0,4,0
+5,1000,294,294,4:54,302,147,168,0,5,0
 6,1000,291,291,4:51,302,148,168,0,6,0
-7,1000,291,291,4:51,301,148,168,0,4,0
-8,1000,291,291,4:51,297,149,168,0,2,0
+7,1000,291,291,4:51,301,148,168,0,6,0
+8,1000,291,291,4:51,297,149,168,0,3,0
 9,1000,374,374,6:14,374,118,162,0,0,0
 10,360,133,370,6:10,364,120,162,0,0,1
 
@@ -5279,8 +5279,8 @@ dur_moving_s,3599
 dur_moving,59:59
 speed_avg_kmh,25.5
 speed_avg_display,25.5 km/h
-ele_gain_m,51
-ele_loss_m,42
+ele_gain_m,60
+ele_loss_m,48
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,147
 hr_max,168
@@ -5308,11 +5308,11 @@ raw_sample_count,3600
 
 ## s7_splits
 n,dist_m,dur_s,speed_kmh,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
-1,4993,692,26,141,88,165,10,6,0
-2,5000,686,26.2,153,90,211,0,14,0
-3,5000,736,24.4,154,88,214,18,0,0
-4,5000,740,24.3,151,87,200,0,22,0
-5,5000,687,26.2,137,88,150,22,0,0
+1,4993,692,26,141,88,165,11,8,0
+2,5000,686,26.2,153,90,211,4,16,0
+3,5000,736,24.4,154,88,214,20,0,0
+4,5000,740,24.3,151,87,200,0,23,0
+5,5000,687,26.2,137,88,150,23,0,0
 6,499,57,31.7,137,88,150,0,0,1
 
 ## s7_laps
@@ -5491,7 +5491,7 @@ pace_avg_mmss,4:22
 speed_avg_display,4:22/km
 gap_avg_s_km,258
 gap_avg_mmss,4:18
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,146
@@ -5676,7 +5676,7 @@ pace_avg_mmss,12:49
 speed_avg_display,12:49/km
 gap_avg_s_km,754
 gap_avg_mmss,12:34
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,116
@@ -5818,26 +5818,26 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,lat,lon,grade_pct
 
 ## sessions
 n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,12,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,12,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,12,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,12,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,12,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,12,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,60,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
 8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,12,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
 10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,12,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,bike_km,bike_time,bike_ele_m,swim_m,swim_time,hike_km,hike_time,hike_ele_m,other_time,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
-2026-S23,1,49:59,9.4,49:59,9,,,,,,,,,,146,100,41,58,1
-2026-S25,1,49:59,9.6,49:59,9,,,,,,,,,,149,100,12,87,1
-2026-S28,1,49:59,9.7,49:59,9,,,,,,,,,,174,100,10,81,9
-2026-S30,4,3h29:56,27.9,2h29:57,27,25.5,59:59,51,,,,,,,676,100,45,23,32
-2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,9,15:21,378,100,61,29,11
+2026-S23,1,49:59,9.4,49:59,12,,,,,,,,,,146,100,41,58,1
+2026-S25,1,49:59,9.6,49:59,12,,,,,,,,,,149,100,12,87,1
+2026-S28,1,49:59,9.7,49:59,12,,,,,,,,,,174,100,10,81,9
+2026-S30,4,3h29:56,27.9,2h29:57,36,25.5,59:59,60,,,,,,,676,100,45,23,32
+2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,12,15:21,378,100,61,29,11
 
 ## best_efforts_all_sessions
 distance,time,pace_mmss,date,file
@@ -5894,8 +5894,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,134
 hr_max,168
@@ -5921,14 +5921,14 @@ raw_sample_count,3000
 
 ## s1_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,119,161,4,0,0
+1,997,368,369,6:09,357,119,161,6,0,0
 2,1000,313,313,5:13,305,135,166,4,0,0
 3,1000,313,313,5:13,310,135,166,0,0,0
 4,1000,313,313,5:13,316,135,166,0,2,0
-5,1000,313,313,5:13,321,136,166,0,4,0
-6,1000,313,313,5:13,324,136,166,0,4,0
-7,1000,313,313,5:13,322,137,166,0,4,0
-8,1000,313,313,5:13,318,137,166,0,2,0
+5,1000,313,313,5:13,321,136,166,0,5,0
+6,1000,313,313,5:13,324,136,166,0,6,0
+7,1000,313,313,5:13,322,137,166,0,5,0
+8,1000,313,313,5:13,318,137,166,0,3,0
 9,1000,313,313,5:13,312,138,166,0,0,0
 10,420,131,313,5:13,308,138,166,0,0,1
 
@@ -5994,8 +5994,8 @@ pace_avg_mmss,5:14
 speed_avg_display,5:14/km
 gap_avg_s_km,315
 gap_avg_mmss,5:15
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,168
@@ -6021,14 +6021,14 @@ raw_sample_count,3000
 
 ## s2_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,367,368,6:08,356,120,161,4,0,0
+1,997,367,368,6:08,356,120,161,6,0,0
 2,1000,308,308,5:08,300,137,166,4,0,0
 3,1000,308,308,5:08,305,138,166,0,0,0
 4,1000,308,308,5:08,312,139,166,0,2,0
-5,1000,308,308,5:08,316,139,166,0,4,0
+5,1000,308,308,5:08,316,139,166,0,5,0
 6,1000,308,308,5:08,318,140,166,0,6,0
-7,1000,308,308,5:08,317,141,166,0,4,0
-8,1000,308,308,5:08,313,142,166,0,2,0
+7,1000,308,308,5:08,317,141,166,0,5,0
+8,1000,308,308,5:08,313,142,166,0,3,0
 9,1000,308,308,5:08,308,142,166,0,0,0
 10,555,171,308,5:08,302,143,166,0,0,1
 
@@ -6095,8 +6095,8 @@ pace_avg_mmss,5:09
 speed_avg_display,5:09/km
 gap_avg_s_km,311
 gap_avg_mmss,5:11
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,142
 hr_max,168
@@ -6127,14 +6127,14 @@ raw_sample_count,3000
 
 ## s3_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,366,367,6:07,354,120,161,4,0,0
+1,997,366,367,6:07,354,120,161,6,0,0
 2,1000,303,303,5:03,295,140,166,4,0,0
 3,1000,303,303,5:03,301,141,166,0,0,0
 4,1000,303,303,5:03,306,143,166,0,2,0
-5,1000,303,303,5:03,312,144,166,0,4,0
+5,1000,303,303,5:03,312,144,166,0,5,0
 6,1000,303,303,5:03,314,145,166,0,6,0
-7,1000,303,303,5:03,312,146,166,0,4,0
-8,1000,303,303,5:03,309,147,166,0,2,0
+7,1000,303,303,5:03,312,146,166,0,6,0
+8,1000,303,303,5:03,309,147,166,0,3,0
 9,1000,303,303,5:03,303,149,166,0,0,0
 10,690,209,303,5:03,297,150,166,2,0,1
 
@@ -6201,8 +6201,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,166
@@ -6230,14 +6230,14 @@ raw_sample_count,3000
 
 ## s4_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,108,161,4,0,0
+1,997,368,369,6:09,357,108,161,6,0,0
 2,1000,313,313,5:13,305,141,166,4,0,0
 3,1000,313,313,5:13,310,143,166,0,0,0
 4,1000,313,313,5:13,316,139,166,0,2,0
-5,1000,313,313,5:13,321,138,166,0,4,0
-6,1000,313,313,5:13,324,143,166,0,4,0
-7,1000,313,313,5:13,322,143,166,0,4,0
-8,1000,313,313,5:13,318,139,166,0,2,0
+5,1000,313,313,5:13,321,138,166,0,5,0
+6,1000,313,313,5:13,324,143,166,0,6,0
+7,1000,313,313,5:13,322,143,166,0,5,0
+8,1000,313,313,5:13,318,139,166,0,3,0
 9,1000,313,313,5:13,312,141,166,0,0,0
 10,420,131,313,5:13,308,150,166,0,0,1
 
@@ -6303,8 +6303,8 @@ pace_avg_mmss,5:28
 speed_avg_display,5:28/km
 gap_avg_s_km,330
 gap_avg_mmss,5:30
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,132
 hr_max,177
@@ -6333,14 +6333,14 @@ raw_sample_count,3000
 
 ## s5_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,294,145,168,0,0,0
 4,1000,299,299,4:59,302,143,168,0,2,0
-5,1000,302,302,5:02,311,142,166,0,4,0
+5,1000,302,302,5:02,311,142,166,0,5,0
 6,1000,306,306,5:06,317,140,167,0,6,0
-7,1000,311,311,5:11,320,139,166,0,4,0
-8,1000,329,329,5:29,336,135,164,0,2,0
+7,1000,311,311,5:11,320,139,166,0,5,0
+8,1000,329,329,5:29,336,135,164,0,3,0
 9,1000,370,370,6:10,370,120,162,0,0,0
 10,144,53,370,6:10,363,120,162,0,0,1
 
@@ -6423,8 +6423,8 @@ pace_avg_mmss,5:20
 speed_avg_display,5:20/km
 gap_avg_s_km,322
 gap_avg_mmss,5:22
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,135
 hr_max,180
@@ -6442,14 +6442,14 @@ raw_sample_count,3000
 
 ## s6_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,369,370,6:10,358,120,162,4,0,0
+1,997,369,370,6:10,358,120,162,6,0,0
 2,1000,363,363,6:03,354,115,162,4,0,0
 3,1000,295,295,4:55,293,145,168,0,0,0
 4,1000,295,295,4:55,299,146,168,0,2,0
-5,1000,294,294,4:54,302,147,168,0,4,0
+5,1000,294,294,4:54,302,147,168,0,5,0
 6,1000,291,291,4:51,302,148,168,0,6,0
-7,1000,291,291,4:51,301,148,168,0,4,0
-8,1000,291,291,4:51,297,149,168,0,2,0
+7,1000,291,291,4:51,301,148,168,0,6,0
+8,1000,291,291,4:51,297,149,168,0,3,0
 9,1000,374,374,6:14,374,118,162,0,0,0
 10,360,133,370,6:10,364,120,162,0,0,1
 
@@ -6528,8 +6528,8 @@ dur_moving_s,3599
 dur_moving,59:59
 speed_avg_kmh,25.5
 speed_avg_display,25.5 km/h
-ele_gain_m,51
-ele_loss_m,42
+ele_gain_m,60
+ele_loss_m,48
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,147
 hr_max,168
@@ -6557,11 +6557,11 @@ raw_sample_count,3600
 
 ## s7_splits
 n,dist_m,dur_s,speed_kmh,hr_bpm,cad_spm,pw_w,ele_gain_m,ele_loss_m,partial
-1,4993,692,26,141,88,165,10,6,0
-2,5000,686,26.2,153,90,211,0,14,0
-3,5000,736,24.4,154,88,214,18,0,0
-4,5000,740,24.3,151,87,200,0,22,0
-5,5000,687,26.2,137,88,150,22,0,0
+1,4993,692,26,141,88,165,11,8,0
+2,5000,686,26.2,153,90,211,4,16,0
+3,5000,736,24.4,154,88,214,20,0,0
+4,5000,740,24.3,151,87,200,0,23,0
+5,5000,687,26.2,137,88,150,23,0,0
 6,499,57,31.7,137,88,150,0,0,1
 
 ## s7_laps
@@ -6730,7 +6730,7 @@ pace_avg_mmss,4:22
 speed_avg_display,4:22/km
 gap_avg_s_km,258
 gap_avg_mmss,4:18
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,146
@@ -6828,7 +6828,7 @@ pace_avg_mmss,12:49
 speed_avg_display,12:49/km
 gap_avg_s_km,754
 gap_avg_mmss,12:34
-ele_gain_m,9
+ele_gain_m,12
 ele_loss_m,0
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,116
@@ -6935,26 +6935,26 @@ t_s,dist_m,pace_s_km,hr_bpm,ele_m,grade_pct
 
 ## sessions
 n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,intervals,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
-5,2026-07-23,running,9.14,49:59,5:28/km,5:30,9,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
-6,2026-07-25,running,9.36,49:59,5:20/km,5:22,9,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
-7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,51,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,12,134,168,ceinture,signal,1.4,18,,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,12,137,168,ceinture,signal,2.3,24,,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,12,142,168,ceinture,signal,3.7,30,,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,12,137,166,capteur poignet,signal,1.4,18,,b-steady-optical.tcx
+5,2026-07-23,running,9.14,49:59,5:28/km,5:30,12,132,177,ceinture,signal,-2.0,27,"6 × 179 s, récup 120 s",c-intervals-fade.tcx
+6,2026-07-25,running,9.36,49:59,5:20/km,5:22,12,135,180,indéterminée,signal,n/a,27,"6 × 179 s, récup 119 s",c-intervals.tcx
+7,2026-07-26,cycling,25.50,59:59,25.5 km/h,,60,147,168,ceinture,signal,0.1,,"6 × 239 s à 260 W, récup 119 s",d-erg.tcx
 8,2026-07-27,swimming,1.20,20:23,1:42/100m,,0,120,128,indéterminée,signal,n/a,,,e-pool.tcx
-9,2026-07-28,other,3.51,15:21,4:22/km,,9,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
+9,2026-07-28,other,3.51,15:21,4:22/km,,12,146,168,ceinture,signal,n/a,,,f-hyrox.tcx
 10,2026-07-29,other,0.45,0:00,,,0,93,96,ceinture,signal,n/a,,,g-stroll.tcx
-11,2026-07-30,hiking,3.12,39:59,12:49/km,,9,116,168,ceinture,signal,-0.0,,,h-hike.tcx
+11,2026-07-30,hiking,3.12,39:59,12:49/km,,12,116,168,ceinture,signal,-0.0,,,h-hike.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,bike_km,bike_time,bike_ele_m,swim_m,swim_time,hike_km,hike_time,hike_ele_m,other_time,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
-2026-S23,1,49:59,9.4,49:59,9,,,,,,,,,,146,100,41,58,1
-2026-S25,1,49:59,9.6,49:59,9,,,,,,,,,,149,100,12,87,1
-2026-S28,1,49:59,9.7,49:59,9,,,,,,,,,,174,100,10,81,9
-2026-S30,4,3h29:56,27.9,2h29:57,27,25.5,59:59,51,,,,,,,676,100,45,23,32
-2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,9,15:21,378,100,61,29,11
+2026-S23,1,49:59,9.4,49:59,12,,,,,,,,,,146,100,41,58,1
+2026-S25,1,49:59,9.6,49:59,12,,,,,,,,,,149,100,12,87,1
+2026-S28,1,49:59,9.7,49:59,12,,,,,,,,,,174,100,10,81,9
+2026-S30,4,3h29:56,27.9,2h29:57,36,25.5,59:59,60,,,,,,,676,100,45,23,32
+2026-S31,4,1h15:43,,,,,,,1200,20:23,3.1,39:59,12,15:21,378,100,61,29,11
 
 ## best_efforts_all_sessions
 distance,time,pace_mmss,date,file
@@ -7056,18 +7056,18 @@ date,pace_ref,hr_bpm,time_at_pace_s,hr_source,temp_air_c,pace_held,efficiency
 
 ## sessions
 n,date,sport,dist_km,dur_moving,speed,gap_mmss,ele_gain_m,hr_avg,hr_max,hr_source,hr_source_basis,drift_pct,temp_c,file
-1,2026-06-02,running,9.42,49:59,5:18/km,5:20,9,134,168,ceinture,signal,1.4,18,a-steady-strap-1.tcx
-2,2026-06-16,running,9.55,49:59,5:14/km,5:15,9,137,168,ceinture,signal,2.3,24,a-steady-strap-2.tcx
-3,2026-07-07,running,9.69,49:59,5:09/km,5:11,9,142,168,ceinture,signal,3.7,30,a-steady-strap-3.tcx
-4,2026-07-21,running,9.42,49:59,5:18/km,5:20,9,137,166,capteur poignet,signal,1.4,18,b-steady-optical.tcx
+1,2026-06-02,running,9.42,49:59,5:18/km,5:20,12,134,168,ceinture,signal,1.4,18,a-steady-strap-1.tcx
+2,2026-06-16,running,9.55,49:59,5:14/km,5:15,12,137,168,ceinture,signal,2.3,24,a-steady-strap-2.tcx
+3,2026-07-07,running,9.69,49:59,5:09/km,5:11,12,142,168,ceinture,signal,3.7,30,a-steady-strap-3.tcx
+4,2026-07-21,running,9.42,49:59,5:18/km,5:20,12,137,166,capteur poignet,signal,1.4,18,b-steady-optical.tcx
 
 # Charge hebdomadaire : une colonne par discipline (distance, durée, dénivelé), jamais additionnées. trimp = TRIMP d'Edwards (minutes dans chaque zone FC × numéro de zone), seule charge commune à tous les sports ; hr_coverage_pct = part du temps en mouvement avec une FC. Une séance sans FC ne pèse rien dans le trimp.
 ## weekly_load
 week,sessions,dur_moving,run_km,run_time,run_ele_m,trimp,hr_coverage_pct,easy_pct,moderate_pct,hard_pct
-2026-S23,1,49:59,9.4,49:59,9,146,100,99,1,1
-2026-S25,1,49:59,9.6,49:59,9,149,100,93,6,1
-2026-S28,1,49:59,9.7,49:59,9,174,100,44,56,1
-2026-S30,1,49:59,9.4,49:59,9,160,100,82,0,18
+2026-S23,1,49:59,9.4,49:59,12,146,100,99,1,1
+2026-S25,1,49:59,9.6,49:59,12,149,100,93,6,1
+2026-S28,1,49:59,9.7,49:59,12,174,100,44,56,1
+2026-S30,1,49:59,9.4,49:59,12,160,100,82,0,18
 
 ## best_efforts_all_sessions
 distance,time,pace_mmss,date,file
@@ -7115,8 +7115,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,134
 hr_max,168
@@ -7142,14 +7142,14 @@ raw_sample_count,3000
 
 ## s1_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,119,161,4,0,0
+1,997,368,369,6:09,357,119,161,6,0,0
 2,1000,313,313,5:13,305,135,166,4,0,0
 3,1000,313,313,5:13,310,135,166,0,0,0
 4,1000,313,313,5:13,316,135,166,0,2,0
-5,1000,313,313,5:13,321,136,166,0,4,0
-6,1000,313,313,5:13,324,136,166,0,4,0
-7,1000,313,313,5:13,322,137,166,0,4,0
-8,1000,313,313,5:13,318,137,166,0,2,0
+5,1000,313,313,5:13,321,136,166,0,5,0
+6,1000,313,313,5:13,324,136,166,0,6,0
+7,1000,313,313,5:13,322,137,166,0,5,0
+8,1000,313,313,5:13,318,137,166,0,3,0
 9,1000,313,313,5:13,312,138,166,0,0,0
 10,420,131,313,5:13,308,138,166,0,0,1
 
@@ -7193,8 +7193,8 @@ pace_avg_mmss,5:14
 speed_avg_display,5:14/km
 gap_avg_s_km,315
 gap_avg_mmss,5:15
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,168
@@ -7220,14 +7220,14 @@ raw_sample_count,3000
 
 ## s2_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,367,368,6:08,356,120,161,4,0,0
+1,997,367,368,6:08,356,120,161,6,0,0
 2,1000,308,308,5:08,300,137,166,4,0,0
 3,1000,308,308,5:08,305,138,166,0,0,0
 4,1000,308,308,5:08,312,139,166,0,2,0
-5,1000,308,308,5:08,316,139,166,0,4,0
+5,1000,308,308,5:08,316,139,166,0,5,0
 6,1000,308,308,5:08,318,140,166,0,6,0
-7,1000,308,308,5:08,317,141,166,0,4,0
-8,1000,308,308,5:08,313,142,166,0,2,0
+7,1000,308,308,5:08,317,141,166,0,5,0
+8,1000,308,308,5:08,313,142,166,0,3,0
 9,1000,308,308,5:08,308,142,166,0,0,0
 10,555,171,308,5:08,302,143,166,0,0,1
 
@@ -7271,8 +7271,8 @@ pace_avg_mmss,5:09
 speed_avg_display,5:09/km
 gap_avg_s_km,311
 gap_avg_mmss,5:11
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,142
 hr_max,168
@@ -7303,14 +7303,14 @@ raw_sample_count,3000
 
 ## s3_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,366,367,6:07,354,120,161,4,0,0
+1,997,366,367,6:07,354,120,161,6,0,0
 2,1000,303,303,5:03,295,140,166,4,0,0
 3,1000,303,303,5:03,301,141,166,0,0,0
 4,1000,303,303,5:03,306,143,166,0,2,0
-5,1000,303,303,5:03,312,144,166,0,4,0
+5,1000,303,303,5:03,312,144,166,0,5,0
 6,1000,303,303,5:03,314,145,166,0,6,0
-7,1000,303,303,5:03,312,146,166,0,4,0
-8,1000,303,303,5:03,309,147,166,0,2,0
+7,1000,303,303,5:03,312,146,166,0,6,0
+8,1000,303,303,5:03,309,147,166,0,3,0
 9,1000,303,303,5:03,303,149,166,0,0,0
 10,690,209,303,5:03,297,150,166,2,0,1
 
@@ -7354,8 +7354,8 @@ pace_avg_mmss,5:18
 speed_avg_display,5:18/km
 gap_avg_s_km,320
 gap_avg_mmss,5:20
-ele_gain_m,9
-ele_loss_m,21
+ele_gain_m,12
+ele_loss_m,24
 ele_source,calculé depuis l'altitude GPS — sous-estime généralement de 30 à 50 %
 hr_avg,137
 hr_max,166
@@ -7383,14 +7383,14 @@ raw_sample_count,3000
 
 ## s4_splits
 n,dist_m,dur_s,pace_s_km,pace_mmss,gap_s_km,hr_bpm,cad_spm,ele_gain_m,ele_loss_m,partial
-1,997,368,369,6:09,357,108,161,4,0,0
+1,997,368,369,6:09,357,108,161,6,0,0
 2,1000,313,313,5:13,305,141,166,4,0,0
 3,1000,313,313,5:13,310,143,166,0,0,0
 4,1000,313,313,5:13,316,139,166,0,2,0
-5,1000,313,313,5:13,321,138,166,0,4,0
-6,1000,313,313,5:13,324,143,166,0,4,0
-7,1000,313,313,5:13,322,143,166,0,4,0
-8,1000,313,313,5:13,318,139,166,0,2,0
+5,1000,313,313,5:13,321,138,166,0,5,0
+6,1000,313,313,5:13,324,143,166,0,6,0
+7,1000,313,313,5:13,322,143,166,0,5,0
+8,1000,313,313,5:13,318,139,166,0,3,0
 9,1000,313,313,5:13,312,141,166,0,0,0
 10,420,131,313,5:13,308,150,166,0,0,1
 

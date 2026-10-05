@@ -126,7 +126,10 @@ const insights = built.insights;
 
 const s = digest.session;
 check("distance plausible", s.distM > 11000 && s.distM < 14000, `${s.distM} m`);
-check("D+ non gonflé par le bruit", (s.eleGainM ?? 0) > 20 && (s.eleGainM ?? 0) < 60, `${s.eleGainM} m`);
+// Le profil compte deux côtes de 30 m (bruit de ±0,4 m) : D+ vrai = 60 m.
+// L'ancien seuil (< 60) était calé sur un calcul qui perdait la fin des
+// montées ; le bruit, lui, ne doit toujours rien ajouter.
+check("D+ non gonflé par le bruit", (s.eleGainM ?? 0) >= 55 && (s.eleGainM ?? 0) <= 62, `${s.eleGainM} m`);
 check("temps en mouvement < écoulé", s.durMovingS <= s.durElapsedS, `${s.durMovingS}/${s.durElapsedS} s`);
 check("FC max cohérente", (s.hrMax ?? 0) > 160 && (s.hrMax ?? 0) < 200, `${s.hrMax} bpm`);
 check("GAP calculé", s.gapAvgSPerKm != null, paceLabel(s.gapAvgSPerKm));
