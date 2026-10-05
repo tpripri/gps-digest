@@ -341,3 +341,8 @@ export function resampleByDistance(
   }
   return out;
 }
+
+/** Allègement des séances anciennes du mode archive : un point sur cinq. */
+export function thinByTime<T extends { t: number }>(samples: T[]): T[] {
+  return samples.filter((_, i) => i % 5 === 0);
+}

@@ -25,7 +25,7 @@ const DEFAULT_LOCALE = "en";
  * Choisit la langue depuis l'en-tête Accept-Language, en respectant les
  * facteurs de qualité (« fr-CA,fr;q=0.9,en;q=0.8 »).
  */
-function pickLocale(header: string | null): string {
+export function pickLocale(header: string | null): string {
   if (!header) return DEFAULT_LOCALE;
 
   const ranked = header

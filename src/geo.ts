@@ -46,6 +46,58 @@ export function fillDistance(samples: Sample[]): void {
 }
 
 /**
+ * Complète la distance des points qui n'en portent pas.
+ *
+ * Certains points FIT (avant le signal GPS, FC seule après l'arrêt de la
+ * montre) et la fin de bien des TCX n'ont pas de distance. Lus comme 0 m, ils
+ * faisaient tomber la séance à 0 km, créaient un « saut » de toute la
+ * distance en une seconde (605 m/s), et la séance, jugée immobile, perdait
+ * toute son analyse.
+ *
+ * Un trou entre deux points connus est comblé au prorata du temps : prolonger
+ * la dernière valeur concentrerait la distance du trou en un seul pas. Les
+ * points de tête prennent la première distance connue, ceux de queue la
+ * dernière.
+ */
+export function carryDistance(samples: Sample[]): void {
+  let prev = -1;
+  for (let i = 0; i < samples.length; i++) {
+    if (samples[i].dist == null) continue;
+    const d = samples[i].dist!;
+    if (prev < 0) {
+      for (let k = 0; k < i; k++) samples[k].dist = d;
+    } else if (i - prev > 1) {
+      const a = samples[prev];
+      const span = samples[i].t - a.t;
+      for (let k = prev + 1; k < i; k++) {
+        const f = span > 0 ? (samples[k].t - a.t) / span : 0;
+        samples[k].dist = a.dist! + f * (d - a.dist!);
+      }
+    }
+    prev = i;
+  }
+  if (prev >= 0) for (let k = prev + 1; k < samples.length; k++) samples[k].dist = samples[prev].dist;
+}
+
+/**
+ * Maximum et minimum d'une série, par une boucle. `Math.max(...série)` passe
+ * un argument par point : au-delà d'environ 65 000 points (Safari) ou
+ * 120 000 (Chrome), soit 18 à 36 h à une mesure par seconde, l'analyse
+ * plantait.
+ */
+export function maxOf(values: readonly (number | undefined)[]): number | undefined {
+  let m: number | undefined;
+  for (const v of values) if (v != null && Number.isFinite(v) && (m == null || v > m)) m = v;
+  return m;
+}
+
+export function minOf(values: readonly (number | undefined)[]): number | undefined {
+  let m: number | undefined;
+  for (const v of values) if (v != null && Number.isFinite(v) && (m == null || v < m)) m = v;
+  return m;
+}
+
+/**
  * Moyenne glissante centrée sur une **fenêtre temporelle**, pas sur un nombre
  * de points. Indispensable : l'enregistrement "intelligent" de Garmin produit
  * des intervalles de 1 à 15 s dans le même fichier.
@@ -141,6 +193,15 @@ export function elevationGainLoss(
     }
   }
   return { gain, loss };
+}
+
+/**
+ * Durée ou allure en « m:ss ». On arrondit d'abord à la seconde : arrondir
+ * les secondes après avoir pris les minutes donnait « 4:60 » pour 299,6 s.
+ */
+export function mmss(seconds: number): string {
+  const total = Math.round(seconds);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
 }
 
 export function mean(values: (number | undefined)[]): number | undefined {

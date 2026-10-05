@@ -19,7 +19,7 @@
  * chaleur, qui produit exactement le même effet.
  */
 
-import { smoothByTime, mean } from "./geo.ts";
+import { smoothByTime, mean, maxOf } from "./geo.ts";
 import { t, translator } from "./i18n.ts";
 import type { Sample, Sport } from "./types.ts";
 
@@ -98,7 +98,7 @@ export function temperatureContext(
 
   return {
     avgC: temps.length ? mean(temps) : undefined,
-    maxC: temps.length ? Math.max(...temps) : undefined,
+    maxC: maxOf(temps),
     fromWristSensor: wristMounted,
     caveat:
       wristMounted && temps.length

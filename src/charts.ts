@@ -14,6 +14,7 @@
  */
 
 import { translator } from "./i18n.ts";
+import { maxOf, minOf } from "./geo.ts";
 
 const W = 720;
 const H = 220;
@@ -33,8 +34,8 @@ interface Scale {
 
 function scaleY(values: number[], invert = false, padPct = 0.08): Scale {
   const finite = values.filter((v) => Number.isFinite(v));
-  let min = Math.min(...finite);
-  let max = Math.max(...finite);
+  let min = minOf(finite) ?? Infinity;
+  let max = maxOf(finite) ?? -Infinity;
   if (!Number.isFinite(min) || min === max) {
     min = (min || 0) - 1;
     max = (max || 0) + 1;

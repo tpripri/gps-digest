@@ -4,7 +4,7 @@ import { parseTcx } from "./parse-tcx.ts";
 import { parseGpx } from "./parse-gpx.ts";
 import { parseFit, parseFitBuffer, type FitExtras } from "./parse-fit.ts";
 import { maskPrivacyZone } from "./privacy.ts";
-import { fillDistance } from "./geo.ts";
+import { carryDistance, maxOf } from "./geo.ts";
 import {
   computeSplits,
   detectIntervals,
@@ -112,6 +112,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
   const samples = activity.samples;
   if (!samples.length) throw new Error(translator(locale)("digest.errNoPoints"));
+  carryDistance(samples);
 
   // Zone de confidentialité : elle efface des positions, elle ne coupe plus
   // rien. Tous les calculs ci-dessous portent sur la séance entière ; seuls le
@@ -312,7 +313,7 @@ export function buildFull(activity: Activity, opts: DigestOptions = {}): BuildRe
 
 /** Base des zones FC d'une séance : profil renseigné ou FC max observée. */
 function zoneBasis(samples: Sample[], athlete?: AthleteProfile): HrZoneBasis | undefined {
-  const observed = Math.max(0, ...samples.map((s) => s.hr ?? 0));
+  const observed = maxOf(samples.map((s) => s.hr)) ?? 0;
   if (observed < 60) return undefined;
   const { model } = hrZoneBounds(athlete, observed);
   return athlete?.maxHr || athlete?.lthr

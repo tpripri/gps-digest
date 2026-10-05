@@ -8,7 +8,7 @@
  */
 
 import { sax, num } from "./xml.ts";
-import { fillDistance, sanitizeSamples } from "./geo.ts";
+import { carryDistance, fillDistance, sanitizeSamples } from "./geo.ts";
 import type { Activity, Lap, Sample, Sport } from "./types.ts";
 
 const SPORT_MAP: Record<string, Sport> = {
@@ -181,6 +181,7 @@ export function parseTcx(xml: string): Activity {
   samples.sort((a, b) => a.t - b.t);
   sanitizeSamples(samples);
   if (samples.length && samples[0].dist == null) fillDistance(samples);
+  carryDistance(samples);
 
   // Natation en bassin : la montre compte des longueurs, pas des mètres. La
   // distance vit alors dans les <Lap> et le flux de points n'en porte aucune —

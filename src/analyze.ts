@@ -6,7 +6,7 @@
  * transforme une série temporelle en objets que le modèle peut interpréter.
  */
 
-import { smoothByTime, elevationGainLoss, mean, speedSeries } from "./geo.ts";
+import { smoothByTime, elevationGainLoss, maxOf, mean, speedSeries } from "./geo.ts";
 import { t } from "./i18n.ts";
 import {
   movingTime,
@@ -174,7 +174,7 @@ export function hrZoneBounds(athlete: AthleteProfile | undefined, observedMax: n
 }
 
 export function hrZones(samples: Sample[], athlete?: AthleteProfile, locale?: string): ZoneBin[] {
-  const observed = Math.max(0, ...samples.map((s) => s.hr ?? 0));
+  const observed = maxOf(samples.map((s) => s.hr)) ?? 0;
   if (observed < 60) return [];
   const { bounds } = hrZoneBounds(athlete, observed);
   return binTime(
@@ -726,7 +726,7 @@ export function summarize(
     paceAvgSPerKm: paceAvg,
     gapAvgSPerKm: paceAvg != null && gapRatio ? paceAvg / gapRatio : undefined,
     speedAvgMS: speedAvg,
-    speedMaxMS: speed.length ? Math.max(...speed) : undefined,
+    speedMaxMS: maxOf(speed),
     hrAvg,
     hrMax: samples.reduce<number | undefined>(
       (m, s) => (s.hr != null && (m == null || s.hr > m) ? s.hr : m),
